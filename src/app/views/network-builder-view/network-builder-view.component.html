@@ -1,2 +1,69 @@
-<p class="shapeCanvas">network-builder-view works!</p>
-  <button routerLink="/data-entry-component">Edit</button>
+<svg class="shapeCanvas"
+  (mousedown)="startDrawingMouse($event)" 
+  (mousemove)="keepDrawingMouse($event)"
+  (mouseup)="stopDrawingMouse()"
+  (touchstart)="startDrawingTouch($event)" 
+  (touchmove)="keepDrawingTouch($event)"
+  (touchend)="stopDrawingTouch()"  
+  >
+
+  <ng-container *ngFor="let shape of shapesToDraw">
+
+    <!--Branch or Bus-->
+    <svg *ngIf="shape.type=='bus' || shape.type=='branch'" >
+
+      <!--Selected-->
+      <svg *ngIf="shape==(selectedShape)"   class="selected"
+      [attr.height]="shape.hOuter" [attr.width]="shape.wOuter"
+      [attr.x]="shape.xOuter" [attr.y]="shape.yOuter"> 
+      <rect [attr.stroke-width]="1" 
+        [attr.width]="shape.wOuter" [attr.height]="shape.hOuter"/>
+      </svg>
+
+      <rect 
+        [attr.x]="shape.xInner" 
+        [attr.y]="shape.yInner" 
+        [attr.width]="shape.wInner"
+        [attr.height]="shape.hInner"
+        [attr.rx]="shape.type=='bus'?8:2" /> 
+    </svg>
+
+    <!--Gen or Load-->
+    <svg class="path" *ngIf="shape.type=='gen' || shape.type=='load'">
+
+      <!--Selected-->
+      <svg *ngIf="shape==(selectedShape)" class="selected" 
+      [attr.height]="shape.hOuter" [attr.width]="shape.wOuter"
+      [attr.x]="shape.xOuter" [attr.y]="shape.yOuter"> 
+        <rect [attr.width]="shape.wOuter" [attr.height]="shape.hOuter"/>
+      </svg>
+
+      <!--Gen-->
+      <svg *ngIf="shape.type=='gen'"
+        [attr.height]="shape.hInner" [attr.width]="shape.wInner"
+        [attr.x]="shape.xInner" [attr.y]="shape.yInner"> 
+      
+        <!--Circle: For a stroke width of 3-->
+        <circle [attr.cx]="shape.wInner/2" [attr.cy]="shape.wInner/2" [attr.r]="shape.wInner/2 - 3/2"/>
+        <line [attr.x1]="shape.wInner/2" [attr.y1]="shape.wInner - 3"
+              [attr.x2]="shape.wInner/2" [attr.y2]="shape.hInner"/>
+        <!--Sine-->      
+        <path [attr.d]="shape.path1"/>
+        <path [attr.d]="shape.path2"/>
+      </svg>  
+      <!--Load-->
+      <svg *ngIf="shape.type=='load'"
+      [attr.height]="shape.hInner" [attr.width]="shape.wInner"
+      [attr.x]="shape.xInner" [attr.y]="shape.yInner"> 
+      <path [attr.d]="shape.path1"/>
+      </svg>
+    </svg>
+  </ng-container>
+
+</svg>
+<br>
+<button (click)="addElement('bus')">Bus</button>
+<button (click)="addElement('branch')">Branch</button>
+<button (click)="addElement('gen')">Gen</button>
+<button (click)="addElement('load')">Load</button>
+<button routerLink="/data-entry-component">Edit</button>
