@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // import the feature module here so you can add it to the imports array below
 import {ViewsModule} from './views/views.module';
+import {DataModelModule} from './data-model/data-model.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {ViewsModule} from './views/views.module';
     AppRoutingModule,
     ReactiveFormsModule,
     // add the feature modules here
-    ViewsModule
+    ViewsModule,
+    DataModelModule
   ],
   providers: [],
   bootstrap: [AppComponent]
