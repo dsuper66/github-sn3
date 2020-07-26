@@ -13,9 +13,11 @@ export class DataEntryViewComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  favoriteColorControl = new FormControl('');
+
 }
 
-export class FavoriteColorComponent {
-  favoriteColorControl = new FormControl('');
-  
-}
+// export class FavoriteColorComponent {
+//   favoriteColorControl = new FormControl('');
+
+// }
