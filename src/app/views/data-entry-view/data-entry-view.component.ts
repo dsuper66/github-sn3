@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -12,4 +13,9 @@ export class DataEntryViewComponent implements OnInit {
   ngOnInit(): void {
   }
 
+}
+
+export class FavoriteColorComponent {
+  favoriteColorControl = new FormControl('');
+  
 }

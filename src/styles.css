@@ -19,3 +19,7 @@ button {
     /*stop scroll within canvas but keep zoom*/
     overflow: hidden;
 }
+
+body {
+  margin: 1em;
+}

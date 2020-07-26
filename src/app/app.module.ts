@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 // import the feature module here so you can add it to the imports array below
 import {ViewsModule} from './views/views.module';
 
@@ -14,6 +16,7 @@ import {ViewsModule} from './views/views.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     // add the feature modules here
     ViewsModule
   ],
