@@ -10,7 +10,7 @@
   <ng-container *ngFor="let shape of shapesToDraw">
 
     <!--Branch or Bus-->
-    <svg *ngIf="shape.type=='bus' || shape.type=='branch'" >
+    <svg *ngIf="shape.elementType=='bus' || shape.elementType=='branch'" >
 
       <!--Selected-->
       <svg *ngIf="shape==(selectedShape)"   class="selected"
@@ -25,11 +25,11 @@
         [attr.y]="shape.yInner" 
         [attr.width]="shape.wInner"
         [attr.height]="shape.hInner"
-        [attr.rx]="shape.type=='bus'?8:2" /> 
+        [attr.rx]="shape.elementType=='bus'?8:2" /> 
     </svg>
 
     <!--Gen or Load-->
-    <svg class="path" *ngIf="shape.type=='gen' || shape.type=='load'">
+    <svg class="path" *ngIf="shape.elementType=='gen' || shape.elementType=='load'">
 
       <!--Selected-->
       <svg *ngIf="shape==(selectedShape)" class="selected" 
@@ -39,7 +39,7 @@
       </svg>
 
       <!--Gen-->
-      <svg *ngIf="shape.type=='gen'"
+      <svg *ngIf="shape.elementType=='gen'"
         [attr.height]="shape.hInner" [attr.width]="shape.wInner"
         [attr.x]="shape.xInner" [attr.y]="shape.yInner"> 
       
@@ -52,7 +52,7 @@
         <path [attr.d]="shape.path2"/>
       </svg>  
       <!--Load-->
-      <svg *ngIf="shape.type=='load'"
+      <svg *ngIf="shape.elementType=='load'"
       [attr.height]="shape.hInner" [attr.width]="shape.wInner"
       [attr.x]="shape.xInner" [attr.y]="shape.yInner"> 
       <path [attr.d]="shape.path1"/>
