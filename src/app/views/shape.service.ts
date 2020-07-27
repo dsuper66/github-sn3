@@ -23,15 +23,15 @@ export class ShapeService {
 
   selectWidth = 40;
 
-  addShape(type: string) {
-    let count = this.shapes.filter(shape => shape.type == type).length;
-    console.log (type + ":" + (this.getCount(type) + 1));
+  addShape(elementType: string) {
+    let count = this.shapes.filter(shape => shape.elementType == elementType).length;
+    console.log (elementType + ":" + (this.getCount(elementType) + 1));
 
     //BUS
-    if (type == 'bus') {
+    if (elementType == 'bus') {
       let y = this.busInitY * (1 + this.getCount('bus'));
       this.shapes.push({
-        type: type,
+        elementType: elementType,
         xInner: this.busInitX,
         yInner: y,
         wInner: this.busLength,
@@ -43,7 +43,7 @@ export class ShapeService {
        })
     }
     //BRANCH
-    else if (type == 'branch') {
+    else if (elementType == 'branch') {
       let branchCountNew = this.getCount('branch') + 1;
       var x = 0;
       if (branchCountNew%2 == 1) {
@@ -54,7 +54,7 @@ export class ShapeService {
       };
       let y = (this.busInitY * Math.ceil(branchCountNew/2)) + this.busWidth/2;
       this.shapes.push({
-        type: type,
+        elementType: elementType,
         xInner: x,
         yInner: y,
         wInner: this.branchWidth,
@@ -66,7 +66,7 @@ export class ShapeService {
       })
     }
     //GEN & LOAD
-    else if (type == 'gen' || type == 'load') {     
+    else if (elementType == 'gen' || elementType == 'load') {     
       let genLoadCount =  this.getCount('gen') + this.getCount('load')
       let h = this.genLoadLength;
       let w = this.genLoadWidth;
@@ -74,14 +74,14 @@ export class ShapeService {
       let y = (this.busInitY * (1 + genLoadCount)) - h;
       var path1: string;
       var path2: string;
-      if (type == 'gen') {
+      if (elementType == 'gen') {
         let sineStartX = 6;
         let sineStartY = w/2;
         let sineW = w - 2*sineStartX;
         path1 = `M ${sineStartX} ${sineStartY}           q ${sineW/4} ${-sineW/2} ${sineW/2} 0` 
         path2 = `M ${sineStartX + sineW/2} ${sineStartY} q ${sineW/4} ${sineW/2}  ${sineW/2} 0` 
       }
-      else if (type == 'load') {
+      else if (elementType == 'load') {
         let arrowH = 10;
         //<path id="lineAB" d="M 20 100 l 0 -98 m -18 18 l 18 -18 l 18 18"
         path1 = `M ${w/2} ${h} l 0 ${-(h-2)} m ${-arrowH} ${arrowH} l ${arrowH} ${-arrowH} l ${arrowH} ${arrowH}`
@@ -89,7 +89,7 @@ export class ShapeService {
 
       console.log("path1: " + path1 + " path2: " + path2);
       this.shapes.push({
-        type: type,
+        elementType: elementType,
         xInner: x,
         yInner: y,
         wInner: w,
@@ -105,7 +105,7 @@ export class ShapeService {
   }
 
   getCount(type: String) {
-    return this.shapes.filter(shape => shape.type == type).length;
+    return this.shapes.filter(shape => shape.elementType == type).length;
   }
   getShapes() {
     console.log("get shapes");

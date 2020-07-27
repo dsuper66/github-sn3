@@ -98,7 +98,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.lastDrawingPoint && this.selectedShape) {
 
       //Start direction for bus or branch determines if resize or move
-      if (this.selectedShape.type == 'bus' || this.selectedShape.type == 'branch') {
+      if (this.selectedShape.elementType == 'bus' || this.selectedShape.elementType == 'branch') {
         if (!this.directionDone) {
           let xThreshold = 5;
           let yThreshold = 5;
@@ -107,11 +107,11 @@ export class NetworkBuilderViewComponent implements OnInit {
           //Branch is resize if movement is up-down, bus is resize if movement is left-right
           if (deltaFromStartX > xThreshold || deltaFromStartY > yThreshold) {
             this.selectedShape.doResize = false;
-            if (deltaFromStartY > yThreshold && this.selectedShape.type == 'branch') {
+            if (deltaFromStartY > yThreshold && this.selectedShape.elementType == 'branch') {
               console.log("Up Down");
               this.selectedShape.doResize = true;
             }
-            else if (deltaFromStartX > xThreshold && this.selectedShape.type == 'bus') {
+            else if (deltaFromStartX > xThreshold && this.selectedShape.elementType == 'bus') {
               console.log("Left Right");
               this.selectedShape.doResize = true;
             }
@@ -129,7 +129,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
       //Resize (bus or branch)
       if (this.selectedShape.doResize) {
-        if (this.selectedShape.type == 'bus') {
+        if (this.selectedShape.elementType == 'bus') {
           let atRHS = (drawingPoint.x > this.selectedShape.xInner + this.selectedShape.wInner / 2);
           if (atRHS) {
             this.shapeService.applyDeltaW(deltaX, this.selectedShape);
@@ -139,7 +139,7 @@ export class NetworkBuilderViewComponent implements OnInit {
             this.shapeService.applyDeltaW(-deltaX, this.selectedShape);
           }
         }
-        else if (this.selectedShape.type == 'branch') {
+        else if (this.selectedShape.elementType == 'branch') {
           let atBottom = (drawingPoint.y > this.selectedShape.yInner + this.selectedShape.hInner / 2);
           if (atBottom) {
             this.shapeService.applyDeltaH(deltaY, this.selectedShape);

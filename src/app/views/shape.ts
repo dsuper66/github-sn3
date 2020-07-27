@@ -1,5 +1,5 @@
 export class Shape {
-    type: string;
+    elementType: string;
     xInner:number;
     yInner:number;
     wInner:number;
