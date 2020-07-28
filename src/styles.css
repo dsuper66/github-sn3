@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 button {
-  margin: 2px;
+  margin: 4px;
   touch-action: manipulation;
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -14,8 +14,10 @@ button {
 .shapeCanvas{
     height:75vh;
     width: 100vw;
-    border:solid;
-    border-color:lightgrey;
+
+    /* border:solid;
+    border-color:lightgrey; */
+
     margin: 0px;
     /*stop scroll within canvas but keep zoom*/
     overflow: hidden;
@@ -23,4 +25,7 @@ button {
 
 body {
   margin: 0em;
+}
+section {
+  margin: 4px;
 }

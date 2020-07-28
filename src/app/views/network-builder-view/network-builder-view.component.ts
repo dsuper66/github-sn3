@@ -19,7 +19,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   shapesToDraw: Shape[] = [];
   selectedShape: Shape;
-  selectedId = "";
+  selectedId = "none";
   lastDrawingPoint: Point; //For calculating delta as move progresses  
   //For checks at start of move
   firstPoint: Point;
@@ -28,7 +28,6 @@ export class NetworkBuilderViewComponent implements OnInit {
   drawingState = "stopped";
   //Touch can lead to touch evt followed by mouse... use timer to stop mouse
   touchTime = Date.now();
-  //mouseTime = Date.now();
 
   //Add Element
   addElement(type: string) {
