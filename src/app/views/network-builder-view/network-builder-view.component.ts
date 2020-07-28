@@ -19,6 +19,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   shapesToDraw: Shape[] = [];
   selectedShape: Shape;
+  selectedId = "";
   lastDrawingPoint: Point; //For calculating delta as move progresses  
   //For checks at start of move
   firstPoint: Point;
@@ -39,7 +40,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   //Start drawing... checks
   startDrawingChecks(x: number, y: number) {
     //If inside a shape then this is adjusting
-    console.log("start drawing checks");
+    //console.log("start drawing checks");
     this.drawingState = "starting";
     var foundShape = false;
     for (let thisShape of this.shapesToDraw) {
@@ -55,6 +56,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           console.log("new select");
           this.drawingState = "keepDrawing";
           this.selectedShape = thisShape;
+          this.selectedId = thisShape.elementId;
         }
 
 
@@ -92,7 +94,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
 
   keepDrawing(drawingPoint: Point) {
-    console.log("keep drawing");
+    //console.log("keep drawing");
     this.drawingState = "keepDrawing";
     //If we have a last drawing point...
     if (this.lastDrawingPoint && this.selectedShape) {
@@ -162,11 +164,11 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
   keepDrawingMouse(evt: MouseEvent) {
-    console.log("keep drawing mouse");
+    //console.log("keep drawing mouse");
     this.keepDrawing({ x: evt.offsetX, y: evt.offsetY });
   }
   keepDrawingTouch(evt: TouchEvent) {
-    console.log("keep drawing touch");
+    //console.log("keep drawing touch");
     this.keepDrawing({ x: evt.touches[0].pageX, y: evt.touches[0].pageY });
     //this.checkIfPointIsInAnyShape(evt.touches[0].pageX, evt.touches[0].pageY)
   }
@@ -179,6 +181,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.drawingState == "starting")  {
       console.log("unselect");
       this.selectedShape = null;
+      this.selectedId = "";
       this.shapesToDraw = this.shapeService.getShapes();
     }
     //stop any current adjustment (but stay selected)

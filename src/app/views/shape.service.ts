@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Shape } from './shape';
+import { ModelElementService } from '../data-model/model-element.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShapeService {
 
-  constructor() { }
+  constructor(private modelElementService: ModelElementService) { }
 
   private shapes:Shape[]=[];
 
@@ -24,12 +25,12 @@ export class ShapeService {
   selectWidth = 40;
 
   addShape(elementType: string) {
-
-    let elementId = "item001";
+    //Add the element and get back the i.d.
+    let elementId = this.modelElementService.addModelElement(elementType);
 
     //For deciding placement
-    let count = this.shapes.filter(shape => shape.elementType == elementType).length;
-    console.log (elementType + ":" + (this.getCount(elementType) + 1));
+    let count = this.shapes.filter(shape => shape.elementType === elementType).length;
+    console.log (elementId + ":" + elementType + " count:" + (this.getCount(elementType) + 1));
 
     //BUS
     if (elementType == 'bus') {
