@@ -62,13 +62,11 @@
 
 </svg>
 
-<!-- Edit and Delete buttons -->
-<section>
-  <button  [disabled]="!selectedId" routerLink="/data-entry-component/{{selectedId}}">Data</button>
-  <button [disabled]="!selectedId" routerLink="/data-entry-component/{{selectedId}}">Delete</button>
-  {{selectedId}}
+<!-- Selected Id -->
+<section style="text-align:right;">
+<div  *ngIf="selectedId; else elseBlock">{{selectedId}}</div>
+<ng-template #elseBlock>no selection</ng-template>
 </section>
-
 
 <hr class="rounded">
 <section>
@@ -78,4 +76,8 @@
 <button (click)="addElement('load')">Load</button>
 &nbsp;&nbsp;
 <button>Main</button>
+
+<button style="float: right;" [disabled]="!selectedId" routerLink="/data-entry-component/{{selectedId}}">Data</button>
+
 </section>
+
