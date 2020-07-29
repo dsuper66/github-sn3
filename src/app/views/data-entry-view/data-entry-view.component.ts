@@ -30,6 +30,7 @@ export class DataEntryViewComponent implements OnInit {
     const elementId = this.route.snapshot.paramMap.get('elementId');
     console.log(">>>Element ID:" + elementId 
       + " name:" + this.modelElementService.getElementName(elementId));
+    this.modelData.setValue(elementId);
   }
 
 }

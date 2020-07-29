@@ -61,11 +61,21 @@
   </ng-container>
 
 </svg>
+
+<!-- Edit and Delete buttons -->
+<section>
+  <button  [disabled]="!selectedId" routerLink="/data-entry-component/{{selectedId}}">Data</button>
+  <button [disabled]="!selectedId" routerLink="/data-entry-component/{{selectedId}}">Delete</button>
+  {{selectedId}}
+</section>
+
+
 <hr class="rounded">
 <section>
 <button (click)="addElement('bus')">Bus</button>
 <button (click)="addElement('branch')">Branch</button>
 <button (click)="addElement('gen')">Gen</button>
 <button (click)="addElement('load')">Load</button>
-<button routerLink="/data-entry-component/{{selectedId}}">Edit</button>
+&nbsp;&nbsp;
+<button>Main</button>
 </section>

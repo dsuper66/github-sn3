@@ -24,7 +24,8 @@ export class ShapeService {
 
   selectWidth = 40;
 
-  addShape(elementType: string) {
+  //Add a shape
+  addShape(elementType: string):string {
     //Add the element and get back the i.d.
     let elementId = this.modelElementService.addModelElement(elementType);
 
@@ -110,14 +111,18 @@ export class ShapeService {
         path2
       });
     }
+    return elementId;
   }
 
   getCount(type: String) {
-    return this.shapes.filter(shape => shape.elementType == type).length;
+    return this.shapes.filter(shape => shape.elementType === type).length;
   }
   getShapes() {
     console.log("get shapes");
     return this.shapes;
+  }
+  getShapeWithId(elementId:string){
+    return this.shapes.filter(shape => shape.elementId === elementId)[0];
   }
 
   applyDeltaX(deltaX: number, shape: Shape) {

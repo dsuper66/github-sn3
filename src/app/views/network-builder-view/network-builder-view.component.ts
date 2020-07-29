@@ -19,7 +19,9 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   shapesToDraw: Shape[] = [];
   selectedShape: Shape;
-  selectedId = "none";
+  selectedId: string;
+
+  //Drawing declarations
   lastDrawingPoint: Point; //For calculating delta as move progresses  
   //For checks at start of move
   firstPoint: Point;
@@ -32,7 +34,8 @@ export class NetworkBuilderViewComponent implements OnInit {
   //Add Element
   addElement(type: string) {
     console.log("add element:" + type);
-    this.shapeService.addShape(type);
+    this.selectedId = this.shapeService.addShape(type);
+    this.selectedShape = this.shapeService.getShapeWithId(this.selectedId);
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
