@@ -14,6 +14,8 @@ export class NetworkBuilderViewComponent implements OnInit {
   constructor(private shapeService: ShapeService) { }
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
+    this.selectedShape = this.shapeService.getSelectedShape();
+    this.selectedId = this.selectedShape.elementId;
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
@@ -36,6 +38,9 @@ export class NetworkBuilderViewComponent implements OnInit {
     console.log("add element:" + type);
     this.selectedId = this.shapeService.addShape(type);
     this.selectedShape = this.shapeService.getShapeWithId(this.selectedId);
+    //this.selectedShape = this.shapeService.addShape(type);
+    //this.selectedId = this.selectedShape.elementId;
+    this.shapeService.setSelectedShape(this.selectedShape);
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
@@ -58,6 +63,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           console.log("new select");
           this.drawingState = "keepDrawing";
           this.selectedShape = thisShape;
+          this.shapeService.setSelectedShape(thisShape);
           this.selectedId = thisShape.elementId;
         }
 

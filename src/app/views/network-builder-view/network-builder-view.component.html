@@ -1,3 +1,6 @@
+<!-- The <div> is so that builder and data entry line up -->
+<div class="shapeCanvas">
+<!-- Shape canvas is repeated so that svg fills <p> -->
 <svg class="shapeCanvas"
   (mousedown)="startDrawingMouse($event)" 
   (mousemove)="keepDrawingMouse($event)"
@@ -62,13 +65,16 @@
 
 </svg>
 
+</div>
+
 <!-- Selected Id -->
 <section style="text-align:right;">
-<div  *ngIf="selectedId; else elseBlock">{{selectedId}}</div>
-<ng-template #elseBlock>no selection</ng-template>
+  <div  *ngIf="selectedId; else elseBlock">{{selectedId}}</div>
+  <ng-template #elseBlock>no selection</ng-template>
 </section>
 
 <hr class="rounded">
+
 <section>
 <button (click)="addElement('bus')">Bus</button>
 <button (click)="addElement('branch')">Branch</button>

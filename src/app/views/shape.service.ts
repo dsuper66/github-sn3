@@ -10,6 +10,7 @@ export class ShapeService {
   constructor(private modelElementService: ModelElementService) { }
 
   private shapes:Shape[]=[];
+  private selectedShape:Shape;
 
   branchLength = 100;
   branchWidth = 5;
@@ -25,7 +26,7 @@ export class ShapeService {
   selectWidth = 40;
 
   //Add a shape
-  addShape(elementType: string):string {
+  addShape(elementType: string): string {
     //Add the element and get back the i.d.
     let elementId = this.modelElementService.addModelElement(elementType);
 
@@ -123,6 +124,12 @@ export class ShapeService {
   }
   getShapeWithId(elementId:string){
     return this.shapes.filter(shape => shape.elementId === elementId)[0];
+  }
+  setSelectedShape(selectedShape: Shape) {
+    this.selectedShape = selectedShape;
+  }
+  getSelectedShape():Shape {
+    return this.selectedShape;
   }
 
   applyDeltaX(deltaX: number, shape: Shape) {
