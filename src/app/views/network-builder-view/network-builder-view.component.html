@@ -61,6 +61,11 @@
       <path [attr.d]="shape.path1"/>
       </svg>
     </svg>
+    
+    <!-- selected ID -->
+    <svg height="200" width="200">
+      <text x="0" y="15">{{selectedId}}</text>
+    </svg>
   </ng-container>
 
 </svg>
@@ -79,7 +84,6 @@
 <!-- Button area -->
 
 <div class="buttonArea">
-  <!-- <hr class="rounded"> -->
   &nbsp;
   <button (click)="addElement('bus')">Bus</button>
   <button (click)="addElement('branch')">Branch</button>
@@ -87,8 +91,9 @@
   <button (click)="addElement('load')">Load</button>
   &nbsp;&nbsp;
   <button>Main</button>
-
-  <button style="float: right;" [disabled]="!selectedId" routerLink="/data-entry-component/{{selectedId}}">Data</button>
+  <button style="float: right;margin-right: 8px;" 
+    [disabled]="!selectedId" 
+    routerLink="/data-entry-component/{{selectedId}}">Data</button>
 
 </div>
 

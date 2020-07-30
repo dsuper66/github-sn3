@@ -15,7 +15,12 @@ export class NetworkBuilderViewComponent implements OnInit {
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
-    this.selectedId = this.selectedShape.elementId;
+    if (this.selectedShape) {
+      this.selectedId = this.selectedShape.elementId;
+    }
+    else {
+      this.selectedId = "none selected";
+    }
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
@@ -189,7 +194,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.drawingState == "starting") {
       console.log("unselect");
       this.selectedShape = null;
-      this.selectedId = "";
+      this.selectedId = "none selected";
       this.shapesToDraw = this.shapeService.getShapes();
     }
     //stop any current adjustment (but stay selected)
@@ -210,7 +215,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     var el = document.getElementById("canvas"); // or other selector like querySelector()
     var rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-    console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
+    // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
     return "done";
   }
 
