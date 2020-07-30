@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 button {
   margin: 4px;
+  height: 25px;
   touch-action: manipulation;
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -11,8 +12,14 @@ button {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.buttonArea{
+  height: 40px;
+  background-color: aqua;
+}
+
 .shapeCanvas{
-    height:75vh;
+    /* height:75vh; */
+    height: calc(100vh - 40px);
     width: 100vw;
 
     /* border:solid;
@@ -26,7 +33,5 @@ button {
 
 body {
   margin: 0px;
-}
-section {
-  margin: 4px;
+  border-width: 0px;
 }

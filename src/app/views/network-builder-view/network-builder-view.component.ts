@@ -78,7 +78,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
     //direction determines move or resize... reset it now at start 
     //and figure it out with keepDrawing
-    this.directionDone = false; 
+    this.directionDone = false;
     this.firstPoint = { x: x, y: y };
     this.lastDrawingPoint = this.firstPoint;
     //Not in any shape, reset select
@@ -186,7 +186,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
     //If there was no drawing, just start=>stop then unselect
     //(timer to avoid mouse/touch overlap)
-    if (this.drawingState == "starting")  {
+    if (this.drawingState == "starting") {
       console.log("unselect");
       this.selectedShape = null;
       this.selectedId = "";
@@ -204,6 +204,14 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
   stopDrawingTouch() {
     this.stopDrawing();
+  }
+
+  getCanvasSize():string {
+    var el = document.getElementById("canvas"); // or other selector like querySelector()
+    var rect = el.getBoundingClientRect(); // get the bounding rectangle
+
+    console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
+    return "done";
   }
 
 }
