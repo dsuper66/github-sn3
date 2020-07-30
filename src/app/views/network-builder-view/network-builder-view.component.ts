@@ -212,8 +212,10 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
 
   getCanvasSize():string {
-    var el = document.getElementById("canvas"); // or other selector like querySelector()
+    var el = document.getElementById("body"); // or other selector like querySelector()
     var rect = el.getBoundingClientRect(); // get the bounding rectangle
+
+ 
 
     // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
     return "done";
