@@ -48,3 +48,7 @@ body {
   color: white;
   text-align: center;
 }
+
+#fill-1:hover {
+  fill:red;
+}
