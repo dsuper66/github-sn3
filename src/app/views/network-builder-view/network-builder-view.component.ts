@@ -15,18 +15,18 @@ export class NetworkBuilderViewComponent implements OnInit {
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
-    if (this.selectedShape) {
-      this.selectedId = this.selectedShape.elementId;
-    }
-    else {
-      this.selectedId = "none selected";
-    }
+    // if (this.selectedShape) {
+    //   this.selectedId = this.selectedShape.elementId;
+    // }
+    // else {
+    //   this.selectedId = "none selected";
+    // }
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
   shapesToDraw: Shape[] = [];
   selectedShape: Shape;
-  selectedId: string;
+  // selectedId: string;
 
   //Drawing declarations
   lastDrawingPoint: Point; //For calculating delta as move progresses  
@@ -41,11 +41,11 @@ export class NetworkBuilderViewComponent implements OnInit {
   //Add Element
   addElement(type: string) {
     console.log("add element:" + type);
-    this.selectedId = this.shapeService.addShape(type);
-    this.selectedShape = this.shapeService.getShapeWithId(this.selectedId);
+    this.selectedShape = this.shapeService.addShape(type);
+    // this.selectedShape = this.shapeService.getShapeWithId(this.selectedId);
     //this.selectedShape = this.shapeService.addShape(type);
     //this.selectedId = this.selectedShape.elementId;
-    this.shapeService.setSelectedShape(this.selectedShape);
+    //this.shapeService.setSelectedShape(this.selectedShape);
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
@@ -68,8 +68,8 @@ export class NetworkBuilderViewComponent implements OnInit {
           console.log("new select");
           this.drawingState = "keepDrawing";
           this.selectedShape = thisShape;
+          // this.selectedId = thisShape.elementId;
           this.shapeService.setSelectedShape(thisShape);
-          this.selectedId = thisShape.elementId;
         }
 
 
@@ -194,7 +194,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.drawingState == "starting") {
       console.log("unselect");
       this.selectedShape = null;
-      this.selectedId = "none selected";
+      // this.selectedId = "none selected";
       this.shapesToDraw = this.shapeService.getShapes();
     }
     //stop any current adjustment (but stay selected)

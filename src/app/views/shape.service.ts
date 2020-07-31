@@ -26,7 +26,7 @@ export class ShapeService {
   selectWidth = 40;
 
   //Add a shape
-  addShape(elementType: string): string {
+  addShape(elementType: string): Shape {
     //Add the element and get back the i.d.
     let elementId = this.modelElementService.addModelElement(elementType);
 
@@ -37,7 +37,7 @@ export class ShapeService {
     //BUS
     if (elementType == 'bus') {
       let y = this.busInitY * (1 + this.getCount('bus'));
-      this.shapes.push({
+      this.selectedShape = ({
         elementType: elementType,
         elementId: elementId,
         xInner: this.busInitX,
@@ -61,7 +61,8 @@ export class ShapeService {
         x = this.busInitX + 0.8*this.busLength - this.branchWidth
       };
       let y = (this.busInitY * Math.ceil(branchCountNew/2)) + this.busWidth/2;
-      this.shapes.push({
+      // this.shapes.push({
+      this.selectedShape = ({
         elementType: elementType,
         elementId: elementId,
         xInner: x,
@@ -97,7 +98,8 @@ export class ShapeService {
       }
 
       console.log("path1: " + path1 + " path2: " + path2);
-      this.shapes.push({
+      // this.shapes.push({
+      this.selectedShape = ({
         elementType: elementType,
         elementId: elementId,
         xInner: x,
@@ -112,7 +114,8 @@ export class ShapeService {
         path2
       });
     }
-    return elementId;
+    this.shapes.push(this.selectedShape);
+    return this.selectedShape;
   }
 
   getCount(type: String) {

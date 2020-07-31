@@ -63,8 +63,23 @@
     </svg>
 
     <!-- selected ID -->
-    <svg height="200" width="200">
-      <text x="0" y="15">&nbsp;{{selectedId}}</text>
+    <svg *ngIf="selectedShape" height="200" width="200">
+      <text x="0" y="15">&nbsp;{{selectedShape.elementId}}</text>
+
+        <!-- <foreignObject x="10" y="20" width="100%" height="100"> 
+          
+          <xhtml:button routerLink="/data-entry-component">
+            <i class="material-icons" style="font-size:18px;color:black">
+              mode_edit</i>
+          </xhtml:button>
+
+          <xhtml:button (click)="addElement('bus')">
+            <i class="material-icons" style="font-size:18px;color:black">
+              mode_delete_forever</i> 
+          </xhtml:button>
+        </foreignObject> -->
+  
+
     </svg>
   </ng-container>
 
@@ -106,6 +121,7 @@
 <!-- <div class="buttonArea"> -->
 <div class="footer">
   &nbsp;
+  
   <button (click)="addElement('bus')">Bus</button>
   <button (click)="addElement('branch')">Branch</button>
   <button (click)="addElement('gen')">Gen</button>
@@ -113,8 +129,8 @@
   &nbsp;&nbsp;
   <button>Main</button>
   <button style="float: right;margin-right: 8px;" 
-    [disabled]="!selectedId" 
-    routerLink="/data-entry-component/{{selectedId}}">Data</button>
+    [disabled]="!selectedShape" 
+    routerLink="/data-entry-component">Data</button>
 
 </div>
 
