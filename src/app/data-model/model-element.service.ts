@@ -12,6 +12,9 @@ export class ModelElementService {
   private modelElements:ModelElement[]=[];
   private elementNextIndex = new Map<string, bigint>();
 
+  private propertyTypesOfElementType = new Map<string, [string]>();
+
+
   addModelElement(elementType: string): string {
     //Get next index for i.d.
     if (this.elementNextIndex[elementType] == undefined) {
