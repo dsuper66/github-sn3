@@ -48,6 +48,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     //this.selectedId = this.selectedShape.elementId;
     //this.shapeService.setSelectedShape(this.selectedShape);
     this.shapesToDraw = this.shapeService.getShapes();
+    this.checkForOverlap();
   }
 
   //Start drawing... checks
@@ -252,25 +253,26 @@ export class NetworkBuilderViewComponent implements OnInit {
           genOrLoadId = theNotBus.elementId;
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             this.setConnectedStatus(theNotBus, true);
+            theNotBus.busId = theBus.elementId;
           }
-          else {
+          else if (theNotBus.busId === theBus.elementId) {
             this.setConnectedStatus(theNotBus, false);
+            theNotBus.busId = "";
           }
         }
       }
       //Non-bus is moving
       else {
-        let theGenOrLoad = this.selectedShape;
+        let theNotBus = this.selectedShape;
         let theBuses = this.shapeService.getShapesOfType('bus');
-        var genOrLoadHasBus = false;
-        for (let theBus of theBuses) {
-          genOrLoadId = theGenOrLoad.elementId;
-          if (this.shapeService.isOverlap(theGenOrLoad, theBus)) {
-            genOrLoadHasBus = true;
+        theNotBus.busId = "";
+        for (let theBus of theBuses) {          
+          if (this.shapeService.isOverlap(theNotBus, theBus)) {
+            theNotBus.busId = theBus.elementId;
             break;
           }
         }
-        this.setConnectedStatus(theGenOrLoad, genOrLoadHasBus);
+        this.setConnectedStatus(theNotBus, (theNotBus.busId != ""));
       }
       // if (genOrLoadId) {
       //   var el = document.getElementById(genOrLoadId);

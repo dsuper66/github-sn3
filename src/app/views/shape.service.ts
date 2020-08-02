@@ -25,6 +25,9 @@ export class ShapeService {
 
   selectWidth = 40;
 
+  checkConnectivityForBus(bus: Shape) {
+
+  }
 
   getShapes() {
     console.log("get shapes");
@@ -140,8 +143,7 @@ export class ShapeService {
         wOuter: this.selectWidth,
         hOuter: h,
         path1,
-        path2,
-        strokeColor:"lawnGreen"
+        path2
       });
     }
     this.shapes.push(this.selectedShape);
