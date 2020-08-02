@@ -44,6 +44,10 @@ export class ShapeService {
   getShapesOfType(elementType: string):Shape[] {
     return this.shapes.filter(shape => shape.elementType === elementType);
   }
+  //...and not of type
+  getShapesNotOfType(elementType: string):Shape[] {
+    return this.shapes.filter(shape => shape.elementType != elementType);
+  }
 
   getCountShapesOfType(elementType: string) {
     return this.getShapesOfType(elementType).length;

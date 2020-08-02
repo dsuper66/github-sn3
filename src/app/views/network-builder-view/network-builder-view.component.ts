@@ -221,6 +221,20 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.stopDrawing();
   }
 
+  setConnectedStatus(shape: Shape, isConnected: boolean) {
+      var el = document.getElementById(shape.elementId);
+      el.setAttribute("stroke",(isConnected ? "black" : "lime"));
+      // if (isConnected) {
+      //   el.setAttribute("stroke", "black");
+      // }
+      // else {
+      //   el.setAttribute("stroke", "lime");
+      // }
+      if (shape.elementType === 'bus' || shape.elementType === 'branch') {
+        el.setAttribute("fill",(isConnected ? "black" : "lime"));
+      }
+  }
+
   checkForOverlap() {
     // var overlap = !(rect1.right < rect2.left || 
     //   rect1.left > rect2.right || 
@@ -229,22 +243,26 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.selectedShape.elementType === 'gen'
       || this.selectedShape.elementType === 'load'
       || this.selectedShape.elementType === 'bus') {
-      var genOrLoadHasBus = false;
       var genOrLoadId: string;
+      //Bus is moving
       if (this.selectedShape.elementType === 'bus') {
         let theBus = this.selectedShape;
-        let theGens = this.shapeService.getShapesOfType('gen');
-        for (let theGen of theGens) {
-          genOrLoadId = theGen.elementId;
-          if (this.shapeService.isOverlap(theGen, theBus)) {
-            genOrLoadHasBus = true;
-            break;
+        let theNotBuses = this.shapeService.getShapesNotOfType('bus');
+        for (let theNotBus of theNotBuses) {
+          genOrLoadId = theNotBus.elementId;
+          if (this.shapeService.isOverlap(theNotBus, theBus)) {
+            this.setConnectedStatus(theNotBus, true);
+          }
+          else {
+            this.setConnectedStatus(theNotBus, false);
           }
         }
       }
+      //Non-bus is moving
       else {
         let theGenOrLoad = this.selectedShape;
         let theBuses = this.shapeService.getShapesOfType('bus');
+        var genOrLoadHasBus = false;
         for (let theBus of theBuses) {
           genOrLoadId = theGenOrLoad.elementId;
           if (this.shapeService.isOverlap(theGenOrLoad, theBus)) {
@@ -252,16 +270,17 @@ export class NetworkBuilderViewComponent implements OnInit {
             break;
           }
         }
+        this.setConnectedStatus(theGenOrLoad, genOrLoadHasBus);
       }
-      if (genOrLoadId) {
-        var el = document.getElementById(genOrLoadId);
-        if (genOrLoadHasBus) {
-          el.setAttribute("stroke", "black");
-        }
-        else {
-          el.setAttribute("stroke", "lime");
-        }
-      }
+      // if (genOrLoadId) {
+      //   var el = document.getElementById(genOrLoadId);
+      //   if (genOrLoadHasBus) {
+      //     el.setAttribute("stroke", "black");
+      //   }
+      //   else {
+      //     el.setAttribute("stroke", "lime");
+      //   }
+      // }
       // let otherShapes = (this.selectedShape.elementType === 'bus')
       //   ? this.shapeService.getShapesOfType('gen')
       //   : this.shapeService.getShapesOfType('bus');
