@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
+import { ControlContainer } from '@angular/forms';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   lastDrawingPoint: Point; //For calculating delta as move progresses  
   //For checks at start of move
   firstPoint: Point;
-  directionDone = false;
+  directionDone = true;
   //For knowing whether to draw or unselect
   drawingState = "stopped";
   //Touch can lead to touch evt followed by mouse... use timer to stop mouse
@@ -55,21 +56,26 @@ export class NetworkBuilderViewComponent implements OnInit {
     //console.log("start drawing checks");
     this.drawingState = "starting";
     var foundShape = false;
-    for (let thisShape of this.shapesToDraw) {
+    for (let checkShape of this.shapesToDraw) {
       //console.log (thisShape.x);
-      if (x >= thisShape.xOuter
-        && x <= thisShape.xOuter + thisShape.wOuter
-        && y >= thisShape.yOuter
-        && y <= thisShape.yOuter + thisShape.hOuter) {
+      if (x >= checkShape.xOuter
+        && x <= checkShape.xOuter + checkShape.wOuter
+        && y >= checkShape.yOuter
+        && y <= checkShape.yOuter + checkShape.hOuter) {
 
         //If this is already selected then a tap (starting -> stopped)
         //will unselect... for a new selection we want to "keepDrawing"
-        if (this.selectedShape != thisShape) {
+        if (this.selectedShape != checkShape) {
           console.log("new select");
           this.drawingState = "keepDrawing";
-          this.selectedShape = thisShape;
-          // this.selectedId = thisShape.elementId;
-          this.shapeService.setSelectedShape(thisShape);
+          this.selectedShape = checkShape;
+          this.shapeService.setSelectedShape(checkShape);
+          //For bus or branch need to check direction
+          if (this.selectedShape.elementType == 'bus'
+            || this.selectedShape.elementType == 'branch') {
+            this.directionDone = false;
+          }
+
         }
 
 
@@ -109,24 +115,27 @@ export class NetworkBuilderViewComponent implements OnInit {
   keepDrawing(drawingPoint: Point) {
     //console.log("keep drawing");
     this.drawingState = "keepDrawing";
-    //If we have a last drawing point...
+    //If we have a last drawing point and a selected shape then we are doing something
     if (this.lastDrawingPoint && this.selectedShape) {
 
       //Start direction for bus or branch determines if resize or move
-      if (this.selectedShape.elementType == 'bus' || this.selectedShape.elementType == 'branch') {
-        if (!this.directionDone) {
+      if (!this.directionDone) {
+        if (this.selectedShape.elementType == 'bus' || this.selectedShape.elementType == 'branch') {
           let xThreshold = 5;
           let yThreshold = 5;
           let deltaFromStartX = Math.abs(drawingPoint.x - this.firstPoint.x);
           let deltaFromStartY = Math.abs(drawingPoint.y - this.firstPoint.y);
-          //Branch is resize if movement is up-down, bus is resize if movement is left-right
+          //Branch is resize if movement is up-down, 
+          //bus is resize if movement is left-right
           if (deltaFromStartX > xThreshold || deltaFromStartY > yThreshold) {
             this.selectedShape.doResize = false;
-            if (deltaFromStartY > yThreshold && this.selectedShape.elementType == 'branch') {
+            if (deltaFromStartY > yThreshold
+              && this.selectedShape.elementType == 'branch') {
               console.log("Up Down");
               this.selectedShape.doResize = true;
             }
-            else if (deltaFromStartX > xThreshold && this.selectedShape.elementType == 'bus') {
+            else if (deltaFromStartX > xThreshold
+              && this.selectedShape.elementType == 'bus') {
               console.log("Left Right");
               this.selectedShape.doResize = true;
             }
@@ -172,7 +181,9 @@ export class NetworkBuilderViewComponent implements OnInit {
         this.selectedShape.xOuter += deltaX;
         this.selectedShape.yOuter += deltaY;
       }
-
+      // if (deltaX > 5 || deltaY > 5) {
+      this.checkForOverlap();
+      // }
       this.lastDrawingPoint = drawingPoint;
     }
   }
@@ -200,8 +211,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     //stop any current adjustment (but stay selected)
     this.drawingState = "stopped";
     this.lastDrawingPoint = null;
-    this.directionDone = false;
-
+    this.directionDone = true;
 
   }
   stopDrawingMouse() {
@@ -211,11 +221,74 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.stopDrawing();
   }
 
-  getCanvasSize():string {
+  checkForOverlap() {
+    // var overlap = !(rect1.right < rect2.left || 
+    //   rect1.left > rect2.right || 
+    //   rect1.bottom < rect2.top || 
+    //   rect1.top > rect2.bottom)
+    if (this.selectedShape.elementType === 'gen'
+      || this.selectedShape.elementType === 'load'
+      || this.selectedShape.elementType === 'bus') {
+      var genOrLoadHasBus = false;
+      var genOrLoadId: string;
+      if (this.selectedShape.elementType === 'bus') {
+        let theBus = this.selectedShape;
+        let theGens = this.shapeService.getShapesOfType('gen');
+        for (let theGen of theGens) {
+          genOrLoadId = theGen.elementId;
+          if (this.shapeService.isOverlap(theGen, theBus)) {
+            genOrLoadHasBus = true;
+            break;
+          }
+        }
+      }
+      else {
+        let theGenOrLoad = this.selectedShape;
+        let theBuses = this.shapeService.getShapesOfType('bus');
+        for (let theBus of theBuses) {
+          genOrLoadId = theGenOrLoad.elementId;
+          if (this.shapeService.isOverlap(theGenOrLoad, theBus)) {
+            genOrLoadHasBus = true;
+            break;
+          }
+        }
+      }
+      if (genOrLoadId) {
+        var el = document.getElementById(genOrLoadId);
+        if (genOrLoadHasBus) {
+          el.setAttribute("stroke", "black");
+        }
+        else {
+          el.setAttribute("stroke", "lime");
+        }
+      }
+      // let otherShapes = (this.selectedShape.elementType === 'bus')
+      //   ? this.shapeService.getShapesOfType('gen')
+      //   : this.shapeService.getShapesOfType('bus');
+
+      // for (let otherShape of otherShapes) {
+      //   console.log("checking " + otherShape.elementId);
+      //   if (this.shapeService.isOverlap(otherShape,this.selectedShape)){
+      //     //this.selectedShape.strokeColor = "black";
+      //     console.log(this.selectedShape.elementId 
+      //       + " is connected to " + otherShape.elementId);
+      //     var el = document.getElementById("gen");
+      //     el.setAttribute("stroke", "black")
+      //   }
+      //   else {
+      //     //this.selectedShape.strokeColor = "lawngreen";
+      //     var el = document.getElementById("gen");
+      //     el.setAttribute("stroke", "lime")
+      //   }
+      // }
+    }
+  }
+
+  getCanvasSize(): string {
     var el = document.getElementById("body"); // or other selector like querySelector()
     var rect = el.getBoundingClientRect(); // get the bounding rectangle
 
- 
+
 
     // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
     return "done";

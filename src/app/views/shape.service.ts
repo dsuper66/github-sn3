@@ -25,18 +25,43 @@ export class ShapeService {
 
   selectWidth = 40;
 
+
+  getShapes() {
+    console.log("get shapes");
+    return this.shapes;
+  }
+  getShapeWithId(elementId:string){
+    return this.shapes.filter(shape => shape.elementId === elementId)[0];
+  }
+  setSelectedShape(selectedShape: Shape) {
+    this.selectedShape = selectedShape;
+  }
+  getSelectedShape():Shape {
+    return this.selectedShape;
+  }
+
+  //Shapes of type
+  getShapesOfType(elementType: string):Shape[] {
+    return this.shapes.filter(shape => shape.elementType === elementType);
+  }
+
+  getCountShapesOfType(elementType: string) {
+    return this.getShapesOfType(elementType).length;
+    //return this.shapes.filter(shape => shape.elementType === elementType).length;
+  }
+
   //Add a shape
   addShape(elementType: string): Shape {
     //Add the element and get back the i.d.
     let elementId = this.modelElementService.addModelElement(elementType);
 
     //For deciding placement
-    let count = this.shapes.filter(shape => shape.elementType === elementType).length;
-    console.log (elementId + ":" + elementType + " count:" + (this.getCount(elementType) + 1));
+    //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
+    console.log (elementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
 
     //BUS
     if (elementType == 'bus') {
-      let y = this.busInitY * (1 + this.getCount('bus'));
+      let y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
       this.selectedShape = ({
         elementType: elementType,
         elementId: elementId,
@@ -52,7 +77,7 @@ export class ShapeService {
     }
     //BRANCH
     else if (elementType == 'branch') {
-      let branchCountNew = this.getCount('branch') + 1;
+      let branchCountNew = this.getCountShapesOfType('branch') + 1;
       var x = 0;
       if (branchCountNew%2 == 1) {
         x = this.busInitX + 0.2*this.busLength; 
@@ -77,7 +102,7 @@ export class ShapeService {
     }
     //GEN & LOAD
     else if (elementType == 'gen' || elementType == 'load') {     
-      let genLoadCount =  this.getCount('gen') + this.getCount('load')
+      let genLoadCount =  this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
       let h = this.genLoadLength;
       let w = this.genLoadWidth;
       let x = this.busInitX + this.busLength/2 - w/2;
@@ -111,27 +136,11 @@ export class ShapeService {
         wOuter: this.selectWidth,
         hOuter: h,
         path1,
-        path2
+        path2,
+        strokeColor:"lawnGreen"
       });
     }
     this.shapes.push(this.selectedShape);
-    return this.selectedShape;
-  }
-
-  getCount(type: String) {
-    return this.shapes.filter(shape => shape.elementType === type).length;
-  }
-  getShapes() {
-    console.log("get shapes");
-    return this.shapes;
-  }
-  getShapeWithId(elementId:string){
-    return this.shapes.filter(shape => shape.elementId === elementId)[0];
-  }
-  setSelectedShape(selectedShape: Shape) {
-    this.selectedShape = selectedShape;
-  }
-  getSelectedShape():Shape {
     return this.selectedShape;
   }
 
@@ -150,6 +159,22 @@ export class ShapeService {
   applyDeltaH(deltaY: number, shape: Shape) {
     shape.hInner += deltaY;
     shape.hOuter += deltaY;
-  }  
+  }
+
+  isOverlap(shape1:Shape,shape2:Shape): boolean {
+    if (shape1.xInner + shape1.wInner < shape2.xInner) {
+      return false;
+    }
+    else if (shape1.xInner > shape2.xInner + shape2.wInner) {
+      return false;
+    }
+    else if (shape1.yInner + shape1.hInner < shape2.yInner) {
+      return false;
+    }
+    else if (shape1.yInner > shape2.yInner + shape2.hInner) {
+      return false;
+    }
+    return true;    
+  }
 }
 

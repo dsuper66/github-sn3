@@ -14,4 +14,5 @@ export class Shape {
     doResize? = false;
     path1?:string;
     path2?:string; 
+    strokeColor?="lawngreen";
 }
