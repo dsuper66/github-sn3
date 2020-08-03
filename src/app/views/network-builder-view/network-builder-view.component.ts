@@ -222,9 +222,12 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.stopDrawing();
   }
 
-  setConnectivityColor(shape: Shape, isConnected: boolean) {
+  setConnectivityColor(shape: Shape) {
+    let isFullyConnected = 
+    (shape.elementType != 'branch' && shape.busId1 != "")
+    || (shape.busId1 != "" && shape.busId2 != "");
     var el = document.getElementById(shape.elementId);
-    el.setAttribute("stroke", (isConnected ? "black" : "lime"));
+    el.setAttribute("stroke", (isFullyConnected ? "black" : "lime"));
     // if (isConnected) {
     //   el.setAttribute("stroke", "black");
     // }
@@ -232,7 +235,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     //   el.setAttribute("stroke", "lime");
     // }
     if (shape.elementType === 'bus' || shape.elementType === 'branch') {
-      el.setAttribute("fill", (isConnected ? "black" : "lime"));
+      el.setAttribute("fill", (isFullyConnected ? "black" : "lime"));
     }
   }
 
@@ -248,28 +251,20 @@ export class NetworkBuilderViewComponent implements OnInit {
       //Bus is moving
       if (this.selectedShape.elementType === 'bus') {
         let theBus = this.selectedShape;
-        let theNotBuses = this.shapeService.getShapesNotOfType('bus');
-        for (let theNotBus of theNotBuses) {
+        for (let theNotBus of this.shapeService.getShapesNotOfType('bus')) {
           //connected
-          if (this.shapeService.isOverlap(theNotBus, theBus)) {
-            this.setConnectivityColor(theNotBus, true);            
+          if (this.shapeService.isOverlap(theNotBus, theBus)) {          
             theNotBus.busId1 = theBus.elementId;
           }
           //if was connected then but not now (bus1)
           else if (theNotBus.busId1 === theBus.elementId) {            
-            theNotBus.busId1 = "";
-            //this check is for branch (bus2 is always empty for non-branch)
-            if (theNotBus.busId2 === "") {
-              this.setConnectivityColor(theNotBus, false);
-            }
+            theNotBus.busId1 = "";          
           }
           //if was connected then now not (bus2... branch only)
           else if (theNotBus.busId2 === theBus.elementId) {            
             theNotBus.busId2 = "";
-            if (theNotBus.busId1 === "") {
-              this.setConnectivityColor(theNotBus, false);
-            }
           }
+          this.setConnectivityColor(theNotBus);
         }
       }
       //Non-bus is moving
@@ -298,10 +293,8 @@ export class NetworkBuilderViewComponent implements OnInit {
             }
           }
         }
-        let isFullyConnected = 
-          (theNotBus.elementType != 'branch' && theNotBus.busId1 != "")
-          || (theNotBus.busId1 != "" && theNotBus.busId2 != "");
-        this.setConnectivityColor(theNotBus,isFullyConnected);   
+
+        this.setConnectivityColor(theNotBus);   
       }
       
       // if (genOrLoadId) {
