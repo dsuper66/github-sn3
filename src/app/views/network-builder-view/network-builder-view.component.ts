@@ -269,13 +269,13 @@ export class NetworkBuilderViewComponent implements OnInit {
                 if (theNotBus.busId1 === "") {
                   theNotBus.busId1 = theBus.elementId;
                 }
-                else {
+                else if (theNotBus.busId2 === "") {
                   theNotBus.busId2 = theBus.elementId;
                 }
               }
             }
           }
-          //if was connected then but not now (bus1)
+          //not connected... if was connected then but not now (bus1)
           else if (theNotBus.busId1 === theBus.elementId) {
             theNotBus.busId1 = "";
           }
