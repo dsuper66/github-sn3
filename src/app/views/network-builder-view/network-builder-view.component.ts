@@ -258,7 +258,9 @@ export class NetworkBuilderViewComponent implements OnInit {
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //not a branch
             if (theNotBus.elementType != 'branch') {
-              theNotBus.busId1 = theBus.elementId;
+              if (theNotBus.busId1 === "") { //don't steel other connections
+                theNotBus.busId1 = theBus.elementId;
+              }
             }
             //branch... only connect if not already
             else {
