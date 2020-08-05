@@ -3,6 +3,7 @@ import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
 import { ControlContainer } from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { ControlContainer } from '@angular/forms';
 })
 export class NetworkBuilderViewComponent implements OnInit {
 
-  constructor(private shapeService: ShapeService) { }
+  constructor(private shapeService: ShapeService, private router: Router) { }
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
@@ -350,11 +351,12 @@ export class NetworkBuilderViewComponent implements OnInit {
   getCanvasSize(): string {
     var el = document.getElementById("body"); // or other selector like querySelector()
     var rect = el.getBoundingClientRect(); // get the bounding rectangle
-
-
-
     // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
     return "done";
+  }
+
+  dataRoute(){
+    this.router.navigate([ '/data-entry-component' ])
   }
 
 }
