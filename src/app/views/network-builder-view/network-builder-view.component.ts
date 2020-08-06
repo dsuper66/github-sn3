@@ -17,12 +17,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
-    // if (this.selectedShape) {
-    //   this.selectedId = this.selectedShape.elementId;
-    // }
-    // else {
-    //   this.selectedId = "none selected";
-    // }
+
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
@@ -45,10 +40,6 @@ export class NetworkBuilderViewComponent implements OnInit {
   addElement(type: string) {
     console.log("add element:" + type);
     this.selectedShape = this.shapeService.addShape(type);
-    // this.selectedShape = this.shapeService.getShapeWithId(this.selectedId);
-    //this.selectedShape = this.shapeService.addShape(type);
-    //this.selectedId = this.selectedShape.elementId;
-    //this.shapeService.setSelectedShape(this.selectedShape);
     this.shapesToDraw = this.shapeService.getShapes();
     //Wait for draw and then check connectivity
     setTimeout(() => {
@@ -73,8 +64,10 @@ export class NetworkBuilderViewComponent implements OnInit {
         if (this.selectedShape != checkShape) {
           console.log("new select");
           this.drawingState = "keepDrawing";
+
           this.selectedShape = checkShape;
           this.shapeService.setSelectedShape(checkShape);
+
           //For bus or branch need to check direction
           if (this.selectedShape.elementType == 'bus'
             || this.selectedShape.elementType == 'branch') {
@@ -97,13 +90,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.directionDone = false;
     this.firstPoint = { x: x, y: y };
     this.lastDrawingPoint = this.firstPoint;
-    //Not in any shape, reset select
-    /*
-    if (!foundShape) {
-      this.lastDrawingPoint = null;
-      this.selectedShape = null;
-      this.shapesToDraw = this.shapeService.getShapes(); 
-    }*/
+
   }
   startDrawingMouse(evt: MouseEvent) {
     console.log("startingMouse" + Date.now().toString);
@@ -209,8 +196,10 @@ export class NetworkBuilderViewComponent implements OnInit {
     //(timer to avoid mouse/touch overlap)
     if (this.drawingState == "starting") {
       console.log("unselect");
+
       this.selectedShape = null;
-      // this.selectedId = "none selected";
+      this.shapeService.setSelectedShape(null);
+
       this.shapesToDraw = this.shapeService.getShapes();
     }
     //stop any current adjustment (but stay selected)
@@ -357,7 +346,11 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
 
   dataRoute(){
-    this.router.navigate([ '/data-entry-component' ])
+      this.router.navigate([ '/data-entry-component' ])        
+  }
+
+  deleteSelectedShape(){
+    this.shapeService.deleteSelectedShape();        
   }
 
 }

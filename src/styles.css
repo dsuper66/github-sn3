@@ -61,6 +61,13 @@ body {
   text-align: left;
 }
 
-#fill-1:hover {
-  fill:red;
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: aliceblue;
+  height: 40px;
+  color: white;
+  text-align: left;
 }

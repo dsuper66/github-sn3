@@ -38,9 +38,21 @@ export class ShapeService {
   }
   setSelectedShape(selectedShape: Shape) {
     this.selectedShape = selectedShape;
+    if (this.selectedShape) {
+      console.log("shape service selected shape = " 
+      + this.selectedShape.elementId)
+     }
+     else {
+      console.log("shape service selected shape = ###NULL###");
+     }
   }
   getSelectedShape():Shape {
     return this.selectedShape;
+  }
+
+  //Delete
+  deleteSelectedShape(){
+    // this.shapes = this.shapes.filter(shape => shape.elementId === elementId)[0];
   }
 
   //Shapes of type
