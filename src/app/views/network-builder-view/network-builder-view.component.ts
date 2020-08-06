@@ -350,7 +350,9 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
 
   deleteSelectedShape(){
-    this.shapeService.deleteSelectedShape();        
+    this.shapeService.deleteSelectedShape();
+    this.shapesToDraw = this.shapeService.getShapes();
+    this.selectedShape = null;        
   }
 
 }

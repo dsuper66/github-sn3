@@ -52,7 +52,9 @@ export class ShapeService {
 
   //Delete
   deleteSelectedShape(){
-    // this.shapes = this.shapes.filter(shape => shape.elementId === elementId)[0];
+    this.shapes = this.shapes.filter(
+      shape => shape.elementId != this.selectedShape.elementId);
+    this.selectedShape = null;
   }
 
   //Shapes of type
