@@ -65,9 +65,9 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 100%;
-  background-color: aliceblue;
-  height: 40px;
+  width: 200px;
+  /* background-color: aliceblue; */
+  height: 35px;
   color: white;
   text-align: left;
 }
