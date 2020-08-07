@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-//So that we can extract the i.d. from the route
-import { ActivatedRoute } from '@angular/router';
+//So that we can route here
+// import { ActivatedRoute } from '@angular/router';
 
 import { ShapeService } from '../shape.service';
 import {ModelElementService} from '../../data-model/model-element.service';
@@ -17,8 +17,8 @@ export class DataEntryViewComponent implements OnInit {
 
   constructor(
     private modelElementService: ModelElementService,
-    private shapeService: ShapeService,
-    private route: ActivatedRoute)
+    private shapeService: ShapeService)
+    // private route: ActivatedRoute)
     { }
 
   ngOnInit(): void {
@@ -45,10 +45,4 @@ export class DataEntryViewComponent implements OnInit {
     this.modelData.setValue(this.elementId);
 
   }
-
 }
-
-// export class FavoriteColorComponent {
-//   favoriteColorControl = new FormControl('');
-
-// }

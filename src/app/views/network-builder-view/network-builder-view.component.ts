@@ -307,34 +307,6 @@ export class NetworkBuilderViewComponent implements OnInit {
         this.setConnectivityColor(theNotBus);
       }
 
-      // if (genOrLoadId) {
-      //   var el = document.getElementById(genOrLoadId);
-      //   if (genOrLoadHasBus) {
-      //     el.setAttribute("stroke", "black");
-      //   }
-      //   else {
-      //     el.setAttribute("stroke", "lime");
-      //   }
-      // }
-      // let otherShapes = (this.selectedShape.elementType === 'bus')
-      //   ? this.shapeService.getShapesOfType('gen')
-      //   : this.shapeService.getShapesOfType('bus');
-
-      // for (let otherShape of otherShapes) {
-      //   console.log("checking " + otherShape.elementId);
-      //   if (this.shapeService.isOverlap(otherShape,this.selectedShape)){
-      //     //this.selectedShape.strokeColor = "black";
-      //     console.log(this.selectedShape.elementId 
-      //       + " is connected to " + otherShape.elementId);
-      //     var el = document.getElementById("gen");
-      //     el.setAttribute("stroke", "black")
-      //   }
-      //   else {
-      //     //this.selectedShape.strokeColor = "lawngreen";
-      //     var el = document.getElementById("gen");
-      //     el.setAttribute("stroke", "lime")
-      //   }
-      // }
     }
   }
 
@@ -345,9 +317,9 @@ export class NetworkBuilderViewComponent implements OnInit {
     return "done";
   }
 
-  dataRoute(){
-      this.router.navigate([ '/data-entry-component' ])        
-  }
+  // dataRoute(){
+  //     this.router.navigate([ '/data-entry-component' ])        
+  // }
 
   deleteSelectedShape(){
     this.shapeService.deleteSelectedShape();

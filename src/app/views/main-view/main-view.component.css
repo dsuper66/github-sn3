@@ -1,0 +1,9 @@
+
+
+.textBox {
+    position: "absolute";
+    left: 20px;
+    height: 310px;
+    overflow: auto;
+    border-style: solid;
+  }

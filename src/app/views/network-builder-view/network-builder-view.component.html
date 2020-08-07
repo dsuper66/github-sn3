@@ -121,7 +121,7 @@
     <svg *ngIf="selectedShape" height="100" width="400" class="noSelect">
 
       <!-- <text x="38" y="35">&nbsp;{{selectedShape.elementId}}</text> -->
-      <text x="130" y="23">&nbsp;{{selectedShape.elementId}}@{{selectedShape.busId1}} {{selectedShape.busId2}}</text>
+      <text x="134" y="23">{{selectedShape.elementId}}@{{selectedShape.busId1}} {{selectedShape.busId2}}</text>
 
         <!-- <foreignObject x="10" y="20" width="100%" height="100"> 
           
@@ -186,7 +186,7 @@
   <button (click)="addElement('gen')">Gen</button>
   <button (click)="addElement('load')">Load</button>
   &nbsp;&nbsp;
-  <button>Main</button>
+  <button routerLink="/main-component">Main</button>
   
   <!-- <button style="float: right;margin-right: 8px;" 
     [disabled]="!selectedShape" 
