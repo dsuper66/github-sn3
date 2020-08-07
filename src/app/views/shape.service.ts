@@ -25,10 +25,6 @@ export class ShapeService {
 
   selectWidth = 40;
 
-  checkConnectivityForBus(bus: Shape) {
-
-  }
-
   getShapes() {
     console.log("get shapes");
     return this.shapes;
@@ -59,7 +55,11 @@ export class ShapeService {
 
   //Shapes of type
   getShapesOfType(elementType: string):Shape[] {
-    return this.shapes.filter(shape => shape.elementType === elementType);
+    let filtered = this.shapes.filter(shape => shape.elementType === elementType);
+    for (let element of filtered) {
+      console.log(element.elementId);
+    }
+    return filtered;
   }
   //...and not of type
   getShapesNotOfType(elementType: string):Shape[] {

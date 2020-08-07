@@ -1,8 +1,13 @@
 
+.marginAll {
+    margin-left: 12px;
+}
 
 .textBox {
-    position: "absolute";
-    left: 20px;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-top: 50px;
+    width: 300px;
     height: 310px;
     overflow: auto;
     border-style: solid;

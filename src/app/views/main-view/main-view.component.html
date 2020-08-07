@@ -1,9 +1,12 @@
-<p>main-view works!</p>
 
-<button
+
+<button class="marginAll"
   routerLink="/network-builder-component">Build</button>
+<br><br>
+<button class="marginAll"
+  routerLink="/network-builder-component">Solve</button>
 
-<div class="textBox" >
+<div class="textBox marginAll" >
     <ng-container *ngFor="let shape of shapes">
         {{shape.elementId}}<br>
     </ng-container>
