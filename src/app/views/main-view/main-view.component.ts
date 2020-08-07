@@ -16,7 +16,13 @@ export class MainViewComponent implements OnInit {
   private shapes:Shape[]=[];
 
   ngOnInit(): void {
-    this.shapes = this.shapeService.getShapes();
+    this.getShapeData();
   }
 
+  getShapeData() {
+    this.shapes = this.shapeService.getShapes();
+    for (let shape of this.shapes) {
+      console.log(JSON.stringify({ name: shape.elementId, age: shape.busId1 }));
+    }
+  }
 }
