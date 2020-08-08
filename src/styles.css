@@ -52,6 +52,18 @@ body {
   overflow: hidden;
 }
 
+.header {
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  /* background-color: aliceblue; */
+  height: 35px;
+  /* color: white; */
+  text-align: left;
+}
+
 .footer {
   position: fixed;
   left: 0;
@@ -63,13 +75,4 @@ body {
   text-align: left;
 }
 
-.header {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  /* background-color: aliceblue; */
-  height: 35px;
-  /* color: white; */
-  text-align: left;
-}
+
