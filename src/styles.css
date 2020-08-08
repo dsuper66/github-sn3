@@ -25,23 +25,24 @@ button {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-.buttonArea{
+/* .buttonArea{
   height: 40px;
   background-color: aliceblue;
-}
+} */
 
 .shapeCanvas{
     /* height:75vh; */
     /* height: calc(100vh - 40px); */
+
+    /*stop scroll within canvas but keep zoom*/
+    overflow: hidden;
+    /*...also needed this to stop scroll on iphone 5*/
+    position: fixed;
+    
     height:100vh;
     width: 100vw;
 
-    /* border:solid;
-    border-color:lightgrey; */
-
     margin: 0px;
-    /*stop scroll within canvas but keep zoom*/
-    overflow: hidden;
 }
 
 body {
@@ -54,10 +55,10 @@ body {
   position: fixed;
   left: 0;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
   background-color: aliceblue;
   height: 40px;
-  color: white;
+  /* color: white; */
   text-align: left;
 }
 
@@ -65,9 +66,9 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 200px;
+  width: 100vw;
   /* background-color: aliceblue; */
   height: 35px;
-  color: white;
+  /* color: white; */
   text-align: left;
 }
