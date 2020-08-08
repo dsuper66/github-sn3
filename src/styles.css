@@ -46,7 +46,8 @@ button {
 }
 
 body {
-  margin: 5px;
+  top: 0px;
+  margin-left: 5px;
   border-width: 0px;
   overflow: hidden;
 }
