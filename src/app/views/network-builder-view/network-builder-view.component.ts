@@ -23,7 +23,9 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   shapesToDraw: Shape[] = [];
   selectedShape: Shape;
-  infoWidth = 30;
+
+  headerH = 35;
+  // infoWidth = 30;
   // selectedId: string;
 
   //Drawing declarations

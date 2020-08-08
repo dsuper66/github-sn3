@@ -38,7 +38,7 @@ button {
     overflow: hidden;
     /*...also needed this to stop scroll on iphone 5*/
     position: fixed;
-    top: 35px;
+    /* top: 35px; */
     height:100vh;
     width: 100vw;
 
