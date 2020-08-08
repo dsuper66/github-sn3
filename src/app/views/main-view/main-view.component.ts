@@ -21,8 +21,28 @@ export class MainViewComponent implements OnInit {
 
   getShapeData() {
     this.shapes = this.shapeService.getShapes();
+    var modelData:Array<Object> = [];
     for (let shape of this.shapes) {
-      console.log(JSON.stringify({ name: shape.elementId, age: shape.busId1 }));
+      modelData.push({ 
+        elementId: shape.elementId, 
+        busId1: shape.busId1,
+        busId2: shape.busId2
+      });
     }
+    let myJson = JSON.stringify(modelData);
+    console.log("json:" + myJson);
+    
+    interface MyObj {
+      elementId: string
+      bus1: string
+    }
+    
+    let obj:MyObj[] = JSON.parse(myJson);
+
+    for (let thisObj of obj) {
+    console.log("parse:" + thisObj.elementId);
+    }
+    
+      
   }
 }
