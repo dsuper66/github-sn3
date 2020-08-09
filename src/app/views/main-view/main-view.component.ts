@@ -13,7 +13,8 @@ export class MainViewComponent implements OnInit {
 
   constructor(private shapeService: ShapeService) { }
 
-  private shapes:Shape[]=[];
+  shapes:Shape[]=[];
+  modelJSON="";
 
   ngOnInit(): void {
     this.getShapeData();
@@ -31,6 +32,7 @@ export class MainViewComponent implements OnInit {
     }
     let myJson = JSON.stringify(modelData);
     console.log("json:" + myJson);
+    this.modelJSON = myJson;
     
     interface MyObj {
       elementId: string

@@ -2,14 +2,26 @@
 
 <button class="marginAll"
   routerLink="/network-builder-component">Build</button>
-<br><br>
+
 <button class="marginAll"
   routerLink="/network-builder-component">Solve</button>
+<button class="marginAll"
+  routerLink="/network-builder-component">Results</button>
+
+<br><br>
+<button class="marginAll"
+  routerLink="/network-builder-component">Save</button>
+<button class="marginAll"
+  routerLink="/network-builder-component">Load</button>
+<button class="marginAll"
+  routerLink="/network-builder-component">Settings</button>
 
 <div class="textBox marginAll" >
     <ng-container *ngFor="let shape of shapes">
         {{shape.elementId}}<br>
     </ng-container>
-
+    <br>
+    <br>
+    {{modelJSON}}
 
 </div>
