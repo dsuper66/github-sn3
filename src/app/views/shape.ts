@@ -14,6 +14,6 @@ export class Shape {
     doResize? = false;
     path1?:string;
     path2?:string; 
-    busId1?:string="";
-    busId2?:string="";
+    connAtId1?:string="";
+    connAtId2?:string="";
 }

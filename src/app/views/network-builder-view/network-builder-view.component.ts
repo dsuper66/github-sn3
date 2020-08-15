@@ -219,8 +219,8 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   setConnectivityColor(shape: Shape) {
     let isFullyConnected =
-      (shape.elementType != 'branch' && shape.busId1 != "")
-      || (shape.busId1 != "" && shape.busId2 != "");
+      (shape.elementType != 'branch' && shape.connAtId1 != "")
+      || (shape.connAtId1 != "" && shape.connAtId2 != "");
     var el = document.getElementById(shape.elementId);
     el.setAttribute("stroke", (isFullyConnected ? "black" : "lime"));
     // if (isConnected) {
@@ -251,30 +251,30 @@ export class NetworkBuilderViewComponent implements OnInit {
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //not a branch
             if (theNotBus.elementType != 'branch') {
-              if (theNotBus.busId1 === "") { //don't steel other connections
-                theNotBus.busId1 = theBus.elementId;
+              if (theNotBus.connAtId1 === "") { //don't steel other connections
+                theNotBus.connAtId1 = theBus.elementId;
               }
             }
             //branch... only connect if not already
             else {
-              if (theNotBus.busId1 != theBus.elementId
-              && theNotBus.busId2 != theBus.elementId) {
-                if (theNotBus.busId1 === "") {
-                  theNotBus.busId1 = theBus.elementId;
+              if (theNotBus.connAtId1 != theBus.elementId
+              && theNotBus.connAtId2 != theBus.elementId) {
+                if (theNotBus.connAtId1 === "") {
+                  theNotBus.connAtId1 = theBus.elementId;
                 }
-                else if (theNotBus.busId2 === "") {
-                  theNotBus.busId2 = theBus.elementId;
+                else if (theNotBus.connAtId2 === "") {
+                  theNotBus.connAtId2 = theBus.elementId;
                 }
               }
             }
           }
           //not connected... if was connected then but not now (bus1)
-          else if (theNotBus.busId1 === theBus.elementId) {
-            theNotBus.busId1 = "";
+          else if (theNotBus.connAtId1 === theBus.elementId) {
+            theNotBus.connAtId1 = "";
           }
           //if was connected then now not (bus2... branch only)
-          else if (theNotBus.busId2 === theBus.elementId) {
-            theNotBus.busId2 = "";
+          else if (theNotBus.connAtId2 === theBus.elementId) {
+            theNotBus.connAtId2 = "";
           }
           this.setConnectivityColor(theNotBus);
         }
@@ -283,21 +283,21 @@ export class NetworkBuilderViewComponent implements OnInit {
       else {
         let theNotBus = this.selectedShape;
         let theBuses = this.shapeService.getShapesOfType('bus');
-        theNotBus.busId1 = "";
-        theNotBus.busId2 = "";
+        theNotBus.connAtId1 = "";
+        theNotBus.connAtId2 = "";
         for (let theBus of theBuses) {
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //Assign bus1 if this is not a branch
             if (theNotBus.elementType != "branch") {
-              theNotBus.busId1 = theBus.elementId;
+              theNotBus.connAtId1 = theBus.elementId;
               break;
             }
             else { //branch
-              if (theNotBus.busId1 === "") {
-                theNotBus.busId1 = theBus.elementId;
+              if (theNotBus.connAtId1 === "") {
+                theNotBus.connAtId1 = theBus.elementId;
               }
-              else if (theNotBus.busId2 === "") {
-                theNotBus.busId2 = theBus.elementId;
+              else if (theNotBus.connAtId2 === "") {
+                theNotBus.connAtId2 = theBus.elementId;
               }
               else { //have two buses
                 break;

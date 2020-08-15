@@ -12,17 +12,19 @@ export class ShapeService {
   private shapes:Shape[]=[];
   private selectedShape:Shape;
 
-  branchLength = 100;
-  branchWidth = 5;
-
+  //Initial values
+  branchInitLength = 100;
   busInitX = 50;
   busInitY = 100;
-  busLength = 120;
-  busWidth = 14;
+  busInitLength = 120;
 
+  //Standard values
+  branchWidth = 5;
+  busWidth = 14;
   genLoadLength = 42;
   genLoadWidth = 30;
 
+  //Selection box
   selectWidth = 40;
 
   getShapes() {
@@ -88,11 +90,11 @@ export class ShapeService {
         elementId: elementId,
         xInner: this.busInitX,
         yInner: y,
-        wInner: this.busLength,
+        wInner: this.busInitLength,
         hInner: this.busWidth,
         xOuter: this.busInitX,
         yOuter: y - (this.selectWidth - this.busWidth)/2,
-        wOuter: this.busLength,
+        wOuter: this.busInitLength,
         hOuter: this.selectWidth
        })
     }
@@ -101,10 +103,10 @@ export class ShapeService {
       let branchCountNew = this.getCountShapesOfType('branch') + 1;
       var x = 0;
       if (branchCountNew%2 == 1) {
-        x = this.busInitX + 0.2*this.busLength; 
+        x = this.busInitX + 0.2*this.busInitLength; 
       }
       else {
-        x = this.busInitX + 0.8*this.busLength - this.branchWidth
+        x = this.busInitX + 0.8*this.busInitLength - this.branchWidth
       };
       let y = (this.busInitY * Math.ceil(branchCountNew/2)) + this.busWidth/2;
       // this.shapes.push({
@@ -114,11 +116,11 @@ export class ShapeService {
         xInner: x,
         yInner: y,
         wInner: this.branchWidth,
-        hInner: this.branchLength,
+        hInner: this.branchInitLength,
         xOuter: x - (this.selectWidth - this.branchWidth)/2,
         yOuter: y,
         wOuter: this.selectWidth,
-        hOuter: this.branchLength
+        hOuter: this.branchInitLength
       })
     }
     //GEN & LOAD
@@ -126,7 +128,7 @@ export class ShapeService {
       let genLoadCount =  this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
       let h = this.genLoadLength;
       let w = this.genLoadWidth;
-      let x = this.busInitX + this.busLength/2 - w/2;
+      let x = this.busInitX + this.busInitLength/2 - w/2;
       let y = (this.busInitY * (1 + genLoadCount)) - h;
       var path1: string;
       var path2: string;
