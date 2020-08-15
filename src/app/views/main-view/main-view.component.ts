@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ShapeService } from '../shape.service';
 import {ModelElementService} from '../../data-model/model-element.service';
 import { Shape } from '../shape';
+import {ModelElement} from '../../data-model/model-element'
 
 @Component({
   selector: 'app-main-view',
@@ -23,6 +24,7 @@ export class MainViewComponent implements OnInit {
   getShapeData() {
     this.shapes = this.shapeService.getShapes();
     var modelData:Array<Object> = [];
+    var jString2 = "";
     var jString = "{" + JSON.stringify("bus1") + ":{";
     for (let shape of this.shapes) {
       modelData.push({ 
@@ -34,13 +36,22 @@ export class MainViewComponent implements OnInit {
       jString += JSON.stringify(shape.elementId) 
         + ":" + JSON.stringify((shape.busId1) ? shape.busId1 : "") + ","
 
+      
+      jString2 += JSON.stringify({
+        elementId: shape.elementId,
+        elementType: shape.elementType,
+        bus1: shape.busId1,
+        bus2: shape.busId2
+      });
+
     }
     jString = jString.substring(0, jString.length - 1) + "}}"
 
     let myJson = JSON.stringify(modelData);
     console.log("json:" + myJson);
 
-    this.modelJSON = jString;
+    // this.modelJSON = jString;
+    this.modelJSON = jString2;
     
     interface MyObj {
       elementId: string

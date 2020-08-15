@@ -1,5 +1,6 @@
 export class ModelElement {
-    elementType: string;
     elementId: string;
-    name: string;
+    elementType: string;
+    bus1: string;
+    bus2: string;
 }

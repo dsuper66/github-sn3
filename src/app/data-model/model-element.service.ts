@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ModelElement} from './model-element';
+import { Shape } from '../views/shape';
+
 
 @Injectable({
   //the preferred way to create a singleton service
@@ -28,16 +30,18 @@ export class ModelElementService {
 
     //Add the element
     this.modelElements.push({
-      elementType: elementType,
       elementId: elementId,
-      name: 'from-model'
+      elementType: elementType,
+      bus1: "",
+      bus2: ""
     });
 
     return elementId;
   }
 
-  getElementName(elementId: string) {
-    return this.modelElements.filter(modelElement => modelElement.elementId === elementId)[0].name;
-  }
+
+  // getNewElementId(elementId: string) {
+  //   return this.modelElements.filter(modelElement => modelElement.elementId === elementId)[0].name;
+  // }
 
 }
