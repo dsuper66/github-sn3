@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ShapeService } from '../shape.service';
-import {ModelElementService} from '../../data-model/model-element.service';
+import { ModelElementService } from '../../data-model/model-element.service';
 import { Shape } from '../shape';
-import {ModelElement} from '../../data-model/model-element'
+import { ModelElement } from '../../data-model/model-element'
 
 @Component({
   selector: 'app-main-view',
@@ -14,8 +14,8 @@ export class MainViewComponent implements OnInit {
 
   constructor(private shapeService: ShapeService) { }
 
-  shapes:Shape[]=[];
-  modelJSON="";
+  shapes: Shape[] = [];
+  modelJSON = "";
 
   ngOnInit(): void {
     this.getShapeData();
@@ -23,20 +23,20 @@ export class MainViewComponent implements OnInit {
 
   getShapeData() {
     this.shapes = this.shapeService.getShapes();
-    var modelData:Array<Object> = [];
+    var modelData: Array<Object> = [];
     var jString2 = "";
     var jString = "{" + JSON.stringify("bus1") + ":{";
     for (let shape of this.shapes) {
-      modelData.push({ 
-        elementId: shape.elementId, 
+      modelData.push({
+        elementId: shape.elementId,
         busId1: (shape.busId1) ? shape.busId1 : "",
         busId2: (shape.busId2) ? shape.busId2 : ""
       });
 
-      jString += JSON.stringify(shape.elementId) 
+      jString += JSON.stringify(shape.elementId)
         + ":" + JSON.stringify((shape.busId1) ? shape.busId1 : "") + ","
 
-      
+
       jString2 += JSON.stringify({
         elementId: shape.elementId,
         elementType: shape.elementType,
@@ -52,18 +52,18 @@ export class MainViewComponent implements OnInit {
 
     // this.modelJSON = jString;
     this.modelJSON = jString;
-    
+
     interface MyObj {
       elementId: string
       bus1: string
     }
-    
-    let obj:MyObj[] = JSON.parse(myJson);
+
+    let obj: MyObj[] = JSON.parse(myJson);
 
     for (let thisObj of obj) {
-    console.log("parse:" + thisObj.elementId);
+      console.log("parse:" + thisObj.elementId);
     }
-    
-      
+
+
   }
 }

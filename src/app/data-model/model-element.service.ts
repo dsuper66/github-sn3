@@ -9,12 +9,35 @@ import { Shape } from '../views/shape';
 })
 export class ModelElementService {
 
-  constructor() { }
+  constructor() {
+
+    //Populate the default element types and properties
+    this.allElementTypes = ['bus','branch','gen','load'];
+    this.propertiesOfElementType = new Map([
+      ['bus',['isRefBus']],
+      ['branch',['bus1','bus2','resistance','susceptance']],
+      ['gen',['bus1','offers']],
+      ['load',['bus1','bids']]
+    ])
+    this.valueTypesOfProperties = new Map([
+      ['isRefBus','bool'],
+      ['bus1','string'],
+      ['bus2','string'],
+      ['offers','tupleArray'],
+      ['bids','tupleArray']
+    ])
+    
+   }
 
   private modelElements:ModelElement[]=[];
   private elementNextIndex = new Map<string, bigint>();
 
-  private propertyTypesOfElementType = new Map<string, [string]>();
+  private allElementTypes:String[]=[];
+  private propertiesOfElementType = new Map<string, string[]>();
+  private valueTypesOfProperties = new Map<string, string>();
+  private propertiesDisplayOrder = new Map<string,bigint >(); //-ve => read only, 0 no display
+
+  private allProperties:String[] = [];
 
 
   addModelElement(elementType: string): string {
