@@ -51,7 +51,7 @@ export class MainViewComponent implements OnInit {
     console.log("json:" + myJson);
 
     // this.modelJSON = jString;
-    this.modelJSON = jString2;
+    this.modelJSON = jString;
     
     interface MyObj {
       elementId: string
