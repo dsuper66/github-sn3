@@ -56,11 +56,12 @@ export class ShapeService {
   }
 
   //Shapes of type
+  //***this happens multiple times during a move *****/
   getShapesOfType(elementType: string):Shape[] {
     let filtered = this.shapes.filter(shape => shape.elementType === elementType);
-    for (let element of filtered) {
-      console.log(element.elementId);
-    }
+    // for (let element of filtered) {
+    //   console.log("shapes of type:" + elementType + " = " + element.elementId);
+    // }
     return filtered;
   }
   //...and not of type

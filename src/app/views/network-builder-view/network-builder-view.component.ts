@@ -24,6 +24,8 @@ export class NetworkBuilderViewComponent implements OnInit {
   shapesToDraw: Shape[] = [];
   selectedShape: Shape;
 
+  busWidth = 14;
+
   headerH = 35;
   // infoWidth = 30;
   // selectedId: string;
@@ -45,7 +47,8 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.shapesToDraw = this.shapeService.getShapes();
     //Wait for draw and then check connectivity
     setTimeout(() => {
-      this.checkForOverlaps()}, 5);    
+      this.checkForOverlaps()
+    }, 5);
   }
 
   //Start drawing... checks
@@ -55,12 +58,14 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.drawingState = "starting";
     var foundShape = false;
     for (let checkShape of this.shapesToDraw) {
+      //Check if touch is inside any shape
       //console.log (thisShape.x);
       if (x >= checkShape.xOuter
         && x <= checkShape.xOuter + checkShape.wOuter
         && y >= checkShape.yOuter
         && y <= checkShape.yOuter + checkShape.hOuter) {
 
+        //Inside a shape... now check what we are doing
         //If this is already selected then a tap (starting -> stopped)
         //will unselect... for a new selection we want to "keepDrawing"
         if (this.selectedShape != checkShape) {
@@ -71,19 +76,15 @@ export class NetworkBuilderViewComponent implements OnInit {
           this.shapeService.setSelectedShape(checkShape);
 
           //For bus or branch need to check direction
-          if (this.selectedShape.elementType == 'bus'
-            || this.selectedShape.elementType == 'branch') {
-            this.directionDone = false;
-          }
+          // if (this.selectedShape.elementType == 'bus'
+          //   || this.selectedShape.elementType == 'branch') {
+          //   this.directionDone = false;
+          // }
 
         }
 
+        // console.log("inside");
 
-        //this.firstPoint = { x: x, y: y };
-        //this.lastDrawingPoint = this.firstPoint;
-        console.log("inside");
-        //foundShape = true;
-        //this.directionDone = false;
         break;
       }
     }
@@ -122,15 +123,17 @@ export class NetworkBuilderViewComponent implements OnInit {
           //Branch is resize if movement is up-down, 
           //bus is resize if movement is left-right
           if (deltaFromStartX > xThreshold || deltaFromStartY > yThreshold) {
+            //Start by assuming a resize (one direction is greater than threshold)
             this.selectedShape.doResize = false;
+            //Then see if it is a resize
             if (deltaFromStartY > yThreshold
               && this.selectedShape.elementType == 'branch') {
-              console.log("Up Down");
+              // console.log("Up Down");
               this.selectedShape.doResize = true;
             }
             else if (deltaFromStartX > xThreshold
               && this.selectedShape.elementType == 'bus') {
-              console.log("Left Right");
+              // console.log("Left Right");
               this.selectedShape.doResize = true;
             }
             this.directionDone = true;
@@ -138,6 +141,13 @@ export class NetworkBuilderViewComponent implements OnInit {
           else { //don't move or resize until we know which
             return
           }
+        }
+      }
+      //Check for ROTATE
+      else if (this.selectedShape.elementType == 'branch') {
+        let deltaFromStartX = Math.abs(drawingPoint.x - this.firstPoint.x);
+        if (deltaFromStartX > 50) {
+          console.log("DIAGONAL");
         }
       }
 
@@ -234,6 +244,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
+  //CHECK FOR OVERLAPS
   checkForOverlaps() {
     // var overlap = !(rect1.right < rect2.left || 
     //   rect1.left > rect2.right || 
@@ -258,7 +269,7 @@ export class NetworkBuilderViewComponent implements OnInit {
             //branch... only connect if not already
             else {
               if (theNotBus.connAtId1 != theBus.elementId
-              && theNotBus.connAtId2 != theBus.elementId) {
+                && theNotBus.connAtId2 != theBus.elementId) {
                 if (theNotBus.connAtId1 === "") {
                   theNotBus.connAtId1 = theBus.elementId;
                 }
@@ -323,10 +334,10 @@ export class NetworkBuilderViewComponent implements OnInit {
   //     this.router.navigate([ '/data-entry-component' ])        
   // }
 
-  deleteSelectedShape(){
+  deleteSelectedShape() {
     this.shapeService.deleteSelectedShape();
     this.shapesToDraw = this.shapeService.getShapes();
-    this.selectedShape = null;        
+    this.selectedShape = null;
   }
 
 }
