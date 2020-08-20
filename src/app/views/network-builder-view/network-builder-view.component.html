@@ -33,23 +33,35 @@
     <!--Branch or Bus-->
     <svg *ngIf="shape.elementType=='bus' || shape.elementType=='branch'" >
 
-      <!--Selected-->
-      <svg *ngIf="shape==(selectedShape)"   class="selected"
-      [attr.height]="shape.hOuter" [attr.width]="shape.wOuter"
-      [attr.x]="shape.xOuter" [attr.y]="shape.yOuter"> 
-      <rect [attr.stroke-width]="1" 
-        [attr.width]="shape.wOuter" [attr.height]="shape.hOuter"/>
-      </svg>
+      <!-- Bus or branch-->
+       <!-- <svg *ngIf="shape.elementType=='bus'"> -->
 
-      <!-- Bus or Branch -->
-       <!-- transform="rotate(20,20,45)" -->
-      <rect 
-        id="{{shape.elementId}}" 
-        [attr.x]="shape.xInner" 
-        [attr.y]="shape.yInner" 
-        [attr.width]="shape.wInner"
-        [attr.height]="shape.hInner"
-        [attr.rx]="shape.elementType=='bus'?8:2" /> 
+        <!-- [attr.x]="shape.xOuter" [attr.y]="shape.yOuter" -->
+        <!-- [ngStyle]="{'transform': 'rotate(45deg) translateX(0px) translateY(0px)'}"  -->
+
+        <!-- Selected -->
+        <svg *ngIf="shape==(selectedShape)"   class="selected"
+        [attr.height]="shape.hOuter" [attr.width]="shape.wOuter"
+        [attr.x]="shape.xOuter" [attr.y]="shape.yOuter"
+        > 
+        <rect [attr.stroke-width]="1" 
+          [attr.width]="shape.wOuter" [attr.height]="shape.hOuter"/>
+        </svg>
+        
+        <!-- Inner -->
+          <rect 
+          
+          id="{{shape.elementId}}" 
+          [attr.x]="shape.xInner" 
+          [attr.y]="shape.yInner" 
+          [attr.width]="shape.wInner"
+          [attr.height]="shape.hInner"
+          [attr.rx]="shape.elementType=='bus'?8:2" 
+          /> 
+      <!-- </svg> -->
+
+ 
+
     </svg>
 
     <!--Gen or Load-->

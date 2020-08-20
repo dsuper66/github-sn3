@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
@@ -13,7 +13,12 @@ import { Router } from '@angular/router';
 })
 export class NetworkBuilderViewComponent implements OnInit {
 
-  constructor(private shapeService: ShapeService, private router: Router) { }
+  constructor(
+    private shapeService: ShapeService, 
+    private router: Router,
+    private renderer: Renderer2) 
+    { }
+
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
@@ -114,12 +119,14 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.lastDrawingPoint && this.selectedShape) {
 
       //Start direction for bus or branch determines if resize or move
+      var deltaFromStartX = 0;
+      var deltaFromStartY = 0;
       if (!this.directionDone) {
         if (this.selectedShape.elementType == 'bus' || this.selectedShape.elementType == 'branch') {
           let xThreshold = 5;
           let yThreshold = 5;
-          let deltaFromStartX = Math.abs(drawingPoint.x - this.firstPoint.x);
-          let deltaFromStartY = Math.abs(drawingPoint.y - this.firstPoint.y);
+          deltaFromStartX = Math.abs(drawingPoint.x - this.firstPoint.x);
+          deltaFromStartY = Math.abs(drawingPoint.y - this.firstPoint.y);
           //Branch is resize if movement is up-down, 
           //bus is resize if movement is left-right
           if (deltaFromStartX > xThreshold || deltaFromStartY > yThreshold) {
@@ -144,11 +151,18 @@ export class NetworkBuilderViewComponent implements OnInit {
         }
       }
       //Check for ROTATE
-      else if (this.selectedShape.elementType == 'branch') {
-        let deltaFromStartX = Math.abs(drawingPoint.x - this.firstPoint.x);
-        if (deltaFromStartX > 50) {
-          console.log("DIAGONAL");
-        }
+      else if (this.selectedShape.elementType == 'branch' 
+        && this.selectedShape.doResize) {
+          deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
+          if (deltaFromStartX > 50) {
+            console.log("DIAGONAL+");          
+          }
+          else if (deltaFromStartX < -50) {
+            console.log("DIAGONAL-");          
+          }
+
+          // var el = document.getElementById(this.selectedShape.elementId);
+          // this.renderer.setStyle(el, "transform", "rotate(-45deg)");
       }
 
       //Adjust... resize or move
@@ -204,15 +218,16 @@ export class NetworkBuilderViewComponent implements OnInit {
   stopDrawing() {
     console.log("stop drawing");
 
-    //If there was no drawing, just start=>stop then unselect
+    //Just a tap... If there was no drawing, just start=>stop then unselect
     //(timer to avoid mouse/touch overlap)
     if (this.drawingState == "starting") {
       console.log("unselect");
 
+      //Reset selected shape
       this.selectedShape = null;
       this.shapeService.setSelectedShape(null);
-
       this.shapesToDraw = this.shapeService.getShapes();
+
     }
     //stop any current adjustment (but stay selected)
     this.drawingState = "stopped";
@@ -258,11 +273,11 @@ export class NetworkBuilderViewComponent implements OnInit {
       if (this.selectedShape.elementType === 'bus') {
         let theBus = this.selectedShape;
         for (let theNotBus of this.shapeService.getShapesNotOfType('bus')) {
-          //connected
+          //overlapped
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //not a branch
             if (theNotBus.elementType != 'branch') {
-              if (theNotBus.connAtId1 === "") { //don't steel other connections
+              if (theNotBus.connAtId1 === "") { //don't steal other connections
                 theNotBus.connAtId1 = theBus.elementId;
               }
             }
@@ -300,7 +315,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //Assign bus1 if this is not a branch
             if (theNotBus.elementType != "branch") {
-              theNotBus.connAtId1 = theBus.elementId;
+              theNotBus.connAtId1 = theBus.elementId;        
               break;
             }
             else { //branch

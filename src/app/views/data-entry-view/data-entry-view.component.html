@@ -4,9 +4,11 @@
   routerLink="/network-builder-component">Back</button>
   &nbsp;
 </div>
-<div class="shapeCanvas">
+
+<!-- <div class="shapeCanvas">
   <br>
   <br>
+
   <label>
     Name:
     <input type="text" 
@@ -14,6 +16,24 @@
 
     [formControl]="modelData">
   </label>
+
+</div> -->
+<br>
+<br>
+
+  
+<div [formGroup]="myGroup">
+  
+
+  <div *ngFor="let property of properties" class="form-row">
+
+    <label>
+      {{property}}:
+      <input type="text" formControlName="{{property}}">
+    </label>
+
+  </div>
+
 </div>
 
 

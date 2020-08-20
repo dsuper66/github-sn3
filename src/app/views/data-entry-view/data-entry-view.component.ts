@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 //So that we can route here
 // import { ActivatedRoute } from '@angular/router';
@@ -17,17 +19,22 @@ export class DataEntryViewComponent implements OnInit {
 
   constructor(
     private modelElementService: ModelElementService,
-    private shapeService: ShapeService)
-    // private route: ActivatedRoute)
-    { }
+    private shapeService: ShapeService,
+    private fb: FormBuilder) {  }
 
   ngOnInit(): void {
     this.getElementId();
   }
 
-  modelData = new FormControl('');
-  selectedShape:Shape;
-  elementId = "none selected";
+  myGroup: FormGroup;
+
+  // myGroup = new FormGroup({
+  //   firstName: new FormControl()
+  // });
+
+  properties:string[];
+  private selectedShape:Shape;
+  private elementId = "none selected";
 
 
   getElementId(): void {
@@ -41,8 +48,19 @@ export class DataEntryViewComponent implements OnInit {
     this.selectedShape = this.shapeService.getSelectedShape();
     if (this.selectedShape) {
       this.elementId = this.selectedShape.elementId;
+      console.log (">>> " + this.selectedShape.elementType);
+      this.properties = this.modelElementService.getPropertiesOfElementType(this.selectedShape.elementType);
+      console.log (this.properties)
+
+
+      this.myGroup = this.fb.group({
+        'conn1': ['none'],
+        'conn2':['none'],
+        'resistance':['none'] });
     }
-    this.modelData.setValue(this.elementId);
+
+
+    // this.modelData.setValue(this.elementId);
 
   }
 }

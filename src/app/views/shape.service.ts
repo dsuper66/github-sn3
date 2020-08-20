@@ -98,6 +98,7 @@ export class ShapeService {
         wOuter: this.busInitLength,
         hOuter: this.selectWidth
        })
+       console.log(">>>" + (this.busInitX) + " " + (y + this.busWidth/2))
     }
     //BRANCH
     else if (elementType == 'branch') {

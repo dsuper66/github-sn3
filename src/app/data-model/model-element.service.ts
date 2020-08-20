@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ModelElement} from './model-element';
 import { Shape } from '../views/shape';
+import {ElementType} from './model-element'
+import { BehaviorSubject } from 'rxjs';
 
 
 @Injectable({
@@ -10,35 +12,40 @@ import { Shape } from '../views/shape';
 export class ModelElementService {
 
   constructor() {
-
-    //Populate the default element types and properties
-    this.allElementTypes = ['bus','branch','gen','load'];
-    this.propertiesOfElementType = new Map([
-      ['bus',['isRefBus']],
-      ['branch',['bus1','bus2','resistance','susceptance']],
-      ['gen',['bus1','offers']],
-      ['load',['bus1','bids']]
-    ])
-    this.valueTypesOfProperties = new Map([
-      ['isRefBus','bool'],
-      ['bus1','string'],
-      ['bus2','string'],
-      ['offers','tupleArray'],
-      ['bids','tupleArray']
-    ])
     
+    this.elementTypes.push(
+      {elementTypeId:'bus',properties:['isRefBus']},
+      {elementTypeId:'branch',properties:['conn1','conn2','resistance','susceptance']},
+      {elementTypeId:'gen',properties:['conn1','offers']},
+      {elementTypeId:'load',properties:['conn1','bids']}
+      );
+    // this.valueTypesOfProperties = new Map([
+    //   ['isRefBus','bool'],
+    //   ['conn1','string'],
+    //   ['conn2','string'],
+    //   ['offers','tupleArray'],
+    //   ['bids','tupleArray']
+    // ])
    }
 
+  
   private modelElements:ModelElement[]=[];
   private elementNextIndex = new Map<string, bigint>();
 
-  private allElementTypes:String[]=[];
-  private propertiesOfElementType = new Map<string, string[]>();
+  private elementTypes:ElementType[] = [];
+
+  private propertiesOfElementType : Map<string, string[]>;
   private valueTypesOfProperties = new Map<string, string>();
-  private propertiesDisplayOrder = new Map<string,bigint >(); //-ve => read only, 0 no display
+  // private propertiesDisplayOrder = new Map<string,bigint >(); //-ve => read only, 0 no display
 
   private allProperties:String[] = [];
 
+
+  getPropertiesOfElementType(elementTypeId:string):string[] {
+    console.log ("from: " + this.propertiesOfElementType);
+    let elementType = this.elementTypes.filter(elementType => elementType.elementTypeId === elementTypeId)[0];
+    return elementType.properties;
+  }
 
   addModelElement(elementType: string): string {
     //Get next index for i.d.
