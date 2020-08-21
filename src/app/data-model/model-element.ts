@@ -5,15 +5,17 @@ export class ModelElement {
     bus2: string;
 }
 
-
+export interface ElementProperty {
+  [propertyTypeId:string]:any;
+}
 
 export interface ElementType {
     elementTypeId: string;
-    properties: string[];
+    elementPropertyTypes: string[];
   }
 
-export interface ElementProperty {
-    elementPropertyId: string;
+export interface ElementPropertyType {
+    propertyTypeId: string;
     primitiveType: string;
   }
 

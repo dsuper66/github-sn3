@@ -14,10 +14,10 @@ export class ModelElementService {
   constructor() {
     
     this.elementTypes.push(
-      {elementTypeId:'bus',properties:['isRefBus']},
-      {elementTypeId:'branch',properties:['conn1','conn2','resistance','susceptance']},
-      {elementTypeId:'gen',properties:['conn1','offers']},
-      {elementTypeId:'load',properties:['conn1','bids']}
+      {elementTypeId:'bus',elementPropertyTypes:['isRefBus']},
+      {elementTypeId:'branch',elementPropertyTypes:['conn1','conn2','resistance','susceptance']},
+      {elementTypeId:'gen',elementPropertyTypes:['conn1','offers']},
+      {elementTypeId:'load',elementPropertyTypes:['conn1','bids']}
       );
     // this.valueTypesOfProperties = new Map([
     //   ['isRefBus','bool'],
@@ -44,7 +44,7 @@ export class ModelElementService {
   getPropertiesOfElementType(elementTypeId:string):string[] {
     console.log ("from: " + this.propertiesOfElementType);
     let elementType = this.elementTypes.filter(elementType => elementType.elementTypeId === elementTypeId)[0];
-    return elementType.properties;
+    return elementType.elementPropertyTypes;
   }
 
   addModelElement(elementType: string): string {
