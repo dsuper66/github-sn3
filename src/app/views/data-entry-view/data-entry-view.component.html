@@ -22,7 +22,7 @@
 <br>
 
   
-<div [formGroup]="myGroup">
+<!-- <div [formGroup]="myGroup">
   
 
   <div *ngFor="let property of properties" class="form-row">
@@ -34,6 +34,13 @@
 
   </div>
 
+</div> -->
+
+<div *ngFor="let property of propertiesFormArray.controls; index as i">
+  <label>
+    {{formTitles[i]}}:
+    <input [formControl]="propertiesFormArray.controls[i]" />
+  </label>
 </div>
 
 

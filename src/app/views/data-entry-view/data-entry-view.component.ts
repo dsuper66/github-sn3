@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 
 //So that we can route here
 // import { ActivatedRoute } from '@angular/router';
 
 import { ShapeService } from '../shape.service';
-import {ModelElementService} from '../../data-model/model-element.service';
+import { ModelElementService } from '../../data-model/model-element.service';
 import { Shape } from '../shape';
 
 @Component({
@@ -20,7 +21,7 @@ export class DataEntryViewComponent implements OnInit {
   constructor(
     private modelElementService: ModelElementService,
     private shapeService: ShapeService,
-    private fb: FormBuilder) {  }
+    private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.getElementId();
@@ -32,8 +33,12 @@ export class DataEntryViewComponent implements OnInit {
   //   firstName: new FormControl()
   // });
 
-  properties:string[];
-  private selectedShape:Shape;
+  propertiesFormArray = new FormArray([]);
+  formTitles: string[] = [];
+
+
+  properties: string[];
+  private selectedShape: Shape;
   private elementId = "none selected";
 
 
@@ -48,19 +53,43 @@ export class DataEntryViewComponent implements OnInit {
     this.selectedShape = this.shapeService.getSelectedShape();
     if (this.selectedShape) {
       this.elementId = this.selectedShape.elementId;
-      console.log (">>> " + this.selectedShape.elementType);
+      console.log(">>> " + this.selectedShape.elementType);
       this.properties = this.modelElementService.getPropertiesOfElementType(this.selectedShape.elementType);
-      console.log (this.properties)
+      console.log(this.properties)
 
+      interface Dict {
+        [key: string]: string;
+      }
+      let controlsConfig: Dict;
 
-      this.myGroup = this.fb.group({
+      var indexedArray: { [key: string]: any; } = {
         'conn1': ['none'],
-        'conn2':['none'],
-        'resistance':['none'] });
+        'conn2': ['none'],
+        'resistance': ['none']
+      }
+
+
+      // indexedArray = {'conn1': ['none'],conn2':['none'],'resistance':['none']};
+      // var controlsConfig: {
+      //   [key: string]: any;}
+      for (let property of this.properties) {
+        this.formTitles.push(property);
+        this.propertiesFormArray.push(new FormControl(property));
+      }
+
+      // console.log(">>>mm>>>" + indexedArray);
+      //   this.myGroup = this.fb.group({
+      //     'conn1': ['none'],
+      //     'conn2':['none'],
+      //     'resistance':['none'] });
+      // }
+      // this.myGroup = this.fb.group({
+      //   indexedArray });
+      // }
+
+
+      // this.modelData.setValue(this.elementId);
+
     }
-
-
-    // this.modelData.setValue(this.elementId);
-
   }
 }

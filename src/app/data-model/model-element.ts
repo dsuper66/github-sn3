@@ -16,3 +16,10 @@ export interface ElementProperty {
     elementPropertyId: string;
     primitiveType: string;
   }
+
+
+  interface SquareConfig {
+    color?: string;
+    width?: number;
+    [propName: string]: any;
+  }
