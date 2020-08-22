@@ -37,7 +37,7 @@ export class DataEntryViewComponent implements OnInit {
   formTitles: string[] = [];
 
 
-  properties: string[];
+  propertyIds: string[];
   private selectedShape: Shape;
   private elementId = "none selected";
 
@@ -54,8 +54,8 @@ export class DataEntryViewComponent implements OnInit {
     if (this.selectedShape) {
       this.elementId = this.selectedShape.elementId;
       console.log(">>> " + this.selectedShape.elementType);
-      this.properties = this.modelElementService.getPropertiesOfElementType(this.selectedShape.elementType);
-      console.log(this.properties)
+      this.propertyIds = this.modelElementService.getPropertyIdsOfElementType(this.selectedShape.elementType);
+      console.log(this.propertyIds)
 
       interface Dict {
         [key: string]: string;
@@ -72,9 +72,11 @@ export class DataEntryViewComponent implements OnInit {
       // indexedArray = {'conn1': ['none'],conn2':['none'],'resistance':['none']};
       // var controlsConfig: {
       //   [key: string]: any;}
-      for (let property of this.properties) {
-        this.formTitles.push(property);
-        this.propertiesFormArray.push(new FormControl(property));
+      for (let propertyId of this.propertyIds) {
+        this.formTitles.push(propertyId);
+
+
+        this.propertiesFormArray.push(new FormControl(propertyId));
       }
 
       // console.log(">>>mm>>>" + indexedArray);

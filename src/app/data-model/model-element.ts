@@ -1,22 +1,31 @@
 export class ModelElement {
     elementId: string;
-    elementType: string;
-    bus1: string;
-    bus2: string;
+    elementTypeId: string;
+    // bus1: string;
+    // bus2: string;
+    properties: ElementProperties;
 }
 
-export interface ElementProperty {
+export interface ElementProperties {
   [propertyTypeId:string]:any;
 }
 
 export interface ElementType {
     elementTypeId: string;
-    elementPropertyTypes: string[];
+    propertyTypeIds: string[];
   }
 
+export interface ElementTypeId {
+  id: string;
+}
+
+export interface PropertyTypeId {
+  id: string;
+}
 export interface ElementPropertyType {
     propertyTypeId: string;
     primitiveType: string;
+    defaultValue: any;
   }
 
 

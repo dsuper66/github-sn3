@@ -38,7 +38,9 @@
 
 <div *ngFor="let property of propertiesFormArray.controls; index as i">
   <label>
+    <!-- The label -->
     {{formTitles[i]}}:
+    <!-- Create the input and add the default value -->
     <input [formControl]="propertiesFormArray.controls[i]" />
   </label>
 </div>
