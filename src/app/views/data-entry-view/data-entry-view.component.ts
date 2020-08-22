@@ -35,6 +35,7 @@ export class DataEntryViewComponent implements OnInit {
 
   propertiesFormArray = new FormArray([]);
   formTitles: string[] = [];
+  formDefaults: string[] = [];
 
 
   propertyIds: string[];
@@ -74,9 +75,11 @@ export class DataEntryViewComponent implements OnInit {
       //   [key: string]: any;}
       for (let propertyId of this.propertyIds) {
         this.formTitles.push(propertyId);
+        let currentValue = this.modelElementService.getValueForElementProperty(this.elementId,propertyId);
+        this.formDefaults.push(currentValue);
+        console.log("current value:" + currentValue);
 
-
-        this.propertiesFormArray.push(new FormControl(propertyId));
+        this.propertiesFormArray.push(new FormControl(currentValue));
       }
 
       // console.log(">>>mm>>>" + indexedArray);

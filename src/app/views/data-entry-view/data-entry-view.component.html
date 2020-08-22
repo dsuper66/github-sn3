@@ -41,7 +41,11 @@
     <!-- The label -->
     {{formTitles[i]}}:
     <!-- Create the input and add the default value -->
-    <input [formControl]="propertiesFormArray.controls[i]" />
+    <input 
+      type="text"
+      id="{{formTitles[i]}}"
+      placeholder="{{formDefaults[i]}}"
+      [formControl]="propertiesFormArray.controls[i]" />
   </label>
 </div>
 
