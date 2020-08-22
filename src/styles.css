@@ -45,12 +45,12 @@ button {
     margin: 0px;
 }
 
-body {
+/* body {
   top: 0px;
   margin-left: 5px;
   border-width: 0px;
   overflow: hidden;
-}
+} */
 
 .header {
   position: fixed;
