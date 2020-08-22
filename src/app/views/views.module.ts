@@ -7,13 +7,13 @@ import { MainViewComponent } from './main-view/main-view.component';
 
 import { AppRoutingModule } from '../app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [NetworkBuilderViewComponent, DataEntryViewComponent, MainViewComponent],
   imports: [
-    CommonModule, AppRoutingModule, ReactiveFormsModule
+    CommonModule, AppRoutingModule, ReactiveFormsModule,FormsModule
   ]
 })
 export class ViewsModule { }

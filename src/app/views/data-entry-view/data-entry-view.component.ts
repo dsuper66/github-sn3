@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { FormBuilder } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 
@@ -20,14 +20,11 @@ export class DataEntryViewComponent implements OnInit {
 
   constructor(
     private modelElementService: ModelElementService,
-    private shapeService: ShapeService,
-    private fb: FormBuilder) { }
+    private shapeService: ShapeService) { }
 
   ngOnInit(): void {
     this.getElementId();
   }
-
-  myGroup: FormGroup;
 
   // myGroup = new FormGroup({
   //   firstName: new FormControl()
@@ -43,6 +40,9 @@ export class DataEntryViewComponent implements OnInit {
   private selectedShape: Shape;
   private elementId = "none selected";
 
+  onSubmit(form: any): void {
+    console.log('you submitted value:', form);
+  }
 
   getElementId(): void {
     //Get the element i.d. from the route
@@ -59,16 +59,16 @@ export class DataEntryViewComponent implements OnInit {
       this.propertyIds = this.modelElementService.getPropertyIdsOfElementType(this.selectedShape.elementType);
       console.log(this.propertyIds)
 
-      interface Dict {
-        [key: string]: string;
-      }
-      let controlsConfig: Dict;
+      // interface Dict {
+      //   [key: string]: string;
+      // }
+      // let controlsConfig: Dict;
 
-      var indexedArray: { [key: string]: any; } = {
-        'conn1': ['none'],
-        'conn2': ['none'],
-        'resistance': ['none']
-      }
+      // var indexedArray: { [key: string]: any; } = {
+      //   'conn1': ['none'],
+      //   'conn2': ['none'],
+      //   'resistance': ['none']
+      // }
 
 
       // indexedArray = {'conn1': ['none'],conn2':['none'],'resistance':['none']};

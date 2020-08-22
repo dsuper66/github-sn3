@@ -22,34 +22,53 @@
 <br>
 
   
-<!-- <div [formGroup]="myGroup">
+<!-- <div [formGroup]="myGroup"> -->
   
+  <!-- 
+    <div *ngFor="let property of properties" class="form-row">
 
-  <div *ngFor="let property of properties" class="form-row">
+      <label>
+        {{property}}:
+        <input type="text" formControlName="{{property}}">
+      </label>
 
-    <label>
-      {{property}}:
-      <input type="text" formControlName="{{property}}">
-    </label>
+    </div>
 
-  </div>
+  </div> -->
 
-</div> -->
+  <!-- <div *ngFor="let property of propertiesFormArray.controls; index as i"> -->
 
-<!-- <div *ngFor="let property of propertiesFormArray.controls; index as i"> -->
-  <div *ngFor="let property of propertiesFormArray; index as i">
-  <label>
-    <!-- The label -->
-    {{formTitles[i]}}:
-    <!-- Create the input and add the default value -->
-    <input 
-      type="text"
-      id="{{formTitles[i]}}"
+  <form #f="ngForm"
+  (ngSubmit)="onSubmit(f.value)" >
+
+    <div *ngFor="let property of propertiesFormArray; index as i">
+
+      <label>
+      <!-- The label -->
+      {{formTitles[i]}}:
+      <!-- Create the input and add the default value -->
+      <input 
+        type="text"
+        id="{{formTitles[i]}}"
+        placeholder="{{formDefaults[i]}}"
+        name="{{formTitles[i]}}"
+        
       
-      [formControl]="propertiesFormArray[i]" />
-  </label>
-</div>
 
+        
+        ngModel>
+      </label>
+      </div>
+
+      <!-- [formControl]="propertiesFormArray[i]"  -->
+
+    <button type="submit">Submit</button>
+
+  </form>
+
+<!-- </div> -->
+
+<!-- <button type="submit" [disabled]="!profileForm.valid">Submit</button> -->
 <!-- placeholder="{{formDefaults[i]}}" -->
 
 <!-- <hr class="rounded"> -->
