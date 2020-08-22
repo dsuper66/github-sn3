@@ -36,7 +36,8 @@
 
 </div> -->
 
-<div *ngFor="let property of propertiesFormArray.controls; index as i">
+<!-- <div *ngFor="let property of propertiesFormArray.controls; index as i"> -->
+  <div *ngFor="let property of propertiesFormArray; index as i">
   <label>
     <!-- The label -->
     {{formTitles[i]}}:
@@ -44,11 +45,12 @@
     <input 
       type="text"
       id="{{formTitles[i]}}"
-      placeholder="{{formDefaults[i]}}"
-      [formControl]="propertiesFormArray.controls[i]" />
+      
+      [formControl]="propertiesFormArray[i]" />
   </label>
 </div>
 
+<!-- placeholder="{{formDefaults[i]}}" -->
 
 <!-- <hr class="rounded"> -->
 

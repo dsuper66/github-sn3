@@ -33,7 +33,8 @@ export class DataEntryViewComponent implements OnInit {
   //   firstName: new FormControl()
   // });
 
-  propertiesFormArray = new FormArray([]);
+  // propertiesFormArray = new FormArray([]);
+  propertiesFormArray: FormControl[] = [];
   formTitles: string[] = [];
   formDefaults: string[] = [];
 
