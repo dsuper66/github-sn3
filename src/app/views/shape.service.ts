@@ -200,5 +200,14 @@ export class ShapeService {
     }
     return true;    
   }
+
+  saveConnectivityToModel() {
+    for (let nonBusElement of this.getShapesNotOfType('bus')){
+      this.modelElementService.setValueForElementProperty(
+        nonBusElement.elementId,'conn1',nonBusElement.connId1);
+      this.modelElementService.setValueForElementProperty(
+        nonBusElement.elementId,'conn2',nonBusElement.connId2);
+    }
+  }
 }
 

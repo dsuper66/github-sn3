@@ -29,19 +29,19 @@ export class MainViewComponent implements OnInit {
     for (let shape of this.shapes) {
       modelData.push({
         elementId: shape.elementId,
-        busId1: (shape.connAtId1) ? shape.connAtId1 : "",
-        busId2: (shape.connAtId2) ? shape.connAtId2 : ""
+        busId1: (shape.connId1) ? shape.connId1 : "",
+        busId2: (shape.connId2) ? shape.connId2 : ""
       });
 
       jString += JSON.stringify(shape.elementId)
-        + ":" + JSON.stringify((shape.connAtId1) ? shape.connAtId1 : "") + ","
+        + ":" + JSON.stringify((shape.connId1) ? shape.connId1 : "") + ","
 
 
       jString2 += JSON.stringify({
         elementId: shape.elementId,
         elementType: shape.elementType,
-        bus1: shape.connAtId1,
-        bus2: shape.connAtId2
+        bus1: shape.connId1,
+        bus2: shape.connId2
       });
 
     }

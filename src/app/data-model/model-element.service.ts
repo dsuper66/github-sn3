@@ -89,9 +89,15 @@ export class ModelElementService {
 
   getValueForElementProperty(elementId:string, propertyTypeId: string):string {
     let properties = this.modelElements.filter(
-      element => element.elementId ===elementId
+      element => element.elementId === elementId
     )[0].properties;
     return properties[propertyTypeId];
+  }
+
+  setValueForElementProperty(elementId:string, propertyTypeId: string, value:any){
+    this.modelElements.filter(
+      element => element.elementId === elementId
+    )[0].properties[propertyTypeId] = value;
   }
 
   makePropertiesForElementType(elementTypeId: string):ElementProperties {

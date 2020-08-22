@@ -11,7 +11,7 @@
       (click)="deleteSelectedShape()">Delete</button>
 
     <span *ngIf="(selectedShape)">
-      {{selectedShape.elementId}}@{{selectedShape.busId1}} {{selectedShape.busId2}}
+      {{selectedShape.elementId}}@{{selectedShape.connId1}} {{selectedShape.connId2}}
     </span>
     
 </div>
@@ -93,11 +93,11 @@
       </svg>  
       <!--Load-->
       <svg *ngIf="shape.elementType=='load'"
-      [attr.height]="shape.hInner" [attr.width]="shape.wInner"
-      [attr.x]="shape.xInner" [attr.y]="shape.yInner"
-      id="{{shape.elementId}}"
-      > 
-      <path [attr.d]="shape.path1"/>
+        [attr.height]="shape.hInner" [attr.width]="shape.wInner"
+        [attr.x]="shape.xInner" [attr.y]="shape.yInner"
+        id="{{shape.elementId}}">
+
+        <path [attr.d]="shape.path1"/>
       </svg>
       
     </svg>
