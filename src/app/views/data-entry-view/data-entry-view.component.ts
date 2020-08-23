@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm, Form, NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
@@ -10,6 +10,7 @@ import { FormArray } from '@angular/forms';
 import { ShapeService } from '../shape.service';
 import { ModelElementService } from '../../data-model/model-element.service';
 import { Shape } from '../shape';
+import { isDefined } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -36,12 +37,28 @@ export class DataEntryViewComponent implements OnInit {
   formDefaults: string[] = [];
 
 
-  propertyIds: string[];
+  propertyTypeIds: string[];
   private selectedShape: Shape;
   private elementId = "none selected";
 
-  onSubmit(form: any): void {
-    console.log('you submitted value:', form);
+  onSubmit(form: NgForm): void {
+    console.log('you submitted value:' , form);
+    for (let propertyTypeId of this.propertyTypeIds.filter(
+      id => Object(form)[id] != "")) {
+      console.log(">>>" + propertyTypeId + ":" + Object(form)[propertyTypeId]);
+    }
+    // console.log('resistance:' , document.getElementById("resistance")[0].value)
+    // console.log('resistance:' , form["resistance"]);
+    // let items = form as {[property: string]: any};
+    // for (let formItem of Object.values(form.controls) as {key:string,value:any}) {
+    //   console.log("value:" + formItem.value)
+    // form.forEach(element => {
+
+    //   console.log(element)
+    // }); 
+      // for (const name in form.controls) {
+      //     console.log ("ppp");
+      // }
   }
 
   getElementId(): void {
@@ -56,8 +73,8 @@ export class DataEntryViewComponent implements OnInit {
     if (this.selectedShape) {
       this.elementId = this.selectedShape.elementId;
       console.log(">>> " + this.selectedShape.elementType);
-      this.propertyIds = this.modelElementService.getPropertyIdsOfElementType(this.selectedShape.elementType);
-      console.log(this.propertyIds)
+      this.propertyTypeIds = this.modelElementService.getPropertyTypeIdsOfElementType(this.selectedShape.elementType);
+      console.log(this.propertyTypeIds)
 
       // interface Dict {
       //   [key: string]: string;
@@ -74,7 +91,7 @@ export class DataEntryViewComponent implements OnInit {
       // indexedArray = {'conn1': ['none'],conn2':['none'],'resistance':['none']};
       // var controlsConfig: {
       //   [key: string]: any;}
-      for (let propertyId of this.propertyIds) {
+      for (let propertyId of this.propertyTypeIds) {
         this.formTitles.push(propertyId);
         let currentValue = this.modelElementService.getValueForElementProperty(this.elementId,propertyId);
         this.formDefaults.push(currentValue);

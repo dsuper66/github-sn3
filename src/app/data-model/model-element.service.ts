@@ -25,10 +25,10 @@ export class ModelElementService {
       {propertyTypeId:'offers', primitiveType:'tranches', defaultValue:[50,150]}
     )
 
-    this.propertyIdsOfElementType['bus']=['isRefBus'];
-    this.propertyIdsOfElementType['branch']=['conn1','conn2','resistance','susceptance'];
-    this.propertyIdsOfElementType['gen'] = ['conn1','offers'];
-    this.propertyIdsOfElementType['load'] = ['conn1','bids'];
+    this.propertyTypeIdsOfElementType['bus']=['isRefBus'];
+    this.propertyTypeIdsOfElementType['branch']=['conn1','conn2','resistance','susceptance'];
+    this.propertyTypeIdsOfElementType['gen'] = ['conn1','offers'];
+    this.propertyTypeIdsOfElementType['load'] = ['conn1','bids'];
       // {elementTypeId:'bus',propertyTypeIds:['isRefBus']},
       // {elementTypeId:'branch',propertyTypeIds:['conn1','conn2','resistance','susceptance']},
       // {elementTypeId:'gen',propertyTypeIds:['conn1','offers']},
@@ -48,7 +48,7 @@ export class ModelElementService {
   private elementNextIndex = new Map<string, bigint>();
 
   private elementPropertyTypes:ElementPropertyType[] = [];
-  private propertyIdsOfElementType: {[id:string]:string[]} = {};
+  private propertyTypeIdsOfElementType: {[id:string]:string[]} = {};
 
   // private propertiesOfElementType : Map<string, string[]>;
   private valueTypesOfProperties = new Map<string, string>();
@@ -57,11 +57,11 @@ export class ModelElementService {
   private allProperties:String[] = [];
 
 
-  getPropertyIdsOfElementType(elementTypeId:string): string[] {
-    console.log ("from: " + this.propertyIdsOfElementType);
+  getPropertyTypeIdsOfElementType(elementTypeId:string): string[] {
+    console.log ("from: " + this.propertyTypeIdsOfElementType);
     // let elementType = this.propertiesOfElementType.filter(elementType => elementType.elementTypeId === elementTypeId)[0];
     // return elementType.propertyTypeIds;
-    return this.propertyIdsOfElementType[elementTypeId];
+    return this.propertyTypeIdsOfElementType[elementTypeId];
   }
 
   addModelElement(elementTypeId: string): string {
@@ -105,7 +105,7 @@ export class ModelElementService {
     //   elementType => elementType.elementTypeId === elementTypeId)[0].propertyTypeIds;
 
     console.log("makePropertiesForElementType of " + elementTypeId);
-    let thesePropertyTypeIds = this.propertyIdsOfElementType[elementTypeId];
+    let thesePropertyTypeIds = this.propertyTypeIdsOfElementType[elementTypeId];
     console.log("got property types: " + thesePropertyTypeIds);
     // let properties = this.elementPropertyTypes.filter(
     //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyTypeId thesePropertyTypeIds)
