@@ -44,15 +44,15 @@
       <label>
       <!-- The label -->
       {{formTitles[i]}}:
+      </label>
       <!-- Create the input and add the default value -->
       <input 
         type="text"
         id="{{formTitles[i]}}"
         placeholder="{{formDefaults[i]}}"
         name="{{formTitles[i]}}"
-        
         ngModel>
-      </label>
+        
     </div>
 
       <!-- [formControl]="propertiesFormArray[i]"  -->
