@@ -45,7 +45,9 @@ export class DataEntryViewComponent implements OnInit {
     console.log('you submitted value:' , form);
     for (let propertyTypeId of this.propertyTypeIds.filter(
       id => Object(form)[id] != "")) {
-      console.log(">>>" + propertyTypeId + ":" + Object(form)[propertyTypeId]);
+        let newValue = Object(form)[propertyTypeId];
+        console.log(">>>" + propertyTypeId + ":" + newValue);
+      this.modelElementService.setValueForElementProperty(this.elementId,propertyTypeId,newValue);
     }
     // console.log('resistance:' , document.getElementById("resistance")[0].value)
     // console.log('resistance:' , form["resistance"]);
