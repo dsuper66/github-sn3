@@ -21,26 +21,17 @@ export class ModelElementService {
       {propertyTypeId:'conn2', primitiveType:'string', defaultValue:'none'},
       {propertyTypeId:'resistance', primitiveType:'number', defaultValue:'10'},
       {propertyTypeId:'susceptance', primitiveType:'number', defaultValue:'0.001'},
-      {propertyTypeId:'bids', primitiveType:'tranches', defaultValue:[100,70]},
-      {propertyTypeId:'offers', primitiveType:'tranches', defaultValue:[50,150]}
+      {propertyTypeId:'enBids', primitiveType:'tranches', defaultValue:[100,70]},
+      {propertyTypeId:'enOffers', primitiveType:'tranches', defaultValue:[50,150]},
+      {propertyTypeId:'resOffers', primitiveType:'tranches', defaultValue:[50,150]},
+      {propertyTypeId:'genCapacity', primitiveType:'number', defaultValue:'100'}
     )
 
     this.propertyTypeIdsOfElementType['bus']=['isRefBus'];
     this.propertyTypeIdsOfElementType['branch']=['conn1','conn2','resistance','susceptance'];
-    this.propertyTypeIdsOfElementType['gen'] = ['conn1','offers'];
-    this.propertyTypeIdsOfElementType['load'] = ['conn1','bids'];
-      // {elementTypeId:'bus',propertyTypeIds:['isRefBus']},
-      // {elementTypeId:'branch',propertyTypeIds:['conn1','conn2','resistance','susceptance']},
-      // {elementTypeId:'gen',propertyTypeIds:['conn1','offers']},
-      // {elementTypeId:'load',propertyTypeIds:['conn1','bids']}
-      // );
-    // this.valueTypesOfProperties = new Map([
-    //   ['isRefBus','bool'],
-    //   ['conn1','string'],
-    //   ['conn2','string'],
-    //   ['offers','tupleArray'],
-    //   ['bids','tupleArray']
-    // ])
+    this.propertyTypeIdsOfElementType['gen'] = ['conn1','enOffers','resOffers','genCapacity'];
+    this.propertyTypeIdsOfElementType['load'] = ['conn1','enBids'];
+
    }
 
   

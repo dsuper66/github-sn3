@@ -3,7 +3,7 @@ import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
 import { ControlContainer } from '@angular/forms';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,7 +15,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   constructor(
     private shapeService: ShapeService, 
-    private router: Router,
+    // private router: Router,
     private renderer: Renderer2) 
     { }
 

@@ -1,25 +1,8 @@
 
-<div class="header">
+<!-- <div class="header">
   <button
   routerLink="/network-builder-component">Back</button>
-</div>
-
-<!-- <div class="shapeCanvas">
-  <br>
-  <br>
-
-  <label>
-    Name:
-    <input type="text" 
-    style="font-size:25px;width:120px"
-
-    [formControl]="modelData">
-  </label>
-
 </div> -->
-<br>
-<br>
-
   
 <!-- <div [formGroup]="myGroup"> -->
   
@@ -36,15 +19,20 @@
   </div> -->
 
   <!-- <div *ngFor="let property of propertiesFormArray.controls; index as i"> -->
+<!-- 
+  <button routerLink="/network-builder-component">Back</button>
+  &nbsp; -->
 
   <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
-
+    <button type="submit">Submit</button>
+    <br>
+    <br>
     <div *ngFor="let property of propertiesFormArray; index as i">
 
       
       <!-- The label -->
         <!-- {{formTitles[i]}}: -->
-      <span class="text">{{formTitles[i]}}:</span>
+      <span class="text">{{formTitles[i]}}: </span>
       <!-- Create the input and add the default value -->
       <input 
         type="text"
@@ -53,12 +41,7 @@
         name="{{formTitles[i]}}"
         
         ngModel>
-
     </div>
-
-      <!-- [formControl]="propertiesFormArray[i]"  -->
-
-    <button type="submit">Submit</button>
 
   </form>
 

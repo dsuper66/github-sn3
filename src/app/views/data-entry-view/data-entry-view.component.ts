@@ -11,6 +11,7 @@ import { ShapeService } from '../shape.service';
 import { ModelElementService } from '../../data-model/model-element.service';
 import { Shape } from '../shape';
 import { isDefined } from '@angular/compiler/src/util';
+// import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -21,6 +22,7 @@ export class DataEntryViewComponent implements OnInit {
 
   constructor(
     private modelElementService: ModelElementService,
+    // private router: Router,
     private shapeService: ShapeService) { }
 
   ngOnInit(): void {
@@ -49,6 +51,9 @@ export class DataEntryViewComponent implements OnInit {
         console.log(">>>" + propertyTypeId + ":" + newValue);
       this.modelElementService.setValueForElementProperty(this.elementId,propertyTypeId,newValue);
     }
+
+    // this.router.navigate([ '/network-builder-component' ]) ;
+
     // console.log('resistance:' , document.getElementById("resistance")[0].value)
     // console.log('resistance:' , form["resistance"]);
     // let items = form as {[property: string]: any};
