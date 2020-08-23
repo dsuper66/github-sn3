@@ -2,7 +2,6 @@
 <div class="header">
   <button
   routerLink="/network-builder-component">Back</button>
-  &nbsp;
 </div>
 
 <!-- <div class="shapeCanvas">
@@ -38,8 +37,7 @@
 
   <!-- <div *ngFor="let property of propertiesFormArray.controls; index as i"> -->
 
-  <form #f="ngForm"
-  (ngSubmit)="onSubmit(f.value)" >
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
     <div *ngFor="let property of propertiesFormArray; index as i">
 
@@ -55,7 +53,7 @@
         
         ngModel>
       </label>
-      </div>
+    </div>
 
       <!-- [formControl]="propertiesFormArray[i]"  -->
 

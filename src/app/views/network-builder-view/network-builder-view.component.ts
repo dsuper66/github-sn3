@@ -230,8 +230,6 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.lastDrawingPoint = null;
     this.directionDone = true;
 
-    //Save any connectivity changes back to the main model
-    this.shapeService.saveConnectivityToModel();
   }
   stopDrawingMouse() {
     this.stopDrawing();
@@ -240,21 +238,35 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.stopDrawing();
   }
 
-  setConnectivityColor(shape: Shape) {
+  setConnectivity(shape: Shape) {
     let isFullyConnected =
       (shape.elementType != 'branch' && shape.connId1 != "")
       || (shape.connId1 != "" && shape.connId2 != "");
+
+    // var el = document.getElementById(shape.elementId);
+    // el.setAttribute("stroke", (isFullyConnected ? "black" : "lime"));
+
+    // if (shape.elementType === 'bus' || shape.elementType === 'branch') {
+    //   el.setAttribute("fill", (isFullyConnected ? "black" : "lime"));
+    // }
+    
+    //Use renderer not attribute
+    //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
+    //https://stackoverflow.com/questions/54507984/angular-how-to-modify-css-transform-property-of-html-elements-inside-a-compone
+    //(with changes to setProperty)
+
+    //Set stroke colour
     var el = document.getElementById(shape.elementId);
-    el.setAttribute("stroke", (isFullyConnected ? "black" : "lime"));
-    // if (isConnected) {
-    //   el.setAttribute("stroke", "black");
-    // }
-    // else {
-    //   el.setAttribute("stroke", "lime");
-    // }
+    this.renderer.setProperty(el.style, 
+      "stroke", (isFullyConnected ? "black" : "lime"));
+    //Bus and branch also set fill colour
     if (shape.elementType === 'bus' || shape.elementType === 'branch') {
-      el.setAttribute("fill", (isFullyConnected ? "black" : "lime"));
+      this.renderer.setProperty(el.style,
+        "fill", (isFullyConnected ? "black" : "lime"));
     }
+
+    //Save any connectivity changes back to the main model
+    this.shapeService.saveConnectivityToModel();
   }
 
   //CHECK FOR OVERLAPS
@@ -301,7 +313,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           else if (theNotBus.connId2 === theBus.elementId) {
             theNotBus.connId2 = "";
           }
-          this.setConnectivityColor(theNotBus);
+          this.setConnectivity(theNotBus);
         }
       }
       //Non-bus is moving
@@ -330,7 +342,7 @@ export class NetworkBuilderViewComponent implements OnInit {
             }
           }
         }
-        this.setConnectivityColor(theNotBus);
+        this.setConnectivity(theNotBus);
       }
     }
   }

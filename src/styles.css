@@ -1,8 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  /* top: 0px; */
+  margin-left: 0px;
+  /* border-width: 0px;
+  overflow: hidden; */
+}
+
 button {
+  margin-left: 6px;
   margin-top: 8px;
-  margin-left: 4px;
-  
   height: 24px;
 
   touch-action: manipulation;
@@ -45,12 +52,7 @@ button {
     margin: 0px;
 }
 
-/* body {
-  top: 0px;
-  margin-left: 5px;
-  border-width: 0px;
-  overflow: hidden;
-} */
+
 
 .header {
   position: fixed;
