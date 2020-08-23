@@ -41,10 +41,10 @@
 
     <div *ngFor="let property of propertiesFormArray; index as i">
 
-      <label>
+      
       <!-- The label -->
-      {{formTitles[i]}}:
-      </label>
+        <!-- {{formTitles[i]}}: -->
+      <text>{{formTitles[i]}}:</text>
       <!-- Create the input and add the default value -->
       <input 
         type="text"
@@ -52,7 +52,7 @@
         placeholder="{{formDefaults[i]}}"
         name="{{formTitles[i]}}"
         ngModel>
-        
+
     </div>
 
       <!-- [formControl]="propertiesFormArray[i]"  -->
