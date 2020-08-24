@@ -18,14 +18,15 @@ export class MainViewComponent implements OnInit {
   modelJSON = "";
 
   ngOnInit(): void {
-    this.getShapeData();
+    this.getModelData();
   }
 
-  getShapeData() {
+  getModelData() {
     this.shapes = this.shapeService.getShapes();
     var modelData: Array<Object> = [];
-    var jString2 = "";
+    // var jString2 = "";
     var jString = "{" + JSON.stringify("bus1") + ":{";
+
     for (let shape of this.shapes) {
       modelData.push({
         elementId: shape.elementId,
@@ -37,32 +38,30 @@ export class MainViewComponent implements OnInit {
         + ":" + JSON.stringify((shape.connId1) ? shape.connId1 : "") + ","
 
 
-      jString2 += JSON.stringify({
-        elementId: shape.elementId,
-        elementType: shape.elementType,
-        bus1: shape.connId1,
-        bus2: shape.connId2
-      });
+      // jString2 += JSON.stringify({
+      //   elementId: shape.elementId,
+      //   elementType: shape.elementType,
+      //   bus1: shape.connId1,
+      //   bus2: shape.connId2
+      // });
 
     }
     jString = jString.substring(0, jString.length - 1) + "}}"
 
-    let myJson = JSON.stringify(modelData);
-    console.log("json:" + myJson);
-
-    // this.modelJSON = jString;
     this.modelJSON = jString;
 
-    interface MyObj {
-      elementId: string
-      bus1: string
-    }
+    // let myJson = JSON.stringify(modelData);
+    // console.log("json:" + myJson);
+    // interface MyObj {
+    //   elementId: string
+    //   bus1: string
+    // }
 
-    let obj: MyObj[] = JSON.parse(myJson);
+    // let obj: MyObj[] = JSON.parse(myJson);
 
-    for (let thisObj of obj) {
-      console.log("parse:" + thisObj.elementId);
-    }
+    // for (let thisObj of obj) {
+    //   console.log("parse:" + thisObj.elementId);
+    // }
 
 
   }

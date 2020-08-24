@@ -24,7 +24,12 @@
   &nbsp; -->
 
   <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
+      <!-- Prevent implicit submission of the form -->
+    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
     <button type="submit">Submit</button>
+    &nbsp;
+    <button routerLink="/network-builder-component">Cancel</button>
     <br>
     <br>
     <div *ngFor="let property of propertiesFormArray; index as i">

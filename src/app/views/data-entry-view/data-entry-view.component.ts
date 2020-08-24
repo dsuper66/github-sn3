@@ -11,7 +11,7 @@ import { ShapeService } from '../shape.service';
 import { ModelElementService } from '../../data-model/model-element.service';
 import { Shape } from '../shape';
 import { isDefined } from '@angular/compiler/src/util';
-// import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -22,7 +22,7 @@ export class DataEntryViewComponent implements OnInit {
 
   constructor(
     private modelElementService: ModelElementService,
-    // private router: Router,
+    private router: Router,
     private shapeService: ShapeService) { }
 
   ngOnInit(): void {
@@ -51,8 +51,8 @@ export class DataEntryViewComponent implements OnInit {
         console.log(">>>" + propertyTypeId + ":" + newValue);
       this.modelElementService.setValueForElementProperty(this.elementId,propertyTypeId,newValue);
     }
-
-    // this.router.navigate([ '/network-builder-component' ]) ;
+    //Submit also navigates back
+    this.router.navigate([ '/network-builder-component' ]) ;
 
     // console.log('resistance:' , document.getElementById("resistance")[0].value)
     // console.log('resistance:' , form["resistance"]);
@@ -100,11 +100,11 @@ export class DataEntryViewComponent implements OnInit {
       //   [key: string]: any;}
       for (let propertyId of this.propertyTypeIds) {
         this.formTitles.push(propertyId);
-        let currentValue = this.modelElementService.getValueForElementProperty(this.elementId,propertyId);
-        this.formDefaults.push(currentValue);
-        console.log("current value:" + currentValue);
+        let value = this.modelElementService.getValueForElementProperty(this.elementId,propertyId);
+        this.formDefaults.push(value);
+        console.log("current value:" + value);
 
-        this.propertiesFormArray.push(new FormControl(currentValue));
+        this.propertiesFormArray.push(new FormControl(value));
       }
 
       // console.log(">>>mm>>>" + indexedArray);
