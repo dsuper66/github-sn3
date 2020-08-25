@@ -58,7 +58,7 @@ export class ShapeService {
   //Shapes of type
   //***this happens multiple times during a move *****/
   getShapesOfType(elementType: string):Shape[] {
-    let filtered = this.shapes.filter(shape => shape.elementType === elementType);
+    let filtered = this.shapes.filter(shape => shape.elementTypeId === elementType);
     // for (let element of filtered) {
     //   console.log("shapes of type:" + elementType + " = " + element.elementId);
     // }
@@ -66,7 +66,7 @@ export class ShapeService {
   }
   //...and not of type
   getShapesNotOfType(elementType: string):Shape[] {
-    return this.shapes.filter(shape => shape.elementType != elementType);
+    return this.shapes.filter(shape => shape.elementTypeId != elementType);
   }
 
   getCountShapesOfType(elementType: string) {
@@ -87,7 +87,7 @@ export class ShapeService {
     if (elementType == 'bus') {
       let y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
       this.selectedShape = ({
-        elementType: elementType,
+        elementTypeId: elementType,
         elementId: elementId,
         xInner: this.busInitX,
         yInner: y,
@@ -113,7 +113,7 @@ export class ShapeService {
       let y = (this.busInitY * Math.ceil(branchCountNew/2)) + this.busWidth/2;
       // this.shapes.push({
       this.selectedShape = ({
-        elementType: elementType,
+        elementTypeId: elementType,
         elementId: elementId,
         xInner: x,
         yInner: y,
@@ -150,7 +150,7 @@ export class ShapeService {
       console.log("path1: " + path1 + " path2: " + path2);
       // this.shapes.push({
       this.selectedShape = ({
-        elementType: elementType,
+        elementTypeId: elementType,
         elementId: elementId,
         xInner: x,
         yInner: y,

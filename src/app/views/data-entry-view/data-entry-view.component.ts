@@ -79,8 +79,9 @@ export class DataEntryViewComponent implements OnInit {
     this.selectedShape = this.shapeService.getSelectedShape();
     if (this.selectedShape) {
       this.elementId = this.selectedShape.elementId;
-      console.log(">>> " + this.selectedShape.elementType);
-      this.propertyTypeIds = this.modelElementService.getPropertyTypeIdsOfElementType(this.selectedShape.elementType);
+      console.log(">>> " + this.selectedShape.elementTypeId);
+      this.propertyTypeIds = 
+        this.modelElementService.getPropertyTypeIdsOfElementType(this.selectedShape.elementTypeId);
       console.log(this.propertyTypeIds)
 
       // interface Dict {

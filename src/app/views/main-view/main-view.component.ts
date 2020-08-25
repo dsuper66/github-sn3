@@ -12,7 +12,10 @@ import { ModelElement } from '../../data-model/model-element'
 })
 export class MainViewComponent implements OnInit {
 
-  constructor(private shapeService: ShapeService) { }
+  constructor(
+    private shapeService: ShapeService,
+    private modelElementService: ModelElementService) 
+    { }
 
   shapes: Shape[] = [];
   modelJSON = "";
@@ -22,6 +25,35 @@ export class MainViewComponent implements OnInit {
   }
 
   getModelData() {
+    //Start element and array of elements
+    var jString = "{" + JSON.stringify("elements") + ":[";
+    let modelElements = this.modelElementService.getModelElements();
+    for (const modelElement of modelElements){
+      //ID
+      jString += "{" + JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
+      //Element type
+      jString += JSON.stringify("elementTypeId") + ":" + JSON.stringify(modelElement.elementTypeId) + ",";
+      //Properties
+      jString += JSON.stringify("properties") + ":[";
+  
+      //Properties
+      for (const propertyTypeId
+          of this.modelElementService.getPropertyTypeIdsOfElementType(modelElement.elementTypeId)) {
+
+            let value = this.modelElementService.getValueForElementProperty(modelElement.elementId,propertyTypeId);
+            jString += "{" + JSON.stringify(propertyTypeId)  + ":" + JSON.stringify(value)  + "},"
+      }
+      //Close properties array and element to prep for next element
+      jString = jString.substring(0, jString.length - 1) + "]},";
+    }
+    //Close elements array and element
+    jString = jString.substring(0, jString.length - 1) + "]}";
+
+    this.modelJSON = jString;
+  }
+
+
+  getModelDataOld() {
     this.shapes = this.shapeService.getShapes();
     var modelData: Array<Object> = [];
     // var jString2 = "";

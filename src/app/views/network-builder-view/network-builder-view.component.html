@@ -31,10 +31,10 @@
   <ng-container *ngFor="let shape of shapesToDraw">
 
     <!--Branch or Bus-->
-    <svg *ngIf="shape.elementType=='bus' || shape.elementType=='branch'" >
+    <svg *ngIf="shape.elementTypeId=='bus' || shape.elementTypeId=='branch'" >
 
       <!-- Bus or branch-->
-       <!-- <svg *ngIf="shape.elementType=='bus'"> -->
+       <!-- <svg *ngIf="shape.elementTypeId=='bus'"> -->
 
         <!-- [attr.x]="shape.xOuter" [attr.y]="shape.yOuter" -->
         <!-- [ngStyle]="{'transform': 'rotate(45deg) translateX(0px) translateY(0px)'}"  -->
@@ -56,7 +56,7 @@
           [attr.y]="shape.yInner" 
           [attr.width]="shape.wInner"
           [attr.height]="shape.hInner"
-          [attr.rx]="shape.elementType=='bus'?8:2" 
+          [attr.rx]="shape.elementTypeId=='bus'?8:2" 
           /> 
       <!-- </svg> -->
 
@@ -66,7 +66,7 @@
 
     <!--Gen or Load-->
     <svg class="path" 
-    *ngIf="shape.elementType=='gen' || shape.elementType=='load'"
+    *ngIf="shape.elementTypeId=='gen' || shape.elementTypeId=='load'"
     >
 
       <!--Selected-->
@@ -77,7 +77,7 @@
       </svg>
 
       <!--Gen-->
-      <svg *ngIf="shape.elementType=='gen'"
+      <svg *ngIf="shape.elementTypeId=='gen'"
         [attr.height]="shape.hInner" [attr.width]="shape.wInner"
         [attr.x]="shape.xInner" [attr.y]="shape.yInner"  
         id="{{shape.elementId}}"              
@@ -92,7 +92,7 @@
         <path [attr.d]="shape.path2"/>
       </svg>  
       <!--Load-->
-      <svg *ngIf="shape.elementType=='load'"
+      <svg *ngIf="shape.elementTypeId=='load'"
         [attr.height]="shape.hInner" [attr.width]="shape.wInner"
         [attr.x]="shape.xInner" [attr.y]="shape.yInner"
         id="{{shape.elementId}}">

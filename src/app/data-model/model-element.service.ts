@@ -55,6 +55,10 @@ export class ModelElementService {
     return this.propertyTypeIdsOfElementType[elementTypeId];
   }
 
+  getModelElements(): ModelElement[] {
+    return this.modelElements;
+  }
+
   addModelElement(elementTypeId: string): string {
     //Get next index for i.d.
     if (this.elementNextIndex[elementTypeId] == undefined) {
