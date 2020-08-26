@@ -34,17 +34,17 @@ export class MainViewComponent implements OnInit {
       //Element type
       jString += JSON.stringify("elementTypeId") + ":" + JSON.stringify(modelElement.elementTypeId) + ",";
       //Properties
-      jString += JSON.stringify("properties") + ":[";
+      jString += JSON.stringify("properties") + ":{";
   
       //Properties
       for (const propertyTypeId
           of this.modelElementService.getPropertyTypeIdsOfElementType(modelElement.elementTypeId)) {
 
             let value = this.modelElementService.getValueForElementProperty(modelElement.elementId,propertyTypeId);
-            jString += "{" + JSON.stringify(propertyTypeId)  + ":" + JSON.stringify(value)  + "},"
+            jString += JSON.stringify(propertyTypeId)  + ":" + JSON.stringify(value)  + ","
       }
       //Close properties array and element to prep for next element
-      jString = jString.substring(0, jString.length - 1) + "]},";
+      jString = jString.substring(0, jString.length - 1) + "}},";
     }
     //Close elements array and element
     jString = jString.substring(0, jString.length - 1) + "]}";
