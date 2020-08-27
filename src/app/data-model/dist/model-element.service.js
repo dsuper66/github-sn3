@@ -25,10 +25,10 @@ var ModelElementService = /** @class */ (function () {
         this.propertyTypeIdsOfElementType['branch'] = ['connId1', 'connId2', 'max', 'resistance', 'susceptance'];
         this.propertyTypeIdsOfElementType['gen'] = ['connId1', 'genCapacity'];
         this.propertyTypeIdsOfElementType['load'] = ['connId1'];
-        this.propertyTypeIdsOfElementType['bidTranch'] = ['parentId', 'quantity', 'price'];
-        this.propertyTypeIdsOfElementType['genTranch'] = ['parentId', 'quantity', 'price'];
-        this.propertyTypeIdsOfElementType['resTranch'] = ['parentId', 'quantity', 'price'];
-        this.propertyTypeIdsOfElementType['lossTranch'] = ['parentId', 'flow', 'loss'];
+        this.propertyTypeIdsOfElementType['bidTranch'] = ['load', 'quantity', 'price'];
+        this.propertyTypeIdsOfElementType['genTranch'] = ['gen', 'quantity', 'price'];
+        this.propertyTypeIdsOfElementType['resTranch'] = ['gen', 'quantity', 'price'];
+        this.propertyTypeIdsOfElementType['lossTranch'] = ['branch', 'flow', 'loss'];
     }
     ModelElementService.prototype.getPropertyTypeIdsOfElementType = function (elementTypeId) {
         console.log("from: " + this.propertyTypeIdsOfElementType);
@@ -56,6 +56,7 @@ var ModelElementService = /** @class */ (function () {
             // bus1: "",
             // bus2: ""
         });
+        //Add any child elements associated with this element type
         return elementId;
     };
     ModelElementService.prototype.getValueForElementProperty = function (elementId, propertyTypeId) {
