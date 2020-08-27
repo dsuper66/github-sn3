@@ -15,25 +15,33 @@ export class ModelElementService {
 
   constructor() {
     
+    //Property Types and Defaults
     this.elementPropertyTypes.push(
       {propertyTypeId:'isRefBus', primitiveType:'bool', defaultValue:true},
-      {propertyTypeId:'conn1', primitiveType:'string', defaultValue:'none'},
-      {propertyTypeId:'conn2', primitiveType:'string', defaultValue:'none'},
+      {propertyTypeId:'connId1', primitiveType:'string', defaultValue:'nil'},
+      {propertyTypeId:'connId2', primitiveType:'string', defaultValue:'nil'},
+      {propertyTypeId:'max', primitiveType:'number', defaultValue:'100'},
       {propertyTypeId:'resistance', primitiveType:'number', defaultValue:'10'},
       {propertyTypeId:'susceptance', primitiveType:'number', defaultValue:'0.001'},
-      {propertyTypeId:'enBids', primitiveType:'tranches', defaultValue:[100,70]},
-      {propertyTypeId:'enOffers', primitiveType:'tranches', defaultValue:[50,150]},
-      {propertyTypeId:'resOffers', primitiveType:'tranches', defaultValue:[50,150]},
+      {propertyTypeId:'parentId', primitiveType:'string', defaultValue:'nil'},
+      {propertyTypeId:'quantity', primitiveType:'number', defaultValue:'70'},
+      {propertyTypeId:'price', primitiveType:'number', defaultValue:'150'},      
+      {propertyTypeId:'flow', primitiveType:'number', defaultValue:'25'},
+      {propertyTypeId:'loss', primitiveType:'number', defaultValue:'2'},
       {propertyTypeId:'genCapacity', primitiveType:'number', defaultValue:'100'}
     )
 
+    //Element Types and their Property Type Ids
     this.propertyTypeIdsOfElementType['bus']=['isRefBus'];
-    this.propertyTypeIdsOfElementType['branch']=['conn1','conn2','resistance','susceptance'];
-    this.propertyTypeIdsOfElementType['gen'] = ['conn1','enOffers','resOffers','genCapacity'];
-    this.propertyTypeIdsOfElementType['load'] = ['conn1','enBids'];
+    this.propertyTypeIdsOfElementType['branch']=['connId1','connId2','max','resistance','susceptance'];
+    this.propertyTypeIdsOfElementType['gen'] = ['connId1','genCapacity'];
+    this.propertyTypeIdsOfElementType['load'] = ['connId1'];
+    this.propertyTypeIdsOfElementType['bidTranch'] = ['parentId','quantity','price'];
+    this.propertyTypeIdsOfElementType['genTranch'] = ['parentId','quantity','price'];    
+    this.propertyTypeIdsOfElementType['resTranch'] = ['parentId','quantity','price'];    
+    this.propertyTypeIdsOfElementType['lossTranch'] = ['parentId','flow','loss'];
 
    }
-
   
   private modelElements:ModelElement[]=[];
   private elementNextIndex = new Map<string, bigint>();
@@ -108,11 +116,13 @@ export class ModelElementService {
     var properties:ElementProperties = {};
     for (let propertyTypeId of thesePropertyTypeIds) {
 
-      console.log("looking for " + propertyTypeId)
+      console.log("looking for property " + propertyTypeId)
       let elementProperty = this.elementPropertyTypes.filter(
         elementPropertyType => elementPropertyType.propertyTypeId === propertyTypeId)[0];
-
+      
+      //Assign default
       properties[elementProperty.propertyTypeId] = elementProperty.defaultValue;
+      
       
     }
     return properties;

@@ -90,13 +90,13 @@ export class DataEntryViewComponent implements OnInit {
       // let controlsConfig: Dict;
 
       // var indexedArray: { [key: string]: any; } = {
-      //   'conn1': ['none'],
-      //   'conn2': ['none'],
+      //   'connId1': ['none'],
+      //   'connId2': ['none'],
       //   'resistance': ['none']
       // }
 
 
-      // indexedArray = {'conn1': ['none'],conn2':['none'],'resistance':['none']};
+      // indexedArray = {'connId1': ['none'],connId2':['none'],'resistance':['none']};
       // var controlsConfig: {
       //   [key: string]: any;}
       for (let propertyId of this.propertyTypeIds) {
@@ -110,8 +110,8 @@ export class DataEntryViewComponent implements OnInit {
 
       // console.log(">>>mm>>>" + indexedArray);
       //   this.myGroup = this.fb.group({
-      //     'conn1': ['none'],
-      //     'conn2':['none'],
+      //     'connId1': ['none'],
+      //     'connId2':['none'],
       //     'resistance':['none'] });
       // }
       // this.myGroup = this.fb.group({
