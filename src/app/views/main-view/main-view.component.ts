@@ -40,7 +40,8 @@ export class MainViewComponent implements OnInit {
       for (const propertyTypeId
           of this.modelElementService.getPropertyTypeIdsOfElementType(modelElement.elementTypeId)) {
 
-            let value = this.modelElementService.getValueForElementProperty(modelElement.elementId,propertyTypeId);
+            let value = this.modelElementService.getValueForElementProperty(
+              modelElement.elementId,propertyTypeId);
             jString += JSON.stringify(propertyTypeId)  + ":" + JSON.stringify(value)  + ","
       }
       //Close properties array and element to prep for next element
