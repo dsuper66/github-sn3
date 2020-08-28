@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 
-//So that we can route here
-// import { ActivatedRoute } from '@angular/router';
+//So that we can extract the i.d.
+import { ActivatedRoute } from '@angular/router';
 
 import { ShapeService } from '../shape.service';
 import { ModelElementService } from '../../data-model/model-element.service';
@@ -19,13 +19,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./data-entry-view.component.css']
 })
 export class DataEntryViewComponent implements OnInit {
-
+  id: string;
+  
   constructor(
     private modelElementService: ModelElementService,
     private router: Router,
-    private shapeService: ShapeService) { }
+    private route: ActivatedRoute,
+    private shapeService: ShapeService) { 
+      route.params.subscribe(params => { this.id = params['id']; });
+    }
 
   ngOnInit(): void {
+    console.log("GOT ID ",this.id);
     this.getElementId();
   }
 
@@ -48,6 +53,7 @@ export class DataEntryViewComponent implements OnInit {
     for (let propertyTypeId of this.propertyTypeIds.filter(
       id => Object(form)[id] != "")) {
         let newValue = Object(form)[propertyTypeId];
+
         console.log(">>>" + propertyTypeId + ":" + newValue);
       this.modelElementService.setValueForElementProperty(this.elementId,propertyTypeId,newValue);
     }

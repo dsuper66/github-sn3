@@ -11,30 +11,26 @@ var core_1 = require("@angular/core");
 var ModelElementService = /** @class */ (function () {
     function ModelElementService() {
         this.modelElements = [];
-        this.elementNextIndex = new Map();
         this.elementPropertyTypes = [];
         this.propertyTypeIdsOfElementType = {};
-        // private propertiesOfElementType : Map<string, string[]>;
-        this.valueTypesOfProperties = new Map();
-        // private propertiesDisplayOrder = new Map<string,bigint >(); //-ve => read only, 0 no display
-        this.allProperties = [];
+        // private valueTypesOfProperties = new Map<string, string>();
+        // private allProperties:String[] = [];
+        this.elementNextIndex = new Map();
         //Property Types (and Defaults)
-        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true }, { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'nil' }, { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'nil' }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001' }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'nil' }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80' }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'genTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90' }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'resTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70' }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150' }, { propertyTypeId: 'bidTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25' }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2' }, { propertyTypeId: 'lossTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100' });
-        //Add static elements
+        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true }, { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001' }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80' }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90' }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70' }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150' }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25' }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2' }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100' });
+        //Add static elements, accessed via the Settings display
         this.modelElements.push({ elementId: 'bidTrancheDef', elementTypeId: 'childSet',
             properties: [{ 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }] });
         //Element Types and their Property Type Ids
         this.propertyTypeIdsOfElementType['bus'] = ['isRefBus'];
-        this.propertyTypeIdsOfElementType['branch'] =
-            ['connId1', 'connId2', 'maxFlow', 'susceptance', 'trancheCount'];
+        this.propertyTypeIdsOfElementType['branch'] = ['connId1', 'connId2', 'maxFlow', 'susceptance'];
         this.propertyTypeIdsOfElementType['gen'] = ['connId1', 'maxGen'];
         this.propertyTypeIdsOfElementType['load'] = ['connId1'];
         this.propertyTypeIdsOfElementType['childSet'] = ['parentTypeId', 'childTypeId', 'childCount'];
         this.propertyTypeIdsOfElementType['bidTranch'] = ['parentId', 'bidLimit', 'bidPrice'];
         this.propertyTypeIdsOfElementType['genTranch'] = ['parentId', 'genLimit', 'genPrice'];
         this.propertyTypeIdsOfElementType['resTranch'] = ['parentId', 'resLimit', 'resPrice'];
-        this.propertyTypeIdsOfElementType['lossTranch'] =
-            ['parentTypeId', 'parentId', 'flowLimit', 'lossLimit', 'trancheCount'];
+        this.propertyTypeIdsOfElementType['lossTranch'] = ['parentId', 'flowLimit', 'lossLimit'];
     }
     ModelElementService.prototype.getPropertyTypeIdsOfElementType = function (elementTypeId) {
         console.log("from: " + this.propertyTypeIdsOfElementType);

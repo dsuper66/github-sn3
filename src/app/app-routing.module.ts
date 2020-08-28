@@ -9,7 +9,7 @@ const routes: Routes = [
   //When first opened, no path re-directs to this path...
   { path: '', redirectTo: '/network-builder-component', pathMatch: 'full' },
   //The paths that link to the components
-  {path: 'data-entry-component', component: DataEntryViewComponent},
+  {path: 'data-entry-component/:id', component: DataEntryViewComponent},
   {path: 'network-builder-component', component: NetworkBuilderViewComponent},
   {path: 'main-component', component: MainViewComponent}
 ];

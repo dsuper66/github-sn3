@@ -10,9 +10,11 @@ exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
 var forms_1 = require("@angular/forms");
 var DataEntryViewComponent = /** @class */ (function () {
-    function DataEntryViewComponent(modelElementService, router, shapeService) {
+    function DataEntryViewComponent(modelElementService, router, route, shapeService) {
+        var _this = this;
         this.modelElementService = modelElementService;
         this.router = router;
+        this.route = route;
         this.shapeService = shapeService;
         // myGroup = new FormGroup({
         //   firstName: new FormControl()
@@ -22,8 +24,10 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.formTitles = [];
         this.formDefaults = [];
         this.elementId = "none selected";
+        route.params.subscribe(function (params) { _this.id = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
+        console.log("GOT ID ", this.id);
         this.getElementId();
     };
     DataEntryViewComponent.prototype.onSubmit = function (form) {

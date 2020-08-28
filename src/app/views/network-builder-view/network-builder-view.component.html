@@ -1,8 +1,8 @@
 <div class="header">
 
-  <button 
-    [disabled]="!selectedShape" 
-    routerLink="/data-entry-component">Data</button> 
+  <button *ngIf="selectedShape"
+    routerLink="/data-entry-component/{{selectedShape.elementId}}">Data</button> 
+  <button *ngIf="!selectedShape" [disabled]=true>Data</button>     
 
     &nbsp;
 
