@@ -20,16 +20,21 @@ var ModelElementService = /** @class */ (function () {
         this.allProperties = [];
         //Property Types (and Defaults)
         this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true }, { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'nil' }, { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'nil' }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001' }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'nil' }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80' }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'genTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90' }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'resTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70' }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150' }, { propertyTypeId: 'bidTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25' }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2' }, { propertyTypeId: 'lossTrancheCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100' });
+        //Add static elements
+        this.modelElements.push({ elementId: 'bidTrancheDef', elementTypeId: 'childSet',
+            properties: [{ 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }] });
         //Element Types and their Property Type Ids
         this.propertyTypeIdsOfElementType['bus'] = ['isRefBus'];
         this.propertyTypeIdsOfElementType['branch'] =
-            ['connId1', 'connId2', 'maxFlow', 'susceptance', 'lossTrancheCount'];
-        this.propertyTypeIdsOfElementType['gen'] = ['connId1', 'maxGen', 'genTrancheCount', 'resTrancheCount'];
+            ['connId1', 'connId2', 'maxFlow', 'susceptance', 'trancheCount'];
+        this.propertyTypeIdsOfElementType['gen'] = ['connId1', 'maxGen'];
         this.propertyTypeIdsOfElementType['load'] = ['connId1'];
-        this.propertyTypeIdsOfElementType['bidTranch'] = ['load', 'bidLimit', 'bidPrice', 'bidTrancheCount'];
-        this.propertyTypeIdsOfElementType['genTranch'] = ['gen', 'genLimit', 'genPrice'];
-        this.propertyTypeIdsOfElementType['resTranch'] = ['gen', 'resLimit', 'resPrice'];
-        this.propertyTypeIdsOfElementType['lossTranch'] = ['branch', 'flowLimit', 'lossLimit'];
+        this.propertyTypeIdsOfElementType['childSet'] = ['parentTypeId', 'childTypeId', 'childCount'];
+        this.propertyTypeIdsOfElementType['bidTranch'] = ['parentId', 'bidLimit', 'bidPrice'];
+        this.propertyTypeIdsOfElementType['genTranch'] = ['parentId', 'genLimit', 'genPrice'];
+        this.propertyTypeIdsOfElementType['resTranch'] = ['parentId', 'resLimit', 'resPrice'];
+        this.propertyTypeIdsOfElementType['lossTranch'] =
+            ['parentTypeId', 'parentId', 'flowLimit', 'lossLimit', 'trancheCount'];
     }
     ModelElementService.prototype.getPropertyTypeIdsOfElementType = function (elementTypeId) {
         console.log("from: " + this.propertyTypeIdsOfElementType);
