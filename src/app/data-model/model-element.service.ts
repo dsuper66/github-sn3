@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ModelElement, ElementPropertyType } from './model-element';
 import { Shape } from '../views/shape';
 import { ElementType } from './model-element'
-import { ElementProperties } from './model-element'
+// import { ElementProperty } from './model-element'
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -42,7 +42,7 @@ export class ModelElementService {
     this.modelElements.push(
       {
         elementId: 'bidTrancheDef', elementTypeId: 'childSet',
-        properties: [{ 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]
+        properties: [{'parentTypeId':'load'}, {'childTypeId': 'bidTranche'}, {'childCount': '3'}]
       }
     );
 
@@ -111,22 +111,32 @@ export class ModelElementService {
     const childSetElements = this.modelElements.filter(
       element => element.elementTypeId === 'childSet');
 
-    for (const childSetElement of childSetElements) {
-        for (const property of childSetElement.properties) {
+    console.log("***found childset:" + childSetElements.length);
 
-        }
-        // console.log("***found childset:" + childSetElement.elementId);
-      
-    // const childSetForNewElement = childSetElements.filter(
-      childSet => childSet.properties['parentTypeId'] === elementTypeIdForNewElement);
+    for (const childSetElement of childSetElements) {
+      // console.log("### " + childSetElement.elementId + ">>" + childSetElement.properties[0]['parentTypeId']);
+      for (const key in childSetElement.properties) {
+        // console.log("###1 " + Object(childSetElement.properties)[key]['parentTypeId']);
+        console.log("###1 " + childSetElement.properties[key]['parentTypeId']);
+      }
+    }
+    const childSetForParent = childSetElements.filter(
+      // childSetElement => childSetElement.properties.filter((property: { [x: string]: any; }) => property['parentTypeId'])
+      childSetElement => childSetElement.properties.filter(
+        (property: { [propertyTypeId: string]: any; }) => property.propertyTypeId === 'parentTypeId')
+    )
+    console.log("###2 " + childSetForParent[0].elementId);
+    
 
     
-      // if (childSetForNewElement) {
-      //   console.log("***element type:"
-      //     + elementTypeIdForNewElement + " has child type:" + childSetForNewElement.properties['childTypeId']);
-      // }
-    }
 
+    // console.log("***found childset:" + childSetForNewElement.elementId);
+
+    // if (childSetForNewElement) {
+    //   console.log("***element type:"
+    //     + elementTypeIdForNewElement + " has child type:" + childSetForNewElement.properties['childTypeId']);
+    // }
+    // }
 
     return elementId;
   }
@@ -144,7 +154,7 @@ export class ModelElementService {
     )[0].properties[propertyTypeId] = value;
   }
 
-  makePropertiesForElementType(elementTypeId: string): ElementProperties {
+  makePropertiesForElementType(elementTypeId: string): { [propertyTypeId: string]: any } {
     // let thesePropertyTypeIds = this.propertiesOfElementType.filter(
     //   elementType => elementType.elementTypeId === elementTypeId)[0].propertyTypeIds;
 
@@ -154,7 +164,7 @@ export class ModelElementService {
     // let properties = this.elementPropertyTypes.filter(
     //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyTypeId thesePropertyTypeIds)
     // )
-    var properties: ElementProperties = {};
+    var properties: { [propertyTypeId: string]: any } = {};
     for (let propertyTypeId of thesePropertyTypeIds) {
 
       console.log("looking for property " + propertyTypeId)

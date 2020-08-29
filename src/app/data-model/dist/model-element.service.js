@@ -65,20 +65,25 @@ var ModelElementService = /** @class */ (function () {
         });
         //Add any child elements associated with this element type
         var childSetElements = this.modelElements.filter(function (element) { return element.elementTypeId === 'childSet'; });
+        console.log("***found childset:" + childSetElements.length);
         for (var _i = 0, childSetElements_1 = childSetElements; _i < childSetElements_1.length; _i++) {
             var childSetElement = childSetElements_1[_i];
-            for (var _a = 0, _b = childSetElement.properties; _a < _b.length; _a++) {
-                var property = _b[_a];
+            // console.log("### " + childSetElement.elementId + ">>" + childSetElement.properties[0]['parentTypeId']);
+            for (var key in childSetElement.properties) {
+                // console.log("###1 " + Object(childSetElement.properties)[key]['parentTypeId']);
+                console.log("###1 " + childSetElement.properties[key]['parentTypeId']);
             }
-            // console.log("***found childset:" + childSetElement.elementId);
-            // const childSetForNewElement = childSetElements.filter(
-            (function (childSet) { return childSet.properties['parentTypeId'] === elementTypeIdForNewElement; });
-            ;
-            // if (childSetForNewElement) {
-            //   console.log("***element type:"
-            //     + elementTypeIdForNewElement + " has child type:" + childSetForNewElement.properties['childTypeId']);
-            // }
         }
+        var childSetForParent = childSetElements.filter(
+        // childSetElement => childSetElement.properties.filter((property: { [x: string]: any; }) => property['parentTypeId'])
+        function (childSetElement) { return childSetElement.properties.filter(function (property) { return property.propertyTypeId === 'parentTypeId'; }); });
+        console.log("###2 " + childSetForParent[0].elementId);
+        // console.log("***found childset:" + childSetForNewElement.elementId);
+        // if (childSetForNewElement) {
+        //   console.log("***element type:"
+        //     + elementTypeIdForNewElement + " has child type:" + childSetForNewElement.properties['childTypeId']);
+        // }
+        // }
         return elementId;
     };
     ModelElementService.prototype.getValueForElementProperty = function (elementId, propertyTypeId) {
