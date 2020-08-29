@@ -20,18 +20,18 @@ import { Router } from '@angular/router';
 })
 export class DataEntryViewComponent implements OnInit {
   id: string;
-  
+
   constructor(
     private modelElementService: ModelElementService,
     private router: Router,
     private route: ActivatedRoute,
-    private shapeService: ShapeService) { 
-      route.params.subscribe(params => { this.id = params['id']; });
-    }
+    private shapeService: ShapeService) {
+    route.params.subscribe(params => { this.id = params['id']; });
+  }
 
   ngOnInit(): void {
-    console.log("GOT ID ",this.id);
-    this.getElementId();
+    console.log("GOT ID ", this.id);
+    this.getDataForElementId(this.id);
   }
 
   // myGroup = new FormGroup({
@@ -43,22 +43,29 @@ export class DataEntryViewComponent implements OnInit {
   formTitles: string[] = [];
   formDefaults: string[] = [];
 
-
+  //To get the data back from the form
   propertyTypeIds: string[];
-  private selectedShape: Shape;
-  private elementId = "none selected";
+  // private selectedShape: Shape;
+  // private elementId = "none selected";
 
   onSubmit(form: NgForm): void {
-    console.log('you submitted value:' , form);
-    for (let propertyTypeId of this.propertyTypeIds.filter(
-      id => Object(form)[id] != "")) {
-        let newValue = Object(form)[propertyTypeId];
+    //The form returns an object
+    console.log('you submitted value:', form);
 
+    //Extract the data from the object
+    //Fields where no data has been entered are empty strings, so we don't update those
+    if (this.propertyTypeIds) {
+      for (let propertyTypeId of this.propertyTypeIds.filter(
+        id => Object(form)[id] != "")) {
+
+        let newValue = Object(form)[propertyTypeId];
         console.log(">>>" + propertyTypeId + ":" + newValue);
-      this.modelElementService.setValueForElementProperty(this.elementId,propertyTypeId,newValue);
+
+        this.modelElementService.setValueForElementProperty(this.id, propertyTypeId, newValue);
+      }
     }
     //Submit also navigates back
-    this.router.navigate([ '/network-builder-component' ]) ;
+    this.router.navigate(['/network-builder-component']);
 
     // console.log('resistance:' , document.getElementById("resistance")[0].value)
     // console.log('resistance:' , form["resistance"]);
@@ -69,12 +76,12 @@ export class DataEntryViewComponent implements OnInit {
 
     //   console.log(element)
     // }); 
-      // for (const name in form.controls) {
-      //     console.log ("ppp");
-      // }
+    // for (const name in form.controls) {
+    //     console.log ("ppp");
+    // }
   }
 
-  getElementId(): void {
+  getDataForElementId(elementId: string): void {
     //Get the element i.d. from the route
     // const elementId = this.route.snapshot.paramMap.get('elementId');
     // const elementId = this.route.snapshot.paramMap.get('elementId');
@@ -82,12 +89,13 @@ export class DataEntryViewComponent implements OnInit {
     //   + " name:" + this.modelElementService.getElementName(elementId));
     // this.modelData.setValue(elementId);
 
-    this.selectedShape = this.shapeService.getSelectedShape();
-    if (this.selectedShape) {
-      this.elementId = this.selectedShape.elementId;
-      console.log(">>> " + this.selectedShape.elementTypeId);
-      this.propertyTypeIds = 
-        this.modelElementService.getPropertyTypeIdsOfElementType(this.selectedShape.elementTypeId);
+    // this.selectedShape = this.shapeService.getSelectedShape();
+    const selectedElement = this.modelElementService.getModelElementForId(elementId);
+    if (selectedElement) {
+      // this.elementId = this.selectedShape.elementId;
+      console.log(">>> " + selectedElement.elementTypeId);
+      this.propertyTypeIds =
+        this.modelElementService.getPropertyTypeIdsOfElementType(selectedElement.elementTypeId);
       console.log(this.propertyTypeIds)
 
       // interface Dict {
@@ -105,9 +113,11 @@ export class DataEntryViewComponent implements OnInit {
       // indexedArray = {'connId1': ['none'],connId2':['none'],'resistance':['none']};
       // var controlsConfig: {
       //   [key: string]: any;}
+
+      //Populate the property fields
       for (let propertyId of this.propertyTypeIds) {
         this.formTitles.push(propertyId);
-        let value = this.modelElementService.getValueForElementProperty(this.elementId,propertyId);
+        let value = this.modelElementService.getValueForElementProperty(elementId, propertyId);
         this.formDefaults.push(value);
         console.log("current value:" + value);
 

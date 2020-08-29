@@ -61,7 +61,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                     console.log("new select");
                     this.drawingState = "keepDrawing";
                     this.selectedShape = checkShape;
-                    this.shapeService.setSelectedShape(checkShape);
+                    this.shapeService.setSelectedShapeId(checkShape.elementId);
                     //For bus or branch need to check direction
                     // if (this.selectedShape.elementType == 'bus'
                     //   || this.selectedShape.elementType == 'branch') {
@@ -192,13 +192,13 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //Unselect if just a tap... (no drawing, just start=>stop)
         if (this.drawingState == "starting") {
             //Reset selected shape
-            this.selectedShape = null;
-            this.shapeService.setSelectedShape(null);
+            this.selectedShape = undefined;
+            this.shapeService.setSelectedShapeId(undefined);
             this.shapesToDraw = this.shapeService.getShapes();
         }
         //Stop any current adjustment (but stay selected)
         this.drawingState = "stopped";
-        this.lastDrawingPoint = null;
+        this.lastDrawingPoint = undefined;
         this.directionDone = true;
     };
     NetworkBuilderViewComponent.prototype.stopDrawingMouse = function () {
@@ -219,12 +219,15 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
         //https://stackoverflow.com/questions/54507984/angular-how-to-modify-css-transform-property-of-html-elements-inside-a-compone
         //(with changes to setProperty)
-        //Set stroke colour
+        //Set connectivity colour
         var el = document.getElementById(shape.elementId);
-        this.renderer.setProperty(el.style, "stroke", (isFullyConnected ? "black" : "lime"));
-        //Bus and branch also set fill colour
-        if (shape.elementTypeId === 'bus' || shape.elementTypeId === 'branch') {
-            this.renderer.setProperty(el.style, "fill", (isFullyConnected ? "black" : "lime"));
+        if (el != undefined) {
+            //Set stroke colour
+            this.renderer.setProperty(el.style, "stroke", (isFullyConnected ? "black" : "lime"));
+            //Bus and branch also set fill colour
+            if (shape.elementTypeId === 'bus' || shape.elementTypeId === 'branch') {
+                this.renderer.setProperty(el.style, "fill", (isFullyConnected ? "black" : "lime"));
+            }
         }
         //Save any connectivity changes back to the main model
         this.shapeService.saveConnectivityToModel();
@@ -235,10 +238,12 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //   rect1.left > rect2.right || 
         //   rect1.bottom < rect2.top || 
         //   rect1.top > rect2.bottom)
-        if (this.selectedShape.elementTypeId === 'gen'
-            || this.selectedShape.elementTypeId === 'load'
-            || this.selectedShape.elementTypeId === 'branch'
-            || this.selectedShape.elementTypeId === 'bus') {
+        if (this.selectedShape != undefined) 
+        //   (this.selectedShape.elementTypeId === 'gen'
+        //   || this.selectedShape.elementTypeId === 'load'
+        //   || this.selectedShape.elementTypeId === 'branch'
+        //   || this.selectedShape.elementTypeId === 'bus')
+        {
             //Bus is moving
             if (this.selectedShape.elementTypeId === 'bus') {
                 var theBus = this.selectedShape;
@@ -308,19 +313,21 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
             }
         }
     };
-    NetworkBuilderViewComponent.prototype.getCanvasSize = function () {
-        var el = document.getElementById("body"); // or other selector like querySelector()
-        var rect = el.getBoundingClientRect(); // get the bounding rectangle
-        // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
-        return "done";
-    };
+    // getCanvasSize(): string {
+    //   var el = document.getElementById("body"); // or other selector like querySelector()
+    //   var rect = el.getBoundingClientRect(); // get the bounding rectangle
+    //   // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
+    //   return "done";
+    // }
     // dataRoute(){
     //     this.router.navigate([ '/data-entry-component' ])        
     // }
     NetworkBuilderViewComponent.prototype.deleteSelectedShape = function () {
-        this.shapeService.deleteSelectedShape();
-        this.shapesToDraw = this.shapeService.getShapes();
-        this.selectedShape = null;
+        if (this.selectedShape != undefined) {
+            this.shapeService.deleteShapeWithId(this.selectedShape.elementId);
+            this.shapesToDraw = this.shapeService.getShapes();
+            this.selectedShape = undefined;
+        }
     };
     NetworkBuilderViewComponent = __decorate([
         core_1.Component({

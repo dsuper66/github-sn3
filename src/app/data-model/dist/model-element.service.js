@@ -41,6 +41,9 @@ var ModelElementService = /** @class */ (function () {
     ModelElementService.prototype.getModelElements = function () {
         return this.modelElements;
     };
+    ModelElementService.prototype.getModelElementForId = function (elementId) {
+        return this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
+    };
     ModelElementService.prototype.addModelElement = function (elementTypeId) {
         //Get next index for i.d.
         if (this.elementNextIndex[elementTypeId] == undefined) {

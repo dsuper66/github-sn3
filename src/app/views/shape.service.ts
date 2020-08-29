@@ -10,7 +10,6 @@ export class ShapeService {
   constructor(private modelElementService: ModelElementService) { }
 
   private shapes:Shape[]=[];
-  private selectedShape:Shape;
 
   //Initial values
   branchInitLength = 100;
@@ -27,34 +26,37 @@ export class ShapeService {
   //Selection box
   selectWidth = 40;
 
+
+
+  //Selected shape... ONLY used so that we can define the selected shape 
+  //when returning from another display
+  private selectedShapeId?:string;
+  setSelectedShapeId(selectedShapeId: string | undefined) {
+    this.selectedShapeId = selectedShapeId;
+  }
+  getSelectedShape():Shape | undefined {
+    if (this.selectedShapeId != undefined) {
+      return this.getShapeWithId(this.selectedShapeId);
+    }
+    else {
+      return undefined;
+    }
+  }
+
+  //Delete
+  deleteShapeWithId(shapeIdToDelete: string){
+    this.shapes = this.shapes.filter(
+      shape => shape.elementId != shapeIdToDelete);
+  }
+
+  //Get shapes
   getShapes() {
     console.log("get shapes");
     return this.shapes;
   }
-  getShapeWithId(elementId:string){
+  getShapeWithId(elementId:string): Shape | undefined {
     return this.shapes.filter(shape => shape.elementId === elementId)[0];
-  }
-  setSelectedShape(selectedShape: Shape) {
-    this.selectedShape = selectedShape;
-    if (this.selectedShape) {
-      console.log("shape service selected shape = " 
-      + this.selectedShape.elementId)
-     }
-     else {
-      console.log("shape service selected shape = ###NULL###");
-     }
-  }
-  getSelectedShape():Shape {
-    return this.selectedShape;
-  }
-
-  //Delete
-  deleteSelectedShape(){
-    this.shapes = this.shapes.filter(
-      shape => shape.elementId != this.selectedShape.elementId);
-    this.selectedShape = null;
-  }
-
+  }  
   //Shapes of type
   //***this happens multiple times during a move *****/
   getShapesOfType(elementType: string):Shape[] {
@@ -68,7 +70,6 @@ export class ShapeService {
   getShapesNotOfType(elementType: string):Shape[] {
     return this.shapes.filter(shape => shape.elementTypeId != elementType);
   }
-
   getCountShapesOfType(elementType: string) {
     return this.getShapesOfType(elementType).length;
     //return this.shapes.filter(shape => shape.elementType === elementType).length;
@@ -83,10 +84,11 @@ export class ShapeService {
     //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
     console.log (elementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
 
+    var newShape = new Shape;
     //BUS
     if (elementType == 'bus') {
       let y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
-      this.selectedShape = ({
+      newShape = ({
         elementTypeId: elementType,
         elementId: elementId,
         xInner: this.busInitX,
@@ -112,7 +114,7 @@ export class ShapeService {
       };
       let y = (this.busInitY * Math.ceil(branchCountNew/2)) + this.busWidth/2;
       // this.shapes.push({
-      this.selectedShape = ({
+      newShape = ({
         elementTypeId: elementType,
         elementId: elementId,
         xInner: x,
@@ -132,8 +134,9 @@ export class ShapeService {
       let w = this.genLoadWidth;
       let x = this.busInitX + this.busInitLength/2 - w/2;
       let y = (this.busInitY * (1 + genLoadCount)) - h;
-      var path1: string;
-      var path2: string;
+      var path1: string | undefined;
+      var path2: string | undefined;
+      
       if (elementType == 'gen') {
         let sineStartX = 6;
         let sineStartY = w/2;
@@ -149,7 +152,7 @@ export class ShapeService {
 
       console.log("path1: " + path1 + " path2: " + path2);
       // this.shapes.push({
-      this.selectedShape = ({
+      newShape = ({
         elementTypeId: elementType,
         elementId: elementId,
         xInner: x,
@@ -164,8 +167,8 @@ export class ShapeService {
         path2
       });
     }
-    this.shapes.push(this.selectedShape);
-    return this.selectedShape;
+    this.shapes.push(newShape);
+    return newShape;
   }
 
   applyDeltaX(deltaX: number, shape: Shape) {

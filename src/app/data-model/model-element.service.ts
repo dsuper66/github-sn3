@@ -81,6 +81,10 @@ export class ModelElementService {
     return this.modelElements;
   }
 
+  getModelElementForId(elementId: string) : ModelElement | undefined {
+    return this.modelElements.filter(element => element.elementId === elementId)[0];
+  }
+
   addModelElement(elementTypeId: string): string {
     //Get next index for i.d.
     if (this.elementNextIndex[elementTypeId] == undefined) {

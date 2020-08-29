@@ -14,20 +14,18 @@ import { ControlContainer } from '@angular/forms';
 export class NetworkBuilderViewComponent implements OnInit {
 
   constructor(
-    private shapeService: ShapeService, 
+    private shapeService: ShapeService,
     // private router: Router,
-    private renderer: Renderer2) 
-    { }
+    private renderer: Renderer2) { }
 
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
-
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
   shapesToDraw: Shape[] = [];
-  selectedShape: Shape;
+  selectedShape?: Shape;
 
   busWidth = 14;
 
@@ -36,7 +34,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   // selectedId: string;
 
   //Drawing declarations
-  lastDrawingPoint: Point; //For calculating delta as move progresses  
+  lastDrawingPoint?: Point; //For calculating delta as move progresses  
   //For checks at start of move
   firstPoint: Point;
   directionDone = true;
@@ -78,7 +76,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           this.drawingState = "keepDrawing";
 
           this.selectedShape = checkShape;
-          this.shapeService.setSelectedShape(checkShape);
+          this.shapeService.setSelectedShapeId(checkShape.elementId);
 
           //For bus or branch need to check direction
           // if (this.selectedShape.elementType == 'bus'
@@ -151,18 +149,18 @@ export class NetworkBuilderViewComponent implements OnInit {
         }
       }
       //Check for ROTATE
-      else if (this.selectedShape.elementTypeId == 'branch' 
+      else if (this.selectedShape.elementTypeId == 'branch'
         && this.selectedShape.doResize) {
-          deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
-          if (deltaFromStartX > 50) {
-            console.log("DIAGONAL+");          
-          }
-          else if (deltaFromStartX < -50) {
-            console.log("DIAGONAL-");          
-          }
+        deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
+        if (deltaFromStartX > 50) {
+          console.log("DIAGONAL+");
+        }
+        else if (deltaFromStartX < -50) {
+          console.log("DIAGONAL-");
+        }
 
-          // var el = document.getElementById(this.selectedShape.elementId);
-          // this.renderer.setStyle(el, "transform", "rotate(-45deg)");
+        // var el = document.getElementById(this.selectedShape.elementId);
+        // this.renderer.setStyle(el, "transform", "rotate(-45deg)");
       }
 
       //Adjust... resize or move
@@ -221,13 +219,14 @@ export class NetworkBuilderViewComponent implements OnInit {
     //Unselect if just a tap... (no drawing, just start=>stop)
     if (this.drawingState == "starting") {
       //Reset selected shape
-      this.selectedShape = null;
-      this.shapeService.setSelectedShape(null);
+      this.selectedShape = undefined;
+      this.shapeService.setSelectedShapeId(undefined);
+
       this.shapesToDraw = this.shapeService.getShapes();
     }
     //Stop any current adjustment (but stay selected)
     this.drawingState = "stopped";
-    this.lastDrawingPoint = null;
+    this.lastDrawingPoint = undefined;
     this.directionDone = true;
 
   }
@@ -249,20 +248,23 @@ export class NetworkBuilderViewComponent implements OnInit {
     // if (shape.elementType === 'bus' || shape.elementType === 'branch') {
     //   el.setAttribute("fill", (isFullyConnected ? "black" : "lime"));
     // }
-    
+
     //Use renderer not attribute
     //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
     //https://stackoverflow.com/questions/54507984/angular-how-to-modify-css-transform-property-of-html-elements-inside-a-compone
     //(with changes to setProperty)
 
-    //Set stroke colour
-    var el = document.getElementById(shape.elementId);
-    this.renderer.setProperty(el.style, 
-      "stroke", (isFullyConnected ? "black" : "lime"));
-    //Bus and branch also set fill colour
-    if (shape.elementTypeId === 'bus' || shape.elementTypeId === 'branch') {
+    //Set connectivity colour
+    const el = document.getElementById(shape.elementId);
+    if (el != undefined) {
+      //Set stroke colour
       this.renderer.setProperty(el.style,
-        "fill", (isFullyConnected ? "black" : "lime"));
+        "stroke", (isFullyConnected ? "black" : "lime"));
+      //Bus and branch also set fill colour
+      if (shape.elementTypeId === 'bus' || shape.elementTypeId === 'branch') {
+        this.renderer.setProperty(el.style,
+          "fill", (isFullyConnected ? "black" : "lime"));
+      }
     }
 
     //Save any connectivity changes back to the main model
@@ -275,10 +277,13 @@ export class NetworkBuilderViewComponent implements OnInit {
     //   rect1.left > rect2.right || 
     //   rect1.bottom < rect2.top || 
     //   rect1.top > rect2.bottom)
-    if (this.selectedShape.elementTypeId === 'gen'
-      || this.selectedShape.elementTypeId === 'load'
-      || this.selectedShape.elementTypeId === 'branch'
-      || this.selectedShape.elementTypeId === 'bus') {
+    if (this.selectedShape != undefined)
+    //   (this.selectedShape.elementTypeId === 'gen'
+    //   || this.selectedShape.elementTypeId === 'load'
+    //   || this.selectedShape.elementTypeId === 'branch'
+    //   || this.selectedShape.elementTypeId === 'bus')
+    {
+
       //Bus is moving
       if (this.selectedShape.elementTypeId === 'bus') {
         let theBus = this.selectedShape;
@@ -326,7 +331,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //Assign bus1 if this is not a branch
             if (theNotBus.elementTypeId != "branch") {
-              theNotBus.connId1 = theBus.elementId;        
+              theNotBus.connId1 = theBus.elementId;
               break;
             }
             else { //branch
@@ -347,21 +352,23 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
-  getCanvasSize(): string {
-    var el = document.getElementById("body"); // or other selector like querySelector()
-    var rect = el.getBoundingClientRect(); // get the bounding rectangle
-    // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
-    return "done";
-  }
+  // getCanvasSize(): string {
+  //   var el = document.getElementById("body"); // or other selector like querySelector()
+  //   var rect = el.getBoundingClientRect(); // get the bounding rectangle
+  //   // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
+  //   return "done";
+  // }
 
   // dataRoute(){
   //     this.router.navigate([ '/data-entry-component' ])        
   // }
 
   deleteSelectedShape() {
-    this.shapeService.deleteSelectedShape();
-    this.shapesToDraw = this.shapeService.getShapes();
-    this.selectedShape = null;
+    if (this.selectedShape != undefined) {
+      this.shapeService.deleteShapeWithId(this.selectedShape.elementId);
+      this.shapesToDraw = this.shapeService.getShapes();
+      this.selectedShape = undefined;
+    }
   }
 
 }

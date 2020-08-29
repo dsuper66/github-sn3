@@ -23,20 +23,26 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.propertiesFormArray = [];
         this.formTitles = [];
         this.formDefaults = [];
-        this.elementId = "none selected";
         route.params.subscribe(function (params) { _this.id = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
         console.log("GOT ID ", this.id);
-        this.getElementId();
+        this.getDataForElementId(this.id);
     };
+    // private selectedShape: Shape;
+    // private elementId = "none selected";
     DataEntryViewComponent.prototype.onSubmit = function (form) {
+        //The form returns an object
         console.log('you submitted value:', form);
-        for (var _i = 0, _a = this.propertyTypeIds.filter(function (id) { return Object(form)[id] != ""; }); _i < _a.length; _i++) {
-            var propertyTypeId = _a[_i];
-            var newValue = Object(form)[propertyTypeId];
-            console.log(">>>" + propertyTypeId + ":" + newValue);
-            this.modelElementService.setValueForElementProperty(this.elementId, propertyTypeId, newValue);
+        //Extract the data from the object
+        //Fields where no data has been entered are empty strings, so we don't update those
+        if (this.propertyTypeIds) {
+            for (var _i = 0, _a = this.propertyTypeIds.filter(function (id) { return Object(form)[id] != ""; }); _i < _a.length; _i++) {
+                var propertyTypeId = _a[_i];
+                var newValue = Object(form)[propertyTypeId];
+                console.log(">>>" + propertyTypeId + ":" + newValue);
+                this.modelElementService.setValueForElementProperty(this.id, propertyTypeId, newValue);
+            }
         }
         //Submit also navigates back
         this.router.navigate(['/network-builder-component']);
@@ -52,19 +58,20 @@ var DataEntryViewComponent = /** @class */ (function () {
         //     console.log ("ppp");
         // }
     };
-    DataEntryViewComponent.prototype.getElementId = function () {
+    DataEntryViewComponent.prototype.getDataForElementId = function (elementId) {
         //Get the element i.d. from the route
         // const elementId = this.route.snapshot.paramMap.get('elementId');
         // const elementId = this.route.snapshot.paramMap.get('elementId');
         // console.log(">>>Element ID:" + elementId 
         //   + " name:" + this.modelElementService.getElementName(elementId));
         // this.modelData.setValue(elementId);
-        this.selectedShape = this.shapeService.getSelectedShape();
-        if (this.selectedShape) {
-            this.elementId = this.selectedShape.elementId;
-            console.log(">>> " + this.selectedShape.elementTypeId);
+        // this.selectedShape = this.shapeService.getSelectedShape();
+        var selectedElement = this.modelElementService.getModelElementForId(elementId);
+        if (selectedElement) {
+            // this.elementId = this.selectedShape.elementId;
+            console.log(">>> " + selectedElement.elementTypeId);
             this.propertyTypeIds =
-                this.modelElementService.getPropertyTypeIdsOfElementType(this.selectedShape.elementTypeId);
+                this.modelElementService.getPropertyTypeIdsOfElementType(selectedElement.elementTypeId);
             console.log(this.propertyTypeIds);
             // interface Dict {
             //   [key: string]: string;
@@ -78,10 +85,11 @@ var DataEntryViewComponent = /** @class */ (function () {
             // indexedArray = {'connId1': ['none'],connId2':['none'],'resistance':['none']};
             // var controlsConfig: {
             //   [key: string]: any;}
+            //Populate the property fields
             for (var _i = 0, _a = this.propertyTypeIds; _i < _a.length; _i++) {
                 var propertyId = _a[_i];
                 this.formTitles.push(propertyId);
-                var value = this.modelElementService.getValueForElementProperty(this.elementId, propertyId);
+                var value = this.modelElementService.getValueForElementProperty(elementId, propertyId);
                 this.formDefaults.push(value);
                 console.log("current value:" + value);
                 this.propertiesFormArray.push(new forms_1.FormControl(value));

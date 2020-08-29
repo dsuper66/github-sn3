@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.ShapeService = void 0;
 var core_1 = require("@angular/core");
+var shape_1 = require("./shape");
 var ShapeService = /** @class */ (function () {
     function ShapeService(modelElementService) {
         this.modelElementService = modelElementService;
@@ -25,31 +26,28 @@ var ShapeService = /** @class */ (function () {
         //Selection box
         this.selectWidth = 40;
     }
+    ShapeService.prototype.setSelectedShapeId = function (selectedShapeId) {
+        this.selectedShapeId = selectedShapeId;
+    };
+    ShapeService.prototype.getSelectedShape = function () {
+        if (this.selectedShapeId != undefined) {
+            return this.getShapeWithId(this.selectedShapeId);
+        }
+        else {
+            return undefined;
+        }
+    };
+    //Delete
+    ShapeService.prototype.deleteShapeWithId = function (shapeIdToDelete) {
+        this.shapes = this.shapes.filter(function (shape) { return shape.elementId != shapeIdToDelete; });
+    };
+    //Get shapes
     ShapeService.prototype.getShapes = function () {
         console.log("get shapes");
         return this.shapes;
     };
     ShapeService.prototype.getShapeWithId = function (elementId) {
         return this.shapes.filter(function (shape) { return shape.elementId === elementId; })[0];
-    };
-    ShapeService.prototype.setSelectedShape = function (selectedShape) {
-        this.selectedShape = selectedShape;
-        if (this.selectedShape) {
-            console.log("shape service selected shape = "
-                + this.selectedShape.elementId);
-        }
-        else {
-            console.log("shape service selected shape = ###NULL###");
-        }
-    };
-    ShapeService.prototype.getSelectedShape = function () {
-        return this.selectedShape;
-    };
-    //Delete
-    ShapeService.prototype.deleteSelectedShape = function () {
-        var _this = this;
-        this.shapes = this.shapes.filter(function (shape) { return shape.elementId != _this.selectedShape.elementId; });
-        this.selectedShape = null;
     };
     //Shapes of type
     //***this happens multiple times during a move *****/
@@ -75,10 +73,11 @@ var ShapeService = /** @class */ (function () {
         //For deciding placement
         //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
         console.log(elementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
+        var newShape = new shape_1.Shape;
         //BUS
         if (elementType == 'bus') {
             var y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
-            this.selectedShape = ({
+            newShape = ({
                 elementTypeId: elementType,
                 elementId: elementId,
                 xInner: this.busInitX,
@@ -105,7 +104,7 @@ var ShapeService = /** @class */ (function () {
             ;
             var y = (this.busInitY * Math.ceil(branchCountNew / 2)) + this.busWidth / 2;
             // this.shapes.push({
-            this.selectedShape = ({
+            newShape = ({
                 elementTypeId: elementType,
                 elementId: elementId,
                 xInner: x,
@@ -141,7 +140,7 @@ var ShapeService = /** @class */ (function () {
             }
             console.log("path1: " + path1 + " path2: " + path2);
             // this.shapes.push({
-            this.selectedShape = ({
+            newShape = ({
                 elementTypeId: elementType,
                 elementId: elementId,
                 xInner: x_1,
@@ -156,8 +155,8 @@ var ShapeService = /** @class */ (function () {
                 path2: path2
             });
         }
-        this.shapes.push(this.selectedShape);
-        return this.selectedShape;
+        this.shapes.push(newShape);
+        return newShape;
     };
     ShapeService.prototype.applyDeltaX = function (deltaX, shape) {
         shape.xInner += deltaX;
