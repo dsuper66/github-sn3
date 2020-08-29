@@ -367,6 +367,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     if (this.selectedShape != undefined) {
       this.shapeService.deleteShapeWithId(this.selectedShape.elementId);
       this.shapesToDraw = this.shapeService.getShapes();
+      
       this.selectedShape = undefined;
     }
   }

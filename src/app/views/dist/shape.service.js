@@ -69,17 +69,17 @@ var ShapeService = /** @class */ (function () {
     //Add a shape
     ShapeService.prototype.addShape = function (elementType) {
         //Add the element and get back the i.d.
-        var elementId = this.modelElementService.addModelElement(elementType);
+        var newElementId = this.modelElementService.addModelElement(elementType);
         //For deciding placement
         //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
-        console.log(elementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
+        console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
         var newShape = new shape_1.Shape;
         //BUS
         if (elementType == 'bus') {
             var y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
             newShape = ({
                 elementTypeId: elementType,
-                elementId: elementId,
+                elementId: newElementId,
                 xInner: this.busInitX,
                 yInner: y,
                 wInner: this.busInitLength,
@@ -106,7 +106,7 @@ var ShapeService = /** @class */ (function () {
             // this.shapes.push({
             newShape = ({
                 elementTypeId: elementType,
-                elementId: elementId,
+                elementId: newElementId,
                 xInner: x,
                 yInner: y,
                 wInner: this.branchWidth,
@@ -142,7 +142,7 @@ var ShapeService = /** @class */ (function () {
             // this.shapes.push({
             newShape = ({
                 elementTypeId: elementType,
-                elementId: elementId,
+                elementId: newElementId,
                 xInner: x_1,
                 yInner: y,
                 wInner: w,
@@ -156,6 +156,7 @@ var ShapeService = /** @class */ (function () {
             });
         }
         this.shapes.push(newShape);
+        this.selectedShapeId = newElementId;
         return newShape;
     };
     ShapeService.prototype.applyDeltaX = function (deltaX, shape) {

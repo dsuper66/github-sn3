@@ -8,14 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
-var forms_1 = require("@angular/forms");
 var DataEntryViewComponent = /** @class */ (function () {
-    function DataEntryViewComponent(modelElementService, router, route, shapeService) {
+    function DataEntryViewComponent(modelElementService, router, route
+    // private shapeService: ShapeService) 
+    ) {
         var _this = this;
         this.modelElementService = modelElementService;
         this.router = router;
         this.route = route;
-        this.shapeService = shapeService;
         // myGroup = new FormGroup({
         //   firstName: new FormControl()
         // });
@@ -36,8 +36,8 @@ var DataEntryViewComponent = /** @class */ (function () {
         console.log('you submitted value:', form);
         //Extract the data from the object
         //Fields where no data has been entered are empty strings, so we don't update those
-        if (this.propertyTypeIds) {
-            for (var _i = 0, _a = this.propertyTypeIds.filter(function (id) { return Object(form)[id] != ""; }); _i < _a.length; _i++) {
+        if (this.dataIds) {
+            for (var _i = 0, _a = this.dataIds.filter(function (id) { return Object(form)[id] != ""; }); _i < _a.length; _i++) {
                 var propertyTypeId = _a[_i];
                 var newValue = Object(form)[propertyTypeId];
                 console.log(">>>" + propertyTypeId + ":" + newValue);
@@ -70,9 +70,9 @@ var DataEntryViewComponent = /** @class */ (function () {
         if (selectedElement) {
             // this.elementId = this.selectedShape.elementId;
             console.log(">>> " + selectedElement.elementTypeId);
-            this.propertyTypeIds =
+            this.dataIds =
                 this.modelElementService.getPropertyTypeIdsOfElementType(selectedElement.elementTypeId);
-            console.log(this.propertyTypeIds);
+            console.log(this.dataIds);
             // interface Dict {
             //   [key: string]: string;
             // }
@@ -86,13 +86,15 @@ var DataEntryViewComponent = /** @class */ (function () {
             // var controlsConfig: {
             //   [key: string]: any;}
             //Populate the property fields
-            for (var _i = 0, _a = this.propertyTypeIds; _i < _a.length; _i++) {
-                var propertyId = _a[_i];
-                this.formTitles.push(propertyId);
-                var value = this.modelElementService.getValueForElementProperty(elementId, propertyId);
+            for (var _i = 0, _a = this.dataIds; _i < _a.length; _i++) {
+                var dataId = _a[_i];
+                //Data Id
+                this.formTitles.push(dataId);
+                //Default value
+                var value = this.modelElementService.getValueForElementProperty(elementId, dataId);
                 this.formDefaults.push(value);
                 console.log("current value:" + value);
-                this.propertiesFormArray.push(new forms_1.FormControl(value));
+                // this.propertiesFormArray.push(new FormControl(value));
             }
             // console.log(">>>mm>>>" + indexedArray);
             //   this.myGroup = this.fb.group({

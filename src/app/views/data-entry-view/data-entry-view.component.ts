@@ -24,8 +24,10 @@ export class DataEntryViewComponent implements OnInit {
   constructor(
     private modelElementService: ModelElementService,
     private router: Router,
-    private route: ActivatedRoute,
-    private shapeService: ShapeService) {
+    private route: ActivatedRoute
+    // private shapeService: ShapeService) 
+    )
+  {
     route.params.subscribe(params => { this.id = params['id']; });
   }
 
@@ -43,8 +45,8 @@ export class DataEntryViewComponent implements OnInit {
   formTitles: string[] = [];
   formDefaults: string[] = [];
 
-  //To get the data back from the form
-  propertyTypeIds: string[];
+  //To get the data back from the data-entry form
+  dataIds: string[];
   // private selectedShape: Shape;
   // private elementId = "none selected";
 
@@ -54,8 +56,8 @@ export class DataEntryViewComponent implements OnInit {
 
     //Extract the data from the object
     //Fields where no data has been entered are empty strings, so we don't update those
-    if (this.propertyTypeIds) {
-      for (let propertyTypeId of this.propertyTypeIds.filter(
+    if (this.dataIds) {
+      for (let propertyTypeId of this.dataIds.filter(
         id => Object(form)[id] != "")) {
 
         let newValue = Object(form)[propertyTypeId];
@@ -94,9 +96,9 @@ export class DataEntryViewComponent implements OnInit {
     if (selectedElement) {
       // this.elementId = this.selectedShape.elementId;
       console.log(">>> " + selectedElement.elementTypeId);
-      this.propertyTypeIds =
+      this.dataIds =
         this.modelElementService.getPropertyTypeIdsOfElementType(selectedElement.elementTypeId);
-      console.log(this.propertyTypeIds)
+      console.log(this.dataIds)
 
       // interface Dict {
       //   [key: string]: string;
@@ -115,13 +117,17 @@ export class DataEntryViewComponent implements OnInit {
       //   [key: string]: any;}
 
       //Populate the property fields
-      for (let propertyId of this.propertyTypeIds) {
-        this.formTitles.push(propertyId);
-        let value = this.modelElementService.getValueForElementProperty(elementId, propertyId);
+      for (let dataId of this.dataIds) {
+        //Data Id
+        this.formTitles.push(dataId);
+
+        //Default value
+        let value = this.modelElementService.getValueForElementProperty(elementId, dataId);
         this.formDefaults.push(value);
+
         console.log("current value:" + value);
 
-        this.propertiesFormArray.push(new FormControl(value));
+        // this.propertiesFormArray.push(new FormControl(value));
       }
 
       // console.log(">>>mm>>>" + indexedArray);

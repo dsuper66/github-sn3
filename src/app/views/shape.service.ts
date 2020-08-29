@@ -78,11 +78,11 @@ export class ShapeService {
   //Add a shape
   addShape(elementType: string): Shape {
     //Add the element and get back the i.d.
-    let elementId = this.modelElementService.addModelElement(elementType);
+    let newElementId = this.modelElementService.addModelElement(elementType);
 
     //For deciding placement
     //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
-    console.log (elementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
+    console.log (newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
 
     var newShape = new Shape;
     //BUS
@@ -90,7 +90,7 @@ export class ShapeService {
       let y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
       newShape = ({
         elementTypeId: elementType,
-        elementId: elementId,
+        elementId: newElementId,
         xInner: this.busInitX,
         yInner: y,
         wInner: this.busInitLength,
@@ -116,7 +116,7 @@ export class ShapeService {
       // this.shapes.push({
       newShape = ({
         elementTypeId: elementType,
-        elementId: elementId,
+        elementId: newElementId,
         xInner: x,
         yInner: y,
         wInner: this.branchWidth,
@@ -154,7 +154,7 @@ export class ShapeService {
       // this.shapes.push({
       newShape = ({
         elementTypeId: elementType,
-        elementId: elementId,
+        elementId: newElementId,
         xInner: x,
         yInner: y,
         wInner: w,
@@ -167,7 +167,10 @@ export class ShapeService {
         path2
       });
     }
+    
     this.shapes.push(newShape);
+    this.selectedShapeId = newElementId;
+    
     return newShape;
   }
 
