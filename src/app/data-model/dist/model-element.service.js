@@ -25,9 +25,14 @@ var ModelElementService = /** @class */ (function () {
         // elementProperties['childCount'] = '3'
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementTypeId: 'childSet',
-            // properties: elementProperties
             properties: this.makeDict([
                 { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
+            ])
+        });
+        this.modelElements.push({
+            elementId: 'genTrancheDef', elementTypeId: 'childSet',
+            properties: this.makeDict([
+                { 'parentTypeId': 'gen' }, { 'childTypeId': 'offerTranche' }, { 'childCount': '3' }
             ])
         });
         //Element Types and their Property Type Ids
@@ -84,9 +89,12 @@ var ModelElementService = /** @class */ (function () {
             // bus2: ""
         });
         //Add any child elements associated with this element type
-        var childSetElements = this.modelElements.filter(function (element) { return element.elementTypeId === 'childSet'; });
+        //Get any childTypes where parenet type matches the element we are adding
         var childTypesForElementType = this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementTypeIdForNewElement; });
-        console.log(">>>>>>>>" + childTypesForElementType[0].properties['childTypeId']);
+        //Create any child elements (linked back like a gen is to a bus)
+        if (childTypesForElementType.length > 0) {
+            console.log(">>>>>>>>" + childTypesForElementType[0].properties['childTypeId']);
+        }
         return elementId;
     };
     ModelElementService.prototype.getValueForElementProperty = function (elementId, propertyTypeId) {
