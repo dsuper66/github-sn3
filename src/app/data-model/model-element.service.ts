@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ModelElement, ElementPropertyType } from './model-element';
 import { Shape } from '../views/shape';
 import { ElementType } from './model-element'
-// import { ElementProperty } from './model-element'
+import { ElementProperties } from './model-element'
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -39,10 +39,14 @@ export class ModelElementService {
     )
 
     //Add static elements, accessed via the Settings display
+    var elementProperties:ElementProperties = {};
+    elementProperties['parentTypeId']='load';
+    elementProperties['childTypeId']='bidTranche'
+    elementProperties['childCount']='3'
     this.modelElements.push(
       {
         elementId: 'bidTrancheDef', elementTypeId: 'childSet',
-        properties: [{'parentTypeId':'load'}, {'childTypeId': 'bidTranche'}, {'childCount': '3'}]
+        properties: elementProperties
       }
     );
 
@@ -111,33 +115,10 @@ export class ModelElementService {
     const childSetElements = this.modelElements.filter(
       element => element.elementTypeId === 'childSet');
 
-    console.log("***found childset:" + childSetElements.length);
-
-    for (const childSetElement of childSetElements) {
-      // console.log("### " + childSetElement.elementId + ">>" + childSetElement.properties[0]['parentTypeId']);
-      for (const key in childSetElement.properties) {
-        // console.log("###1 " + Object(childSetElement.properties)[key]['parentTypeId']);
-        console.log("###1 " + childSetElement.properties[key]['parentTypeId']);
-      }
-    }
-    const childSetForParent = childSetElements.filter(
-      // childSetElement => childSetElement.properties.filter((property: { [x: string]: any; }) => property['parentTypeId'])
-      childSetElement => childSetElement.properties.filter(
-        (property: { [propertyTypeId: string]: any; }) => property.propertyTypeId === 'parentTypeId')
-    )
-    console.log("###2 " + childSetForParent[0].elementId);
-    
-
-    
-
-    // console.log("***found childset:" + childSetForNewElement.elementId);
-
-    // if (childSetForNewElement) {
-    //   console.log("***element type:"
-    //     + elementTypeIdForNewElement + " has child type:" + childSetForNewElement.properties['childTypeId']);
-    // }
-    // }
-
+    const childTypesForElementType = this.modelElements.filter(
+      element => element.properties['parentTypeId'] === elementTypeIdForNewElement);
+    console.log(">>>>>>>>" + childTypesForElementType[0].properties['childTypeId']);
+  
     return elementId;
   }
 

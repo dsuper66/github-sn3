@@ -1,25 +1,25 @@
-export class ModelElement {
+export interface ModelElement {
     elementId: string;
     elementTypeId: string;
     // bus1: string;
     // bus2: string;
     // properties: ElementProperties;
     // properties: Map<string, any>;
-    properties: {[propertyTypeId:string] : any};
+    properties: ElementProperties; //{[propertyTypeId:string] : any};
     // properties: Record<string, any>;
 }
 
 //Dictionary
 //https://stackoverflow.com/questions/15877362/declare-and-initialize-a-dictionary-in-typescript
 
-// export interface ElementProperties {
-//   [propertyTypeId:string]:any;
-// }
-
-export interface ElementProperty {
-  propertyTypeId:string;
-  value:any;
+export interface ElementProperties {
+  [propertyTypeId:string]:any;
 }
+
+// export interface ElementProperty {
+//   propertyTypeId:string;
+//   value:any;
+// }
 
 
 export interface ElementType {
