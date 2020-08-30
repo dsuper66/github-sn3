@@ -39,14 +39,16 @@ export class ModelElementService {
     )
 
     //Add static elements, accessed via the Settings display
-    var elementProperties:ElementProperties = {};
-    elementProperties['parentTypeId']='load';
-    elementProperties['childTypeId']='bidTranche'
-    elementProperties['childCount']='3'
+    // var elementProperties: ElementProperties = {};
+    // elementProperties['parentTypeId'] = 'load';
+    // elementProperties['childTypeId'] = 'bidTranche'
+    // elementProperties['childCount'] = '3'
     this.modelElements.push(
       {
         elementId: 'bidTrancheDef', elementTypeId: 'childSet',
-        properties: elementProperties
+        // properties: elementProperties
+        properties: this.makeDict([
+          {'parentTypeId': 'load'}, {'childTypeId': 'bidTranche'}, {'childCount': '3'}])
       }
     );
 
@@ -75,6 +77,21 @@ export class ModelElementService {
   // private allProperties:String[] = [];
 
   private elementNextIndex = new Map<string, bigint>();
+
+  //Make Dictionary from array of objects
+  //https://stackoverflow.com/questions/43147696/unable-to-extract-object-values-in-typescript
+  makeDict(arrayOfMaps: { [key: string]: any }): { [key: string]: any } {
+    const dict: { [key: string]: any } = {};
+    arrayOfMaps.forEach(function (obj: { (key: string): any }) {
+
+      Object.getOwnPropertyNames(obj).forEach(key => {
+        let value = obj[key];
+        console.log(key + '>>>>' + value);
+        dict[key] = value;
+      });
+    })
+    return dict;
+  }
 
   getPropertyTypeIdsOfElementType(elementTypeId: string): string[] {
     console.log("from: " + this.elementTypeProperties);
@@ -118,7 +135,7 @@ export class ModelElementService {
     const childTypesForElementType = this.modelElements.filter(
       element => element.properties['parentTypeId'] === elementTypeIdForNewElement);
     console.log(">>>>>>>>" + childTypesForElementType[0].properties['childTypeId']);
-  
+
     return elementId;
   }
 

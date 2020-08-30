@@ -19,13 +19,16 @@ var ModelElementService = /** @class */ (function () {
         //Property Types (and Defaults)
         this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true }, { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001' }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80' }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90' }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70' }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150' }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25' }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2' }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100' });
         //Add static elements, accessed via the Settings display
-        var elementProperties = {};
-        elementProperties['parentTypeId'] = 'load';
-        elementProperties['childTypeId'] = 'bidTranche';
-        elementProperties['childCount'] = '3';
+        // var elementProperties: ElementProperties = {};
+        // elementProperties['parentTypeId'] = 'load';
+        // elementProperties['childTypeId'] = 'bidTranche'
+        // elementProperties['childCount'] = '3'
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementTypeId: 'childSet',
-            properties: elementProperties
+            // properties: elementProperties
+            properties: this.makeDict([
+                { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
+            ])
         });
         //Element Types and their Property Type Ids
         this.elementTypeProperties['bus'] = ['isRefBus'];
@@ -38,6 +41,19 @@ var ModelElementService = /** @class */ (function () {
         this.elementTypeProperties['resTranch'] = ['parentId', 'resLimit', 'resPrice'];
         this.elementTypeProperties['lossTranch'] = ['parentId', 'flowLimit', 'lossLimit'];
     }
+    //Make Dictionary from array of objects
+    //https://stackoverflow.com/questions/43147696/unable-to-extract-object-values-in-typescript
+    ModelElementService.prototype.makeDict = function (arrayOfMaps) {
+        var dict = {};
+        arrayOfMaps.forEach(function (obj) {
+            Object.getOwnPropertyNames(obj).forEach(function (key) {
+                var value = obj[key];
+                console.log(key + '>>>>' + value);
+                dict[key] = value;
+            });
+        });
+        return dict;
+    };
     ModelElementService.prototype.getPropertyTypeIdsOfElementType = function (elementTypeId) {
         console.log("from: " + this.elementTypeProperties);
         // let elementType = this.propertiesOfElementType.filter(elementType => elementType.elementTypeId === elementTypeId)[0];
