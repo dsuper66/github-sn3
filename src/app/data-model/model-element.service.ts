@@ -51,8 +51,13 @@ export class ModelElementService {
     this.modelElements.push({
       elementId: 'genTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, {'childTypeId': 'offerTranche' }, {'childCount': '3'}])
-    });    
+        { 'parentTypeId': 'gen' }, {'childTypeId': 'genTranche' }, {'childCount': '3'}])
+    });
+    this.modelElements.push({
+      elementId: 'resTrancheDef', elementTypeId: 'childSet',
+      properties: this.makeDict([
+        { 'parentTypeId': 'gen' }, {'childTypeId': 'resTranche' }, {'childCount': '3'}])
+    });     
 
 
     //Element Types and their Property Type Ids
@@ -84,14 +89,15 @@ export class ModelElementService {
   //https://stackoverflow.com/questions/43147696/unable-to-extract-object-values-in-typescript
   makeDict(arrayOfMaps: { [key: string]: any }): { [key: string]: any } {
     const dict: { [key: string]: any } = {};
-    arrayOfMaps.forEach(function (obj: { (key: string): any }) {
 
+    arrayOfMaps.forEach(function (obj: { (key: string): any }) {
       Object.getOwnPropertyNames(obj).forEach(key => {
         let value = obj[key];
         console.log(key + '>>>>' + value);
         dict[key] = value;
       });
     })
+
     return dict;
   }
 
@@ -110,7 +116,8 @@ export class ModelElementService {
     return this.modelElements.filter(element => element.elementId === elementId)[0];
   }
 
-  addModelElement(elementTypeIdForNewElement: string): string {
+  //Add element (for child elements record their parent)
+  addModelElement(elementTypeIdForNewElement: string, parentId?:string): string {
     //Get next index for i.d.
     if (this.elementNextIndex[elementTypeIdForNewElement] == undefined) {
       this.elementNextIndex[elementTypeIdForNewElement] = 1;
@@ -118,12 +125,13 @@ export class ModelElementService {
     let elementIndex = this.elementNextIndex[elementTypeIdForNewElement];
 
     //Make the i.d.
-    let elementId = elementTypeIdForNewElement + ("000" + elementIndex).slice(-3);
+    let elementIdForNewElement = elementTypeIdForNewElement + ("000" + elementIndex).slice(-3);
     this.elementNextIndex[elementTypeIdForNewElement] = elementIndex + 1;
 
     //Add the element
+    console.log("Adding:" + elementIdForNewElement);
     this.modelElements.push({
-      elementId: elementId,
+      elementId: elementIdForNewElement,
       elementTypeId: elementTypeIdForNewElement,
       properties: this.makePropertiesForElementType(elementTypeIdForNewElement)
       // bus1: "",
@@ -134,12 +142,17 @@ export class ModelElementService {
     //Get any childTypes where parenet type matches the element we are adding
     const childTypesForElementType = this.modelElements.filter(
       element => element.properties['parentTypeId'] === elementTypeIdForNewElement);
-    //Create any child elements (linked back like a gen is to a bus)
-    if (childTypesForElementType.length > 0) {
-      console.log(">>>>>>>>" + childTypesForElementType[0].properties['childTypeId']);
-    }
 
-    return elementId;
+    //Create any child elements (linked back like a gen is to a bus)
+    childTypesForElementType.forEach(function (childElement: ModelElement) {
+      const childTypeId = childElement.properties['childTypeId'];
+      console.log(">>>>>>>>" + childTypeId);
+      
+      () => this.addModelElement(childTypeId,elementTypeIdForNewElement);
+    });
+
+
+    return elementIdForNewElement;
   }
 
   getValueForElementProperty(elementId: string, propertyTypeId: string): string {
