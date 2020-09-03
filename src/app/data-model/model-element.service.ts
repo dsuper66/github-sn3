@@ -80,9 +80,6 @@ export class ModelElementService {
   private elementPropertyTypes: ElementPropertyType[] = [];
   private elementTypeProperties: { [id: string]: string[] } = {};
 
-  // private valueTypesOfProperties = new Map<string, string>();
-  // private allProperties:String[] = [];
-
   private elementNextIndex = new Map<string, bigint>();
 
   //Make Dictionary from array of objects
@@ -117,38 +114,37 @@ export class ModelElementService {
   }
 
   //Add element (for child elements record their parent)
-  addModelElement(elementTypeIdForNewElement: string, parentId?:string): string {
+  addModelElement(elementTypeIdToAdd: string, parentId?:string): string {
     //Get next index for i.d.
-    if (this.elementNextIndex[elementTypeIdForNewElement] == undefined) {
-      this.elementNextIndex[elementTypeIdForNewElement] = 1;
+    if (this.elementNextIndex[elementTypeIdToAdd] == undefined) {
+      this.elementNextIndex[elementTypeIdToAdd] = 1;
     }
-    let elementIndex = this.elementNextIndex[elementTypeIdForNewElement];
+    let elementIndex = this.elementNextIndex[elementTypeIdToAdd];
 
     //Make the i.d.
-    let elementIdForNewElement = elementTypeIdForNewElement + ("000" + elementIndex).slice(-3);
-    this.elementNextIndex[elementTypeIdForNewElement] = elementIndex + 1;
+    let elementIdForNewElement = elementTypeIdToAdd + ("000" + elementIndex).slice(-3);
+    this.elementNextIndex[elementTypeIdToAdd] = elementIndex + 1;
 
     //Add the element
     console.log("Adding:" + elementIdForNewElement);
     this.modelElements.push({
       elementId: elementIdForNewElement,
-      elementTypeId: elementTypeIdForNewElement,
-      properties: this.makePropertiesForElementType(elementTypeIdForNewElement)
-      // bus1: "",
-      // bus2: ""
+      elementTypeId: elementTypeIdToAdd,
+      properties: this.makeProperties(elementTypeIdToAdd,this.elementTypeProperties[elementTypeIdToAdd])
     });
 
     //Add any child elements associated with this element type
     //Get any childTypes where parenet type matches the element we are adding
     const childTypesForElementType = this.modelElements.filter(
-      element => element.properties['parentTypeId'] === elementTypeIdForNewElement);
+      element => element.properties['parentTypeId'] === elementTypeIdToAdd);
 
     //Create any child elements (linked back like a gen is to a bus)
+    const self = this;
     childTypesForElementType.forEach(function (childElement: ModelElement) {
       const childTypeId = childElement.properties['childTypeId'];
       console.log(">>>>>>>>" + childTypeId);
       
-      () => this.addModelElement(childTypeId,elementTypeIdForNewElement);
+      self.addModelElement(childTypeId,elementTypeIdToAdd);
     });
 
 
@@ -168,28 +164,26 @@ export class ModelElementService {
     )[0].properties[propertyTypeId] = value;
   }
 
-  makePropertiesForElementType(elementTypeId: string): { [propertyTypeId: string]: any } {
-    // let thesePropertyTypeIds = this.propertiesOfElementType.filter(
-    //   elementType => elementType.elementTypeId === elementTypeId)[0].propertyTypeIds;
+  makeProperties(elementTypeId: string, propertiesToAdd: string[]):{ [propertyTypeId: string]: any } {
 
     console.log("makePropertiesForElementType of " + elementTypeId);
-    let thesePropertyTypeIds = this.elementTypeProperties[elementTypeId];
-    console.log("got property types: " + thesePropertyTypeIds);
-    // let properties = this.elementPropertyTypes.filter(
-    //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyTypeId thesePropertyTypeIds)
-    // )
+    // let propertyTypesToAdd = this.elementTypeProperties[elementTypeId];
+    // console.log("got property types: " + propertyTypesToAdd);
+
     var properties: { [propertyTypeId: string]: any } = {};
-    for (let propertyTypeId of thesePropertyTypeIds) {
+
+    const self = this;
+    propertiesToAdd.forEach(function (propertyTypeId: string) {
+    // for (let propertyTypeId of propertiesToAdd) {
 
       console.log("looking for property " + propertyTypeId)
-      let elementProperty = this.elementPropertyTypes.filter(
+      let elementProperty = self.elementPropertyTypes.filter(
         elementPropertyType => elementPropertyType.propertyTypeId === propertyTypeId)[0];
 
       //Assign default
       properties[elementProperty.propertyTypeId] = elementProperty.defaultValue;
 
-
-    }
+    })
     return properties;
   }
 

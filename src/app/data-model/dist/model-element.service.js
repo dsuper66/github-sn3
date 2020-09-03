@@ -13,8 +13,6 @@ var ModelElementService = /** @class */ (function () {
         this.modelElements = [];
         this.elementPropertyTypes = [];
         this.elementTypeProperties = {};
-        // private valueTypesOfProperties = new Map<string, string>();
-        // private allProperties:String[] = [];
         this.elementNextIndex = new Map();
         //Property Types (and Defaults)
         this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true }, { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001' }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3' }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none' }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80' }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100' }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90' }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10' }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70' }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150' }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25' }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2' }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100' });
@@ -78,33 +76,31 @@ var ModelElementService = /** @class */ (function () {
         return this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
     };
     //Add element (for child elements record their parent)
-    ModelElementService.prototype.addModelElement = function (elementTypeIdForNewElement, parentId) {
+    ModelElementService.prototype.addModelElement = function (elementTypeIdToAdd, parentId) {
         //Get next index for i.d.
-        if (this.elementNextIndex[elementTypeIdForNewElement] == undefined) {
-            this.elementNextIndex[elementTypeIdForNewElement] = 1;
+        if (this.elementNextIndex[elementTypeIdToAdd] == undefined) {
+            this.elementNextIndex[elementTypeIdToAdd] = 1;
         }
-        var elementIndex = this.elementNextIndex[elementTypeIdForNewElement];
+        var elementIndex = this.elementNextIndex[elementTypeIdToAdd];
         //Make the i.d.
-        var elementIdForNewElement = elementTypeIdForNewElement + ("000" + elementIndex).slice(-3);
-        this.elementNextIndex[elementTypeIdForNewElement] = elementIndex + 1;
+        var elementIdForNewElement = elementTypeIdToAdd + ("000" + elementIndex).slice(-3);
+        this.elementNextIndex[elementTypeIdToAdd] = elementIndex + 1;
         //Add the element
         console.log("Adding:" + elementIdForNewElement);
         this.modelElements.push({
             elementId: elementIdForNewElement,
-            elementTypeId: elementTypeIdForNewElement,
-            properties: this.makePropertiesForElementType(elementTypeIdForNewElement)
-            // bus1: "",
-            // bus2: ""
+            elementTypeId: elementTypeIdToAdd,
+            properties: this.makeProperties(elementTypeIdToAdd, this.elementTypeProperties[elementTypeIdToAdd])
         });
         //Add any child elements associated with this element type
         //Get any childTypes where parenet type matches the element we are adding
-        var childTypesForElementType = this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementTypeIdForNewElement; });
+        var childTypesForElementType = this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementTypeIdToAdd; });
         //Create any child elements (linked back like a gen is to a bus)
+        var self = this;
         childTypesForElementType.forEach(function (childElement) {
-            var _this = this;
             var childTypeId = childElement.properties['childTypeId'];
             console.log(">>>>>>>>" + childTypeId);
-            (function () { return _this.addModelElement(childTypeId, elementTypeIdForNewElement); });
+            self.addModelElement(childTypeId, elementTypeIdToAdd);
         });
         return elementIdForNewElement;
     };
@@ -115,27 +111,19 @@ var ModelElementService = /** @class */ (function () {
     ModelElementService.prototype.setValueForElementProperty = function (elementId, propertyTypeId, value) {
         this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties[propertyTypeId] = value;
     };
-    ModelElementService.prototype.makePropertiesForElementType = function (elementTypeId) {
-        // let thesePropertyTypeIds = this.propertiesOfElementType.filter(
-        //   elementType => elementType.elementTypeId === elementTypeId)[0].propertyTypeIds;
+    ModelElementService.prototype.makeProperties = function (elementTypeId, propertiesToAdd) {
         console.log("makePropertiesForElementType of " + elementTypeId);
-        var thesePropertyTypeIds = this.elementTypeProperties[elementTypeId];
-        console.log("got property types: " + thesePropertyTypeIds);
-        // let properties = this.elementPropertyTypes.filter(
-        //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyTypeId thesePropertyTypeIds)
-        // )
+        // let propertyTypesToAdd = this.elementTypeProperties[elementTypeId];
+        // console.log("got property types: " + propertyTypesToAdd);
         var properties = {};
-        var _loop_1 = function (propertyTypeId) {
+        var self = this;
+        propertiesToAdd.forEach(function (propertyTypeId) {
+            // for (let propertyTypeId of propertiesToAdd) {
             console.log("looking for property " + propertyTypeId);
-            var elementProperty = this_1.elementPropertyTypes.filter(function (elementPropertyType) { return elementPropertyType.propertyTypeId === propertyTypeId; })[0];
+            var elementProperty = self.elementPropertyTypes.filter(function (elementPropertyType) { return elementPropertyType.propertyTypeId === propertyTypeId; })[0];
             //Assign default
             properties[elementProperty.propertyTypeId] = elementProperty.defaultValue;
-        };
-        var this_1 = this;
-        for (var _i = 0, thesePropertyTypeIds_1 = thesePropertyTypeIds; _i < thesePropertyTypeIds_1.length; _i++) {
-            var propertyTypeId = thesePropertyTypeIds_1[_i];
-            _loop_1(propertyTypeId);
-        }
+        });
         return properties;
     };
     ModelElementService = __decorate([
