@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Shape } from './shape';
 import { ModelElementService } from '../data-model/model-element.service'
+import { ModelElementDataService } from '../data-model/model-element-data.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShapeService {
 
-  constructor(private modelElementService: ModelElementService) { }
+  constructor(
+    private modelElementService: ModelElementService,
+    private modelElementDataService: ModelElementDataService    
+    ) { }
 
   private shapes:Shape[]=[];
 
@@ -209,9 +213,9 @@ export class ShapeService {
 
   saveConnectivityToModel() {
     for (let nonBusElement of this.getShapesNotOfType('bus')){
-      this.modelElementService.setValueForElementProperty(
+      this.modelElementDataService.setValueForElementProperty(
         nonBusElement.elementId,'connId1',nonBusElement.connId1);
-      this.modelElementService.setValueForElementProperty(
+      this.modelElementDataService.setValueForElementProperty(
         nonBusElement.elementId,'connId2',nonBusElement.connId2);
     }
   }

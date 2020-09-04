@@ -9,11 +9,12 @@ exports.__esModule = true;
 exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
 var DataEntryViewComponent = /** @class */ (function () {
-    function DataEntryViewComponent(modelElementService, router, route
+    function DataEntryViewComponent(modelElementService, modelElementDataService, router, route
     // private shapeService: ShapeService) 
     ) {
         var _this = this;
         this.modelElementService = modelElementService;
+        this.modelElementDataService = modelElementDataService;
         this.router = router;
         this.route = route;
         // myGroup = new FormGroup({
@@ -41,7 +42,7 @@ var DataEntryViewComponent = /** @class */ (function () {
                 var propertyTypeId = _a[_i];
                 var newValue = Object(form)[propertyTypeId];
                 console.log(">>>" + propertyTypeId + ":" + newValue);
-                this.modelElementService.setValueForElementProperty(this.id, propertyTypeId, newValue);
+                this.modelElementDataService.setValueForElementProperty(this.id, propertyTypeId, newValue);
             }
         }
         //Submit also navigates back
@@ -66,12 +67,12 @@ var DataEntryViewComponent = /** @class */ (function () {
         //   + " name:" + this.modelElementService.getElementName(elementId));
         // this.modelData.setValue(elementId);
         // this.selectedShape = this.shapeService.getSelectedShape();
-        var selectedElement = this.modelElementService.getModelElementForId(elementId);
+        var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
             // this.elementId = this.selectedShape.elementId;
             console.log(">>> " + selectedElement.elementTypeId);
             this.dataIds =
-                this.modelElementService.getPropertyTypeIdsOfElementType(selectedElement.elementTypeId);
+                this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
             console.log(this.dataIds);
             // interface Dict {
             //   [key: string]: string;
@@ -91,7 +92,7 @@ var DataEntryViewComponent = /** @class */ (function () {
                 //Data Id
                 this.formTitles.push(dataId);
                 //Default value
-                var value = this.modelElementService.getValueForElementProperty(elementId, dataId);
+                var value = this.modelElementDataService.getValueForElementProperty(elementId, dataId);
                 this.formDefaults.push(value);
                 console.log("current value:" + value);
                 // this.propertiesFormArray.push(new FormControl(value));

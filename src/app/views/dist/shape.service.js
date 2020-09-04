@@ -10,8 +10,9 @@ exports.ShapeService = void 0;
 var core_1 = require("@angular/core");
 var shape_1 = require("./shape");
 var ShapeService = /** @class */ (function () {
-    function ShapeService(modelElementService) {
+    function ShapeService(modelElementService, modelElementDataService) {
         this.modelElementService = modelElementService;
+        this.modelElementDataService = modelElementDataService;
         this.shapes = [];
         //Initial values
         this.branchInitLength = 100;
@@ -193,8 +194,8 @@ var ShapeService = /** @class */ (function () {
     ShapeService.prototype.saveConnectivityToModel = function () {
         for (var _i = 0, _a = this.getShapesNotOfType('bus'); _i < _a.length; _i++) {
             var nonBusElement = _a[_i];
-            this.modelElementService.setValueForElementProperty(nonBusElement.elementId, 'connId1', nonBusElement.connId1);
-            this.modelElementService.setValueForElementProperty(nonBusElement.elementId, 'connId2', nonBusElement.connId2);
+            this.modelElementDataService.setValueForElementProperty(nonBusElement.elementId, 'connId1', nonBusElement.connId1);
+            this.modelElementDataService.setValueForElementProperty(nonBusElement.elementId, 'connId2', nonBusElement.connId2);
         }
     };
     ShapeService = __decorate([

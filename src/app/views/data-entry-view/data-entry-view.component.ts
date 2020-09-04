@@ -13,6 +13,8 @@ import { Shape } from '../shape';
 import { isDefined } from '@angular/compiler/src/util';
 import { Router } from '@angular/router';
 
+import { ModelElementDataService } from '../../data-model/model-element-data.service';
+
 @Component({
   selector: 'app-data-entry-view',
   templateUrl: './data-entry-view.component.html',
@@ -23,6 +25,7 @@ export class DataEntryViewComponent implements OnInit {
 
   constructor(
     private modelElementService: ModelElementService,
+    private modelElementDataService: ModelElementDataService,
     private router: Router,
     private route: ActivatedRoute
     // private shapeService: ShapeService) 
@@ -63,7 +66,7 @@ export class DataEntryViewComponent implements OnInit {
         let newValue = Object(form)[propertyTypeId];
         console.log(">>>" + propertyTypeId + ":" + newValue);
 
-        this.modelElementService.setValueForElementProperty(this.id, propertyTypeId, newValue);
+        this.modelElementDataService.setValueForElementProperty(this.id, propertyTypeId, newValue);
       }
     }
     //Submit also navigates back
@@ -92,12 +95,12 @@ export class DataEntryViewComponent implements OnInit {
     // this.modelData.setValue(elementId);
 
     // this.selectedShape = this.shapeService.getSelectedShape();
-    const selectedElement = this.modelElementService.getModelElementForId(elementId);
+    const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {
       // this.elementId = this.selectedShape.elementId;
       console.log(">>> " + selectedElement.elementTypeId);
       this.dataIds =
-        this.modelElementService.getPropertyTypeIdsOfElementType(selectedElement.elementTypeId);
+        this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
       console.log(this.dataIds)
 
       // interface Dict {
@@ -122,7 +125,7 @@ export class DataEntryViewComponent implements OnInit {
         this.formTitles.push(dataId);
 
         //Default value
-        let value = this.modelElementService.getValueForElementProperty(elementId, dataId);
+        let value = this.modelElementDataService.getValueForElementProperty(elementId, dataId);
         this.formDefaults.push(value);
 
         console.log("current value:" + value);
