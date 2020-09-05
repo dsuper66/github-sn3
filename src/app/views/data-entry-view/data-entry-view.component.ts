@@ -97,19 +97,20 @@ export class DataEntryViewComponent implements OnInit {
     // this.selectedShape = this.shapeService.getSelectedShape();
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {
-      // this.elementId = this.selectedShape.elementId;
+
       console.log(">>> " + selectedElement.elementTypeId);
-      this.dataIds =
-        this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
+      const parentProperties = this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
+      this.dataIds = parentProperties;
+        
       console.log(this.dataIds)
 
       //Populate the property fields
-      for (const dataId of this.dataIds) {
+      for (const parentProperty of parentProperties) {
         //Data Id
-        this.formTitles.push(dataId);
+        this.formTitles.push(parentProperty);
 
         //Default value
-        let value = this.modelElementDataService.getValueForElementProperty(elementId, dataId);
+        let value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
         this.formDefaults.push(value);
 
         console.log("current value:" + value);
@@ -119,8 +120,12 @@ export class DataEntryViewComponent implements OnInit {
       const childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
       for (const childElement of childElements) {
         console.log("#####" + childElement.elementId);
-        this.dataIds.push(childElement.elementTypeId)
-        this.formTitles.push(childElement.elementId);
+        const childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
+        // this.dataIds.push(childElement.elementTypeId);
+        for (const childProperty of childProperties) {
+          this.dataIds.push(childProperty);
+          this.formTitles.push(childElement.elementId + ":" + childProperty);
+        }
       }
 
 

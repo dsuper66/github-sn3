@@ -69,28 +69,32 @@ var DataEntryViewComponent = /** @class */ (function () {
         // this.selectedShape = this.shapeService.getSelectedShape();
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
-            // this.elementId = this.selectedShape.elementId;
             console.log(">>> " + selectedElement.elementTypeId);
-            this.dataIds =
-                this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
+            var parentProperties = this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
+            this.dataIds = parentProperties;
             console.log(this.dataIds);
             //Populate the property fields
-            for (var _i = 0, _a = this.dataIds; _i < _a.length; _i++) {
-                var dataId = _a[_i];
+            for (var _i = 0, parentProperties_1 = parentProperties; _i < parentProperties_1.length; _i++) {
+                var parentProperty = parentProperties_1[_i];
                 //Data Id
-                this.formTitles.push(dataId);
+                this.formTitles.push(parentProperty);
                 //Default value
-                var value = this.modelElementDataService.getValueForElementProperty(elementId, dataId);
+                var value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
                 this.formDefaults.push(value);
                 console.log("current value:" + value);
             }
             //Get child records
             var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
-            for (var _b = 0, childElements_1 = childElements; _b < childElements_1.length; _b++) {
-                var childElement = childElements_1[_b];
+            for (var _a = 0, childElements_1 = childElements; _a < childElements_1.length; _a++) {
+                var childElement = childElements_1[_a];
                 console.log("#####" + childElement.elementId);
-                this.dataIds.push(childElement.elementTypeId);
-                this.formTitles.push(childElement.elementId);
+                var childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
+                // this.dataIds.push(childElement.elementTypeId);
+                for (var _b = 0, childProperties_1 = childProperties; _b < childProperties_1.length; _b++) {
+                    var childProperty = childProperties_1[_b];
+                    this.dataIds.push(childProperty);
+                    this.formTitles.push(childElement.elementId + ":" + childProperty);
+                }
             }
             // console.log(">>>mm>>>" + indexedArray);
             //   this.myGroup = this.fb.group({
