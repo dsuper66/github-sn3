@@ -39,6 +39,12 @@ var ModelElementDataService = /** @class */ (function () {
                 { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }
             ])
         });
+        this.modelElements.push({
+            elementId: 'lossTrancheDef', elementTypeId: 'childSet',
+            properties: this.makeDict([
+                { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }
+            ])
+        });
         //Element Types and their Property Type Ids
         this.elementTypeProperties['bus'] = ['isRefBus'];
         this.elementTypeProperties['branch'] = ['connId1', 'connId2', 'maxFlow', 'susceptance'];
@@ -75,8 +81,24 @@ var ModelElementDataService = /** @class */ (function () {
         console.log("Got properties: " + properties);
         return properties;
     };
-    ModelElementDataService.prototype.getChildTypeElementsForElementType = function (elementTypeId) {
+    //Child elements
+    ModelElementDataService.prototype.getChildElementDefs = function (elementTypeId) {
         return this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementTypeId; });
+    };
+    ModelElementDataService.prototype.getChildIdsForElementId = function (elementId) {
+        return this.modelElements.filter(function (element) { return element.properties['parentId'] === elementId; });
+    };
+    //Test - get all properties of all
+    ModelElementDataService.prototype.listAllElements = function (elementId) {
+        for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
+            var element = _a[_i];
+            var propertyTypeIds = this.getPropertyTypeIdsFor(element.elementTypeId);
+            for (var _b = 0, propertyTypeIds_1 = propertyTypeIds; _b < propertyTypeIds_1.length; _b++) {
+                var propertyTypeId = propertyTypeIds_1[_b];
+                console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
+            }
+        }
+        return this.modelElements.filter(function (element) { return element.properties['parentId'] === elementId; });
     };
     ModelElementDataService.prototype.getDefaultPropertyForPropertTypeId = function (propertyTypeId) {
         var elementProperty = this.elementPropertyTypes.filter(function (elementPropertyType) { return elementPropertyType.propertyTypeId === propertyTypeId; })[0];

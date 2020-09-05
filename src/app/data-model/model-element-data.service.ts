@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModelElement, ElementPropertyType,ElementProperties,ElementType } from './model-element';
+import { ModelElement, ElementPropertyType, ElementProperties, ElementType } from './model-element';
 
 @Injectable({
   providedIn: 'root'
@@ -38,18 +38,23 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'load' }, {'childTypeId': 'bidTranche' }, {'childCount': '3'}])
+        { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }])
     });
     this.modelElements.push({
       elementId: 'genTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, {'childTypeId': 'genTranche' }, {'childCount': '3'}])
+        { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }])
     });
     this.modelElements.push({
       elementId: 'resTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, {'childTypeId': 'resTranche' }, {'childCount': '3'}])
-    });     
+        { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }])
+    });
+    this.modelElements.push({
+      elementId: 'lossTrancheDef', elementTypeId: 'childSet',
+      properties: this.makeDict([
+        { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }])
+    });    
 
 
     //Element Types and their Property Type Ids
@@ -74,21 +79,21 @@ export class ModelElementDataService {
 
   private elementNextIndex = new Map<string, bigint>();
 
-  getIdForNewElementOfType(elementTypeId: string):string{
-        //Get next index for i.d.
-        if (this.elementNextIndex[elementTypeId] == undefined) {
-          this.elementNextIndex[elementTypeId] = 1;
-        }
-        let elementIndex = this.elementNextIndex[elementTypeId];
-    
-        //Make the i.d.
-        let newId = elementTypeId + ("000" + elementIndex).slice(-3);
-        this.elementNextIndex[elementTypeId] = elementIndex + 1;
-        console.log("New Id:" + newId);
-        return newId;
+  getIdForNewElementOfType(elementTypeId: string): string {
+    //Get next index for i.d.
+    if (this.elementNextIndex[elementTypeId] == undefined) {
+      this.elementNextIndex[elementTypeId] = 1;
+    }
+    let elementIndex = this.elementNextIndex[elementTypeId];
+
+    //Make the i.d.
+    let newId = elementTypeId + ("000" + elementIndex).slice(-3);
+    this.elementNextIndex[elementTypeId] = elementIndex + 1;
+    console.log("New Id:" + newId);
+    return newId;
   }
 
-  addElement(elementId: string, elementTypeId: string, properties: ElementProperties){
+  addElement(elementId: string, elementTypeId: string, properties: ElementProperties) {
     this.modelElements.push({
       elementId: elementId,
       elementTypeId: elementTypeId,
@@ -97,18 +102,36 @@ export class ModelElementDataService {
   }
 
   getPropertyTypeIdsFor(elementTypeId: string): string[] {
-    console.log("Get properties for: " + elementTypeId);    
+    console.log("Get properties for: " + elementTypeId);
     const properties = this.elementTypeProperties[elementTypeId];
     console.log("Got properties: " + properties);
     return properties;
   }
 
-  getChildTypeElementsForElementType(elementTypeId: string): ModelElement[] {
+  //Child elements
+  getChildElementDefs(elementTypeId: string): ModelElement[] {
     return this.modelElements.filter(
       element => element.properties['parentTypeId'] === elementTypeId);
   }
 
-  getDefaultPropertyForPropertTypeId(propertyTypeId: string):any{
+  getChildIdsForElementId(elementId: string): ModelElement[] {
+    return this.modelElements.filter(
+      element => element.properties['parentId'] === elementId);
+  }
+
+  //Test - get all properties of all
+  listAllElements(elementId: string): ModelElement[] {
+    for (const element of this.modelElements) {
+      const propertyTypeIds = this.getPropertyTypeIdsFor(element.elementTypeId)
+      for (const propertyTypeId of propertyTypeIds) {
+        console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
+      }
+    }
+    return this.modelElements.filter(
+      element => element.properties['parentId'] === elementId);
+  }
+
+  getDefaultPropertyForPropertTypeId(propertyTypeId: string): any {
     const elementProperty = this.elementPropertyTypes.filter(
       elementPropertyType => elementPropertyType.propertyTypeId === propertyTypeId)[0];
     return elementProperty.defaultValue;
@@ -122,7 +145,7 @@ export class ModelElementDataService {
     return this.modelElements.filter(element => element.elementId === elementId)[0];
   }
 
-    //Make Dictionary from array of objects
+  //Make Dictionary from array of objects
   //https://stackoverflow.com/questions/43147696/unable-to-extract-object-values-in-typescript
   makeDict(arrayOfMaps: { [key: string]: any }): { [key: string]: any } {
     const dict: { [key: string]: any } = {};
@@ -153,11 +176,11 @@ export class ModelElementDataService {
 
 
   makeProperties(
-    elementTypeId: string, 
+    elementTypeId: string,
     propertiesToAdd: string[],
     self: ModelElementDataService
-    )
-    :{ [propertyTypeId: string]: any } {
+  )
+    : { [propertyTypeId: string]: any } {
 
     console.log("Make Properties For:" + elementTypeId);
     var properties: { [propertyTypeId: string]: any } = {};

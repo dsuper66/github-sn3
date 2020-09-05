@@ -28,7 +28,7 @@ var DataEntryViewComponent = /** @class */ (function () {
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
         console.log("GOT ID ", this.id);
-        this.getDataForElementId(this.id);
+        this.getDisplayDataForElementId(this.id);
     };
     // private selectedShape: Shape;
     // private elementId = "none selected";
@@ -59,7 +59,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         //     console.log ("ppp");
         // }
     };
-    DataEntryViewComponent.prototype.getDataForElementId = function (elementId) {
+    DataEntryViewComponent.prototype.getDisplayDataForElementId = function (elementId) {
         //Get the element i.d. from the route
         // const elementId = this.route.snapshot.paramMap.get('elementId');
         // const elementId = this.route.snapshot.paramMap.get('elementId');
@@ -74,18 +74,6 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.dataIds =
                 this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
             console.log(this.dataIds);
-            // interface Dict {
-            //   [key: string]: string;
-            // }
-            // let controlsConfig: Dict;
-            // var indexedArray: { [key: string]: any; } = {
-            //   'connId1': ['none'],
-            //   'connId2': ['none'],
-            //   'resistance': ['none']
-            // }
-            // indexedArray = {'connId1': ['none'],connId2':['none'],'resistance':['none']};
-            // var controlsConfig: {
-            //   [key: string]: any;}
             //Populate the property fields
             for (var _i = 0, _a = this.dataIds; _i < _a.length; _i++) {
                 var dataId = _a[_i];
@@ -95,7 +83,14 @@ var DataEntryViewComponent = /** @class */ (function () {
                 var value = this.modelElementDataService.getValueForElementProperty(elementId, dataId);
                 this.formDefaults.push(value);
                 console.log("current value:" + value);
-                // this.propertiesFormArray.push(new FormControl(value));
+            }
+            //Get child records
+            var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
+            for (var _b = 0, childElements_1 = childElements; _b < childElements_1.length; _b++) {
+                var childElement = childElements_1[_b];
+                console.log("#####" + childElement.elementId);
+                this.dataIds.push(childElement.elementTypeId);
+                this.formTitles.push(childElement.elementId);
             }
             // console.log(">>>mm>>>" + indexedArray);
             //   this.myGroup = this.fb.group({

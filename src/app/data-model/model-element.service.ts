@@ -26,7 +26,7 @@ export class ModelElementService {
     console.log("Add:" + elementTypeIdToAdd);
     const elementIdForNewElement = this.modelElementDataService.getIdForNewElementOfType(elementTypeIdToAdd);
     const propertyTypeIds = this.modelElementDataService.getPropertyTypeIdsFor(elementTypeIdToAdd);
-    
+
     const properties = this.modelElementDataService.makeProperties(
       elementTypeIdToAdd,
       propertyTypeIds,
@@ -38,14 +38,24 @@ export class ModelElementService {
       properties
     )
 
+    //If this is a child then a parent Id will have been provided
+    if (parentId) {
+          //Set the parent property
+          this.modelElementDataService.setValueForElementProperty(elementIdForNewElement,'parentId',parentId);
+    }
+
     //Create any child elements (linked back like a gen is to a bus)
     const self = this;
-    const childElements = this.modelElementDataService.getChildTypeElementsForElementType(elementTypeIdToAdd);
-    childElements.forEach(function (childElement: ModelElement) {
-      const childTypeId = childElement.properties['childTypeId'];
-      console.log(">>>>>>>>" + childTypeId);
+    const childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeIdToAdd);
+    childElementDefs.forEach(function (childElementDef: ModelElement) {
+      const childTypeId = childElementDef.properties['childTypeId'];
+      const childCount = childElementDef.properties['childCount'];
+      console.log(">>>>>>>>" + childTypeId + " count:" + childCount);
       
-      self.addModelElement(childTypeId,elementTypeIdToAdd);
+      //Add the child record(s)
+      for (let childNum = 1; childNum <= childCount; childNum++) {
+        self.addModelElement(childTypeId,elementIdForNewElement);
+      }
     });
 
 

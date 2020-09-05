@@ -20,13 +20,22 @@ var ModelElementService = /** @class */ (function () {
         var propertyTypeIds = this.modelElementDataService.getPropertyTypeIdsFor(elementTypeIdToAdd);
         var properties = this.modelElementDataService.makeProperties(elementTypeIdToAdd, propertyTypeIds, this.modelElementDataService);
         this.modelElementDataService.addElement(elementIdForNewElement, elementTypeIdToAdd, properties);
+        //If this is a child then a parent Id will have been provided
+        if (parentId) {
+            //Set the parent property
+            this.modelElementDataService.setValueForElementProperty(elementIdForNewElement, 'parentId', parentId);
+        }
         //Create any child elements (linked back like a gen is to a bus)
         var self = this;
-        var childElements = this.modelElementDataService.getChildTypeElementsForElementType(elementTypeIdToAdd);
-        childElements.forEach(function (childElement) {
-            var childTypeId = childElement.properties['childTypeId'];
-            console.log(">>>>>>>>" + childTypeId);
-            self.addModelElement(childTypeId, elementTypeIdToAdd);
+        var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeIdToAdd);
+        childElementDefs.forEach(function (childElementDef) {
+            var childTypeId = childElementDef.properties['childTypeId'];
+            var childCount = childElementDef.properties['childCount'];
+            console.log(">>>>>>>>" + childTypeId + " count:" + childCount);
+            //Add the child record(s)
+            for (var childNum = 1; childNum <= childCount; childNum++) {
+                self.addModelElement(childTypeId, elementIdForNewElement);
+            }
         });
         return elementIdForNewElement;
     };

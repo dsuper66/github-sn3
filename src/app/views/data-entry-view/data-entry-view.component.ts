@@ -36,7 +36,7 @@ export class DataEntryViewComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("GOT ID ", this.id);
-    this.getDataForElementId(this.id);
+    this.getDisplayDataForElementId(this.id);
   }
 
   // myGroup = new FormGroup({
@@ -86,7 +86,7 @@ export class DataEntryViewComponent implements OnInit {
     // }
   }
 
-  getDataForElementId(elementId: string): void {
+  getDisplayDataForElementId(elementId: string): void {
     //Get the element i.d. from the route
     // const elementId = this.route.snapshot.paramMap.get('elementId');
     // const elementId = this.route.snapshot.paramMap.get('elementId');
@@ -103,24 +103,8 @@ export class DataEntryViewComponent implements OnInit {
         this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
       console.log(this.dataIds)
 
-      // interface Dict {
-      //   [key: string]: string;
-      // }
-      // let controlsConfig: Dict;
-
-      // var indexedArray: { [key: string]: any; } = {
-      //   'connId1': ['none'],
-      //   'connId2': ['none'],
-      //   'resistance': ['none']
-      // }
-
-
-      // indexedArray = {'connId1': ['none'],connId2':['none'],'resistance':['none']};
-      // var controlsConfig: {
-      //   [key: string]: any;}
-
       //Populate the property fields
-      for (let dataId of this.dataIds) {
+      for (const dataId of this.dataIds) {
         //Data Id
         this.formTitles.push(dataId);
 
@@ -129,9 +113,16 @@ export class DataEntryViewComponent implements OnInit {
         this.formDefaults.push(value);
 
         console.log("current value:" + value);
-
-        // this.propertiesFormArray.push(new FormControl(value));
       }
+
+      //Get child records
+      const childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
+      for (const childElement of childElements) {
+        console.log("#####" + childElement.elementId);
+        this.dataIds.push(childElement.elementTypeId)
+        this.formTitles.push(childElement.elementId);
+      }
+
 
       // console.log(">>>mm>>>" + indexedArray);
       //   this.myGroup = this.fb.group({

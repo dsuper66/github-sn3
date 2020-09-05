@@ -5,7 +5,10 @@ export interface ModelElement {
     // bus2: string;
     // properties: ElementProperties;
     // properties: Map<string, any>;
-    properties: ElementProperties; //{[propertyTypeId:string] : any};
+    
+    properties: ElementProperties; 
+    // properties: {[propertyTypeId:string] : any};
+    
     // properties: Record<string, any>;
 }
 
