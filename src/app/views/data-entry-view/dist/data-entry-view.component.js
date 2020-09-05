@@ -24,11 +24,13 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.propertiesFormArray = [];
         this.formTitles = [];
         this.formDefaults = [];
-        route.params.subscribe(function (params) { _this.id = params['id']; });
+        //To get the data back from the data-entry form
+        this.dataIds = [];
+        route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
-        console.log("GOT ID ", this.id);
-        this.getDisplayDataForElementId(this.id);
+        console.log("GOT ID ", this.idOfDataEntryObject);
+        this.getDisplayDataForElementId(this.idOfDataEntryObject);
     };
     // private selectedShape: Shape;
     // private elementId = "none selected";
@@ -42,7 +44,7 @@ var DataEntryViewComponent = /** @class */ (function () {
                 var propertyTypeId = _a[_i];
                 var newValue = Object(form)[propertyTypeId];
                 console.log(">>>" + propertyTypeId + ":" + newValue);
-                this.modelElementDataService.setValueForElementProperty(this.id, propertyTypeId, newValue);
+                this.modelElementDataService.setValueForElementProperty(this.idOfDataEntryObject, propertyTypeId, newValue);
             }
         }
         //Submit also navigates back
@@ -71,29 +73,41 @@ var DataEntryViewComponent = /** @class */ (function () {
         if (selectedElement) {
             console.log(">>> " + selectedElement.elementTypeId);
             var parentProperties = this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
-            this.dataIds = parentProperties;
-            console.log(this.dataIds);
+            // this.dataIds = parentProperties;
+            // console.log(this.dataIds)
             //Populate the property fields
+            // .filter(property => property['visible'] === true 
             for (var _i = 0, parentProperties_1 = parentProperties; _i < parentProperties_1.length; _i++) {
                 var parentProperty = parentProperties_1[_i];
-                //Data Id
-                this.formTitles.push(parentProperty);
-                //Default value
-                var value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
-                this.formDefaults.push(value);
-                console.log("current value:" + value);
+                if (this.modelElementDataService.propertyIsVisible(parentProperty)) {
+                    //Data Id
+                    this.formTitles.push(parentProperty);
+                    //Default value
+                    var value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
+                    this.formDefaults.push(value);
+                    console.log(parentProperty + ": current value:" + value);
+                    this.dataIds.push(parentProperty);
+                }
+                else {
+                    console.log(parentProperty + ": not visible");
+                }
             }
             //Get child records
             var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
             for (var _a = 0, childElements_1 = childElements; _a < childElements_1.length; _a++) {
                 var childElement = childElements_1[_a];
-                console.log("#####" + childElement.elementId);
+                // console.log("#####" + childElement.elementId);
                 var childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
                 // this.dataIds.push(childElement.elementTypeId);
                 for (var _b = 0, childProperties_1 = childProperties; _b < childProperties_1.length; _b++) {
                     var childProperty = childProperties_1[_b];
-                    this.dataIds.push(childProperty);
-                    this.formTitles.push(childElement.elementId + ":" + childProperty);
+                    if (this.modelElementDataService.propertyIsVisible(childProperty)) {
+                        this.dataIds.push(childProperty);
+                        this.formTitles.push(childElement.elementId + ":" + childProperty);
+                    }
+                    else {
+                        console.log(childProperty + ": not visible");
+                    }
                 }
             }
             // console.log(">>>mm>>>" + indexedArray);

@@ -21,7 +21,7 @@ import { ModelElementDataService } from '../../data-model/model-element-data.ser
   styleUrls: ['./data-entry-view.component.css']
 })
 export class DataEntryViewComponent implements OnInit {
-  id: string;
+  idOfDataEntryObject: string;
 
   constructor(
     private modelElementService: ModelElementService,
@@ -29,14 +29,13 @@ export class DataEntryViewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
     // private shapeService: ShapeService) 
-    )
-  {
-    route.params.subscribe(params => { this.id = params['id']; });
+  ) {
+    route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
   }
 
   ngOnInit(): void {
-    console.log("GOT ID ", this.id);
-    this.getDisplayDataForElementId(this.id);
+    console.log("GOT ID ", this.idOfDataEntryObject);
+    this.getDisplayDataForElementId(this.idOfDataEntryObject);
   }
 
   // myGroup = new FormGroup({
@@ -49,7 +48,7 @@ export class DataEntryViewComponent implements OnInit {
   formDefaults: string[] = [];
 
   //To get the data back from the data-entry form
-  dataIds: string[];
+  dataIds: string[] = [];
   // private selectedShape: Shape;
   // private elementId = "none selected";
 
@@ -60,13 +59,12 @@ export class DataEntryViewComponent implements OnInit {
     //Extract the data from the object
     //Fields where no data has been entered are empty strings, so we don't update those
     if (this.dataIds) {
-      for (let propertyTypeId of this.dataIds.filter(
-        id => Object(form)[id] != "")) {
+      for (let propertyTypeId of this.dataIds.filter(id => Object(form)[id] != "")) {
 
         let newValue = Object(form)[propertyTypeId];
         console.log(">>>" + propertyTypeId + ":" + newValue);
 
-        this.modelElementDataService.setValueForElementProperty(this.id, propertyTypeId, newValue);
+        this.modelElementDataService.setValueForElementProperty(this.idOfDataEntryObject, propertyTypeId, newValue);
       }
     }
     //Submit also navigates back
@@ -99,32 +97,44 @@ export class DataEntryViewComponent implements OnInit {
     if (selectedElement) {
 
       console.log(">>> " + selectedElement.elementTypeId);
+
       const parentProperties = this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
-      this.dataIds = parentProperties;
-        
-      console.log(this.dataIds)
+      // this.dataIds = parentProperties;
+      // console.log(this.dataIds)
 
       //Populate the property fields
+      // .filter(property => property['visible'] === true 
       for (const parentProperty of parentProperties) {
-        //Data Id
-        this.formTitles.push(parentProperty);
+        if (this.modelElementDataService.propertyIsVisible(parentProperty)) {
+          //Data Id
+          this.formTitles.push(parentProperty);
 
-        //Default value
-        let value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
-        this.formDefaults.push(value);
+          //Default value
+          let value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
+          this.formDefaults.push(value);
 
-        console.log("current value:" + value);
+          console.log(parentProperty + ": current value:" + value);
+          this.dataIds.push(parentProperty);
+        }
+        else {
+          console.log(parentProperty + ": not visible")
+        }
       }
 
       //Get child records
       const childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
       for (const childElement of childElements) {
-        console.log("#####" + childElement.elementId);
+        // console.log("#####" + childElement.elementId);
         const childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
         // this.dataIds.push(childElement.elementTypeId);
         for (const childProperty of childProperties) {
-          this.dataIds.push(childProperty);
-          this.formTitles.push(childElement.elementId + ":" + childProperty);
+          if (this.modelElementDataService.propertyIsVisible(childProperty)) {
+            this.dataIds.push(childProperty);
+            this.formTitles.push(childElement.elementId + ":" + childProperty);
+          }
+          else {
+            console.log(childProperty + ": not visible")
+          }
         }
       }
 

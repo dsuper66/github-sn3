@@ -9,25 +9,25 @@ export class ModelElementDataService {
   constructor() {
     //Property Types (and Defaults)
     this.elementPropertyTypes.push(
-      { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true },
-      { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'none' },
-      { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'none' },
-      { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100' },
-      { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10' },
-      { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001' },
-      { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3' },
-      { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none' },
-      { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none' },
-      { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none' },
-      { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80' },
-      { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100' },
-      { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90' },
-      { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10' },
-      { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70' },
-      { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150' },
-      { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25' },
-      { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2' },
-      { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100' }
+      { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true, visible: true },
+      { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true },
+      { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true },
+      { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true },
+      { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false },
+      { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true },
+      { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true },
+      { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true },
+      { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true },
+      { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true },
+      { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true },
+      { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true },
+      { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true },
+      { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100', visible: true }
     )
 
     //Add static elements, accessed via the Settings display
@@ -190,6 +190,11 @@ export class ModelElementDataService {
       properties[propertyTypeId] = self.getDefaultPropertyForPropertTypeId(propertyTypeId);
     })
     return properties;
+  }
+
+  propertyIsVisible(propertyTypeId: string) {
+    const propertyType = this.elementPropertyTypes.filter(property => property.propertyTypeId === propertyTypeId)[0];
+    return propertyType.visible;
   }
 
 }
