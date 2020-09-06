@@ -24,28 +24,34 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.propertiesFormArray = [];
         this.formTitles = [];
         this.formDefaults = [];
+        this.formElementId = [];
+        this.formPropertyId = [];
         //To get the data back from the data-entry form
         this.dataIds = [];
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
         console.log("GOT ID ", this.idOfDataEntryObject);
-        this.getDisplayDataForElementId(this.idOfDataEntryObject);
+        this.populateFormForElementId(this.idOfDataEntryObject);
     };
     // private selectedShape: Shape;
     // private elementId = "none selected";
     DataEntryViewComponent.prototype.onSubmit = function (form) {
+        var _this = this;
         //The form returns an object
         console.log('you submitted value:', form);
         //Extract the data from the object
         //Fields where no data has been entered are empty strings, so we don't update those
         if (this.dataIds) {
-            for (var _i = 0, _a = this.dataIds.filter(function (id) { return Object(form)[id] != ""; }); _i < _a.length; _i++) {
-                var propertyTypeId = _a[_i];
-                var newValue = Object(form)[propertyTypeId];
-                console.log(">>>" + propertyTypeId + ":" + newValue);
-                this.modelElementDataService.setValueForElementProperty(this.idOfDataEntryObject, propertyTypeId, newValue);
-            }
+            // for (let propertyTypeId of this.dataIds.filter(id => Object(form)[id] != "")) {
+            this.dataIds.forEach(function (propertyTypeId, index) {
+                var formValue = Object(form)[propertyTypeId];
+                if (formValue && formValue != "") {
+                    var newValue = Object(form)[propertyTypeId];
+                    console.log(">>>value>>>" + propertyTypeId + ":" + newValue);
+                    _this.modelElementDataService.setValueForElementProperty(_this.idOfDataEntryObject, propertyTypeId, newValue);
+                }
+            });
         }
         //Submit also navigates back
         this.router.navigate(['/network-builder-component']);
@@ -61,7 +67,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         //     console.log ("ppp");
         // }
     };
-    DataEntryViewComponent.prototype.getDisplayDataForElementId = function (elementId) {
+    DataEntryViewComponent.prototype.populateFormForElementId = function (elementId) {
         //Get the element i.d. from the route
         // const elementId = this.route.snapshot.paramMap.get('elementId');
         // const elementId = this.route.snapshot.paramMap.get('elementId');
@@ -78,18 +84,19 @@ var DataEntryViewComponent = /** @class */ (function () {
             //Populate the property fields
             // .filter(property => property['visible'] === true 
             for (var _i = 0, parentProperties_1 = parentProperties; _i < parentProperties_1.length; _i++) {
-                var parentProperty = parentProperties_1[_i];
-                if (this.modelElementDataService.propertyIsVisible(parentProperty)) {
+                var parentPropertyId = parentProperties_1[_i];
+                if (this.modelElementDataService.propertyIsVisible(parentPropertyId)) {
                     //Data Id
-                    this.formTitles.push(parentProperty);
+                    this.dataIds.push(parentPropertyId);
+                    //Title
+                    this.formTitles.push(parentPropertyId);
                     //Default value
-                    var value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
+                    var value = this.modelElementDataService.getValueForElementProperty(elementId, parentPropertyId);
                     this.formDefaults.push(value);
-                    console.log(parentProperty + ": current value:" + value);
-                    this.dataIds.push(parentProperty);
+                    console.log(parentPropertyId + ": current value:" + value);
                 }
                 else {
-                    console.log(parentProperty + ": not visible");
+                    console.log(parentPropertyId + ": not visible");
                 }
             }
             //Get child records
@@ -100,13 +107,18 @@ var DataEntryViewComponent = /** @class */ (function () {
                 var childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
                 // this.dataIds.push(childElement.elementTypeId);
                 for (var _b = 0, childProperties_1 = childProperties; _b < childProperties_1.length; _b++) {
-                    var childProperty = childProperties_1[_b];
-                    if (this.modelElementDataService.propertyIsVisible(childProperty)) {
-                        this.dataIds.push(childProperty);
-                        this.formTitles.push(childElement.elementId + ":" + childProperty);
+                    var childPropertyId = childProperties_1[_b];
+                    if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {
+                        //Data Id
+                        this.dataIds.push(childPropertyId);
+                        //Title
+                        this.formTitles.push(childPropertyId + "[" + childElement.elementId + "]");
+                        //Default value
+                        var value = this.modelElementDataService.getValueForElementProperty(childElement.elementId, childPropertyId);
+                        this.formDefaults.push(value);
                     }
                     else {
-                        console.log(childProperty + ": not visible");
+                        console.log(childPropertyId + ": not visible");
                     }
                 }
             }

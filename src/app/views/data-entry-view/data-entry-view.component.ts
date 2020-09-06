@@ -35,7 +35,7 @@ export class DataEntryViewComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("GOT ID ", this.idOfDataEntryObject);
-    this.getDisplayDataForElementId(this.idOfDataEntryObject);
+    this.populateFormForElementId(this.idOfDataEntryObject);
   }
 
   // myGroup = new FormGroup({
@@ -46,6 +46,8 @@ export class DataEntryViewComponent implements OnInit {
   propertiesFormArray: FormControl[] = [];
   formTitles: string[] = [];
   formDefaults: string[] = [];
+  formElementId: string[] = [];
+  formPropertyId: string[] = [];
 
   //To get the data back from the data-entry form
   dataIds: string[] = [];
@@ -59,13 +61,18 @@ export class DataEntryViewComponent implements OnInit {
     //Extract the data from the object
     //Fields where no data has been entered are empty strings, so we don't update those
     if (this.dataIds) {
-      for (let propertyTypeId of this.dataIds.filter(id => Object(form)[id] != "")) {
+      // for (let propertyTypeId of this.dataIds.filter(id => Object(form)[id] != "")) {
+      this.dataIds.forEach((propertyTypeId, index) => {
+        const formValue = Object(form)[propertyTypeId];
+        if (formValue && formValue != "") {
 
-        let newValue = Object(form)[propertyTypeId];
-        console.log(">>>" + propertyTypeId + ":" + newValue);
 
-        this.modelElementDataService.setValueForElementProperty(this.idOfDataEntryObject, propertyTypeId, newValue);
-      }
+          let newValue = Object(form)[propertyTypeId];
+          console.log(">>>value>>>" + propertyTypeId + ":" + newValue);
+
+          this.modelElementDataService.setValueForElementProperty(this.idOfDataEntryObject, propertyTypeId, newValue);
+        }
+      })
     }
     //Submit also navigates back
     this.router.navigate(['/network-builder-component']);
@@ -84,7 +91,7 @@ export class DataEntryViewComponent implements OnInit {
     // }
   }
 
-  getDisplayDataForElementId(elementId: string): void {
+  populateFormForElementId(elementId: string): void {
     //Get the element i.d. from the route
     // const elementId = this.route.snapshot.paramMap.get('elementId');
     // const elementId = this.route.snapshot.paramMap.get('elementId');
@@ -104,20 +111,22 @@ export class DataEntryViewComponent implements OnInit {
 
       //Populate the property fields
       // .filter(property => property['visible'] === true 
-      for (const parentProperty of parentProperties) {
-        if (this.modelElementDataService.propertyIsVisible(parentProperty)) {
-          //Data Id
-          this.formTitles.push(parentProperty);
+      for (const parentPropertyId of parentProperties) {
+        if (this.modelElementDataService.propertyIsVisible(parentPropertyId)) {
 
+          //Data Id
+          this.dataIds.push(parentPropertyId);
+          //Title
+          this.formTitles.push(parentPropertyId);
           //Default value
-          let value = this.modelElementDataService.getValueForElementProperty(elementId, parentProperty);
+          const value = this.modelElementDataService.getValueForElementProperty(elementId, parentPropertyId);
           this.formDefaults.push(value);
 
-          console.log(parentProperty + ": current value:" + value);
-          this.dataIds.push(parentProperty);
+          console.log(parentPropertyId + ": current value:" + value);
+
         }
         else {
-          console.log(parentProperty + ": not visible")
+          console.log(parentPropertyId + ": not visible")
         }
       }
 
@@ -127,13 +136,20 @@ export class DataEntryViewComponent implements OnInit {
         // console.log("#####" + childElement.elementId);
         const childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
         // this.dataIds.push(childElement.elementTypeId);
-        for (const childProperty of childProperties) {
-          if (this.modelElementDataService.propertyIsVisible(childProperty)) {
-            this.dataIds.push(childProperty);
-            this.formTitles.push(childElement.elementId + ":" + childProperty);
+        for (const childPropertyId of childProperties) {
+          if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {
+
+            //Data Id
+            this.dataIds.push(childPropertyId);
+            //Title
+            this.formTitles.push(childPropertyId + "[" + childElement.elementId + "]");
+            //Default value
+            const value = this.modelElementDataService.getValueForElementProperty(childElement.elementId, childPropertyId);
+            this.formDefaults.push(value);
+
           }
           else {
-            console.log(childProperty + ": not visible")
+            console.log(childPropertyId + ": not visible")
           }
         }
       }
