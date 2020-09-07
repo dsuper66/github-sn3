@@ -34,16 +34,18 @@
     <br>
 
     <!-- <div *ngFor="let property of propertiesFormArray; index as i"> -->
-    <div *ngFor="let dataId of dataIds; index as i">
+    <!-- <div *ngFor="let dataId of dataIds; index as i"> -->
+    <div *ngFor="let formName of formNames; index as i">
 
       
       <!-- The label -->
-      <span class="text">{{formTitles[i]}}: </span>
+      <!-- <span class="text">{{formTitles[i]}}: </span> -->
+      <span class="text">{{formName}}: </span>
       <!-- Create the input and add the default value -->
       <input 
         type="text"
         placeholder="{{formDefaults[i]}}"
-        name="{{formTitles[i]}}"
+        name="{{formName}}"
         
         ngModel>
     </div>
@@ -51,6 +53,7 @@
     
   </form>
 
+  <!-- name="{{formTitles[i]}}" -->
   <!-- id="{{formTitles[i]}}" -->
 
 <!-- </div> -->

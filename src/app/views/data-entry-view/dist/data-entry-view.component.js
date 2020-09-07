@@ -20,36 +20,34 @@ var DataEntryViewComponent = /** @class */ (function () {
         // myGroup = new FormGroup({
         //   firstName: new FormControl()
         // });
-        // propertiesFormArray = new FormArray([]);
-        this.propertiesFormArray = [];
-        this.formTitles = [];
+        // propertiesFormArray: FormControl[] = [];
+        this.formNames = [];
         this.formDefaults = [];
-        this.formElementId = [];
-        this.formPropertyId = [];
-        //To get the data back from the data-entry form
-        this.dataIds = [];
+        this.formElementIds = [];
+        this.formPropertyIds = [];
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
         console.log("GOT ID ", this.idOfDataEntryObject);
-        this.populateFormForElementId(this.idOfDataEntryObject);
+        this.populateFormFromElementId(this.idOfDataEntryObject);
     };
-    // private selectedShape: Shape;
-    // private elementId = "none selected";
+    //To get the data back from the data-entry form
+    // dataIds: string[] = [];
     DataEntryViewComponent.prototype.onSubmit = function (form) {
         var _this = this;
         //The form returns an object
         console.log('you submitted value:', form);
         //Extract the data from the object
         //Fields where no data has been entered are empty strings, so we don't update those
-        if (this.dataIds) {
-            // for (let propertyTypeId of this.dataIds.filter(id => Object(form)[id] != "")) {
-            this.dataIds.forEach(function (propertyTypeId, index) {
-                var formValue = Object(form)[propertyTypeId];
+        if (this.formNames) {
+            this.formNames.forEach(function (formName, index) {
+                var formValue = Object(form)[formName];
                 if (formValue && formValue != "") {
-                    var newValue = Object(form)[propertyTypeId];
-                    console.log(">>>value>>>" + propertyTypeId + ":" + newValue);
-                    _this.modelElementDataService.setValueForElementProperty(_this.idOfDataEntryObject, propertyTypeId, newValue);
+                    // let newValue = Object(form)[propertyTypeId];
+                    console.log(">>>value>>>" + formName + ":" + formValue);
+                    var propertyId = _this.formPropertyIds[index];
+                    var elementId = _this.formElementIds[index];
+                    _this.modelElementDataService.setValueForElementProperty(elementId, propertyId, formValue);
                 }
             });
         }
@@ -67,7 +65,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         //     console.log ("ppp");
         // }
     };
-    DataEntryViewComponent.prototype.populateFormForElementId = function (elementId) {
+    DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
         //Get the element i.d. from the route
         // const elementId = this.route.snapshot.paramMap.get('elementId');
         // const elementId = this.route.snapshot.paramMap.get('elementId');
@@ -79,48 +77,43 @@ var DataEntryViewComponent = /** @class */ (function () {
         if (selectedElement) {
             console.log(">>> " + selectedElement.elementTypeId);
             var parentProperties = this.modelElementDataService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
-            // this.dataIds = parentProperties;
-            // console.log(this.dataIds)
+            this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
             //Populate the property fields
-            // .filter(property => property['visible'] === true 
-            for (var _i = 0, parentProperties_1 = parentProperties; _i < parentProperties_1.length; _i++) {
-                var parentPropertyId = parentProperties_1[_i];
-                if (this.modelElementDataService.propertyIsVisible(parentPropertyId)) {
-                    //Data Id
-                    this.dataIds.push(parentPropertyId);
-                    //Title
-                    this.formTitles.push(parentPropertyId);
-                    //Default value
-                    var value = this.modelElementDataService.getValueForElementProperty(elementId, parentPropertyId);
-                    this.formDefaults.push(value);
-                    console.log(parentPropertyId + ": current value:" + value);
-                }
-                else {
-                    console.log(parentPropertyId + ": not visible");
-                }
-            }
+            // for (const parentPropertyId of parentProperties) {
+            //   if (this.modelElementDataService.propertyIsVisible(parentPropertyId)) {
+            //     //Data Id
+            //     this.dataIds.push(parentPropertyId);
+            //     //Title
+            //     this.formTitles.push(parentPropertyId);
+            //     //Default value
+            //     const value = this.modelElementDataService.getValueForElementProperty(elementId, parentPropertyId);
+            //     this.formDefaults.push(value);
+            //     console.log(parentPropertyId + ": current value:" + value);
+            //   }
+            //   else {
+            //     console.log(parentPropertyId + ": not visible")
+            //   }
+            // }
             //Get child records
             var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
-            for (var _a = 0, childElements_1 = childElements; _a < childElements_1.length; _a++) {
-                var childElement = childElements_1[_a];
-                // console.log("#####" + childElement.elementId);
+            for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
+                var childElement = childElements_1[_i];
                 var childProperties = this.modelElementDataService.getPropertyTypeIdsFor(childElement.elementTypeId);
-                // this.dataIds.push(childElement.elementTypeId);
-                for (var _b = 0, childProperties_1 = childProperties; _b < childProperties_1.length; _b++) {
-                    var childPropertyId = childProperties_1[_b];
-                    if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {
-                        //Data Id
-                        this.dataIds.push(childPropertyId);
-                        //Title
-                        this.formTitles.push(childPropertyId + "[" + childElement.elementId + "]");
-                        //Default value
-                        var value = this.modelElementDataService.getValueForElementProperty(childElement.elementId, childPropertyId);
-                        this.formDefaults.push(value);
-                    }
-                    else {
-                        console.log(childPropertyId + ": not visible");
-                    }
-                }
+                this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
+                // for (const childPropertyId of childProperties) {
+                //   if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {
+                //     //Data Id
+                //     this.dataIds.push(childPropertyId);
+                //     //Title
+                //     this.formTitles.push(childPropertyId + "[" + childElement.elementId + "]");
+                //     //Default value
+                //     const value = this.modelElementDataService.getValueForElementProperty(childElement.elementId, childPropertyId);
+                //     this.formDefaults.push(value);
+                //   }
+                //   else {
+                //     console.log(childPropertyId + ": not visible")
+                //   }
+                // }
             }
             // console.log(">>>mm>>>" + indexedArray);
             //   this.myGroup = this.fb.group({
@@ -132,6 +125,28 @@ var DataEntryViewComponent = /** @class */ (function () {
             //   indexedArray });
             // }
             // this.modelData.setValue(this.elementId);
+        }
+    };
+    DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
+        for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {
+            var propertyId = propertyIds_1[_i];
+            if (this.modelElementDataService.propertyIsVisible(propertyId)) {
+                //Data Id
+                // this.dataIds.push(propertyId);
+                //Title
+                this.formNames.push(propertyId);
+                //Default value
+                var value = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
+                this.formDefaults.push(value);
+                //PropertyId
+                this.formPropertyIds.push(propertyId);
+                //ElementId
+                this.formElementIds.push(elementId);
+                console.log(propertyId + ": current value:" + value);
+            }
+            else {
+                console.log(propertyId + ": not visible");
+            }
         }
     };
     DataEntryViewComponent = __decorate([
