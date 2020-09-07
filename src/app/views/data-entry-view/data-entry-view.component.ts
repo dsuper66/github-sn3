@@ -185,7 +185,7 @@ export class DataEntryViewComponent implements OnInit {
         //ElementId
         this.formElementIds.push(elementId);
 
-        console.log(propertyId + ": current value:" + value);
+        console.log(elementId + "-" + propertyId + "-value:" + value);
 
       }
       else {

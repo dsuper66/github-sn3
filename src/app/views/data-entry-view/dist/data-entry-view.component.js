@@ -142,7 +142,7 @@ var DataEntryViewComponent = /** @class */ (function () {
                 this.formPropertyIds.push(propertyId);
                 //ElementId
                 this.formElementIds.push(elementId);
-                console.log(propertyId + ": current value:" + value);
+                console.log(elementId + "-" + propertyId + "-value:" + value);
             }
             else {
                 console.log(propertyId + ": not visible");
