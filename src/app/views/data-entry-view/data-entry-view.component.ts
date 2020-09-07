@@ -175,8 +175,9 @@ export class DataEntryViewComponent implements OnInit {
 
         //Data Id
         // this.dataIds.push(propertyId);
-        //Title
-        this.formNames.push(propertyId);
+
+        //Name/Title
+        this.formNames.push(elementId + "-" + propertyId);
         //Default value
         const value = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
         this.formDefaults.push(value);

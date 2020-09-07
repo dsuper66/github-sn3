@@ -133,8 +133,8 @@ var DataEntryViewComponent = /** @class */ (function () {
             if (this.modelElementDataService.propertyIsVisible(propertyId)) {
                 //Data Id
                 // this.dataIds.push(propertyId);
-                //Title
-                this.formNames.push(propertyId);
+                //Name/Title
+                this.formNames.push(elementId + "-" + propertyId);
                 //Default value
                 var value = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
                 this.formDefaults.push(value);
