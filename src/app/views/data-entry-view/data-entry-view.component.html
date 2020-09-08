@@ -24,6 +24,7 @@
   &nbsp; -->
 
   <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
+
       <!-- Prevent implicit submission of the form -->
     <button type="submit" disabled style="display: none" aria-hidden="true"></button>
 
@@ -33,23 +34,29 @@
     <br>
     <br>
 
-    <!-- <div *ngFor="let property of propertiesFormArray; index as i"> -->
-    <!-- <div *ngFor="let dataId of dataIds; index as i"> -->
-    <div *ngFor="let formName of formNames; index as i">
+    <table border="0" table-layout="fixed" >
 
-      
+    <tr *ngFor="let formName of formNames; index as i">
+
       <!-- The label -->
-      <!-- <span class="text">{{formTitles[i]}}: </span> -->
-      <span class="text">{{formName}}: </span>
+      <!-- <tr> -->
+      
+      <td>{{formName}}
+      </td>
       <!-- Create the input and add the default value -->
-      <input 
+      <td>
+        <input 
+        style="text-align:right"
         type="text"
         placeholder="{{formDefaults[i]}}"
         name="{{formName}}"
         
         ngModel>
-    </div>
+      </td>
 
+      </tr>
+    <!-- </div> -->
+    </table>
     
   </form>
 

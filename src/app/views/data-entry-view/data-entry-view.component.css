@@ -1,12 +1,9 @@
-label {
-    /* display: block; */
-    /* width: 6em; */
-    /* margin: .5em 0; */
+/* label {
     margin: 1em;
     color: #607D8B;
     font-weight: bold;
     font-size: 20px;
-  }
+  } */
 
   .text {
     margin-left: 6px;
@@ -21,3 +18,8 @@ label {
     font-weight: normal;
     font-size: 20px;
   }
+/* 
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input { display: table-cell; } */
