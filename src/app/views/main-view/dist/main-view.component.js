@@ -9,9 +9,11 @@ exports.__esModule = true;
 exports.MainViewComponent = void 0;
 var core_1 = require("@angular/core");
 var MainViewComponent = /** @class */ (function () {
-    function MainViewComponent(shapeService, modelElementService) {
+    function MainViewComponent(shapeService, 
+    // private modelElementService: ModelElementService,
+    modelElementDataService) {
         this.shapeService = shapeService;
-        this.modelElementService = modelElementService;
+        this.modelElementDataService = modelElementDataService;
         this.shapes = [];
         this.modelJSON = "";
     }
@@ -21,7 +23,7 @@ var MainViewComponent = /** @class */ (function () {
     MainViewComponent.prototype.getModelData = function () {
         //Start element and array of elements
         var jString = "{" + JSON.stringify("elements") + ":[";
-        var modelElements = this.modelElementService.getModelElements();
+        var modelElements = this.modelElementDataService.getModelElements();
         for (var _i = 0, modelElements_1 = modelElements; _i < modelElements_1.length; _i++) {
             var modelElement = modelElements_1[_i];
             //ID
@@ -31,9 +33,9 @@ var MainViewComponent = /** @class */ (function () {
             //Properties
             jString += JSON.stringify("properties") + ":{";
             //Properties
-            for (var _a = 0, _b = this.modelElementService.getPropertyTypeIdsOfElementType(modelElement.elementTypeId); _a < _b.length; _a++) {
+            for (var _a = 0, _b = this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId); _a < _b.length; _a++) {
                 var propertyTypeId = _b[_a];
-                var value = this.modelElementService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
+                var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
                 jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";
             }
             //Close properties array and element to prep for next element

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ShapeService } from '../shape.service';
-import { ModelElementService } from '../../data-model/model-element.service';
+import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { Shape } from '../shape';
 import { ModelElement } from '../../data-model/model-element'
 
@@ -14,7 +14,8 @@ export class MainViewComponent implements OnInit {
 
   constructor(
     private shapeService: ShapeService,
-    private modelElementService: ModelElementService) 
+    // private modelElementService: ModelElementService,
+    private modelElementDataService: ModelElementDataService) 
     { }
 
   shapes: Shape[] = [];
@@ -27,7 +28,7 @@ export class MainViewComponent implements OnInit {
   getModelData() {
     //Start element and array of elements
     var jString = "{" + JSON.stringify("elements") + ":[";
-    let modelElements = this.modelElementService.getModelElements();
+    let modelElements = this.modelElementDataService.getModelElements();
     for (const modelElement of modelElements){
       //ID
       jString += "{" + JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
@@ -38,9 +39,9 @@ export class MainViewComponent implements OnInit {
   
       //Properties
       for (const propertyTypeId
-          of this.modelElementService.getPropertyTypeIdsOfElementType(modelElement.elementTypeId)) {
+          of this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId)) {
 
-            let value = this.modelElementService.getValueForElementProperty(
+            let value = this.modelElementDataService.getValueForElementProperty(
               modelElement.elementId,propertyTypeId);
             jString += JSON.stringify(propertyTypeId)  + ":" + JSON.stringify(value)  + ","
       }
