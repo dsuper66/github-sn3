@@ -210,12 +210,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
     NetworkBuilderViewComponent.prototype.setConnectivity = function (shape) {
         var isFullyConnected = (shape.elementTypeId != 'branch' && shape.connId1 != "")
             || (shape.connId1 != "" && shape.connId2 != "");
-        // var el = document.getElementById(shape.elementId);
-        // el.setAttribute("stroke", (isFullyConnected ? "black" : "lime"));
-        // if (shape.elementType === 'bus' || shape.elementType === 'branch') {
-        //   el.setAttribute("fill", (isFullyConnected ? "black" : "lime"));
-        // }
-        //Use renderer not attribute
+        //Use renderer, not attribute
         //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
         //https://stackoverflow.com/questions/54507984/angular-how-to-modify-css-transform-property-of-html-elements-inside-a-compone
         //(with changes to setProperty)
@@ -229,7 +224,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                 this.renderer.setProperty(el.style, "fill", (isFullyConnected ? "black" : "lime"));
             }
         }
-        //Save any connectivity changes back to the main model
+        //Save shape connectivity to element model
         this.shapeService.saveConnectivityToModel();
     };
     //CHECK FOR OVERLAPS
@@ -238,12 +233,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //   rect1.left > rect2.right || 
         //   rect1.bottom < rect2.top || 
         //   rect1.top > rect2.bottom)
-        if (this.selectedShape != undefined) 
-        //   (this.selectedShape.elementTypeId === 'gen'
-        //   || this.selectedShape.elementTypeId === 'load'
-        //   || this.selectedShape.elementTypeId === 'branch'
-        //   || this.selectedShape.elementTypeId === 'bus')
-        {
+        if (this.selectedShape != undefined) {
             //Bus is moving
             if (this.selectedShape.elementTypeId === 'bus') {
                 var theBus = this.selectedShape;
@@ -303,7 +293,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                             else if (theNotBus.connId2 === "") {
                                 theNotBus.connId2 = theBus.elementId;
                             }
-                            else { //have two buses
+                            else { //have two buses already
                                 break;
                             }
                         }
@@ -313,15 +303,6 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
             }
         }
     };
-    // getCanvasSize(): string {
-    //   var el = document.getElementById("body"); // or other selector like querySelector()
-    //   var rect = el.getBoundingClientRect(); // get the bounding rectangle
-    //   // console.log(">>> x:" + rect.left + " y:" + rect.top + " w:" + rect.width + "h:" + rect.height);
-    //   return "done";
-    // }
-    // dataRoute(){
-    //     this.router.navigate([ '/data-entry-component' ])        
-    // }
     NetworkBuilderViewComponent.prototype.deleteSelectedShape = function () {
         if (this.selectedShape != undefined) {
             this.shapeService.deleteShapeWithId(this.selectedShape.elementId);

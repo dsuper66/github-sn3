@@ -10,10 +10,10 @@ export class ShapeService {
 
   constructor(
     private modelElementService: ModelElementService,
-    private modelElementDataService: ModelElementDataService    
-    ) { }
+    private modelElementDataService: ModelElementDataService
+  ) { }
 
-  private shapes:Shape[]=[];
+  private shapes: Shape[] = [];
 
   //Initial values
   branchInitLength = 100;
@@ -34,11 +34,11 @@ export class ShapeService {
 
   //Selected shape... ONLY used so that we can define the selected shape 
   //when returning from another display
-  private selectedShapeId?:string;
+  private selectedShapeId?: string;
   setSelectedShapeId(selectedShapeId: string | undefined) {
     this.selectedShapeId = selectedShapeId;
   }
-  getSelectedShape():Shape | undefined {
+  getSelectedShape(): Shape | undefined {
     if (this.selectedShapeId != undefined) {
       return this.getShapeWithId(this.selectedShapeId);
     }
@@ -48,7 +48,7 @@ export class ShapeService {
   }
 
   //Delete
-  deleteShapeWithId(shapeIdToDelete: string){
+  deleteShapeWithId(shapeIdToDelete: string) {
     this.shapes = this.shapes.filter(
       shape => shape.elementId != shapeIdToDelete);
   }
@@ -58,12 +58,12 @@ export class ShapeService {
     console.log("get shapes");
     return this.shapes;
   }
-  getShapeWithId(elementId:string): Shape | undefined {
+  getShapeWithId(elementId: string): Shape | undefined {
     return this.shapes.filter(shape => shape.elementId === elementId)[0];
-  }  
+  }
   //Shapes of type
   //***this happens multiple times during a move *****/
-  getShapesOfType(elementType: string):Shape[] {
+  getShapesOfType(elementType: string): Shape[] {
     let filtered = this.shapes.filter(shape => shape.elementTypeId === elementType);
     // for (let element of filtered) {
     //   console.log("shapes of type:" + elementType + " = " + element.elementId);
@@ -71,7 +71,7 @@ export class ShapeService {
     return filtered;
   }
   //...and not of type
-  getShapesNotOfType(elementType: string):Shape[] {
+  getShapesNotOfType(elementType: string): Shape[] {
     return this.shapes.filter(shape => shape.elementTypeId != elementType);
   }
   getCountShapesOfType(elementType: string) {
@@ -86,7 +86,7 @@ export class ShapeService {
 
     //For deciding placement
     //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
-    console.log (newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
+    console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
 
     var newShape = new Shape;
     //BUS
@@ -100,23 +100,23 @@ export class ShapeService {
         wInner: this.busInitLength,
         hInner: this.busWidth,
         xOuter: this.busInitX,
-        yOuter: y - (this.selectWidth - this.busWidth)/2,
+        yOuter: y - (this.selectWidth - this.busWidth) / 2,
         wOuter: this.busInitLength,
         hOuter: this.selectWidth
-       })
-       console.log(">>>" + (this.busInitX) + " " + (y + this.busWidth/2))
+      })
+      console.log(">>>" + (this.busInitX) + " " + (y + this.busWidth / 2))
     }
     //BRANCH
     else if (elementType == 'branch') {
       let branchCountNew = this.getCountShapesOfType('branch') + 1;
       var x = 0;
-      if (branchCountNew%2 == 1) {
-        x = this.busInitX + 0.2*this.busInitLength; 
+      if (branchCountNew % 2 == 1) {
+        x = this.busInitX + 0.2 * this.busInitLength;
       }
       else {
-        x = this.busInitX + 0.8*this.busInitLength - this.branchWidth
+        x = this.busInitX + 0.8 * this.busInitLength - this.branchWidth
       };
-      let y = (this.busInitY * Math.ceil(branchCountNew/2)) + this.busWidth/2;
+      let y = (this.busInitY * Math.ceil(branchCountNew / 2)) + this.busWidth / 2;
       // this.shapes.push({
       newShape = ({
         elementTypeId: elementType,
@@ -125,33 +125,33 @@ export class ShapeService {
         yInner: y,
         wInner: this.branchWidth,
         hInner: this.branchInitLength,
-        xOuter: x - (this.selectWidth - this.branchWidth)/2,
+        xOuter: x - (this.selectWidth - this.branchWidth) / 2,
         yOuter: y,
         wOuter: this.selectWidth,
         hOuter: this.branchInitLength
       })
     }
     //GEN & LOAD
-    else if (elementType == 'gen' || elementType == 'load') {     
-      let genLoadCount =  this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
+    else if (elementType == 'gen' || elementType == 'load') {
+      let genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
       let h = this.genLoadLength;
       let w = this.genLoadWidth;
-      let x = this.busInitX + this.busInitLength/2 - w/2;
+      let x = this.busInitX + this.busInitLength / 2 - w / 2;
       let y = (this.busInitY * (1 + genLoadCount)) - h;
       var path1: string | undefined;
       var path2: string | undefined;
-      
+
       if (elementType == 'gen') {
         let sineStartX = 6;
-        let sineStartY = w/2;
-        let sineW = w - 2*sineStartX;
-        path1 = `M ${sineStartX} ${sineStartY}           q ${sineW/4} ${-sineW/2} ${sineW/2} 0` 
-        path2 = `M ${sineStartX + sineW/2} ${sineStartY} q ${sineW/4} ${sineW/2}  ${sineW/2} 0` 
+        let sineStartY = w / 2;
+        let sineW = w - 2 * sineStartX;
+        path1 = `M ${sineStartX} ${sineStartY}           q ${sineW / 4} ${-sineW / 2} ${sineW / 2} 0`
+        path2 = `M ${sineStartX + sineW / 2} ${sineStartY} q ${sineW / 4} ${sineW / 2}  ${sineW / 2} 0`
       }
       else if (elementType == 'load') {
         let arrowH = 10;
         //<path id="lineAB" d="M 20 100 l 0 -98 m -18 18 l 18 -18 l 18 18"
-        path1 = `M ${w/2} ${h} l 0 ${-(h-2)} m ${-arrowH} ${arrowH} l ${arrowH} ${-arrowH} l ${arrowH} ${arrowH}`
+        path1 = `M ${w / 2} ${h} l 0 ${-(h - 2)} m ${-arrowH} ${arrowH} l ${arrowH} ${-arrowH} l ${arrowH} ${arrowH}`
       }
 
       console.log("path1: " + path1 + " path2: " + path2);
@@ -163,7 +163,7 @@ export class ShapeService {
         yInner: y,
         wInner: w,
         hInner: h,
-        xOuter: x - (this.selectWidth - w)/2,
+        xOuter: x - (this.selectWidth - w) / 2,
         yOuter: y,
         wOuter: this.selectWidth,
         hOuter: h,
@@ -171,10 +171,10 @@ export class ShapeService {
         path2
       });
     }
-    
+
     this.shapes.push(newShape);
     this.selectedShapeId = newElementId;
-    
+
     return newShape;
   }
 
@@ -195,7 +195,7 @@ export class ShapeService {
     shape.hOuter += deltaY;
   }
 
-  isOverlap(shape1:Shape,shape2:Shape): boolean {
+  isOverlap(shape1: Shape, shape2: Shape): boolean {
     if (shape1.xInner + shape1.wInner < shape2.xInner) {
       return false;
     }
@@ -208,16 +208,40 @@ export class ShapeService {
     else if (shape1.yInner > shape2.yInner + shape2.hInner) {
       return false;
     }
-    return true;    
+    return true;
   }
 
   saveConnectivityToModel() {
-    for (let nonBusElement of this.getShapesNotOfType('bus')){
-      this.modelElementDataService.setValueForElementProperty(
-        nonBusElement.elementId,'connId1',nonBusElement.connId1);
-      this.modelElementDataService.setValueForElementProperty(
-        nonBusElement.elementId,'connId2',nonBusElement.connId2);
+    //Non-bus elements reference back to the bus
+    for (let nonBusEl of this.getShapesNotOfType('bus')) {
+      // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
+      //load and gen only have connId1
+      if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
+        //In terms of the load, the bus is a fromBus
+        if (nonBusEl.elementTypeId === 'load') {
+          this.modelElementDataService.setValueForElementProperty(
+            nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
+          // propertyTypeIds.push({propertyTyepId:'fromBus',busId:(nonBusEl.connId1)});
+        }
+        //...for a gen, the bus is a toBus
+        else if (nonBusEl.elementTypeId === 'gen') {
+          this.modelElementDataService.setValueForElementProperty(
+            nonBusEl.elementId, 'toBus', nonBusEl.connId1);
+        }
+      }
+      else if (nonBusEl.elementTypeId === 'branch') {
+        var fromBus: string | undefined;
+        var toBus: string | undefined;
+        if (nonBusEl.connId1 && nonBusEl.connId2) {
+          if (nonBusEl.connId1 < nonBusEl.connId2) {
+            fromBus = nonBusEl.connId1;
+            toBus = nonBusEl.connId2;
+          }
+          
+        }
+      }
+
     }
   }
+  
 }
-

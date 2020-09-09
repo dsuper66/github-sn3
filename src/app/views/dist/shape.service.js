@@ -192,10 +192,32 @@ var ShapeService = /** @class */ (function () {
         return true;
     };
     ShapeService.prototype.saveConnectivityToModel = function () {
+        //Non-bus elements reference back to the bus
         for (var _i = 0, _a = this.getShapesNotOfType('bus'); _i < _a.length; _i++) {
-            var nonBusElement = _a[_i];
-            this.modelElementDataService.setValueForElementProperty(nonBusElement.elementId, 'connId1', nonBusElement.connId1);
-            this.modelElementDataService.setValueForElementProperty(nonBusElement.elementId, 'connId2', nonBusElement.connId2);
+            var nonBusEl = _a[_i];
+            // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
+            //load and gen only have connId1
+            if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
+                //In terms of the load, the bus is a fromBus
+                if (nonBusEl.elementTypeId === 'load') {
+                    this.modelElementDataService.setValueForElementProperty(nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
+                    // propertyTypeIds.push({propertyTyepId:'fromBus',busId:(nonBusEl.connId1)});
+                }
+                //...for a gen, the bus is a toBus
+                else if (nonBusEl.elementTypeId === 'gen') {
+                    this.modelElementDataService.setValueForElementProperty(nonBusEl.elementId, 'toBus', nonBusEl.connId1);
+                }
+            }
+            else if (nonBusEl.elementTypeId === 'branch') {
+                var fromBus;
+                var toBus;
+                if (nonBusEl.connId1 && nonBusEl.connId2) {
+                    if (nonBusEl.connId1 < nonBusEl.connId2) {
+                        fromBus = nonBusEl.connId1;
+                        toBus = nonBusEl.connId2;
+                    }
+                }
+            }
         }
     };
     ShapeService = __decorate([

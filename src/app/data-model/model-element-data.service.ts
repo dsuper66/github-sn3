@@ -10,8 +10,8 @@ export class ModelElementDataService {
     //Property Types (and Defaults)
     this.elementPropertyTypes.push(
       { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true, visible: true },
-      { propertyTypeId: 'connId1', primitiveType: 'string', defaultValue: 'none', visible: false },
-      { propertyTypeId: 'connId2', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false },
+      { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false },
       { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true },
       { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true },
       { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true },
