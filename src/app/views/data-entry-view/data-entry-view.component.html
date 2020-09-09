@@ -34,25 +34,29 @@
     <br>
     <br>
 
-    <table border="0" table-layout="fixed" >
+    <!-- <table table-layout="fixed" > -->
+    <table table-layout="fixed">
 
     <tr *ngFor="let formName of formNames; index as i">
 
       <!-- The label -->
-      <!-- <tr> -->
-      
-      <td>{{formName}}
-      </td>
+      <td>{{formName}}</td>
+
       <!-- Create the input and add the default value -->
       <td>
-        <input 
-        style="text-align:right"
-        type="text"
+        <input
+        style="text-align:right; width:120px"
+
+        type="number"
+        step="any"
+
         placeholder="{{formDefaults[i]}}"
         name="{{formName}}"
         
         ngModel>
       </td>
+
+      <!-- type="number"  -->
 
       </tr>
     <!-- </div> -->
@@ -60,18 +64,8 @@
     
   </form>
 
-  <!-- name="{{formTitles[i]}}" -->
-  <!-- id="{{formTitles[i]}}" -->
 
-<!-- </div> -->
-
-<!-- <button type="submit" [disabled]="!profileForm.valid">Submit</button> -->
-<!-- placeholder="{{formDefaults[i]}}" -->
-
-<!-- <hr class="rounded"> -->
-
-<!-- <div class="buttonArea"> -->
-  <div class="footer">
+<!-- <div class="footer">
   <button
   routerLink="/network-builder-component">Back</button>
-</div>
+</div> -->
