@@ -25,31 +25,35 @@ var ModelElementDataService = /** @class */ (function () {
             elementId: 'bidTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
                 { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
-            ])
+            ]),
+            visible: false
         });
         this.modelElements.push({
             elementId: 'genTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
                 { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }
-            ])
+            ]),
+            visible: false
         });
         this.modelElements.push({
             elementId: 'resTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
                 { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }
-            ])
+            ]),
+            visible: false
         });
         this.modelElements.push({
             elementId: 'lossTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
                 { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }
-            ])
+            ]),
+            visible: false
         });
         //Element Types and their Property Type Ids
         this.elementTypeProperties['bus'] = ['isRefBus'];
-        this.elementTypeProperties['branch'] = ['connId1', 'connId2', 'maxFlow', 'susceptance'];
-        this.elementTypeProperties['gen'] = ['connId1', 'maxGen'];
-        this.elementTypeProperties['load'] = ['connId1'];
+        this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'maxFlow', 'susceptance'];
+        this.elementTypeProperties['gen'] = ['toBus', 'maxGen'];
+        this.elementTypeProperties['load'] = ['fromBus'];
         this.elementTypeProperties['childSet'] = ['parentTypeId', 'childTypeId', 'childCount'];
         this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
         this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
@@ -72,7 +76,8 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: elementId,
             elementTypeId: elementTypeId,
-            properties: properties
+            properties: properties,
+            visible: true
         });
     };
     ModelElementDataService.prototype.getPropertyTypeIdsFor = function (elementTypeId) {
@@ -102,7 +107,13 @@ var ModelElementDataService = /** @class */ (function () {
     };
     ModelElementDataService.prototype.getDefaultPropertyForPropertTypeId = function (propertyTypeId) {
         var elementProperty = this.elementPropertyTypes.filter(function (elementPropertyType) { return elementPropertyType.propertyTypeId === propertyTypeId; })[0];
-        return elementProperty.defaultValue;
+        if (elementProperty) {
+            return elementProperty.defaultValue;
+        }
+        else {
+            console.log("%c" + "No Default found for " + propertyTypeId, "color: red");
+            return "";
+        }
     };
     ModelElementDataService.prototype.getModelElements = function () {
         return this.modelElements;
@@ -128,7 +139,9 @@ var ModelElementDataService = /** @class */ (function () {
         return properties[propertyTypeId];
     };
     ModelElementDataService.prototype.setValueForElementProperty = function (elementId, propertyTypeId, value) {
-        this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties[propertyTypeId] = value;
+        if (value) {
+            this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties[propertyTypeId] = value;
+        }
     };
     ModelElementDataService.prototype.makeProperties = function (elementTypeId, propertiesToAdd, self) {
         console.log("Make Properties For:" + elementTypeId);
@@ -140,6 +153,7 @@ var ModelElementDataService = /** @class */ (function () {
         return properties;
     };
     ModelElementDataService.prototype.propertyIsVisible = function (propertyTypeId) {
+        console.log("get visible status for property:" + propertyTypeId);
         var propertyType = this.elementPropertyTypes.filter(function (property) { return property.propertyTypeId === propertyTypeId; })[0];
         return propertyType.visible;
     };

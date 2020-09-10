@@ -38,30 +38,35 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }])
+        { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]),
+      visible: false
     });
     this.modelElements.push({
       elementId: 'genTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }])
+        { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }]),
+      visible: false
     });
     this.modelElements.push({
       elementId: 'resTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }])
+        { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }]),
+      visible: false
     });
     this.modelElements.push({
       elementId: 'lossTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
-        { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }])
-    });    
+        { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
+      visible: false
+    });
+
 
 
     //Element Types and their Property Type Ids
     this.elementTypeProperties['bus'] = ['isRefBus'];
-    this.elementTypeProperties['branch'] = ['connId1', 'connId2', 'maxFlow', 'susceptance'];
-    this.elementTypeProperties['gen'] = ['connId1', 'maxGen'];
-    this.elementTypeProperties['load'] = ['connId1'];
+    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'maxFlow', 'susceptance'];
+    this.elementTypeProperties['gen'] = ['toBus', 'maxGen'];
+    this.elementTypeProperties['load'] = ['fromBus'];
 
     this.elementTypeProperties['childSet'] = ['parentTypeId', 'childTypeId', 'childCount'];
 
@@ -97,7 +102,8 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: elementId,
       elementTypeId: elementTypeId,
-      properties: properties
+      properties: properties,
+      visible: true
     });
   }
 
@@ -134,7 +140,13 @@ export class ModelElementDataService {
   getDefaultPropertyForPropertTypeId(propertyTypeId: string): any {
     const elementProperty = this.elementPropertyTypes.filter(
       elementPropertyType => elementPropertyType.propertyTypeId === propertyTypeId)[0];
-    return elementProperty.defaultValue;
+    if (elementProperty) {
+      return elementProperty.defaultValue;
+    }
+    else {
+      console.log("%c" + "No Default found for " + propertyTypeId, "color: red");
+      return "";
+    }
   }
 
   getModelElements(): ModelElement[] {
@@ -169,9 +181,11 @@ export class ModelElementDataService {
   }
 
   setValueForElementProperty(elementId: string, propertyTypeId: string, value: any) {
-    this.modelElements.filter(
-      element => element.elementId === elementId
-    )[0].properties[propertyTypeId] = value;
+    if (value) {
+      this.modelElements.filter(
+        element => element.elementId === elementId
+      )[0].properties[propertyTypeId] = value;
+    }
   }
 
 
@@ -193,6 +207,7 @@ export class ModelElementDataService {
   }
 
   propertyIsVisible(propertyTypeId: string) {
+    console.log("get visible status for property:" + propertyTypeId);
     const propertyType = this.elementPropertyTypes.filter(property => property.propertyTypeId === propertyTypeId)[0];
     return propertyType.visible;
   }

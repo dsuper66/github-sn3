@@ -29,7 +29,7 @@ export class MainViewComponent implements OnInit {
     //Start element and array of elements
     var jString = "{" + JSON.stringify("elements") + ":[";
     let modelElements = this.modelElementDataService.getModelElements();
-    for (const modelElement of modelElements){
+    for (const modelElement of modelElements.filter(element => element.visible)){
       //ID
       jString += "{" + JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
       //Element type

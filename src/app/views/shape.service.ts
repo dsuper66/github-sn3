@@ -215,13 +215,13 @@ export class ShapeService {
     //Non-bus elements reference back to the bus
     for (let nonBusEl of this.getShapesNotOfType('bus')) {
       // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
-      //load and gen only have connId1
+
+      //load and gen... only have connId1
       if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
         //In terms of the load, the bus is a fromBus
         if (nonBusEl.elementTypeId === 'load') {
           this.modelElementDataService.setValueForElementProperty(
             nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
-          // propertyTypeIds.push({propertyTyepId:'fromBus',busId:(nonBusEl.connId1)});
         }
         //...for a gen, the bus is a toBus
         else if (nonBusEl.elementTypeId === 'gen') {
@@ -229,19 +229,34 @@ export class ShapeService {
             nonBusEl.elementId, 'toBus', nonBusEl.connId1);
         }
       }
+      //branch
       else if (nonBusEl.elementTypeId === 'branch') {
         var fromBus: string | undefined;
         var toBus: string | undefined;
+        //If fully connected then fromBus is lowest alphabetically, other is toBus
         if (nonBusEl.connId1 && nonBusEl.connId2) {
           if (nonBusEl.connId1 < nonBusEl.connId2) {
             fromBus = nonBusEl.connId1;
             toBus = nonBusEl.connId2;
           }
-          
+          else {
+            fromBus = nonBusEl.connId2;
+            toBus = nonBusEl.connId1;  
+          }
         }
+        //else only one end connected... assign the fromBus
+        else if (nonBusEl.connId1) {
+          fromBus = nonBusEl.connId1;
+        }
+        else if (nonBusEl.connId2) {
+          fromBus = nonBusEl.connId2;
+        }
+        this.modelElementDataService.setValueForElementProperty(
+          nonBusEl.elementId, 'toBus', toBus);
+        this.modelElementDataService.setValueForElementProperty(
+            nonBusEl.elementId, 'fromBus', fromBus);
+          
       }
-
     }
   }
-  
 }

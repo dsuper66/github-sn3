@@ -24,8 +24,8 @@ var MainViewComponent = /** @class */ (function () {
         //Start element and array of elements
         var jString = "{" + JSON.stringify("elements") + ":[";
         var modelElements = this.modelElementDataService.getModelElements();
-        for (var _i = 0, modelElements_1 = modelElements; _i < modelElements_1.length; _i++) {
-            var modelElement = modelElements_1[_i];
+        for (var _i = 0, _a = modelElements.filter(function (element) { return element.visible; }); _i < _a.length; _i++) {
+            var modelElement = _a[_i];
             //ID
             jString += "{" + JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
             //Element type
@@ -33,8 +33,8 @@ var MainViewComponent = /** @class */ (function () {
             //Properties
             jString += JSON.stringify("properties") + ":{";
             //Properties
-            for (var _a = 0, _b = this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId); _a < _b.length; _a++) {
-                var propertyTypeId = _b[_a];
+            for (var _b = 0, _c = this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId); _b < _c.length; _b++) {
+                var propertyTypeId = _c[_b];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
                 jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";
             }
