@@ -15,7 +15,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.elementTypeProperties = {};
         this.elementNextIndex = new Map();
         //Property Types (and Defaults)
-        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true, visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100', visible: true });
+        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100', visible: true });
         //Add static elements, accessed via the Settings display
         // var elementProperties: ElementProperties = {};
         // elementProperties['parentTypeId'] = 'load';
@@ -138,9 +138,37 @@ var ModelElementDataService = /** @class */ (function () {
         var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
         return properties[propertyTypeId];
     };
-    ModelElementDataService.prototype.setValueForElementProperty = function (elementId, propertyTypeId, value) {
+    ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyTypeId, value) {
+        return this.modelElements.filter(function (element) { return element.properties[propertyTypeId] === value; });
+    };
+    ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyTypeId, value) {
+        console.log("setPropertyForElement");
         if (value) {
-            this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties[propertyTypeId] = value;
+            //Special cases
+            //isRefBus... set all to false first if the new value is true
+            if (propertyTypeId === 'isRefBus' && value === 'true') {
+                this.setPropertyForAllElements(propertyTypeId, "false");
+            }
+            //Update the property for the element
+            var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
+            elementToUpdate.properties[propertyTypeId] = value;
+        }
+        else {
+            console.log("NO VALUE");
+        }
+    };
+    ModelElementDataService.prototype.setPropertyForAllElements = function (propertyTypeId, value) {
+        console.log("setPropertyForAllElements");
+        if (value) {
+            var elementsToUpdate = this.modelElements.filter(function (element) { return element.properties[propertyTypeId]; });
+            for (var _i = 0, elementsToUpdate_1 = elementsToUpdate; _i < elementsToUpdate_1.length; _i++) {
+                var elementToUpdate = elementsToUpdate_1[_i];
+                console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementTypeId + " to:" + value);
+                elementToUpdate.properties[propertyTypeId] = value;
+            }
+        }
+        else {
+            console.log("NO VALUE");
         }
     };
     ModelElementDataService.prototype.makeProperties = function (elementTypeId, propertiesToAdd, self) {

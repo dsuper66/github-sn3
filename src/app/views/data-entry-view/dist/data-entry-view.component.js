@@ -47,7 +47,7 @@ var DataEntryViewComponent = /** @class */ (function () {
                     console.log(">>>value>>>" + formName + ":" + formValue);
                     var propertyId = _this.formPropertyIds[index];
                     var elementId = _this.formElementIds[index];
-                    _this.modelElementDataService.setValueForElementProperty(elementId, propertyId, formValue);
+                    _this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
                 }
             });
         }

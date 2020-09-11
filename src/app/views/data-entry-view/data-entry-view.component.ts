@@ -70,7 +70,7 @@ export class DataEntryViewComponent implements OnInit {
           const propertyId = this.formPropertyIds[index];
           const elementId = this.formElementIds[index];
 
-          this.modelElementDataService.setValueForElementProperty(elementId, propertyId, formValue);
+          this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
         }
       })
     }

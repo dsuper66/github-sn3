@@ -38,10 +38,9 @@ export class ModelElementService {
       properties
     )
 
-    //If this is a child then a parent Id will have been provided
+    //If this is a child then a parent Id will have been provided... use it to set the parent property
     if (parentId) {
-          //Set the parent property
-          this.modelElementDataService.setValueForElementProperty(elementIdForNewElement,'parentId',parentId);
+          this.modelElementDataService.setPropertyForElement(elementIdForNewElement,'parentId',parentId);
     }
 
     //Create any child elements (linked back like a gen is to a bus)
@@ -58,6 +57,14 @@ export class ModelElementService {
       }
     });
 
+    //Special cases
+    //bus... need one with isRefBus = true
+    if (elementTypeIdToAdd === 'bus') {
+        //If no refBus then make this refBus = true
+        if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus','true').length == 0) {
+          this.modelElementDataService.setPropertyForElement(elementIdForNewElement,'isRefBus','true');
+        }
+    }
 
     return elementIdForNewElement;
   }

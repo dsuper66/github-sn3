@@ -220,12 +220,12 @@ export class ShapeService {
       if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
         //In terms of the load, the bus is a fromBus
         if (nonBusEl.elementTypeId === 'load') {
-          this.modelElementDataService.setValueForElementProperty(
+          this.modelElementDataService.setPropertyForElement(
             nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
         }
         //...for a gen, the bus is a toBus
         else if (nonBusEl.elementTypeId === 'gen') {
-          this.modelElementDataService.setValueForElementProperty(
+          this.modelElementDataService.setPropertyForElement(
             nonBusEl.elementId, 'toBus', nonBusEl.connId1);
         }
       }
@@ -251,9 +251,9 @@ export class ShapeService {
         else if (nonBusEl.connId2) {
           fromBus = nonBusEl.connId2;
         }
-        this.modelElementDataService.setValueForElementProperty(
+        this.modelElementDataService.setPropertyForElement(
           nonBusEl.elementId, 'toBus', toBus);
-        this.modelElementDataService.setValueForElementProperty(
+        this.modelElementDataService.setPropertyForElement(
             nonBusEl.elementId, 'fromBus', fromBus);
           
       }

@@ -20,10 +20,9 @@ var ModelElementService = /** @class */ (function () {
         var propertyTypeIds = this.modelElementDataService.getPropertyTypeIdsFor(elementTypeIdToAdd);
         var properties = this.modelElementDataService.makeProperties(elementTypeIdToAdd, propertyTypeIds, this.modelElementDataService);
         this.modelElementDataService.addElement(elementIdForNewElement, elementTypeIdToAdd, properties);
-        //If this is a child then a parent Id will have been provided
+        //If this is a child then a parent Id will have been provided... use it to set the parent property
         if (parentId) {
-            //Set the parent property
-            this.modelElementDataService.setValueForElementProperty(elementIdForNewElement, 'parentId', parentId);
+            this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
         }
         //Create any child elements (linked back like a gen is to a bus)
         var self = this;
@@ -37,6 +36,14 @@ var ModelElementService = /** @class */ (function () {
                 self.addModelElement(childTypeId, elementIdForNewElement);
             }
         });
+        //Special cases
+        //bus... need one with isRefBus = true
+        if (elementTypeIdToAdd === 'bus') {
+            //If no refBus then make this refBus = true
+            if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
+                this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');
+            }
+        }
         return elementIdForNewElement;
     };
     ModelElementService = __decorate([

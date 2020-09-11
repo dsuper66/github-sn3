@@ -200,11 +200,11 @@ var ShapeService = /** @class */ (function () {
             if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
                 //In terms of the load, the bus is a fromBus
                 if (nonBusEl.elementTypeId === 'load') {
-                    this.modelElementDataService.setValueForElementProperty(nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
+                    this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
                 }
                 //...for a gen, the bus is a toBus
                 else if (nonBusEl.elementTypeId === 'gen') {
-                    this.modelElementDataService.setValueForElementProperty(nonBusEl.elementId, 'toBus', nonBusEl.connId1);
+                    this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'toBus', nonBusEl.connId1);
                 }
             }
             //branch
@@ -229,8 +229,8 @@ var ShapeService = /** @class */ (function () {
                 else if (nonBusEl.connId2) {
                     fromBus = nonBusEl.connId2;
                 }
-                this.modelElementDataService.setValueForElementProperty(nonBusEl.elementId, 'toBus', toBus);
-                this.modelElementDataService.setValueForElementProperty(nonBusEl.elementId, 'fromBus', fromBus);
+                this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'toBus', toBus);
+                this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', fromBus);
             }
         }
     };

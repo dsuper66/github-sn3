@@ -9,7 +9,7 @@ export class ModelElementDataService {
   constructor() {
     //Property Types (and Defaults)
     this.elementPropertyTypes.push(
-      { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: true, visible: true },
+      { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true },
       { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false },
       { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false },
       { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true },
@@ -180,20 +180,49 @@ export class ModelElementDataService {
     return properties[propertyTypeId];
   }
 
-  setValueForElementProperty(elementId: string, propertyTypeId: string, value: any) {
+  getElementsWithPropertyValue(propertyTypeId: string, value: string):ModelElement[] {
+    return this.modelElements.filter(
+      element => element.properties[propertyTypeId] === value);
+  }
+
+  setPropertyForElement(elementId: string, propertyTypeId: string, value: any) {
+    console.log("setPropertyForElement")
     if (value) {
-      this.modelElements.filter(
-        element => element.elementId === elementId
-      )[0].properties[propertyTypeId] = value;
+
+      //Special cases
+      //isRefBus... set all to false first if the new value is true
+      if (propertyTypeId === 'isRefBus' && value === 'true') {
+        this.setPropertyForAllElements(propertyTypeId,"false");
+      }
+
+      //Update the property for the element
+      const elementToUpdate = this.modelElements.filter(
+        element => element.elementId === elementId)[0];
+      elementToUpdate.properties[propertyTypeId] = value;
+    }
+    else {
+      console.log("NO VALUE");
     }
   }
 
+  setPropertyForAllElements(propertyTypeId: string, value: any) {
+    console.log("setPropertyForAllElements")
+    if (value) {
 
-  makeProperties(
-    elementTypeId: string,
-    propertiesToAdd: string[],
-    self: ModelElementDataService
-  )
+      const elementsToUpdate = this.modelElements.filter(
+        element => element.properties[propertyTypeId]);
+
+      for (const elementToUpdate of elementsToUpdate) {
+        console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementTypeId + " to:" + value);
+        elementToUpdate.properties[propertyTypeId] = value;
+      }
+    }
+    else {
+      console.log("NO VALUE");
+    }
+  }
+
+  makeProperties(elementTypeId: string,propertiesToAdd: string[],self: ModelElementDataService)
     : { [propertyTypeId: string]: any } {
 
     console.log("Make Properties For:" + elementTypeId);
