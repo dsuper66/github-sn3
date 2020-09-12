@@ -7,11 +7,10 @@ import { catchError, retry } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    Authorization: 'my-auth-token'
+    'Content-Type':  'application/json'
+    // Authorization: 'my-auth-token'
   })
 };
-
 
 export interface SolverResult {
   resultJson: string;
@@ -33,7 +32,7 @@ export class SolverCallService {
 
   /** POST: send model to solver */
   sendModelToSolver(solverInput: SolverInput): Observable<SolverResult> {
-    return this.http.post<SolverResult>(this.solverURL, solverInput, httpOptions)
+    return this.http.post<SolverResult>(this.solverURL, solverInput.inputJson, httpOptions)
       .pipe(
         //catchError(this.handleError('sendModel', hero))
       );

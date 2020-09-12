@@ -11,8 +11,8 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var httpOptions = {
     headers: new http_1.HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: 'my-auth-token'
+        'Content-Type': 'application/json'
+        // Authorization: 'my-auth-token'
     })
 };
 var SolverCallService = /** @class */ (function () {
@@ -22,7 +22,7 @@ var SolverCallService = /** @class */ (function () {
     }
     /** POST: send model to solver */
     SolverCallService.prototype.sendModelToSolver = function (solverInput) {
-        return this.http.post(this.solverURL, solverInput, httpOptions)
+        return this.http.post(this.solverURL, solverInput.inputJson, httpOptions)
             .pipe(
         //catchError(this.handleError('sendModel', hero))
         );
