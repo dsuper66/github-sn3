@@ -11,9 +11,10 @@ var core_1 = require("@angular/core");
 var MainViewComponent = /** @class */ (function () {
     function MainViewComponent(shapeService, 
     // private modelElementService: ModelElementService,
-    modelElementDataService) {
+    modelElementDataService, solverCallService) {
         this.shapeService = shapeService;
         this.modelElementDataService = modelElementDataService;
+        this.solverCallService = solverCallService;
         this.shapes = [];
         this.modelJSON = "";
     }
@@ -44,6 +45,13 @@ var MainViewComponent = /** @class */ (function () {
         //Close elements array and element
         jString = jString.substring(0, jString.length - 1) + "]}";
         this.modelJSON = jString;
+        //Send the model to the solver
+        var solverInput = { inputJson: jString };
+        this.solverCallService
+            .sendModelToSolver(solverInput)
+            .subscribe(function (solverResults) {
+            console.log("SOLVER RESULTS:" + solverResults);
+        });
     };
     MainViewComponent.prototype.getModelDataOld = function () {
         this.shapes = this.shapeService.getShapes();

@@ -4,6 +4,10 @@ import { ShapeService } from '../shape.service';
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { Shape } from '../shape';
 import { ModelElement } from '../../data-model/model-element'
+import { SolverCallService } from '../../data-model/solver-call.service';
+import { SolverInput } from '../../data-model/solver-call.service';
+
+
 
 @Component({
   selector: 'app-main-view',
@@ -15,7 +19,8 @@ export class MainViewComponent implements OnInit {
   constructor(
     private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
-    private modelElementDataService: ModelElementDataService) 
+    private modelElementDataService: ModelElementDataService,
+    private solverCallService: SolverCallService)
     { }
 
   shapes: Shape[] = [];
@@ -52,6 +57,16 @@ export class MainViewComponent implements OnInit {
     jString = jString.substring(0, jString.length - 1) + "]}";
 
     this.modelJSON = jString;
+
+
+    //Send the model to the solver
+    const solverInput: SolverInput = { inputJson: jString } as SolverInput;
+    
+    this.solverCallService
+        .sendModelToSolver(solverInput)
+        .subscribe(solverResults => {
+          console.log("SOLVER RESULTS:" + solverResults)
+        });
   }
 
 
