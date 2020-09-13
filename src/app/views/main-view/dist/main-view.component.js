@@ -15,13 +15,15 @@ var MainViewComponent = /** @class */ (function () {
         this.shapeService = shapeService;
         this.modelElementDataService = modelElementDataService;
         this.solverCallService = solverCallService;
-        this.shapes = [];
-        this.modelJSON = "";
+        // shapes: Shape[] = [];
+        this.solverJsonInput = "";
+        this.solverResults = "";
     }
     MainViewComponent.prototype.ngOnInit = function () {
         this.getModelData();
     };
     MainViewComponent.prototype.getModelData = function () {
+        var _this = this;
         //Start element and array of elements
         var jString = "{" + JSON.stringify("elements") + ":[";
         var modelElements = this.modelElementDataService.getModelElements();
@@ -44,21 +46,22 @@ var MainViewComponent = /** @class */ (function () {
         }
         //Close elements array and element
         jString = jString.substring(0, jString.length - 1) + "]}";
-        this.modelJSON = jString;
+        this.solverJsonInput = jString;
         //Send the model to the solver
         var solverInput = { inputJson: jString };
         this.solverCallService
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
             console.log("SOLVER RESULTS:" + solverResults);
+            _this.solverResults = solverResults;
         });
     };
     MainViewComponent.prototype.getModelDataOld = function () {
-        this.shapes = this.shapeService.getShapes();
+        // this.shapes = this.shapeService.getShapes();
         var modelData = [];
         // var jString2 = "";
         var jString = "{" + JSON.stringify("bus1") + ":{";
-        for (var _i = 0, _a = this.shapes; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.shapeService.getShapes(); _i < _a.length; _i++) {
             var shape = _a[_i];
             modelData.push({
                 elementId: shape.elementId,
@@ -75,7 +78,7 @@ var MainViewComponent = /** @class */ (function () {
             // });
         }
         jString = jString.substring(0, jString.length - 1) + "}}";
-        this.modelJSON = jString;
+        this.solverJsonInput = jString;
         // let myJson = JSON.stringify(modelData);
         // console.log("json:" + myJson);
         // interface MyObj {

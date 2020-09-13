@@ -5,15 +5,13 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
-const httpOptions = {
-  headers: new HttpHeaders({
+const headers = new HttpHeaders({
     'Content-Type':  'application/json'
     // Authorization: 'my-auth-token'
-  })
-};
+  });
 
 export interface SolverResult {
-  resultJson: string;
+  resultText: string;
 }
 
 export interface SolverInput {
@@ -30,9 +28,22 @@ export class SolverCallService {
 
   solverURL = 'https://shrouded-escarpment-67155.herokuapp.com/api/solve';
 
+
+
   /** POST: send model to solver */
-  sendModelToSolver(solverInput: SolverInput): Observable<SolverResult> {
-    return this.http.post<SolverResult>(this.solverURL, solverInput.inputJson, httpOptions)
+  sendModelToSolver(solverInput: SolverInput): Observable<string> {
+
+    const httpOptions:Object = {
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+      }),
+      responseType: 'text'
+    }
+
+    return this.http.post<string>(
+      this.solverURL, 
+      solverInput.inputJson, 
+      httpOptions)
       .pipe(
         //catchError(this.handleError('sendModel', hero))
       );

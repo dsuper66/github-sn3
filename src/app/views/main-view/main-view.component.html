@@ -22,12 +22,20 @@
   <button class="marginAll"
   routerLink="/data-entry-component/element-def">Element Def</button>  
 
-
+<!-- JSON model -->
 <div class="textBox marginAll" >
-    <ng-container *ngFor="let shape of shapes">
+    <!-- <ng-container *ngFor="let shape of shapes">
         {{shape.elementId}}<br>
-    </ng-container>
+    </ng-container> -->
 
-    {{modelJSON}}
+    {{solverJsonInput}}
+</div>
 
+<!-- Reults from SCALA -->
+<div class="textBox marginAll" >
+  <!-- <ng-container *ngFor="let shape of shapes">
+      {{shape.elementId}}<br>
+  </ng-container> -->
+
+  {{solverResults}}
 </div>

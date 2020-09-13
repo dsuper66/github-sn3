@@ -23,8 +23,9 @@ export class MainViewComponent implements OnInit {
     private solverCallService: SolverCallService)
     { }
 
-  shapes: Shape[] = [];
-  modelJSON = "";
+  // shapes: Shape[] = [];
+  solverJsonInput = "";
+  solverResults = "";
 
   ngOnInit(): void {
     this.getModelData();
@@ -56,7 +57,7 @@ export class MainViewComponent implements OnInit {
     //Close elements array and element
     jString = jString.substring(0, jString.length - 1) + "]}";
 
-    this.modelJSON = jString;
+    this.solverJsonInput = jString;
 
 
     //Send the model to the solver
@@ -65,18 +66,19 @@ export class MainViewComponent implements OnInit {
     this.solverCallService
         .sendModelToSolver(solverInput)
         .subscribe(solverResults => {
-          console.log("SOLVER RESULTS:" + solverResults)
+          console.log("SOLVER RESULTS:" + solverResults);
+          this.solverResults = solverResults;
         });
   }
 
 
   getModelDataOld() {
-    this.shapes = this.shapeService.getShapes();
+    // this.shapes = this.shapeService.getShapes();
     var modelData: Array<Object> = [];
     // var jString2 = "";
     var jString = "{" + JSON.stringify("bus1") + ":{";
 
-    for (let shape of this.shapes) {
+    for (let shape of this.shapeService.getShapes()) {
       modelData.push({
         elementId: shape.elementId,
         busId1: (shape.connId1) ? shape.connId1 : "",
@@ -97,7 +99,7 @@ export class MainViewComponent implements OnInit {
     }
     jString = jString.substring(0, jString.length - 1) + "}}"
 
-    this.modelJSON = jString;
+    this.solverJsonInput = jString;
 
     // let myJson = JSON.stringify(modelData);
     // console.log("json:" + myJson);
