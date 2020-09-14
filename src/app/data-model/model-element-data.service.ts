@@ -1,5 +1,11 @@
+import { isDefined } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
-import { ModelElement, ElementPropertyType, ElementProperties, ElementType } from './model-element';
+import { 
+  ModelElement, 
+  ElementPropertyType, 
+  ElementProperties, 
+  ElementVarType,
+  ElementType } from './model-element';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +13,7 @@ import { ModelElement, ElementPropertyType, ElementProperties, ElementType } fro
 export class ModelElementDataService {
 
   constructor() {
+
     //Property Types (and Defaults)
     this.elementPropertyTypes.push(
       { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true },
@@ -27,60 +34,87 @@ export class ModelElementDataService {
       { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true },
       { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true },
       { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true },
-      { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100', visible: true }
+      { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
     )
 
-    //Add static elements, accessed via the Settings display
-    // var elementProperties: ElementProperties = {};
-    // elementProperties['parentTypeId'] = 'load';
-    // elementProperties['childTypeId'] = 'bidTranche'
-    // elementProperties['childCount'] = '3'
+ 
+
+    //Add child element defs... elements created automatically with parent
+    //Bid Tranches
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
         { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]),
       visible: false
     });
+    //Gen Tranches
     this.modelElements.push({
       elementId: 'genTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
         { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }]),
       visible: false
     });
+    //Res Tranches
     this.modelElements.push({
       elementId: 'resTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
         { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }]),
       visible: false
     });
+    //Loss Tranches
     this.modelElements.push({
       elementId: 'lossTrancheDef', elementTypeId: 'childSet',
       properties: this.makeDict([
         { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
       visible: false
     });
+    //Branch Fwd Direction
+    this.modelElements.push({
+      elementId: 'branchFwd', elementTypeId: 'childSet',
+      properties: this.makeDict([
+        { 'parentTypeId': 'branch' }, { 'childTypeId': 'branchFwd' }, { 'childCount': '1' }]),
+      visible: false
+    });
+    //Branch Rev Direction
+    this.modelElements.push({
+      elementId: 'branchRev', elementTypeId: 'childSet',
+      properties: this.makeDict([
+        { 'parentTypeId': 'branch' }, { 'childTypeId': 'branchRev' }, { 'childCount': '1' }]),
+      visible: false
+    });
 
 
 
-    //Element Types and their Property Type Ids
+    //Element Types and Property Types
+    //Parent elements
     this.elementTypeProperties['bus'] = ['isRefBus'];
     this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'maxFlow', 'susceptance'];
-    this.elementTypeProperties['gen'] = ['toBus', 'maxGen'];
+    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
     this.elementTypeProperties['load'] = ['fromBus'];
-
+    //Element that defines a child
     this.elementTypeProperties['childSet'] = ['parentTypeId', 'childTypeId', 'childCount'];
-
+    //Child elements
     this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
     this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
     this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+    this.elementTypeProperties['branchFwd'] = ['parentId'];
+    this.elementTypeProperties['branchRev'] = ['parentId'];
 
+    //Element Types and Variables
+    this.elementTypeVarTypes['bus'] = ['phaseAngle'];
+    this.elementTypeVarTypes['branch'] = ['flow'];
+    this.elementTypeVarTypes['gen'] = ['genCleared'];
+    this.elementTypeVarTypes['load'] = ['loadCleared'];
   }
 
   private modelElements: ModelElement[] = [];
 
   private elementPropertyTypes: ElementPropertyType[] = [];
-  private elementTypeProperties: { [id: string]: string[] } = {};
+  private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
+
+  private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
+
 
   private elementNextIndex = new Map<string, bigint>();
 
@@ -92,10 +126,15 @@ export class ModelElementDataService {
     let elementIndex = this.elementNextIndex[elementTypeId];
 
     //Make the i.d.
-    let newId = elementTypeId + ("000" + elementIndex).slice(-3);
+    // let newId = elementTypeId + ("000" + elementIndex).slice(-3);
+    let newId = this.makeIdFromStringAndNumber(elementTypeId,elementIndex);
     this.elementNextIndex[elementTypeId] = elementIndex + 1;
     console.log("New Id:" + newId);
     return newId;
+  }
+
+  makeIdFromStringAndNumber(idString: string, idNumber:number) : string {
+    return idString + ("000" + idNumber).slice(-3);
   }
 
   addElement(elementId: string, elementTypeId: string, properties: ElementProperties) {

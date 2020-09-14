@@ -13,14 +13,12 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements = [];
         this.elementPropertyTypes = [];
         this.elementTypeProperties = {};
+        this.elementTypeVarTypes = {};
         this.elementNextIndex = new Map();
         //Property Types (and Defaults)
-        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'maxGen', primitiveType: 'number', defaultValue: '100', visible: true });
-        //Add static elements, accessed via the Settings display
-        // var elementProperties: ElementProperties = {};
-        // elementProperties['parentTypeId'] = 'load';
-        // elementProperties['childTypeId'] = 'bidTranche'
-        // elementProperties['childCount'] = '3'
+        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'maxFlow', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true });
+        //Add child element defs... elements created automatically with parent
+        //Bid Tranches
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
@@ -28,6 +26,7 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
+        //Gen Tranches
         this.modelElements.push({
             elementId: 'genTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
@@ -35,6 +34,7 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
+        //Res Tranches
         this.modelElements.push({
             elementId: 'resTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
@@ -42,6 +42,7 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
+        //Loss Tranches
         this.modelElements.push({
             elementId: 'lossTrancheDef', elementTypeId: 'childSet',
             properties: this.makeDict([
@@ -49,16 +50,42 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
-        //Element Types and their Property Type Ids
+        //Branch Fwd Direction
+        this.modelElements.push({
+            elementId: 'branchFwd', elementTypeId: 'childSet',
+            properties: this.makeDict([
+                { 'parentTypeId': 'branch' }, { 'childTypeId': 'branchFwd' }, { 'childCount': '1' }
+            ]),
+            visible: false
+        });
+        //Branch Rev Direction
+        this.modelElements.push({
+            elementId: 'branchRev', elementTypeId: 'childSet',
+            properties: this.makeDict([
+                { 'parentTypeId': 'branch' }, { 'childTypeId': 'branchRev' }, { 'childCount': '1' }
+            ]),
+            visible: false
+        });
+        //Element Types and Property Types
+        //Parent elements
         this.elementTypeProperties['bus'] = ['isRefBus'];
         this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'maxFlow', 'susceptance'];
-        this.elementTypeProperties['gen'] = ['toBus', 'maxGen'];
+        this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
         this.elementTypeProperties['load'] = ['fromBus'];
+        //Element that defines a child
         this.elementTypeProperties['childSet'] = ['parentTypeId', 'childTypeId', 'childCount'];
+        //Child elements
         this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
         this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
         this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
         this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+        this.elementTypeProperties['branchFwd'] = ['parentId'];
+        this.elementTypeProperties['branchRev'] = ['parentId'];
+        //Element Types and Variables
+        this.elementTypeVarTypes['bus'] = ['phaseAngle'];
+        this.elementTypeVarTypes['branch'] = ['flow'];
+        this.elementTypeVarTypes['gen'] = ['genCleared'];
+        this.elementTypeVarTypes['load'] = ['loadCleared'];
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementTypeId) {
         //Get next index for i.d.
@@ -67,10 +94,14 @@ var ModelElementDataService = /** @class */ (function () {
         }
         var elementIndex = this.elementNextIndex[elementTypeId];
         //Make the i.d.
-        var newId = elementTypeId + ("000" + elementIndex).slice(-3);
+        // let newId = elementTypeId + ("000" + elementIndex).slice(-3);
+        var newId = this.makeIdFromStringAndNumber(elementTypeId, elementIndex);
         this.elementNextIndex[elementTypeId] = elementIndex + 1;
         console.log("New Id:" + newId);
         return newId;
+    };
+    ModelElementDataService.prototype.makeIdFromStringAndNumber = function (idString, idNumber) {
+        return idString + ("000" + idNumber).slice(-3);
     };
     ModelElementDataService.prototype.addElement = function (elementId, elementTypeId, properties) {
         this.modelElements.push({
