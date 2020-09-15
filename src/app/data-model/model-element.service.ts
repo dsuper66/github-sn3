@@ -64,8 +64,8 @@ export class ModelElementService {
       }
     });
 
-    //Special cases
-    //bus... need one with isRefBus = true
+    //Special case
+    //bus... need one (and only one) with isRefBus = true
     if (elementTypeIdToAdd === 'bus') {
         //If no refBus then make this refBus = true
         if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus','true').length == 0) {
