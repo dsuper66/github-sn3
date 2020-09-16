@@ -34,9 +34,9 @@ export class ModelElementDataService {
       { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true },
       { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true },
       { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true },
-      { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true },
-      { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true },
-      { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
+      { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
+      // { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true },
+      // { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
     )
 
  
@@ -76,30 +76,30 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'branchFlowPos', elementTypeId: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'branch' },  { 'varId': 'branchFlow' },
-        { 'childTypeId': 'posVar' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'branch' },  //{ 'varId': 'branchFlow' },
+        { 'childTypeId': 'posFlow' }, { 'childCount': '1' }]),
       visible: false
     });
     this.modelElements.push({
       elementId: 'branchFlowNeg', elementTypeId: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'branch' }, { 'varId': 'branchFlow' }, 
-        { 'childTypeId': 'negVar' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'branch' }, //{ 'varId': 'branchFlow' }, 
+        { 'childTypeId': 'negFlow' }, { 'childCount': '1' }]),
       visible: false
     });    
     //Unrestricted - bus angle
     this.modelElements.push({
       elementId: 'phaseAnglePos', elementTypeId: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'bus' }, { 'varId': 'phaseAngle' }, 
-        { 'childTypeId': 'posVar' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+        { 'childTypeId': 'posAngle' }, { 'childCount': '1' }]),
       visible: false
     });
     this.modelElements.push({
       elementId: 'phaseAngleNeg', elementTypeId: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'bus' }, { 'varId': 'phaseAngle' }, 
-        { 'childTypeId': 'negVar' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+        { 'childTypeId': 'negAngle' }, { 'childCount': '1' }]),
       visible: false
     });    
 
@@ -112,17 +112,24 @@ export class ModelElementDataService {
     this.elementTypeProperties['load'] = ['fromBus'];
     //Element that defines a child
     this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
-    //Child elements
+    //Child elements - tranches
     this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
     this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
     this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
-    this.elementTypeProperties['posVar'] = ['parentId', 'posMult'];
-    this.elementTypeProperties['negVar'] = ['parentId', 'negMult'];
+    //Child elements - unrestricted variables
+    this.elementTypeProperties['posFlow'] = ['parentId'];
+    this.elementTypeProperties['negFlow'] = ['parentId'];    
+    this.elementTypeProperties['posAngle'] = ['parentId'];
+    this.elementTypeProperties['negAngle'] = ['parentId'];
 
     //Element Types and Variables
     this.elementTypeVarTypes['bus'] = ['phaseAngle'];
-    this.elementTypeVarTypes['branch'] = ['flow'];
+    this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
+    this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];    
+    this.elementTypeVarTypes['branch'] = ['branchFlow'];
+    this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
+    this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
     this.elementTypeVarTypes['gen'] = ['genCleared'];
     this.elementTypeVarTypes['load'] = ['loadCleared'];
   }

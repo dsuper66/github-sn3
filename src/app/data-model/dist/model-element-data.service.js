@@ -16,7 +16,10 @@ var ModelElementDataService = /** @class */ (function () {
         this.elementTypeVarTypes = {};
         this.elementNextIndex = new Map();
         //Property Types (and Defaults)
-        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'flowMax', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true }, { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true });
+        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'flowMax', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
+        // { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true },
+        // { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
+        );
         //Add child element defs... elements created automatically with parent
         //parentTypeId is used to identify the parent
         //Bid Tranches
@@ -55,16 +58,16 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'branchFlowPos', elementTypeId: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' }, { 'varId': 'branchFlow' },
-                { 'childTypeId': 'posVar' }, { 'childCount': '1' }
+                { 'parentTypeId': 'branch' },
+                { 'childTypeId': 'posFlow' }, { 'childCount': '1' }
             ]),
             visible: false
         });
         this.modelElements.push({
             elementId: 'branchFlowNeg', elementTypeId: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' }, { 'varId': 'branchFlow' },
-                { 'childTypeId': 'negVar' }, { 'childCount': '1' }
+                { 'parentTypeId': 'branch' },
+                { 'childTypeId': 'negFlow' }, { 'childCount': '1' }
             ]),
             visible: false
         });
@@ -72,16 +75,16 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'phaseAnglePos', elementTypeId: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'bus' }, { 'varId': 'phaseAngle' },
-                { 'childTypeId': 'posVar' }, { 'childCount': '1' }
+                { 'parentTypeId': 'bus' },
+                { 'childTypeId': 'posAngle' }, { 'childCount': '1' }
             ]),
             visible: false
         });
         this.modelElements.push({
             elementId: 'phaseAngleNeg', elementTypeId: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'bus' }, { 'varId': 'phaseAngle' },
-                { 'childTypeId': 'negVar' }, { 'childCount': '1' }
+                { 'parentTypeId': 'bus' },
+                { 'childTypeId': 'negAngle' }, { 'childCount': '1' }
             ]),
             visible: false
         });
@@ -93,16 +96,23 @@ var ModelElementDataService = /** @class */ (function () {
         this.elementTypeProperties['load'] = ['fromBus'];
         //Element that defines a child
         this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
-        //Child elements
+        //Child elements - tranches
         this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
         this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
         this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
         this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
-        this.elementTypeProperties['posVar'] = ['parentId', 'posMult'];
-        this.elementTypeProperties['negVar'] = ['parentId', 'negMult'];
+        //Child elements - unrestricted variables
+        this.elementTypeProperties['posFlow'] = ['parentId'];
+        this.elementTypeProperties['negFlow'] = ['parentId'];
+        this.elementTypeProperties['posAngle'] = ['parentId'];
+        this.elementTypeProperties['negAngle'] = ['parentId'];
         //Element Types and Variables
         this.elementTypeVarTypes['bus'] = ['phaseAngle'];
-        this.elementTypeVarTypes['branch'] = ['flow'];
+        this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
+        this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];
+        this.elementTypeVarTypes['branch'] = ['branchFlow'];
+        this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
+        this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
         this.elementTypeVarTypes['gen'] = ['genCleared'];
         this.elementTypeVarTypes['load'] = ['loadCleared'];
     }
