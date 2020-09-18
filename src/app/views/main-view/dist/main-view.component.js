@@ -24,18 +24,20 @@ var MainViewComponent = /** @class */ (function () {
     };
     MainViewComponent.prototype.getModelData = function () {
         var _this = this;
-        //Start element and array of elements
+        //Start elements array
         var jString = "{" + JSON.stringify("elements") + ":[";
+        //Individual Elements    
         var modelElements = this.modelElementDataService.getModelElements();
         for (var _i = 0, _a = modelElements.filter(function (element) { return element.visible; }); _i < _a.length; _i++) {
             var modelElement = _a[_i];
+            //Start Element
+            jString += "{";
             //ID
-            jString += "{" + JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
+            jString += JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
             //Element type
             jString += JSON.stringify("elementTypeId") + ":" + JSON.stringify(modelElement.elementTypeId) + ",";
-            //Properties
+            //Properties 
             jString += JSON.stringify("properties") + ":{";
-            //Properties
             for (var _b = 0, _c = this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId); _b < _c.length; _b++) {
                 var propertyTypeId = _c[_b];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
@@ -44,7 +46,7 @@ var MainViewComponent = /** @class */ (function () {
             //Close properties array and element to prep for next element
             jString = jString.substring(0, jString.length - 1) + "}},";
         }
-        //Close elements array and element
+        //Close elements array
         jString = jString.substring(0, jString.length - 1) + "]}";
         this.solverJsonInput = jString;
         //Send the model to the solver
@@ -55,40 +57,6 @@ var MainViewComponent = /** @class */ (function () {
             console.log("SOLVER RESULTS:" + solverResults);
             _this.solverResults = solverResults;
         });
-    };
-    MainViewComponent.prototype.getModelDataOld = function () {
-        // this.shapes = this.shapeService.getShapes();
-        var modelData = [];
-        // var jString2 = "";
-        var jString = "{" + JSON.stringify("bus1") + ":{";
-        for (var _i = 0, _a = this.shapeService.getShapes(); _i < _a.length; _i++) {
-            var shape = _a[_i];
-            modelData.push({
-                elementId: shape.elementId,
-                busId1: (shape.connId1) ? shape.connId1 : "",
-                busId2: (shape.connId2) ? shape.connId2 : ""
-            });
-            jString += JSON.stringify(shape.elementId)
-                + ":" + JSON.stringify((shape.connId1) ? shape.connId1 : "") + ",";
-            // jString2 += JSON.stringify({
-            //   elementId: shape.elementId,
-            //   elementType: shape.elementType,
-            //   bus1: shape.connId1,
-            //   bus2: shape.connId2
-            // });
-        }
-        jString = jString.substring(0, jString.length - 1) + "}}";
-        this.solverJsonInput = jString;
-        // let myJson = JSON.stringify(modelData);
-        // console.log("json:" + myJson);
-        // interface MyObj {
-        //   elementId: string
-        //   bus1: string
-        // }
-        // let obj: MyObj[] = JSON.parse(myJson);
-        // for (let thisObj of obj) {
-        //   console.log("parse:" + thisObj.elementId);
-        // }
     };
     MainViewComponent = __decorate([
         core_1.Component({
