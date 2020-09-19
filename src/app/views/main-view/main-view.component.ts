@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 // import { ShapeService } from '../shape.service';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
+import { ModelElementDefService } from '../../data-model/model-element-def.service';
 import { MathModelDataService } from '../../data-model/math-model-data.service';
+
 
 import { Shape } from '../shape';
 import { ModelElement } from '../../data-model/model-element'
@@ -22,7 +24,8 @@ export class MainViewComponent implements OnInit {
     // private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
     private modelElementDataService: ModelElementDataService,
-    private mathModelDataService: MathModelDataService,
+    private modelElementDefService: ModelElementDefService,
+    // private mathModelDataService: MathModelDataService,
     private solverCallService: SolverCallService)
     { }
 
@@ -52,7 +55,7 @@ export class MainViewComponent implements OnInit {
       //Properties 
       jString += JSON.stringify("properties") + ":{";
       for (const propertyTypeId
-          of this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId)) {
+          of this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementTypeId)) {
 
             let value = this.modelElementDataService.getValueForElementProperty(
               modelElement.elementId,propertyTypeId);

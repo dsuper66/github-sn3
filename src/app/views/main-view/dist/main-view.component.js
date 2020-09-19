@@ -12,9 +12,11 @@ var MainViewComponent = /** @class */ (function () {
     function MainViewComponent(
     // private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
-    modelElementDataService, mathModelDataService, solverCallService) {
+    modelElementDataService, modelElementDefService, 
+    // private mathModelDataService: MathModelDataService,
+    solverCallService) {
         this.modelElementDataService = modelElementDataService;
-        this.mathModelDataService = mathModelDataService;
+        this.modelElementDefService = modelElementDefService;
         this.solverCallService = solverCallService;
         // shapes: Shape[] = [];
         this.solverJsonInput = "";
@@ -39,7 +41,7 @@ var MainViewComponent = /** @class */ (function () {
             jString += JSON.stringify("elementTypeId") + ":" + JSON.stringify(modelElement.elementTypeId) + ",";
             //Properties 
             jString += JSON.stringify("properties") + ":{";
-            for (var _b = 0, _c = this.modelElementDataService.getPropertyTypeIdsFor(modelElement.elementTypeId); _b < _c.length; _b++) {
+            for (var _b = 0, _c = this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementTypeId); _b < _c.length; _b++) {
                 var propertyTypeId = _c[_b];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
                 jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";

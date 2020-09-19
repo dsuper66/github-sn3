@@ -106,24 +106,24 @@ export class ModelElementDataService {
     });    
 
 
-    //Element Types and Property Types
-    //Parent elements
-    this.elementTypeProperties['bus'] = ['isRefBus'];
-    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
-    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
-    this.elementTypeProperties['load'] = ['fromBus'];
-    //Element that defines a child
-    this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
-    //Child elements - tranches
-    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
-    this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
-    this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
-    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
-    //Child elements - unrestricted variables
-    this.elementTypeProperties['posFlow'] = ['parentId'];
-    this.elementTypeProperties['negFlow'] = ['parentId'];    
-    this.elementTypeProperties['posAngle'] = ['parentId'];
-    this.elementTypeProperties['negAngle'] = ['parentId'];
+    // //Element Types and Property Types
+    // //Parent elements
+    // this.elementTypeProperties['bus'] = ['isRefBus'];
+    // this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+    // this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
+    // this.elementTypeProperties['load'] = ['fromBus'];
+    // //Element that defines a child
+    // this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
+    // //Child elements - tranches
+    // this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
+    // this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
+    // this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
+    // this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+    // //Child elements - unrestricted variables
+    // this.elementTypeProperties['posFlow'] = ['parentId'];
+    // this.elementTypeProperties['negFlow'] = ['parentId'];    
+    // this.elementTypeProperties['posAngle'] = ['parentId'];
+    // this.elementTypeProperties['negAngle'] = ['parentId'];
 
     //Element Types and Variables
     this.elementTypeVarTypes['bus'] = ['phaseAngle'];
@@ -137,7 +137,7 @@ export class ModelElementDataService {
   }
 
   // private elementPropertyTypes: ElementPropertyType[] = [];
-  private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
+  // private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
   private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
   private modelElements: ModelElement[] = [];
@@ -161,12 +161,12 @@ export class ModelElementDataService {
     return idString + ("000" + idNumber).slice(-3);
   }
 
-  getPropertyTypeIdsFor(elementTypeId: string): string[] {
-    console.log("Get properties for: " + elementTypeId);
-    const properties = this.elementTypeProperties[elementTypeId];
-    console.log("Got properties: " + properties);
-    return properties;
-  }
+  // getPropertyTypeIdsFor(elementTypeId: string): string[] {
+  //   console.log("Get properties for: " + elementTypeId);
+  //   const properties = this.elementTypeProperties[elementTypeId];
+  //   console.log("Got properties: " + properties);
+  //   return properties;
+  // }
 
   // getDefaultPropertyForPropertTypeId(propertyTypeId: string): any {
   //   const elementProperty = this.elementPropertyTypes.filter(
@@ -196,18 +196,18 @@ export class ModelElementDataService {
     return dict;
   }
 
-  makeProperties(elementTypeId: string,propertiesToAdd: string[],self: ModelElementDataService)
-    : { [propertyTypeId: string]: any } {
+  // makeProperties(elementTypeId: string,propertiesToAdd: string[],self: ModelElementDataService)
+  //   : { [propertyTypeId: string]: any } {
 
-    console.log("Make Properties For:" + elementTypeId);
-    var properties: { [propertyTypeId: string]: any } = {};
+  //   console.log("Make Properties For:" + elementTypeId);
+  //   var properties: { [propertyTypeId: string]: any } = {};
 
-    propertiesToAdd.forEach(function (propertyTypeId: string) {
-      console.log("looking for property " + propertyTypeId)
-      properties[propertyTypeId] = self.modelElementDefService.getDefaultPropertyForPropertTypeId(propertyTypeId);
-    })
-    return properties;
-  }
+  //   propertiesToAdd.forEach(function (propertyTypeId: string) {
+  //     console.log("looking for property " + propertyTypeId)
+  //     properties[propertyTypeId] = self.modelElementDefService.getDefaultPropertyForPropertTypeId(propertyTypeId);
+  //   })
+  //   return properties;
+  // }
 
   // propertyIsVisible(propertyTypeId: string) {
   //   console.log("get visible status for property:" + propertyTypeId);
@@ -226,6 +226,19 @@ export class ModelElementDataService {
     });
   }
 
+  // makeProperties(elementTypeId: string,propertiesToAdd: string[],self: ModelElementDataService)
+  //   : { [propertyTypeId: string]: any } {
+
+  //   console.log("Make Properties For:" + elementTypeId);
+  //   var properties: { [propertyTypeId: string]: any } = {};
+
+  //   propertiesToAdd.forEach(function (propertyTypeId: string) {
+  //     console.log("looking for property " + propertyTypeId)
+  //     properties[propertyTypeId] = self.modelElementDefService.getDefaultPropertyForPropertTypeId(propertyTypeId);
+  //   })
+  //   return properties;
+  // }
+
   //Child elements
   getChildElementDefs(elementTypeId: string): ModelElement[] {
     return this.modelElements.filter(
@@ -240,7 +253,7 @@ export class ModelElementDataService {
   //Test - get all properties of all
   listAllElements(elementId: string): ModelElement[] {
     for (const element of this.modelElements) {
-      const propertyTypeIds = this.getPropertyTypeIdsFor(element.elementTypeId)
+      const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementTypeId)
       for (const propertyTypeId of propertyTypeIds) {
         console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
       }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ModelElement, ElementPropertyType,ElementProperties,ElementType } from './model-element';
 import { Shape } from '../views/shape';
 import { ModelElementDataService } from './model-element-data.service';
+import { ModelElementDefService } from './model-element-def.service';
 // import { ElementType } from './model-element'
 // import { ElementProperties } from './model-element'
 
@@ -15,15 +16,15 @@ import { BehaviorSubject } from 'rxjs';
 export class ModelElementService {
 
   constructor(
-    private modelElementDataService: ModelElementDataService) {
-    
-  }
+    private modelElementDataService: ModelElementDataService,
+    private modelElementDefService: ModelElementDefService) 
+  { }
 
   //Add element (for child elements record their parent)
   addModelElement(elementTypeIdToAdd: string, parentId?:string, childNum?: number): string {
 
     //Add the new element
-    console.log("Add:" + elementTypeIdToAdd);
+    console.log("addModelElement:" + elementTypeIdToAdd);
 
     //ID for the new element (child element is from parent)
     const elementIdForNewElement 
@@ -32,11 +33,11 @@ export class ModelElementService {
       : this.modelElementDataService.getIdForNewElementOfType(elementTypeIdToAdd);
     
     //Properties
-    const propertyTypeIds = this.modelElementDataService.getPropertyTypeIdsFor(elementTypeIdToAdd);
-    const properties = this.modelElementDataService.makeProperties(
-      elementTypeIdToAdd,
-      propertyTypeIds,
-      this.modelElementDataService);
+    const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeIdToAdd);
+    const properties = this.modelElementDefService.makeProperties(
+      elementTypeIdToAdd,propertyTypeIds);
+      // propertyTypeIds,
+      // this.modelElementDataService);
 
     //Add the element
     this.modelElementDataService.addElement(

@@ -9,20 +9,23 @@ exports.__esModule = true;
 exports.ModelElementService = void 0;
 var core_1 = require("@angular/core");
 var ModelElementService = /** @class */ (function () {
-    function ModelElementService(modelElementDataService) {
+    function ModelElementService(modelElementDataService, modelElementDefService) {
         this.modelElementDataService = modelElementDataService;
+        this.modelElementDefService = modelElementDefService;
     }
     //Add element (for child elements record their parent)
     ModelElementService.prototype.addModelElement = function (elementTypeIdToAdd, parentId, childNum) {
         //Add the new element
-        console.log("Add:" + elementTypeIdToAdd);
+        console.log("addModelElement:" + elementTypeIdToAdd);
         //ID for the new element (child element is from parent)
         var elementIdForNewElement = (parentId && childNum)
             ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeIdToAdd, childNum)
             : this.modelElementDataService.getIdForNewElementOfType(elementTypeIdToAdd);
         //Properties
-        var propertyTypeIds = this.modelElementDataService.getPropertyTypeIdsFor(elementTypeIdToAdd);
-        var properties = this.modelElementDataService.makeProperties(elementTypeIdToAdd, propertyTypeIds, this.modelElementDataService);
+        var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeIdToAdd);
+        var properties = this.modelElementDefService.makeProperties(elementTypeIdToAdd, propertyTypeIds);
+        // propertyTypeIds,
+        // this.modelElementDataService);
         //Add the element
         this.modelElementDataService.addElement(elementIdForNewElement, elementTypeIdToAdd, properties);
         //If this is a child then assign parent property

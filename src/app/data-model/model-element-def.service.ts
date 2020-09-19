@@ -39,9 +39,30 @@ export class ModelElementDefService {
       // { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
     )
 
+    
+    //Element Types and Property Types
+    //Parent elements
+    this.elementTypeProperties['bus'] = ['isRefBus'];
+    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
+    this.elementTypeProperties['load'] = ['fromBus'];
+    //Element that defines a child
+    this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
+    //Child elements - tranches
+    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
+    this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
+    this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
+    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+    //Child elements - unrestricted variables
+    this.elementTypeProperties['posFlow'] = ['parentId'];
+    this.elementTypeProperties['negFlow'] = ['parentId'];    
+    this.elementTypeProperties['posAngle'] = ['parentId'];
+    this.elementTypeProperties['negAngle'] = ['parentId'];
+
   }
 
   private elementPropertyTypes: ElementPropertyType[] = [];
+  private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
 
   propertyIsVisible(propertyTypeId: string) {
     console.log("get visible status for property:" + propertyTypeId);
@@ -56,9 +77,33 @@ export class ModelElementDefService {
       return elementProperty.defaultValue;
     }
     else {
-      console.log("%c" + "No Default found for " + propertyTypeId, "color: red");
+      console.log("%c" + "No Default found for:" + propertyTypeId, "color: red");
       return "";
     }
+  }
+
+  getPropertyTypeIdsFor(elementTypeId: string): string[] {
+    console.log("Get properties for: " + elementTypeId);
+    const properties = this.elementTypeProperties[elementTypeId];
+    console.log("Got properties: " + properties);
+    return properties;
+  }
+
+  makeProperties(elementTypeId: string,propertiesToAdd: string[]) : { [propertyTypeId: string]: any } {
+
+    console.log("Make Properties For:" + elementTypeId + " from propertiesToAdd count:" + propertiesToAdd.length);
+    var properties: { [propertyTypeId: string]: any } = {};
+
+    // propertiesToAdd.forEach(function (propertyTypeId: string) {
+    //   console.log("looking for property: " + propertyTypeId)
+    //   properties[propertyTypeId] = this.getDefaultPropertyForPropertTypeId(propertyTypeId);
+    // })
+
+    for (const propertyTypeId of propertiesToAdd) {
+      console.log("looking for property: " + propertyTypeId);
+      properties[propertyTypeId] = this.getDefaultPropertyForPropertTypeId(propertyTypeId);
+    }
+    return properties;
   }
 
 }
