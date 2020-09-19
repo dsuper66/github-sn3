@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
-import { MathModelDataService } from '../../data-model/math-model-data.service';
+import { MathModelDefService } from '../../data-model/math-model-def.service';
 
 
 import { Shape } from '../shape';
@@ -25,7 +25,7 @@ export class MainViewComponent implements OnInit {
     // private modelElementService: ModelElementService,
     private modelElementDataService: ModelElementDataService,
     private modelElementDefService: ModelElementDefService,
-    // private mathModelDataService: MathModelDataService,
+    private mathModelDefService: MathModelDefService,
     private solverCallService: SolverCallService)
     { }
 

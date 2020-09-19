@@ -12,11 +12,10 @@ var MainViewComponent = /** @class */ (function () {
     function MainViewComponent(
     // private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
-    modelElementDataService, modelElementDefService, 
-    // private mathModelDataService: MathModelDataService,
-    solverCallService) {
+    modelElementDataService, modelElementDefService, mathModelDefService, solverCallService) {
         this.modelElementDataService = modelElementDataService;
         this.modelElementDefService = modelElementDefService;
+        this.mathModelDefService = mathModelDefService;
         this.solverCallService = solverCallService;
         // shapes: Shape[] = [];
         this.solverJsonInput = "";

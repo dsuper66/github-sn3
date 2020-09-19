@@ -125,20 +125,20 @@ export class ModelElementDataService {
     // this.elementTypeProperties['posAngle'] = ['parentId'];
     // this.elementTypeProperties['negAngle'] = ['parentId'];
 
-    //Element Types and Variables
-    this.elementTypeVarTypes['bus'] = ['phaseAngle'];
-    this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
-    this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];    
-    this.elementTypeVarTypes['branch'] = ['branchFlow'];
-    this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
-    this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
-    this.elementTypeVarTypes['gen'] = ['genCleared'];
-    this.elementTypeVarTypes['load'] = ['loadCleared'];
+    // //Element Types and Variables
+    // this.elementTypeVarTypes['bus'] = ['phaseAngle'];
+    // this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
+    // this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];    
+    // this.elementTypeVarTypes['branch'] = ['branchFlow'];
+    // this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
+    // this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
+    // this.elementTypeVarTypes['gen'] = ['genCleared'];
+    // this.elementTypeVarTypes['load'] = ['loadCleared'];
   }
 
   // private elementPropertyTypes: ElementPropertyType[] = [];
   // private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
-  private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
+  // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
   private modelElements: ModelElement[] = [];
   private elementNextIndex = new Map<string, bigint>();

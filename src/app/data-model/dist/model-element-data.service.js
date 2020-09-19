@@ -37,7 +37,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
         // private elementPropertyTypes: ElementPropertyType[] = [];
         // private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
-        this.elementTypeVarTypes = {};
+        // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
         this.modelElements = [];
         this.elementNextIndex = new Map();
         //Add child element defs... elements created automatically with parent
@@ -126,15 +126,15 @@ var ModelElementDataService = /** @class */ (function () {
         // this.elementTypeProperties['negFlow'] = ['parentId'];    
         // this.elementTypeProperties['posAngle'] = ['parentId'];
         // this.elementTypeProperties['negAngle'] = ['parentId'];
-        //Element Types and Variables
-        this.elementTypeVarTypes['bus'] = ['phaseAngle'];
-        this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
-        this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];
-        this.elementTypeVarTypes['branch'] = ['branchFlow'];
-        this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
-        this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
-        this.elementTypeVarTypes['gen'] = ['genCleared'];
-        this.elementTypeVarTypes['load'] = ['loadCleared'];
+        // //Element Types and Variables
+        // this.elementTypeVarTypes['bus'] = ['phaseAngle'];
+        // this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
+        // this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];    
+        // this.elementTypeVarTypes['branch'] = ['branchFlow'];
+        // this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
+        // this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
+        // this.elementTypeVarTypes['gen'] = ['genCleared'];
+        // this.elementTypeVarTypes['load'] = ['loadCleared'];
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementTypeId) {
         //Get next index for i.d.
