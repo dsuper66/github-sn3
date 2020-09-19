@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ShapeService } from '../shape.service';
+// import { ShapeService } from '../shape.service';
+
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
+import { MathModelDataService } from '../../data-model/math-model-data.service';
+
 import { Shape } from '../shape';
 import { ModelElement } from '../../data-model/model-element'
 import { SolverCallService } from '../../data-model/solver-call.service';
 import { SolverInput } from '../../data-model/solver-call.service';
-
 
 
 @Component({
@@ -17,9 +19,10 @@ import { SolverInput } from '../../data-model/solver-call.service';
 export class MainViewComponent implements OnInit {
 
   constructor(
-    private shapeService: ShapeService,
+    // private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
     private modelElementDataService: ModelElementDataService,
+    private mathModelDataService: MathModelDataService,
     private solverCallService: SolverCallService)
     { }
 
@@ -55,7 +58,7 @@ export class MainViewComponent implements OnInit {
               modelElement.elementId,propertyTypeId);
             jString += JSON.stringify(propertyTypeId)  + ":" + JSON.stringify(value)  + ","
       }
-      //Close properties array and element to prep for next element
+      //Close properties object and close element object
       jString = jString.substring(0, jString.length - 1) + "}},";
     }
     //Close elements array

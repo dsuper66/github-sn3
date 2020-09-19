@@ -9,11 +9,12 @@ exports.__esModule = true;
 exports.MainViewComponent = void 0;
 var core_1 = require("@angular/core");
 var MainViewComponent = /** @class */ (function () {
-    function MainViewComponent(shapeService, 
+    function MainViewComponent(
+    // private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
-    modelElementDataService, solverCallService) {
-        this.shapeService = shapeService;
+    modelElementDataService, mathModelDataService, solverCallService) {
         this.modelElementDataService = modelElementDataService;
+        this.mathModelDataService = mathModelDataService;
         this.solverCallService = solverCallService;
         // shapes: Shape[] = [];
         this.solverJsonInput = "";
@@ -43,7 +44,7 @@ var MainViewComponent = /** @class */ (function () {
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
                 jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";
             }
-            //Close properties array and element to prep for next element
+            //Close properties object and close element object
             jString = jString.substring(0, jString.length - 1) + "}},";
         }
         //Close elements array
