@@ -14,6 +14,7 @@ import { isDefined } from '@angular/compiler/src/util';
 import { Router } from '@angular/router';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
+import { ModelElementDefService } from '../../data-model/model-element-def.service';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -24,8 +25,9 @@ export class DataEntryViewComponent implements OnInit {
   idOfDataEntryObject: string;
 
   constructor(
-    private modelElementService: ModelElementService,
+    // private modelElementService: ModelElementService,
     private modelElementDataService: ModelElementDataService,
+    private modelElementDefService: ModelElementDefService,
     private router: Router,
     private route: ActivatedRoute
     // private shapeService: ShapeService) 
@@ -171,7 +173,7 @@ export class DataEntryViewComponent implements OnInit {
 
   populateFormFieldsFromProperties(propertyIds: string[], elementId: string) {
     for (const propertyId of propertyIds) {
-      if (this.modelElementDataService.propertyIsVisible(propertyId)) {
+      if (this.modelElementDefService.propertyIsVisible(propertyId)) {
 
         //Data Id
         // this.dataIds.push(propertyId);

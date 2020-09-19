@@ -9,12 +9,14 @@ exports.__esModule = true;
 exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
 var DataEntryViewComponent = /** @class */ (function () {
-    function DataEntryViewComponent(modelElementService, modelElementDataService, router, route
+    function DataEntryViewComponent(
+    // private modelElementService: ModelElementService,
+    modelElementDataService, modelElementDefService, router, route
     // private shapeService: ShapeService) 
     ) {
         var _this = this;
-        this.modelElementService = modelElementService;
         this.modelElementDataService = modelElementDataService;
+        this.modelElementDefService = modelElementDefService;
         this.router = router;
         this.route = route;
         // myGroup = new FormGroup({
@@ -130,7 +132,7 @@ var DataEntryViewComponent = /** @class */ (function () {
     DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
         for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {
             var propertyId = propertyIds_1[_i];
-            if (this.modelElementDataService.propertyIsVisible(propertyId)) {
+            if (this.modelElementDefService.propertyIsVisible(propertyId)) {
                 //Data Id
                 // this.dataIds.push(propertyId);
                 //Name/Title
