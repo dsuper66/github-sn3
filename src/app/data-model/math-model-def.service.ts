@@ -7,7 +7,7 @@ export class MathModelDefService {
 
   constructor() {
 
-    //Constraints
+    //Constraint Defs
     this.constraintDefs.push(
       { constraintId: 'nodeBal', elementType: 'bus', varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
       { constraintId: 'genTrancheLimit', elementType: 'genTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
@@ -54,10 +54,10 @@ export class MathModelDefService {
     this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
     this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
     this.elementTypeVarTypes['negAngle'] =    ['phaseAngle'];
-    this.elementTypeVarTypes['branch'] =      ['branchFlow'];
-    this.elementTypeVarTypes['posFlow'] =     ['branchFlow'];
-    this.elementTypeVarTypes['negFlow'] =     ['branchFlow'];
-    this.elementTypeVarTypes['gen'] =         ['genCleared'];
+    this.elementTypeVarTypes['branch'] =      ['branchFlow','branchLoss'];
+    this.elementTypeVarTypes['posFlow'] =     ['branchFlow','branchLoss'];
+    this.elementTypeVarTypes['negFlow'] =     ['branchFlow','branchLoss'];
+    this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
     this.elementTypeVarTypes['load'] =        ['loadCleared'];
 
     this.elementTypeVarTypes['genTranche'] =  ['trancheCleared'];
@@ -70,6 +70,13 @@ export class MathModelDefService {
   private constraintComps: ConstraintComp[] = [];
   private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
+  getConstraintDefs() {
+    return this.constraintDefs;
+  }
+
+  getConstraintComps() {
+    return this.constraintComps;
+  }  
       
 }
 

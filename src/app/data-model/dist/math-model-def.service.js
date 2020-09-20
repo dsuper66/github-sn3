@@ -13,7 +13,7 @@ var MathModelDefService = /** @class */ (function () {
         this.constraintDefs = [];
         this.constraintComps = [];
         this.elementTypeVarTypes = {};
-        //Constraints
+        //Constraint Defs
         this.constraintDefs.push({ constraintId: 'nodeBal', elementType: 'bus', varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'genTrancheLimit', elementType: 'genTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 }, { constraintId: 'genSumTranches', elementType: 'gen', varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0 }, { constraintId: 'loadTrancheLimit', elementType: 'loadTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 }, { constraintId: 'loadSumTranches', elementType: 'load', varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'powerFlow', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'brFlowLimit', elementType: 'branch', varType: 'nil', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0 }, { constraintId: 'flowSumDirs', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'angleSumDirs', elementType: 'bus', varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0 });
         //Constraint Components
         this.constraintComps.push({ constraintId: 'nodeBal', elementType: 'gen', propertyMapToParent: 'toBus',
@@ -34,14 +34,20 @@ var MathModelDefService = /** @class */ (function () {
         this.elementTypeVarTypes['bus'] = ['phaseAngle'];
         this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
         this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];
-        this.elementTypeVarTypes['branch'] = ['branchFlow'];
-        this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
-        this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
-        this.elementTypeVarTypes['gen'] = ['genCleared'];
+        this.elementTypeVarTypes['branch'] = ['branchFlow', 'branchLoss'];
+        this.elementTypeVarTypes['posFlow'] = ['branchFlow', 'branchLoss'];
+        this.elementTypeVarTypes['negFlow'] = ['branchFlow', 'branchLoss'];
+        this.elementTypeVarTypes['gen'] = ['genCleared', 'resCleared'];
         this.elementTypeVarTypes['load'] = ['loadCleared'];
         this.elementTypeVarTypes['genTranche'] = ['trancheCleared'];
         this.elementTypeVarTypes['loadTranche'] = ['trancheCleared'];
     }
+    MathModelDefService.prototype.getConstraintDefs = function () {
+        return this.constraintDefs;
+    };
+    MathModelDefService.prototype.getConstraintComps = function () {
+        return this.constraintComps;
+    };
     MathModelDefService = __decorate([
         core_1.Injectable({
             providedIn: 'root'
