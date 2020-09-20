@@ -10,34 +10,7 @@ exports.ModelElementDataService = void 0;
 var core_1 = require("@angular/core");
 var ModelElementDataService = /** @class */ (function () {
     function ModelElementDataService(modelElementDefService) {
-        // //Property Types (and Defaults)
-        // this.elementPropertyTypes.push(
-        //   { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true },
-        //   { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false },
-        //   { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false },
-        //   { propertyTypeId: 'flowMax', primitiveType: 'number', defaultValue: '100', visible: true },
-        //   { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true },
-        //   { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true },
-        //   { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false },
-        //   { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false },
-        //   { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false },
-        //   { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false },
-        //   { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true },
-        //   { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true },
-        //   { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true },
-        //   { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true },
-        //   { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true },
-        //   { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true },
-        //   { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true },
-        //   { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true },
-        //   { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
-        //   // { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true },
-        //   // { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
-        // )
         this.modelElementDefService = modelElementDefService;
-        // private elementPropertyTypes: ElementPropertyType[] = [];
-        // private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
-        // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
         this.modelElements = [];
         this.elementNextIndex = new Map();
         //Add child element defs... elements created automatically with parent
@@ -108,33 +81,6 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
-        // //Element Types and Property Types
-        // //Parent elements
-        // this.elementTypeProperties['bus'] = ['isRefBus'];
-        // this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
-        // this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
-        // this.elementTypeProperties['load'] = ['fromBus'];
-        // //Element that defines a child
-        // this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
-        // //Child elements - tranches
-        // this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
-        // this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
-        // this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
-        // this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
-        // //Child elements - unrestricted variables
-        // this.elementTypeProperties['posFlow'] = ['parentId'];
-        // this.elementTypeProperties['negFlow'] = ['parentId'];    
-        // this.elementTypeProperties['posAngle'] = ['parentId'];
-        // this.elementTypeProperties['negAngle'] = ['parentId'];
-        // //Element Types and Variables
-        // this.elementTypeVarTypes['bus'] = ['phaseAngle'];
-        // this.elementTypeVarTypes['posAngle'] = ['phaseAngle'];
-        // this.elementTypeVarTypes['negAngle'] = ['phaseAngle'];    
-        // this.elementTypeVarTypes['branch'] = ['branchFlow'];
-        // this.elementTypeVarTypes['posFlow'] = ['branchFlow'];
-        // this.elementTypeVarTypes['negFlow'] = ['branchFlow'];
-        // this.elementTypeVarTypes['gen'] = ['genCleared'];
-        // this.elementTypeVarTypes['load'] = ['loadCleared'];
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementTypeId) {
         //Get next index for i.d.
@@ -151,23 +97,6 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.makeIdFromStringAndNumber = function (idString, idNumber) {
         return idString + ("000" + idNumber).slice(-3);
     };
-    // getPropertyTypeIdsFor(elementTypeId: string): string[] {
-    //   console.log("Get properties for: " + elementTypeId);
-    //   const properties = this.elementTypeProperties[elementTypeId];
-    //   console.log("Got properties: " + properties);
-    //   return properties;
-    // }
-    // getDefaultPropertyForPropertTypeId(propertyTypeId: string): any {
-    //   const elementProperty = this.elementPropertyTypes.filter(
-    //     elementPropertyType => elementPropertyType.propertyTypeId === propertyTypeId)[0];
-    //   if (elementProperty) {
-    //     return elementProperty.defaultValue;
-    //   }
-    //   else {
-    //     console.log("%c" + "No Default found for " + propertyTypeId, "color: red");
-    //     return "";
-    //   }
-    // }
     //Make Dictionary from array of objects
     //https://stackoverflow.com/questions/43147696/unable-to-extract-object-values-in-typescript
     ModelElementDataService.prototype.makeDict = function (arrayOfMaps) {
@@ -181,21 +110,6 @@ var ModelElementDataService = /** @class */ (function () {
         });
         return dict;
     };
-    // makeProperties(elementTypeId: string,propertiesToAdd: string[],self: ModelElementDataService)
-    //   : { [propertyTypeId: string]: any } {
-    //   console.log("Make Properties For:" + elementTypeId);
-    //   var properties: { [propertyTypeId: string]: any } = {};
-    //   propertiesToAdd.forEach(function (propertyTypeId: string) {
-    //     console.log("looking for property " + propertyTypeId)
-    //     properties[propertyTypeId] = self.modelElementDefService.getDefaultPropertyForPropertTypeId(propertyTypeId);
-    //   })
-    //   return properties;
-    // }
-    // propertyIsVisible(propertyTypeId: string) {
-    //   console.log("get visible status for property:" + propertyTypeId);
-    //   const propertyType = this.elementPropertyTypes.filter(property => property.propertyTypeId === propertyTypeId)[0];
-    //   return propertyType.visible;
-    // }  
     //===DATA===
     ModelElementDataService.prototype.addElement = function (elementId, elementTypeId, properties) {
         this.modelElements.push({
@@ -205,16 +119,6 @@ var ModelElementDataService = /** @class */ (function () {
             visible: true
         });
     };
-    // makeProperties(elementTypeId: string,propertiesToAdd: string[],self: ModelElementDataService)
-    //   : { [propertyTypeId: string]: any } {
-    //   console.log("Make Properties For:" + elementTypeId);
-    //   var properties: { [propertyTypeId: string]: any } = {};
-    //   propertiesToAdd.forEach(function (propertyTypeId: string) {
-    //     console.log("looking for property " + propertyTypeId)
-    //     properties[propertyTypeId] = self.modelElementDefService.getDefaultPropertyForPropertTypeId(propertyTypeId);
-    //   })
-    //   return properties;
-    // }
     //Child elements
     ModelElementDataService.prototype.getChildElementDefs = function (elementTypeId) {
         return this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementTypeId; });

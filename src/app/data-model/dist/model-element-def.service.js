@@ -60,10 +60,6 @@ var ModelElementDefService = /** @class */ (function () {
     ModelElementDefService.prototype.makeProperties = function (elementTypeId, propertiesToAdd) {
         console.log("Make Properties For:" + elementTypeId + " from propertiesToAdd count:" + propertiesToAdd.length);
         var properties = {};
-        // propertiesToAdd.forEach(function (propertyTypeId: string) {
-        //   console.log("looking for property: " + propertyTypeId)
-        //   properties[propertyTypeId] = this.getDefaultPropertyForPropertTypeId(propertyTypeId);
-        // })
         for (var _i = 0, propertiesToAdd_1 = propertiesToAdd; _i < propertiesToAdd_1.length; _i++) {
             var propertyTypeId = propertiesToAdd_1[_i];
             console.log("looking for property: " + propertyTypeId);

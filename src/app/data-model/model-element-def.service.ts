@@ -94,11 +94,6 @@ export class ModelElementDefService {
     console.log("Make Properties For:" + elementTypeId + " from propertiesToAdd count:" + propertiesToAdd.length);
     var properties: { [propertyTypeId: string]: any } = {};
 
-    // propertiesToAdd.forEach(function (propertyTypeId: string) {
-    //   console.log("looking for property: " + propertyTypeId)
-    //   properties[propertyTypeId] = this.getDefaultPropertyForPropertTypeId(propertyTypeId);
-    // })
-
     for (const propertyTypeId of propertiesToAdd) {
       console.log("looking for property: " + propertyTypeId);
       properties[propertyTypeId] = this.getDefaultPropertyForPropertTypeId(propertyTypeId);

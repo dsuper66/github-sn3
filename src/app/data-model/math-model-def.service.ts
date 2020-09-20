@@ -51,17 +51,17 @@ export class MathModelDefService {
     )
 
     //Variables for Element Types
-    this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
-    this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
-    this.elementTypeVarTypes['negAngle'] =    ['phaseAngle'];
-    this.elementTypeVarTypes['branch'] =      ['branchFlow','branchLoss'];
-    this.elementTypeVarTypes['posFlow'] =     ['branchFlow','branchLoss'];
-    this.elementTypeVarTypes['negFlow'] =     ['branchFlow','branchLoss'];
-    this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
-    this.elementTypeVarTypes['load'] =        ['loadCleared'];
+    // this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
+    // this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
+    // this.elementTypeVarTypes['negAngle'] =    ['phaseAngle'];
+    // this.elementTypeVarTypes['branch'] =      ['branchFlow','branchLoss'];
+    // this.elementTypeVarTypes['posFlow'] =     ['branchFlow','branchLoss'];
+    // this.elementTypeVarTypes['negFlow'] =     ['branchFlow','branchLoss'];
+    // this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
+    // this.elementTypeVarTypes['load'] =        ['loadCleared'];
 
-    this.elementTypeVarTypes['genTranche'] =  ['trancheCleared'];
-    this.elementTypeVarTypes['loadTranche'] = ['trancheCleared'];
+    // this.elementTypeVarTypes['genTranche'] =  ['trancheCleared'];
+    // this.elementTypeVarTypes['loadTranche'] = ['trancheCleared'];
 
   }
 
