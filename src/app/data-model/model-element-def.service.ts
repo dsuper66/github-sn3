@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { 
-  ModelElement, 
   ElementPropertyType, 
-  ElementProperties, 
-  ElementVarType,
-  ElementType } from './model-element';
+  // DefaultPropertyValue
+} from './model-element';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +12,8 @@ export class ModelElementDefService {
 
   constructor() { 
 
-    //Property Types (and Defaults)
+
+    //Property Types
     this.elementPropertyTypes.push(
       { propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true },
       { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false },
@@ -35,9 +34,9 @@ export class ModelElementDefService {
       { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true },
       { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true },
       { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
-      // { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true },
-      // { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
+
     )
+
 
     
     //Element Types and Property Types
@@ -62,7 +61,8 @@ export class ModelElementDefService {
   }
 
   private elementPropertyTypes: ElementPropertyType[] = [];
-  private elementTypeProperties: { [elementTypeId: string]: string[] } = {};
+  private elementTypeProperties: { [elementType: string]: string[] } = {};
+  // private defaultPropertyValues: DefaultPropertyValue[] = [];
 
   propertyIsVisible(propertyTypeId: string) {
     console.log("get visible status for property:" + propertyTypeId);
@@ -82,16 +82,16 @@ export class ModelElementDefService {
     }
   }
 
-  getPropertyTypeIdsFor(elementTypeId: string): string[] {
-    console.log("Get properties for: " + elementTypeId);
-    const properties = this.elementTypeProperties[elementTypeId];
+  getPropertyTypeIdsFor(elementType: string): string[] {
+    console.log("Get properties for: " + elementType);
+    const properties = this.elementTypeProperties[elementType];
     console.log("Got properties: " + properties);
     return properties;
   }
 
-  makeProperties(elementTypeId: string,propertiesToAdd: string[]) : { [propertyTypeId: string]: any } {
+  makeProperties(elementType: string,propertiesToAdd: string[]) : { [propertyTypeId: string]: any } {
 
-    console.log("Make Properties For:" + elementTypeId + " from propertiesToAdd count:" + propertiesToAdd.length);
+    console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
     var properties: { [propertyTypeId: string]: any } = {};
 
     for (const propertyTypeId of propertiesToAdd) {

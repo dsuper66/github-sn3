@@ -120,7 +120,7 @@ export class NetworkBuilderViewComponent implements OnInit {
       var deltaFromStartX = 0;
       var deltaFromStartY = 0;
       if (!this.directionDone) {
-        if (this.selectedShape.elementTypeId == 'bus' || this.selectedShape.elementTypeId == 'branch') {
+        if (this.selectedShape.elementType == 'bus' || this.selectedShape.elementType == 'branch') {
           let xThreshold = 5;
           let yThreshold = 5;
           deltaFromStartX = Math.abs(drawingPoint.x - this.firstPoint.x);
@@ -132,12 +132,12 @@ export class NetworkBuilderViewComponent implements OnInit {
             this.selectedShape.doResize = false;
             //Then see if it is a resize
             if (deltaFromStartY > yThreshold
-              && this.selectedShape.elementTypeId == 'branch') {
+              && this.selectedShape.elementType == 'branch') {
               // console.log("Up Down");
               this.selectedShape.doResize = true;
             }
             else if (deltaFromStartX > xThreshold
-              && this.selectedShape.elementTypeId == 'bus') {
+              && this.selectedShape.elementType == 'bus') {
               // console.log("Left Right");
               this.selectedShape.doResize = true;
             }
@@ -149,7 +149,7 @@ export class NetworkBuilderViewComponent implements OnInit {
         }
       }
       //Check for ROTATE
-      else if (this.selectedShape.elementTypeId == 'branch'
+      else if (this.selectedShape.elementType == 'branch'
         && this.selectedShape.doResize) {
         deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
         if (deltaFromStartX > 50) {
@@ -169,7 +169,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
       //Resize (bus or branch)
       if (this.selectedShape.doResize) {
-        if (this.selectedShape.elementTypeId == 'bus') {
+        if (this.selectedShape.elementType == 'bus') {
           let atRHS = (drawingPoint.x > this.selectedShape.xInner + this.selectedShape.wInner / 2);
           if (atRHS) {
             this.shapeService.applyDeltaW(deltaX, this.selectedShape);
@@ -179,7 +179,7 @@ export class NetworkBuilderViewComponent implements OnInit {
             this.shapeService.applyDeltaW(-deltaX, this.selectedShape);
           }
         }
-        else if (this.selectedShape.elementTypeId == 'branch') {
+        else if (this.selectedShape.elementType == 'branch') {
           let atBottom = (drawingPoint.y > this.selectedShape.yInner + this.selectedShape.hInner / 2);
           if (atBottom) {
             this.shapeService.applyDeltaH(deltaY, this.selectedShape);
@@ -239,7 +239,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   setConnectivity(shape: Shape) {
     let isFullyConnected =
-      (shape.elementTypeId != 'branch' && shape.connId1 != "")
+      (shape.elementType != 'branch' && shape.connId1 != "")
       || (shape.connId1 != "" && shape.connId2 != "");
 
     //Use renderer, not attribute
@@ -254,7 +254,7 @@ export class NetworkBuilderViewComponent implements OnInit {
       this.renderer.setProperty(el.style,
         "stroke", (isFullyConnected ? "black" : "lime"));
       //Bus and branch also set fill colour
-      if (shape.elementTypeId === 'bus' || shape.elementTypeId === 'branch') {
+      if (shape.elementType === 'bus' || shape.elementType === 'branch') {
         this.renderer.setProperty(el.style,
           "fill", (isFullyConnected ? "black" : "lime"));
       }
@@ -275,14 +275,14 @@ export class NetworkBuilderViewComponent implements OnInit {
     {
 
       //Bus is moving
-      if (this.selectedShape.elementTypeId === 'bus') {
+      if (this.selectedShape.elementType === 'bus') {
         let theBus = this.selectedShape;
         //Check connectivity of all non-bus shapes
         for (let theNotBus of this.shapeService.getShapesNotOfType('bus')) {
           //overlapped
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //not a branch
-            if (theNotBus.elementTypeId != 'branch') {
+            if (theNotBus.elementType != 'branch') {
               if (theNotBus.connId1 === "") { //don't steal other connections
                 theNotBus.connId1 = theBus.elementId;
               }
@@ -320,7 +320,7 @@ export class NetworkBuilderViewComponent implements OnInit {
         for (let theBus of theBuses) {
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //Assign bus1 if this is not a branch
-            if (theNotBus.elementTypeId != "branch") {
+            if (theNotBus.elementType != "branch") {
               theNotBus.connId1 = theBus.elementId;
               break;
             }

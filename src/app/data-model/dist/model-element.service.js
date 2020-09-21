@@ -14,27 +14,27 @@ var ModelElementService = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
     }
     //Add element (for child elements record their parent)
-    ModelElementService.prototype.addModelElement = function (elementTypeIdToAdd, parentId, childNum) {
+    ModelElementService.prototype.addModelElement = function (elementTypeToAdd, parentId, childNum) {
         //Add the new element
-        console.log("addModelElement:" + elementTypeIdToAdd);
+        console.log("addModelElement:" + elementTypeToAdd);
         //ID for the new element (child element is from parent)
         var elementIdForNewElement = (parentId && childNum)
-            ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeIdToAdd, childNum)
-            : this.modelElementDataService.getIdForNewElementOfType(elementTypeIdToAdd);
+            ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
+            : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
         //Properties
-        var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeIdToAdd);
-        var properties = this.modelElementDefService.makeProperties(elementTypeIdToAdd, propertyTypeIds);
+        var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeToAdd);
+        var properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds);
         // propertyTypeIds,
         // this.modelElementDataService);
         //Add the element
-        this.modelElementDataService.addElement(elementIdForNewElement, elementTypeIdToAdd, properties);
+        this.modelElementDataService.addElement(elementIdForNewElement, elementTypeToAdd, properties);
         //If this is a child then assign parent property
         if (parentId) {
             this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
         }
         //Create any child elements (linked back to parent like a gen is to a bus)
         var self = this;
-        var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeIdToAdd);
+        var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
         childElementDefs.forEach(function (childElementDef) {
             var childType = childElementDef.properties['childTypeId'];
             var childCount = childElementDef.properties['childCount'];
@@ -46,7 +46,7 @@ var ModelElementService = /** @class */ (function () {
         });
         //Special case
         //bus... need one (and only one) with isRefBus = true
-        if (elementTypeIdToAdd === 'bus') {
+        if (elementTypeToAdd === 'bus') {
             //If no refBus then make this refBus = true
             if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
                 this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');

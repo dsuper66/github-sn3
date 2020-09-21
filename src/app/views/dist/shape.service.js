@@ -53,7 +53,7 @@ var ShapeService = /** @class */ (function () {
     //Shapes of type
     //***this happens multiple times during a move *****/
     ShapeService.prototype.getShapesOfType = function (elementType) {
-        var filtered = this.shapes.filter(function (shape) { return shape.elementTypeId === elementType; });
+        var filtered = this.shapes.filter(function (shape) { return shape.elementType === elementType; });
         // for (let element of filtered) {
         //   console.log("shapes of type:" + elementType + " = " + element.elementId);
         // }
@@ -61,7 +61,7 @@ var ShapeService = /** @class */ (function () {
     };
     //...and not of type
     ShapeService.prototype.getShapesNotOfType = function (elementType) {
-        return this.shapes.filter(function (shape) { return shape.elementTypeId != elementType; });
+        return this.shapes.filter(function (shape) { return shape.elementType != elementType; });
     };
     ShapeService.prototype.getCountShapesOfType = function (elementType) {
         return this.getShapesOfType(elementType).length;
@@ -79,7 +79,7 @@ var ShapeService = /** @class */ (function () {
         if (elementType == 'bus') {
             var y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
             newShape = ({
-                elementTypeId: elementType,
+                elementType: elementType,
                 elementId: newElementId,
                 xInner: this.busInitX,
                 yInner: y,
@@ -106,7 +106,7 @@ var ShapeService = /** @class */ (function () {
             var y = (this.busInitY * Math.ceil(branchCountNew / 2)) + this.busWidth / 2;
             // this.shapes.push({
             newShape = ({
-                elementTypeId: elementType,
+                elementType: elementType,
                 elementId: newElementId,
                 xInner: x,
                 yInner: y,
@@ -142,7 +142,7 @@ var ShapeService = /** @class */ (function () {
             console.log("path1: " + path1 + " path2: " + path2);
             // this.shapes.push({
             newShape = ({
-                elementTypeId: elementType,
+                elementType: elementType,
                 elementId: newElementId,
                 xInner: x_1,
                 yInner: y,
@@ -197,18 +197,18 @@ var ShapeService = /** @class */ (function () {
             var nonBusEl = _a[_i];
             // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
             //load and gen... only have connId1
-            if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
+            if (nonBusEl.elementType != 'branch' && nonBusEl.connId1) {
                 //In terms of the load, the bus is a fromBus
-                if (nonBusEl.elementTypeId === 'load') {
+                if (nonBusEl.elementType === 'load') {
                     this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
                 }
                 //...for a gen, the bus is a toBus
-                else if (nonBusEl.elementTypeId === 'gen') {
+                else if (nonBusEl.elementType === 'gen') {
                     this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'toBus', nonBusEl.connId1);
                 }
             }
             //branch
-            else if (nonBusEl.elementTypeId === 'branch') {
+            else if (nonBusEl.elementType === 'branch') {
                 var fromBus;
                 var toBus;
                 //If fully connected then fromBus is lowest alphabetically, other is toBus

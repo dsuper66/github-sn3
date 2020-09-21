@@ -12,9 +12,8 @@ var MathModelDefService = /** @class */ (function () {
     function MathModelDefService() {
         this.constraintDefs = [];
         this.constraintComps = [];
-        this.elementTypeVarTypes = {};
         //Constraint Defs
-        this.constraintDefs.push({ constraintId: 'nodeBal', elementType: 'bus', varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'genTrancheLimit', elementType: 'genTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 }, { constraintId: 'genSumTranches', elementType: 'gen', varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0 }, { constraintId: 'loadTrancheLimit', elementType: 'loadTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 }, { constraintId: 'loadSumTranches', elementType: 'load', varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'powerFlow', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'brFlowLimit', elementType: 'branch', varType: 'nil', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0 }, { constraintId: 'flowSumDirs', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'angleSumDirs', elementType: 'bus', varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0 });
+        this.constraintDefs.push({ constraintId: 'nodeBal', elementType: 'bus', varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'genTrancheLimit', elementType: 'genTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 }, { constraintId: 'genSumTranches', elementType: 'gen', varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0 }, { constraintId: 'loadTrancheLimit', elementType: 'loadTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 }, { constraintId: 'loadSumTranches', elementType: 'load', varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'powerFlow', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'brFlowLimit', elementType: 'branch', varType: 'nil', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0 }, { constraintId: 'flowSumDirs', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'angleSumDirs', elementType: 'bus', varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }, { constraintId: 'objective', elementType: 'model', varType: 'objectiveVal', inEquality: 'eq', rhsProperty: '', rhsValue: 0 });
         //Constraint Components
         this.constraintComps.push({ constraintId: 'nodeBal', elementType: 'gen', propertyMapToParent: 'toBus',
             varType: 'genCleared', multParentProperty: '', multValue: 1 }, { constraintId: 'nodeBal', elementType: 'load', propertyMapToParent: 'fromBus',
@@ -29,7 +28,9 @@ var MathModelDefService = /** @class */ (function () {
             varType: 'branchFlow', multParentProperty: '', multValue: -1 }, { constraintId: 'brFlowSumDirs', elementType: 'dirFlowRev', propertyMapToParent: 'parentId',
             varType: 'branchFlow', multParentProperty: '', multValue: 1 }, { constraintId: 'angleSumDirs', elementType: 'dirAngleFwd', propertyMapToParent: 'parentId',
             varType: 'phaseAngle', multParentProperty: '', multValue: -1 }, { constraintId: 'angleSumDirs', elementType: 'dirAngleRev', propertyMapToParent: 'parentId',
-            varType: 'phaseAngle', multParentProperty: '', multValue: 1 });
+            varType: 'phaseAngle', multParentProperty: '', multValue: 1 }, { constraintId: 'objective', elementType: 'genTranche', propertyMapToParent: 'genPrice',
+            varType: 'trancheCleared', multParentProperty: '', multValue: -1 }, { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice',
+            varType: 'trancheCleared', multParentProperty: '', multValue: 1 });
         //Variables for Element Types
         // this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
         // this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
@@ -42,6 +43,7 @@ var MathModelDefService = /** @class */ (function () {
         // this.elementTypeVarTypes['genTranche'] =  ['trancheCleared'];
         // this.elementTypeVarTypes['loadTranche'] = ['trancheCleared'];
     }
+    // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
     MathModelDefService.prototype.getConstraintDefs = function () {
         return this.constraintDefs;
     };

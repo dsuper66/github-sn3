@@ -56,10 +56,10 @@ var MainViewComponent = /** @class */ (function () {
             //ID
             jString += JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
             //Element type
-            jString += JSON.stringify("elementTypeId") + ":" + JSON.stringify(modelElement.elementTypeId) + ",";
+            jString += JSON.stringify("elementType") + ":" + JSON.stringify(modelElement.elementType) + ",";
             //Properties 
             jString += JSON.stringify("properties") + ":{";
-            for (var _b = 0, _c = this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementTypeId); _b < _c.length; _b++) {
+            for (var _b = 0, _c = this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementType); _b < _c.length; _b++) {
                 var propertyTypeId = _c[_b];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
                 jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";

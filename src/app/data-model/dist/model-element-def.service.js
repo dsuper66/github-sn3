@@ -12,11 +12,8 @@ var ModelElementDefService = /** @class */ (function () {
     function ModelElementDefService() {
         this.elementPropertyTypes = [];
         this.elementTypeProperties = {};
-        //Property Types (and Defaults)
-        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'flowMax', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
-        // { propertyTypeId: 'posMult', primitiveType: 'number', defaultValue: '1', visible: true },
-        // { propertyTypeId: 'negMult', primitiveType: 'number', defaultValue: '-1', visible: true }
-        );
+        //Property Types
+        this.elementPropertyTypes.push({ propertyTypeId: 'isRefBus', primitiveType: 'bool', defaultValue: 'false', visible: true }, { propertyTypeId: 'fromBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'toBus', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'flowMax', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resistance', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'susceptance', primitiveType: 'number', defaultValue: '0.001', visible: true }, { propertyTypeId: 'childCount', primitiveType: 'number', defaultValue: '3', visible: false }, { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false }, { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true }, { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true }, { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true }, { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true }, { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true }, { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true }, { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true }, { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true }, { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true });
         //Element Types and Property Types
         //Parent elements
         this.elementTypeProperties['bus'] = ['isRefBus'];
@@ -36,6 +33,7 @@ var ModelElementDefService = /** @class */ (function () {
         this.elementTypeProperties['posAngle'] = ['parentId'];
         this.elementTypeProperties['negAngle'] = ['parentId'];
     }
+    // private defaultPropertyValues: DefaultPropertyValue[] = [];
     ModelElementDefService.prototype.propertyIsVisible = function (propertyTypeId) {
         console.log("get visible status for property:" + propertyTypeId);
         var propertyType = this.elementPropertyTypes.filter(function (property) { return property.propertyTypeId === propertyTypeId; })[0];
@@ -51,14 +49,14 @@ var ModelElementDefService = /** @class */ (function () {
             return "";
         }
     };
-    ModelElementDefService.prototype.getPropertyTypeIdsFor = function (elementTypeId) {
-        console.log("Get properties for: " + elementTypeId);
-        var properties = this.elementTypeProperties[elementTypeId];
+    ModelElementDefService.prototype.getPropertyTypeIdsFor = function (elementType) {
+        console.log("Get properties for: " + elementType);
+        var properties = this.elementTypeProperties[elementType];
         console.log("Got properties: " + properties);
         return properties;
     };
-    ModelElementDefService.prototype.makeProperties = function (elementTypeId, propertiesToAdd) {
-        console.log("Make Properties For:" + elementTypeId + " from propertiesToAdd count:" + propertiesToAdd.length);
+    ModelElementDefService.prototype.makeProperties = function (elementType, propertiesToAdd) {
+        console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
         var properties = {};
         for (var _i = 0, propertiesToAdd_1 = propertiesToAdd; _i < propertiesToAdd_1.length; _i++) {
             var propertyTypeId = propertiesToAdd_1[_i];

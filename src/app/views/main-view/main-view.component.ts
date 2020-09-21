@@ -72,11 +72,11 @@ export class MainViewComponent implements OnInit {
       //ID
       jString += JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
       //Element type
-      jString += JSON.stringify("elementTypeId") + ":" + JSON.stringify(modelElement.elementTypeId) + ",";
+      jString += JSON.stringify("elementType") + ":" + JSON.stringify(modelElement.elementType) + ",";
       //Properties 
       jString += JSON.stringify("properties") + ":{";
       for (const propertyTypeId
-        of this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementTypeId)) {
+        of this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementType)) {
 
         let value = this.modelElementDataService.getValueForElementProperty(
           modelElement.elementId, propertyTypeId);

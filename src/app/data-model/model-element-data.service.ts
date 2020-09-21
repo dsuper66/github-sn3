@@ -2,10 +2,11 @@ import { isDefined } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { 
   ModelElement, 
-  ElementPropertyType, 
-  ElementProperties, 
-  ElementVarType,
-  ElementType } from './model-element';
+  ElementProperties
+  // ElementPropertyType, 
+  // ElementVarType,
+  // ElementType 
+} from './model-element';
 
 import { ModelElementDefService } from './model-element-def.service';
 
@@ -22,28 +23,28 @@ export class ModelElementDataService {
     //parentTypeId is used to identify the parent
     //Bid Tranches
     this.modelElements.push({
-      elementId: 'bidTrancheDef', elementTypeId: 'trancheDef',
+      elementId: 'bidTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]),
       visible: false
     });
     //Gen Tranches
     this.modelElements.push({
-      elementId: 'genTrancheDef', elementTypeId: 'trancheDef',
+      elementId: 'genTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }]),
       visible: false
     });
     //Res Tranches
     this.modelElements.push({
-      elementId: 'resTrancheDef', elementTypeId: 'trancheDef',
+      elementId: 'resTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }]),
       visible: false
     });
     //Loss Tranches
     this.modelElements.push({
-      elementId: 'lossTrancheDef', elementTypeId: 'trancheDef',
+      elementId: 'lossTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
       visible: false
@@ -51,14 +52,14 @@ export class ModelElementDataService {
 
     //Unrestricted - branch flow
     this.modelElements.push({
-      elementId: 'branchFlowPos', elementTypeId: 'unrestrictedDef',
+      elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
       properties: this.makeDict([
         { 'parentTypeId': 'branch' },  //{ 'varId': 'branchFlow' },
         { 'childTypeId': 'posFlow' }, { 'childCount': '1' }]),
       visible: false
     });
     this.modelElements.push({
-      elementId: 'branchFlowNeg', elementTypeId: 'unrestrictedDef',
+      elementId: 'branchFlowNeg', elementType: 'unrestrictedDef',
       properties: this.makeDict([
         { 'parentTypeId': 'branch' }, //{ 'varId': 'branchFlow' }, 
         { 'childTypeId': 'negFlow' }, { 'childCount': '1' }]),
@@ -66,14 +67,14 @@ export class ModelElementDataService {
     });    
     //Unrestricted - bus angle
     this.modelElements.push({
-      elementId: 'phaseAnglePos', elementTypeId: 'unrestrictedDef',
+      elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
       properties: this.makeDict([
         { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
         { 'childTypeId': 'posAngle' }, { 'childCount': '1' }]),
       visible: false
     });
     this.modelElements.push({
-      elementId: 'phaseAngleNeg', elementTypeId: 'unrestrictedDef',
+      elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
       properties: this.makeDict([
         { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
         { 'childTypeId': 'negAngle' }, { 'childCount': '1' }]),
@@ -85,16 +86,16 @@ export class ModelElementDataService {
   private modelElements: ModelElement[] = [];
   private elementNextIndex = new Map<string, bigint>();
 
-  getIdForNewElementOfType(elementTypeId: string): string {
+  getIdForNewElementOfType(elementType: string): string {
     //Get next index for i.d.
-    if (this.elementNextIndex[elementTypeId] == undefined) {
-      this.elementNextIndex[elementTypeId] = 1;
+    if (this.elementNextIndex[elementType] == undefined) {
+      this.elementNextIndex[elementType] = 1;
     }
-    let elementIndex = this.elementNextIndex[elementTypeId];
+    let elementIndex = this.elementNextIndex[elementType];
 
     //Make the i.d.
-    let newId = this.makeIdFromStringAndNumber(elementTypeId,elementIndex);
-    this.elementNextIndex[elementTypeId] = elementIndex + 1;
+    let newId = this.makeIdFromStringAndNumber(elementType,elementIndex);
+    this.elementNextIndex[elementType] = elementIndex + 1;
     console.log("New Id:" + newId);
     return newId;
   }
@@ -121,19 +122,19 @@ export class ModelElementDataService {
   
   //===DATA===
 
-  addElement(elementId: string, elementTypeId: string, properties: ElementProperties) {
+  addElement(elementId: string, elementType: string, properties: ElementProperties) {
     this.modelElements.push({
       elementId: elementId,
-      elementTypeId: elementTypeId,
+      elementType: elementType,
       properties: properties,
       visible: true
     });
   }
 
   //Child elements
-  getChildElementDefs(elementTypeId: string): ModelElement[] {
+  getChildElementDefs(elementType: string): ModelElement[] {
     return this.modelElements.filter(
-      element => element.properties['parentTypeId'] === elementTypeId);
+      element => element.properties['parentTypeId'] === elementType);
   }
 
   getChildIdsForElementId(elementId: string): ModelElement[] {
@@ -144,7 +145,7 @@ export class ModelElementDataService {
   //Test - get all properties of all
   listAllElements(elementId: string): ModelElement[] {
     for (const element of this.modelElements) {
-      const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementTypeId)
+      const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType)
       for (const propertyTypeId of propertyTypeIds) {
         console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
       }
@@ -201,7 +202,7 @@ export class ModelElementDataService {
         element => element.properties[propertyTypeId]);
 
       for (const elementToUpdate of elementsToUpdate) {
-        console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementTypeId + " to:" + value);
+        console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementType + " to:" + value);
         elementToUpdate.properties[propertyTypeId] = value;
       }
     }

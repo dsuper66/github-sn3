@@ -1,6 +1,6 @@
 export interface ModelElement {
   elementId: string;
-  elementTypeId: string;
+  elementType: string;
   // bus1: string;
   // bus2: string;
   // properties: ElementProperties;
@@ -26,14 +26,14 @@ export interface ElementProperties {
 // }
 
 
-export interface ElementType {
-  elementTypeId: string;
-  propertyTypeIds: string[];
-}
+// export interface ElementType {
+//   elementTypeId: string;
+//   propertyTypeIds: string[];
+// }
 
-export interface ElementTypeId {
-  id: string;
-}
+// export interface ElementTypeId {
+//   id: string;
+// }
 
 export interface PropertyTypeId {
   id: string;
@@ -44,6 +44,12 @@ export interface ElementPropertyType {
   defaultValue: any;
   visible: boolean;
 }
+
+// export interface DefaultPropertyValue {
+//   propertyTypeId: string,
+//   elementTypeId: string,
+//   value: any;
+// }
 
 export interface ElementVarType {
   varTypeId: string;

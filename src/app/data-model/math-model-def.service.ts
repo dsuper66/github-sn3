@@ -17,7 +17,8 @@ export class MathModelDefService {
       { constraintId: 'powerFlow', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
       { constraintId: 'brFlowLimit', elementType: 'branch', varType: 'nil', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0 },
       { constraintId: 'flowSumDirs', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      { constraintId: 'angleSumDirs', elementType: 'bus', varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }
+      { constraintId: 'angleSumDirs', elementType: 'bus', varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
+      { constraintId: 'objective', elementType: 'model', varType: 'objectiveVal', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }
     )
 
     //Constraint Components
@@ -47,7 +48,12 @@ export class MathModelDefService {
       { constraintId: 'angleSumDirs', elementType: 'dirAngleFwd', propertyMapToParent: 'parentId', 
           varType: 'phaseAngle', multParentProperty: '', multValue: -1 },
       { constraintId: 'angleSumDirs', elementType: 'dirAngleRev', propertyMapToParent: 'parentId', 
-          varType: 'phaseAngle', multParentProperty: '', multValue: 1 }
+          varType: 'phaseAngle', multParentProperty: '', multValue: 1 },
+
+      { constraintId: 'objective', elementType: 'genTranche', propertyMapToParent: 'genPrice', 
+        varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
+      { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice', 
+        varType: 'trancheCleared', multParentProperty: '', multValue: 1 },
     )
 
     //Variables for Element Types
@@ -68,7 +74,7 @@ export class MathModelDefService {
 
   private constraintDefs: ConstraintDef[] = [];
   private constraintComps: ConstraintComp[] = [];
-  private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
+  // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
   getConstraintDefs() {
     return this.constraintDefs;

@@ -64,7 +64,7 @@ export class ShapeService {
   //Shapes of type
   //***this happens multiple times during a move *****/
   getShapesOfType(elementType: string): Shape[] {
-    let filtered = this.shapes.filter(shape => shape.elementTypeId === elementType);
+    let filtered = this.shapes.filter(shape => shape.elementType === elementType);
     // for (let element of filtered) {
     //   console.log("shapes of type:" + elementType + " = " + element.elementId);
     // }
@@ -72,7 +72,7 @@ export class ShapeService {
   }
   //...and not of type
   getShapesNotOfType(elementType: string): Shape[] {
-    return this.shapes.filter(shape => shape.elementTypeId != elementType);
+    return this.shapes.filter(shape => shape.elementType != elementType);
   }
   getCountShapesOfType(elementType: string) {
     return this.getShapesOfType(elementType).length;
@@ -93,7 +93,7 @@ export class ShapeService {
     if (elementType == 'bus') {
       let y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
       newShape = ({
-        elementTypeId: elementType,
+        elementType: elementType,
         elementId: newElementId,
         xInner: this.busInitX,
         yInner: y,
@@ -119,7 +119,7 @@ export class ShapeService {
       let y = (this.busInitY * Math.ceil(branchCountNew / 2)) + this.busWidth / 2;
       // this.shapes.push({
       newShape = ({
-        elementTypeId: elementType,
+        elementType: elementType,
         elementId: newElementId,
         xInner: x,
         yInner: y,
@@ -157,7 +157,7 @@ export class ShapeService {
       console.log("path1: " + path1 + " path2: " + path2);
       // this.shapes.push({
       newShape = ({
-        elementTypeId: elementType,
+        elementType: elementType,
         elementId: newElementId,
         xInner: x,
         yInner: y,
@@ -217,20 +217,20 @@ export class ShapeService {
       // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
 
       //load and gen... only have connId1
-      if (nonBusEl.elementTypeId != 'branch' && nonBusEl.connId1) {
+      if (nonBusEl.elementType != 'branch' && nonBusEl.connId1) {
         //In terms of the load, the bus is a fromBus
-        if (nonBusEl.elementTypeId === 'load') {
+        if (nonBusEl.elementType === 'load') {
           this.modelElementDataService.setPropertyForElement(
             nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
         }
         //...for a gen, the bus is a toBus
-        else if (nonBusEl.elementTypeId === 'gen') {
+        else if (nonBusEl.elementType === 'gen') {
           this.modelElementDataService.setPropertyForElement(
             nonBusEl.elementId, 'toBus', nonBusEl.connId1);
         }
       }
       //branch
-      else if (nonBusEl.elementTypeId === 'branch') {
+      else if (nonBusEl.elementType === 'branch') {
         var fromBus: string | undefined;
         var toBus: string | undefined;
         //If fully connected then fromBus is lowest alphabetically, other is toBus

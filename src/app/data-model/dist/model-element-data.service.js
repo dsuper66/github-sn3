@@ -17,7 +17,7 @@ var ModelElementDataService = /** @class */ (function () {
         //parentTypeId is used to identify the parent
         //Bid Tranches
         this.modelElements.push({
-            elementId: 'bidTrancheDef', elementTypeId: 'trancheDef',
+            elementId: 'bidTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
             ]),
@@ -25,7 +25,7 @@ var ModelElementDataService = /** @class */ (function () {
         });
         //Gen Tranches
         this.modelElements.push({
-            elementId: 'genTrancheDef', elementTypeId: 'trancheDef',
+            elementId: 'genTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }
             ]),
@@ -33,7 +33,7 @@ var ModelElementDataService = /** @class */ (function () {
         });
         //Res Tranches
         this.modelElements.push({
-            elementId: 'resTrancheDef', elementTypeId: 'trancheDef',
+            elementId: 'resTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }
             ]),
@@ -41,7 +41,7 @@ var ModelElementDataService = /** @class */ (function () {
         });
         //Loss Tranches
         this.modelElements.push({
-            elementId: 'lossTrancheDef', elementTypeId: 'trancheDef',
+            elementId: 'lossTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }
             ]),
@@ -49,7 +49,7 @@ var ModelElementDataService = /** @class */ (function () {
         });
         //Unrestricted - branch flow
         this.modelElements.push({
-            elementId: 'branchFlowPos', elementTypeId: 'unrestrictedDef',
+            elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'branch' },
                 { 'childTypeId': 'posFlow' }, { 'childCount': '1' }
@@ -57,7 +57,7 @@ var ModelElementDataService = /** @class */ (function () {
             visible: false
         });
         this.modelElements.push({
-            elementId: 'branchFlowNeg', elementTypeId: 'unrestrictedDef',
+            elementId: 'branchFlowNeg', elementType: 'unrestrictedDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'branch' },
                 { 'childTypeId': 'negFlow' }, { 'childCount': '1' }
@@ -66,7 +66,7 @@ var ModelElementDataService = /** @class */ (function () {
         });
         //Unrestricted - bus angle
         this.modelElements.push({
-            elementId: 'phaseAnglePos', elementTypeId: 'unrestrictedDef',
+            elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'bus' },
                 { 'childTypeId': 'posAngle' }, { 'childCount': '1' }
@@ -74,7 +74,7 @@ var ModelElementDataService = /** @class */ (function () {
             visible: false
         });
         this.modelElements.push({
-            elementId: 'phaseAngleNeg', elementTypeId: 'unrestrictedDef',
+            elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
             properties: this.makeDict([
                 { 'parentTypeId': 'bus' },
                 { 'childTypeId': 'negAngle' }, { 'childCount': '1' }
@@ -82,15 +82,15 @@ var ModelElementDataService = /** @class */ (function () {
             visible: false
         });
     }
-    ModelElementDataService.prototype.getIdForNewElementOfType = function (elementTypeId) {
+    ModelElementDataService.prototype.getIdForNewElementOfType = function (elementType) {
         //Get next index for i.d.
-        if (this.elementNextIndex[elementTypeId] == undefined) {
-            this.elementNextIndex[elementTypeId] = 1;
+        if (this.elementNextIndex[elementType] == undefined) {
+            this.elementNextIndex[elementType] = 1;
         }
-        var elementIndex = this.elementNextIndex[elementTypeId];
+        var elementIndex = this.elementNextIndex[elementType];
         //Make the i.d.
-        var newId = this.makeIdFromStringAndNumber(elementTypeId, elementIndex);
-        this.elementNextIndex[elementTypeId] = elementIndex + 1;
+        var newId = this.makeIdFromStringAndNumber(elementType, elementIndex);
+        this.elementNextIndex[elementType] = elementIndex + 1;
         console.log("New Id:" + newId);
         return newId;
     };
@@ -111,17 +111,17 @@ var ModelElementDataService = /** @class */ (function () {
         return dict;
     };
     //===DATA===
-    ModelElementDataService.prototype.addElement = function (elementId, elementTypeId, properties) {
+    ModelElementDataService.prototype.addElement = function (elementId, elementType, properties) {
         this.modelElements.push({
             elementId: elementId,
-            elementTypeId: elementTypeId,
+            elementType: elementType,
             properties: properties,
             visible: true
         });
     };
     //Child elements
-    ModelElementDataService.prototype.getChildElementDefs = function (elementTypeId) {
-        return this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementTypeId; });
+    ModelElementDataService.prototype.getChildElementDefs = function (elementType) {
+        return this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementType; });
     };
     ModelElementDataService.prototype.getChildIdsForElementId = function (elementId) {
         return this.modelElements.filter(function (element) { return element.properties['parentId'] === elementId; });
@@ -130,7 +130,7 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.listAllElements = function (elementId) {
         for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
             var element = _a[_i];
-            var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementTypeId);
+            var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType);
             for (var _b = 0, propertyTypeIds_1 = propertyTypeIds; _b < propertyTypeIds_1.length; _b++) {
                 var propertyTypeId = propertyTypeIds_1[_b];
                 console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
@@ -173,7 +173,7 @@ var ModelElementDataService = /** @class */ (function () {
             var elementsToUpdate = this.modelElements.filter(function (element) { return element.properties[propertyTypeId]; });
             for (var _i = 0, elementsToUpdate_1 = elementsToUpdate; _i < elementsToUpdate_1.length; _i++) {
                 var elementToUpdate = elementsToUpdate_1[_i];
-                console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementTypeId + " to:" + value);
+                console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementType + " to:" + value);
                 elementToUpdate.properties[propertyTypeId] = value;
             }
         }

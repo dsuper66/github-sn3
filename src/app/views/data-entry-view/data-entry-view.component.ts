@@ -105,8 +105,8 @@ export class DataEntryViewComponent implements OnInit {
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {
 
-      console.log(">>> " + selectedElement.elementTypeId);
-      const parentProperties = this.modelElementDefService.getPropertyTypeIdsFor(selectedElement.elementTypeId);
+      console.log(">>> " + selectedElement.elementType);
+      const parentProperties = this.modelElementDefService.getPropertyTypeIdsFor(selectedElement.elementType);
       this.populateFormFieldsFromProperties(parentProperties,selectedElement.elementId);
       //Populate the property fields
       // for (const parentPropertyId of parentProperties) {
@@ -133,7 +133,7 @@ export class DataEntryViewComponent implements OnInit {
       const childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
       for (const childElement of childElements) {
 
-        const childProperties = this.modelElementDefService.getPropertyTypeIdsFor(childElement.elementTypeId);
+        const childProperties = this.modelElementDefService.getPropertyTypeIdsFor(childElement.elementType);
         this.populateFormFieldsFromProperties(childProperties,childElement.elementId);
 
         // for (const childPropertyId of childProperties) {
