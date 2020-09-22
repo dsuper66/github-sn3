@@ -30,9 +30,9 @@ export class ModelElementDataService {
     });
     //Gen Tranches
     this.modelElements.push({
-      elementId: 'genTrancheDef', elementType: 'trancheDef',
+      elementId: 'enOfferTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, { 'childTypeId': 'genTranche' }, { 'childCount': '3' }]),
+        { 'parentTypeId': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }]),
       visible: false
     });
     //Res Tranches

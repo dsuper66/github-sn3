@@ -24,7 +24,7 @@ var ModelElementDefService = /** @class */ (function () {
         this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
         //Child elements - tranches
         this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
-        this.elementTypeProperties['genTranche'] = ['parentId', 'genLimit', 'genPrice'];
+        this.elementTypeProperties['enOfferTranche'] = ['parentId', 'genLimit', 'genPrice'];
         this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
         this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
         //Child elements - unrestricted variables

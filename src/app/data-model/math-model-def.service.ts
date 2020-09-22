@@ -10,9 +10,9 @@ export class MathModelDefService {
     //Constraint Defs
     this.constraintDefs.push(
       { constraintId: 'nodeBal', elementType: 'bus', varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      { constraintId: 'genTrancheLimit', elementType: 'genTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
+      { constraintId: 'enOfferTrancheLimit', elementType: 'enOfferTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
       { constraintId: 'genSumTranches', elementType: 'gen', varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0 },
-      { constraintId: 'loadTrancheLimit', elementType: 'loadTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
+      { constraintId: 'bidTrancheLimit', elementType: 'bidTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
       { constraintId: 'loadSumTranches', elementType: 'load', varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
       { constraintId: 'powerFlow', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
       { constraintId: 'brFlowLimit', elementType: 'branch', varType: 'nil', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0 },
@@ -31,9 +31,9 @@ export class MathModelDefService {
           varType: 'branchFlow', multParentProperty: '', multValue: -1 },
       { constraintId: 'nodeBal', elementType: 'branch', propertyMapToParent: 'toBus', 
           varType: 'branchFlow', multParentProperty: '', multValue: 1 },
-      { constraintId: 'genSumTranches', elementType: 'genTranche', propertyMapToParent: 'parentId', 
+      { constraintId: 'genSumTranches', elementType: 'enOfferTranche', propertyMapToParent: 'parentId', 
           varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
-      { constraintId: 'loadSumTranches', elementType: 'loadTranche', propertyMapToParent: 'parentId', 
+      { constraintId: 'loadSumTranches', elementType: 'bidTranche', propertyMapToParent: 'parentId', 
           varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
       { constraintId: 'powerFlow', elementType: 'bus', propertyMapToParent: 'fromBus', 
           varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: -1 },
@@ -50,9 +50,9 @@ export class MathModelDefService {
       { constraintId: 'angleSumDirs', elementType: 'dirAngleRev', propertyMapToParent: 'parentId', 
           varType: 'phaseAngle', multParentProperty: '', multValue: 1 },
 
-      { constraintId: 'objective', elementType: 'genTranche', propertyMapToParent: 'genPrice', 
+      { constraintId: 'objective', elementType: 'enOfferTranche', propertyMapToParent: 'genPrice', 
         varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
-      { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice', 
+      { constraintId: 'objective', elementType: 'bidTranche', propertyMapToParent: 'loadPrice', 
         varType: 'trancheCleared', multParentProperty: '', multValue: 1 },
     )
 
@@ -66,8 +66,8 @@ export class MathModelDefService {
     // this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
     // this.elementTypeVarTypes['load'] =        ['loadCleared'];
 
-    // this.elementTypeVarTypes['genTranche'] =  ['trancheCleared'];
-    // this.elementTypeVarTypes['loadTranche'] = ['trancheCleared'];
+    // this.elementTypeVarTypes['enOfferTranche'] =  ['trancheCleared'];
+    // this.elementTypeVarTypes['bidTranche'] = ['trancheCleared'];
 
   }
 
