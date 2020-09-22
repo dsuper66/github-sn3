@@ -75,42 +75,42 @@ function () {
       defaultValue: 'none',
       visible: false
     }, {
-      propertyTypeId: 'genLimit',
+      propertyTypeId: 'enOfferTrancheLimit',
       primitiveType: 'number',
       defaultValue: '80',
       visible: true
     }, {
-      propertyTypeId: 'genPrice',
+      propertyTypeId: 'enOfferTranchePrice',
       primitiveType: 'number',
       defaultValue: '100',
       visible: true
     }, {
-      propertyTypeId: 'resLimit',
+      propertyTypeId: 'resOfferTrancheLimit',
       primitiveType: 'number',
       defaultValue: '90',
       visible: true
     }, {
-      propertyTypeId: 'resPrice',
+      propertyTypeId: 'resOfferTranchePrice',
       primitiveType: 'number',
       defaultValue: '10',
       visible: true
     }, {
-      propertyTypeId: 'bidLimit',
+      propertyTypeId: 'bidTrancheLimit',
       primitiveType: 'number',
       defaultValue: '70',
       visible: true
     }, {
-      propertyTypeId: 'bidPrice',
+      propertyTypeId: 'bidTranchePrice',
       primitiveType: 'number',
       defaultValue: '150',
       visible: true
     }, {
-      propertyTypeId: 'flowLimit',
+      propertyTypeId: 'flowTrancheLimit',
       primitiveType: 'number',
       defaultValue: '25',
       visible: true
     }, {
-      propertyTypeId: 'lossLimit',
+      propertyTypeId: 'lossTrancheLimit',
       primitiveType: 'number',
       defaultValue: '2',
       visible: true
@@ -129,10 +129,10 @@ function () {
 
     this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount']; //Child elements - tranches
 
-    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
-    this.elementTypeProperties['enOfferTranche'] = ['parentId', 'genLimit', 'genPrice'];
-    this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
-    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit']; //Child elements - unrestricted variables
+    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidTrancheLimit', 'bidTranchePrice'];
+    this.elementTypeProperties['enOfferTranche'] = ['parentId', 'enOfferTrancheLimit', 'enOfferTranchePrice'];
+    this.elementTypeProperties['resOfferTranche'] = ['parentId', 'resOfferTrancheLimit', 'resOfferTranchePrice'];
+    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowTrancheLimit', 'lossTrancheLimit']; //Child elements - unrestricted variables
 
     this.elementTypeProperties['posFlow'] = ['parentId'];
     this.elementTypeProperties['negFlow'] = ['parentId'];

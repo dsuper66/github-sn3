@@ -37,9 +37,9 @@ export class ModelElementDataService {
     });
     //Res Tranches
     this.modelElements.push({
-      elementId: 'resTrancheDef', elementType: 'trancheDef',
+      elementId: 'resOfferTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'gen' }, { 'childTypeId': 'resTranche' }, { 'childCount': '3' }]),
+        { 'parentTypeId': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }]),
       visible: false
     });
     //Loss Tranches

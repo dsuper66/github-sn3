@@ -190,7 +190,7 @@ function () {
     }, {
       constraintId: 'objective',
       elementType: 'enOfferTranche',
-      propertyMapToParent: 'genPrice',
+      propertyMapToParent: 'enOfferTranchePrice',
       varType: 'trancheCleared',
       multParentProperty: '',
       multValue: -1

@@ -25,14 +25,14 @@ export class ModelElementDefService {
       { propertyTypeId: 'parentTypeId', primitiveType: 'string', defaultValue: 'none', visible: false },
       { propertyTypeId: 'childTypeId', primitiveType: 'string', defaultValue: 'none', visible: false },
       { propertyTypeId: 'parentId', primitiveType: 'string', defaultValue: 'none', visible: false },
-      { propertyTypeId: 'genLimit', primitiveType: 'number', defaultValue: '80', visible: true },
-      { propertyTypeId: 'genPrice', primitiveType: 'number', defaultValue: '100', visible: true },
-      { propertyTypeId: 'resLimit', primitiveType: 'number', defaultValue: '90', visible: true },
-      { propertyTypeId: 'resPrice', primitiveType: 'number', defaultValue: '10', visible: true },
-      { propertyTypeId: 'bidLimit', primitiveType: 'number', defaultValue: '70', visible: true },
-      { propertyTypeId: 'bidPrice', primitiveType: 'number', defaultValue: '150', visible: true },
-      { propertyTypeId: 'flowLimit', primitiveType: 'number', defaultValue: '25', visible: true },
-      { propertyTypeId: 'lossLimit', primitiveType: 'number', defaultValue: '2', visible: true },
+      { propertyTypeId: 'enOfferTrancheLimit', primitiveType: 'number', defaultValue: '80', visible: true },
+      { propertyTypeId: 'enOfferTranchePrice', primitiveType: 'number', defaultValue: '100', visible: true },
+      { propertyTypeId: 'resOfferTrancheLimit', primitiveType: 'number', defaultValue: '90', visible: true },
+      { propertyTypeId: 'resOfferTranchePrice', primitiveType: 'number', defaultValue: '10', visible: true },
+      { propertyTypeId: 'bidTrancheLimit', primitiveType: 'number', defaultValue: '70', visible: true },
+      { propertyTypeId: 'bidTranchePrice', primitiveType: 'number', defaultValue: '150', visible: true },
+      { propertyTypeId: 'flowTrancheLimit', primitiveType: 'number', defaultValue: '25', visible: true },
+      { propertyTypeId: 'lossTrancheLimit', primitiveType: 'number', defaultValue: '2', visible: true },
       { propertyTypeId: 'capacityMax', primitiveType: 'number', defaultValue: '100', visible: true }
 
     )
@@ -48,10 +48,10 @@ export class ModelElementDefService {
     //Element that defines a child
     this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
     //Child elements - tranches
-    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidLimit', 'bidPrice'];
-    this.elementTypeProperties['enOfferTranche'] = ['parentId', 'genLimit', 'genPrice'];
-    this.elementTypeProperties['resTranche'] = ['parentId', 'resLimit', 'resPrice'];
-    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidTrancheLimit', 'bidTranchePrice'];
+    this.elementTypeProperties['enOfferTranche'] = ['parentId', 'enOfferTrancheLimit', 'enOfferTranchePrice'];
+    this.elementTypeProperties['resOfferTranche'] = ['parentId', 'resOfferTrancheLimit', 'resOfferTranchePrice'];
+    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowTrancheLimit', 'lossTrancheLimit'];
     //Child elements - unrestricted variables
     this.elementTypeProperties['posFlow'] = ['parentId'];
     this.elementTypeProperties['negFlow'] = ['parentId'];    

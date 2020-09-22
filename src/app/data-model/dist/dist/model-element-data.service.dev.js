@@ -54,12 +54,12 @@ function () {
     }); //Res Tranches
 
     this.modelElements.push({
-      elementId: 'resTrancheDef',
+      elementId: 'resOfferTrancheDef',
       elementType: 'trancheDef',
       properties: this.makeDict([{
         'parentTypeId': 'gen'
       }, {
-        'childTypeId': 'resTranche'
+        'childTypeId': 'resOfferTranche'
       }, {
         'childCount': '3'
       }]),
