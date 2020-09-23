@@ -53,10 +53,13 @@ export class ModelElementDefService {
     this.elementTypeProperties['resOfferTranche'] = ['parentId', 'resOfferTrancheLimit', 'resOfferTranchePrice'];
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowTrancheLimit', 'lossTrancheLimit'];
     //Child elements - unrestricted variables
-    this.elementTypeProperties['posFlow'] = ['parentId'];
-    this.elementTypeProperties['negFlow'] = ['parentId'];    
-    this.elementTypeProperties['posAngle'] = ['parentId'];
-    this.elementTypeProperties['negAngle'] = ['parentId'];
+    // this.elementTypeProperties['posFlow'] = ['parentId'];
+    // this.elementTypeProperties['negFlow'] = ['parentId'];    
+    // this.elementTypeProperties['dirAnglePos'] = ['parentId'];
+    // this.elementTypeProperties['dirAngleNeg'] = ['parentId'];
+    this.elementTypeProperties['dirBranchPos'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+    this.elementTypeProperties['dirBranchNeg'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+
 
   }
 

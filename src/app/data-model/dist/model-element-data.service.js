@@ -51,36 +51,32 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' },
-                { 'childTypeId': 'posFlow' }, { 'childCount': '1' }
+                { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }
             ]),
             visible: false
         });
         this.modelElements.push({
             elementId: 'branchFlowNeg', elementType: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' },
-                { 'childTypeId': 'negFlow' }, { 'childCount': '1' }
+                { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchNeg' }, { 'childCount': '1' }
             ]),
             visible: false
         });
-        //Unrestricted - bus angle
-        this.modelElements.push({
-            elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
-            properties: this.makeDict([
-                { 'parentTypeId': 'bus' },
-                { 'childTypeId': 'posAngle' }, { 'childCount': '1' }
-            ]),
-            visible: false
-        });
-        this.modelElements.push({
-            elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
-            properties: this.makeDict([
-                { 'parentTypeId': 'bus' },
-                { 'childTypeId': 'negAngle' }, { 'childCount': '1' }
-            ]),
-            visible: false
-        });
+        // //Unrestricted - bus angle
+        // this.modelElements.push({
+        //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
+        //   properties: this.makeDict([
+        //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+        //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
+        //   visible: false
+        // });
+        // this.modelElements.push({
+        //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
+        //   properties: this.makeDict([
+        //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+        //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
+        //   visible: false
+        // });    
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementType) {
         //Get next index for i.d.

@@ -20,20 +20,6 @@ export interface ElementProperties {
   [propertyTypeId: string]: any;
 }
 
-// export interface ElementProperty {
-//   propertyTypeId:string;
-//   value:any;
-// }
-
-
-// export interface ElementType {
-//   elementTypeId: string;
-//   propertyTypeIds: string[];
-// }
-
-// export interface ElementTypeId {
-//   id: string;
-// }
 
 export interface PropertyTypeId {
   id: string;
@@ -44,12 +30,6 @@ export interface ElementPropertyType {
   defaultValue: any;
   visible: boolean;
 }
-
-// export interface DefaultPropertyValue {
-//   propertyTypeId: string,
-//   elementTypeId: string,
-//   value: any;
-// }
 
 export interface ElementVarType {
   varTypeId: string;

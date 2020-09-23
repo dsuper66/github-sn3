@@ -54,32 +54,30 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'branch' },  //{ 'varId': 'branchFlow' },
-        { 'childTypeId': 'posFlow' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
       visible: false
     });
     this.modelElements.push({
       elementId: 'branchFlowNeg', elementType: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'branch' }, //{ 'varId': 'branchFlow' }, 
-        { 'childTypeId': 'negFlow' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'branch' },{ 'childTypeId': 'dirBranchNeg' }, { 'childCount': '1' }]),
       visible: false
     });    
-    //Unrestricted - bus angle
-    this.modelElements.push({
-      elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
-      properties: this.makeDict([
-        { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
-        { 'childTypeId': 'posAngle' }, { 'childCount': '1' }]),
-      visible: false
-    });
-    this.modelElements.push({
-      elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
-      properties: this.makeDict([
-        { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
-        { 'childTypeId': 'negAngle' }, { 'childCount': '1' }]),
-      visible: false
-    });    
+    // //Unrestricted - bus angle
+    // this.modelElements.push({
+    //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
+    //   properties: this.makeDict([
+    //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+    //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
+    //   visible: false
+    // });
+    // this.modelElements.push({
+    //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
+    //   properties: this.makeDict([
+    //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+    //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
+    //   visible: false
+    // });    
 
   }
 

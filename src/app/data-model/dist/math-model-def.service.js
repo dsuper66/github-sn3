@@ -70,24 +70,13 @@ var MathModelDefService = /** @class */ (function () {
             varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: 1 }, { constraintId: 'brDirFlowLimit', elementType: 'dirBranch', propertyMapToParent: 'parentId',
             varType: 'branchFlow', multParentProperty: '', multValue: 0 }, { constraintId: 'brDirFlowSum', elementType: 'dirFlowFwd', propertyMapToParent: 'parentId',
             varType: 'branchFlow', multParentProperty: '', multValue: -1 }, { constraintId: 'brDirFlowSum', elementType: 'dirFlowRev', propertyMapToParent: 'parentId',
-            varType: 'branchFlow', multParentProperty: '', multValue: 1 }, { constraintId: 'angleSumDirs', elementType: 'dirAngleFwd', propertyMapToParent: 'parentId',
-            varType: 'phaseAngle', multParentProperty: '', multValue: -1 }, { constraintId: 'angleSumDirs', elementType: 'dirAngleRev', propertyMapToParent: 'parentId',
+            varType: 'branchFlow', multParentProperty: '', multValue: 1 }, { constraintId: 'angleSumDirs', elementType: 'dirAnglePos', propertyMapToParent: 'parentId',
+            varType: 'phaseAngle', multParentProperty: '', multValue: -1 }, { constraintId: 'angleSumDirs', elementType: 'dirAngleNeg', propertyMapToParent: 'parentId',
             varType: 'phaseAngle', multParentProperty: '', multValue: 1 }, { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem',
             varType: 'genCleared', multParentProperty: '', multValue: -1 }, { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem',
             varType: 'resCleared', multParentProperty: '', multValue: -1 }, { constraintId: 'objective', elementType: 'genTranche', propertyMapToParent: 'genPrice',
             varType: 'trancheCleared', multParentProperty: '', multValue: -1 }, { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice',
             varType: 'trancheCleared', multParentProperty: '', multValue: 1 });
-        //Variables for Element Types
-        // this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
-        // this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
-        // this.elementTypeVarTypes['negAngle'] =    ['phaseAngle'];
-        // this.elementTypeVarTypes['branch'] =      ['branchFlow','branchLoss'];
-        // this.elementTypeVarTypes['posFlow'] =     ['branchFlow','branchLoss'];
-        // this.elementTypeVarTypes['negFlow'] =     ['branchFlow','branchLoss'];
-        // this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
-        // this.elementTypeVarTypes['load'] =        ['loadCleared'];
-        // this.elementTypeVarTypes['enOfferTranche'] =  ['trancheCleared'];
-        // this.elementTypeVarTypes['bidTranche'] = ['trancheCleared'];
     }
     // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
     MathModelDefService.prototype.getConstraintDefs = function () {

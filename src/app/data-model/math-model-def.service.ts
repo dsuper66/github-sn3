@@ -91,9 +91,9 @@ export class MathModelDefService {
         varType: 'branchFlow', multParentProperty: '', multValue: -1 },
       { constraintId: 'brDirFlowSum', elementType: 'dirFlowRev', propertyMapToParent: 'parentId', 
         varType: 'branchFlow', multParentProperty: '', multValue: 1 },
-      { constraintId: 'angleSumDirs', elementType: 'dirAngleFwd', propertyMapToParent: 'parentId', 
+      { constraintId: 'angleSumDirs', elementType: 'dirAnglePos', propertyMapToParent: 'parentId', 
         varType: 'phaseAngle', multParentProperty: '', multValue: -1 },
-      { constraintId: 'angleSumDirs', elementType: 'dirAngleRev', propertyMapToParent: 'parentId', 
+      { constraintId: 'angleSumDirs', elementType: 'dirAngleNeg', propertyMapToParent: 'parentId', 
         varType: 'phaseAngle', multParentProperty: '', multValue: 1 },
       { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem', 
         varType: 'genCleared', multParentProperty: '', multValue: -1 },
@@ -104,19 +104,6 @@ export class MathModelDefService {
       { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice', 
         varType: 'trancheCleared', multParentProperty: '', multValue: 1 }
     )
-
-    //Variables for Element Types
-    // this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
-    // this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
-    // this.elementTypeVarTypes['negAngle'] =    ['phaseAngle'];
-    // this.elementTypeVarTypes['branch'] =      ['branchFlow','branchLoss'];
-    // this.elementTypeVarTypes['posFlow'] =     ['branchFlow','branchLoss'];
-    // this.elementTypeVarTypes['negFlow'] =     ['branchFlow','branchLoss'];
-    // this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
-    // this.elementTypeVarTypes['load'] =        ['loadCleared'];
-
-    // this.elementTypeVarTypes['enOfferTranche'] =  ['trancheCleared'];
-    // this.elementTypeVarTypes['bidTranche'] = ['trancheCleared'];
 
   }
 
