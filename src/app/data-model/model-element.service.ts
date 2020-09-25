@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { 
+import {
   ModelElement
   // ElementPropertyType,
   // ElementProperties,
@@ -22,27 +22,24 @@ export class ModelElementService {
 
   constructor(
     private modelElementDataService: ModelElementDataService,
-    private modelElementDefService: ModelElementDefService) 
-  { }
+    private modelElementDefService: ModelElementDefService) { }
 
   //Add element (for child elements record their parent)
-  addModelElement(elementTypeToAdd: string, parentId?:string, childNum?: number): string {
+  addModelElement(elementTypeToAdd: string, parentId?: string, childNum?: number): string {
 
     //Add the new element
     console.log("addModelElement:" + elementTypeToAdd);
 
     //ID for the new element (child element is from parent)
-    const elementIdForNewElement 
-      = (parentId && childNum) 
-      ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd,childNum)
-      : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
-    
+    const elementIdForNewElement
+      = (parentId && childNum)
+        ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
+        : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+
     //Properties
     const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeToAdd);
     const properties = this.modelElementDefService.makeProperties(
-      elementTypeToAdd,propertyTypeIds);
-      // propertyTypeIds,
-      // this.modelElementDataService);
+      elementTypeToAdd, propertyTypeIds, childNum);
 
     //Add the element
     this.modelElementDataService.addElement(
@@ -53,7 +50,7 @@ export class ModelElementService {
 
     //If this is a child then assign parent property
     if (parentId) {
-          this.modelElementDataService.setPropertyForElement(elementIdForNewElement,'parentId',parentId);
+      this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
     }
 
     //Create any child elements (linked back to parent like a gen is to a bus)
@@ -63,20 +60,20 @@ export class ModelElementService {
       const childType = childElementDef.properties['childTypeId'];
       const childCount = childElementDef.properties['childCount'];
       console.log(">>>>>>>>" + childType + " count:" + childCount);
-      
+
       //Add the child record(s)
       for (let childNum = 1; childNum <= childCount; childNum++) {
-        self.addModelElement(childType,elementIdForNewElement,childNum);
+        self.addModelElement(childType, elementIdForNewElement, childNum);
       }
     });
 
     //Special case
     //bus... need one (and only one) with isRefBus = true
     if (elementTypeToAdd === 'bus') {
-        //If no refBus then make this refBus = true
-        if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus','true').length == 0) {
-          this.modelElementDataService.setPropertyForElement(elementIdForNewElement,'isRefBus','true');
-        }
+      //If no refBus then make this refBus = true
+      if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
+        this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');
+      }
     }
 
     return elementIdForNewElement;

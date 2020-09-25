@@ -23,9 +23,7 @@ var ModelElementService = /** @class */ (function () {
             : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
         //Properties
         var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeToAdd);
-        var properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds);
-        // propertyTypeIds,
-        // this.modelElementDataService);
+        var properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
         //Add the element
         this.modelElementDataService.addElement(elementIdForNewElement, elementTypeToAdd, properties);
         //If this is a child then assign parent property

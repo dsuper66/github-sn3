@@ -60,13 +60,24 @@ var ModelElementDefService = /** @class */ (function () {
         console.log("Got properties: " + properties);
         return properties;
     };
-    ModelElementDefService.prototype.makeProperties = function (elementType, propertiesToAdd) {
+    ModelElementDefService.prototype.makeProperties = function (elementType, propertiesToAdd, childNum) {
         console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
         var properties = {};
+        //Get defaults
         for (var _i = 0, propertiesToAdd_1 = propertiesToAdd; _i < propertiesToAdd_1.length; _i++) {
             var propertyTypeId = propertiesToAdd_1[_i];
             console.log("looking for defaults for property: " + propertyTypeId);
-            properties[propertyTypeId] = this.getDefaultValueForProperty(propertyTypeId, elementType);
+            var addDefaults = true;
+            //If child element, only add defaults to number 1
+            if (childNum) {
+                if (childNum != 1) {
+                    addDefaults = false;
+                }
+            }
+            //Add defaults
+            if (addDefaults) {
+                properties[propertyTypeId] = this.getDefaultValueForProperty(propertyTypeId, elementType);
+            }
         }
         return properties;
     };
