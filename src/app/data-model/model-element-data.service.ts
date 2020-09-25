@@ -19,10 +19,9 @@ export class ModelElementDataService {
     private modelElementDefService: ModelElementDefService 
   ) {
 
-    //Manually Added Elements
-    //=======================
-
-    //Child element defintions which will cause child elements to be created automatically with parent
+    //Manually Added Child element defintions which will
+    //cause child elements to be created automatically with parent
+    //--------------------------------------------------
     //Tranches
     //--------
     //Bid Tranches associated with load
@@ -56,16 +55,16 @@ export class ModelElementDataService {
     //Unrestricted Elements
     //---------------------
     //Directional branches associated with branch
+    // this.modelElements.push({
+    //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
+    //   properties: this.makeDict([
+    //     { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
+    //   visible: false
+    // });
     this.modelElements.push({
-      elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
+      elementId: 'dirBranchDef', elementType: 'unrestrictedDef',
       properties: this.makeDict([
-        { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
-      visible: false
-    });
-    this.modelElements.push({
-      elementId: 'branchFlowNeg', elementType: 'unrestrictedDef',
-      properties: this.makeDict([
-        { 'parentTypeId': 'branch' },{ 'childTypeId': 'dirBranchNeg' }, { 'childCount': '1' }]),
+        { 'parentTypeId': 'branch' },{ 'childTypeId': 'dirBranch' }, { 'childCount': '2' }]),
       visible: false
     });    
     // //Unrestricted - bus angle

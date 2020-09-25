@@ -38,8 +38,7 @@ export class ModelElementService {
 
     //Properties
     const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeToAdd);
-    const properties = this.modelElementDefService.makeProperties(
-      elementTypeToAdd, propertyTypeIds, childNum);
+    const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
 
     //Add the element
     this.modelElementDataService.addElement(
@@ -53,13 +52,20 @@ export class ModelElementService {
       this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
     }
 
+    //Special case
+    //dirBranch needs a direction property
+    if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
+      this.modelElementDataService.setPropertyForElement(
+        elementIdForNewElement, 'direction', childNum == 1 ? 1 : -1);
+    }  
+
     //Create any child elements (linked back to parent like a gen is to a bus)
     const self = this;
     const childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
     childElementDefs.forEach(function (childElementDef: ModelElement) {
       const childType = childElementDef.properties['childTypeId'];
       const childCount = childElementDef.properties['childCount'];
-      console.log(">>>>>>>>" + childType + " count:" + childCount);
+      console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
 
       //Add the child record(s)
       for (let childNum = 1; childNum <= childCount; childNum++) {
@@ -74,7 +80,7 @@ export class ModelElementService {
       if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
         this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');
       }
-    }
+    } 
 
     return elementIdForNewElement;
   }

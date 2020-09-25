@@ -30,13 +30,18 @@ var ModelElementService = /** @class */ (function () {
         if (parentId) {
             this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
         }
+        //Special case
+        //dirBranch needs a direction property
+        if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
+            this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'direction', childNum == 1 ? 1 : -1);
+        }
         //Create any child elements (linked back to parent like a gen is to a bus)
         var self = this;
         var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
         childElementDefs.forEach(function (childElementDef) {
             var childType = childElementDef.properties['childTypeId'];
             var childCount = childElementDef.properties['childCount'];
-            console.log(">>>>>>>>" + childType + " count:" + childCount);
+            console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
             //Add the child record(s)
             for (var childNum_1 = 1; childNum_1 <= childCount; childNum_1++) {
                 self.addModelElement(childType, elementIdForNewElement, childNum_1);

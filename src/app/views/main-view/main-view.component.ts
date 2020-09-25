@@ -78,9 +78,11 @@ export class MainViewComponent implements OnInit {
       for (const propertyTypeId
         of this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementType)) {
 
-        let value = this.modelElementDataService.getValueForElementProperty(
-          modelElement.elementId, propertyTypeId);
-        jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ","
+        let value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
+        //Don't write undefined values, e.g., tranches with no data
+        if (value != undefined) {
+          jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ","
+        }
       }
       //Remove the last comma and close properties object and close element object
       // jString = jString.substring(0, jString.length - 1) + "}},";

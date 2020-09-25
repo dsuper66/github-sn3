@@ -62,7 +62,10 @@ var MainViewComponent = /** @class */ (function () {
             for (var _b = 0, _c = this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementType); _b < _c.length; _b++) {
                 var propertyTypeId = _c[_b];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyTypeId);
-                jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";
+                //Don't write undefined values, e.g., tranches with no data
+                if (value != undefined) {
+                    jString += JSON.stringify(propertyTypeId) + ":" + JSON.stringify(value) + ",";
+                }
             }
             //Remove the last comma and close properties object and close element object
             // jString = jString.substring(0, jString.length - 1) + "}},";

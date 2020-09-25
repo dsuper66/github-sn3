@@ -35,7 +35,8 @@ export class ModelElementDefService {
       { propertyTypeId: 'tranchePrice', primitiveType: 'number', visible: true },
       { propertyTypeId: 'flowLimit', primitiveType: 'number', visible: true },
       { propertyTypeId: 'lossLimit', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'capacityMax', primitiveType: 'number', visible: true }
+      { propertyTypeId: 'capacityMax', primitiveType: 'number', visible: true },
+      { propertyTypeId: 'direction', primitiveType: 'number', visible: true }
 
     )
 
@@ -57,10 +58,11 @@ export class ModelElementDefService {
     //Element Types and Property Types
     //Parent elements
     this.elementTypeProperties['bus'] = ['isRefBus'];
-    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+    //Branch (flow limit and losses are at the directional level)
+    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance','flowMax'];
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
     this.elementTypeProperties['load'] = ['fromBus'];
-    //Element that defines a child
+    //Element definitions (created in the data service) that define a child to be created 
     this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
     //Child elements - tranches
     this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
@@ -68,12 +70,9 @@ export class ModelElementDefService {
     this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
     //Child elements - unrestricted variables
-    // this.elementTypeProperties['posFlow'] = ['parentId'];
-    // this.elementTypeProperties['negFlow'] = ['parentId'];    
-    // this.elementTypeProperties['dirAnglePos'] = ['parentId'];
-    // this.elementTypeProperties['dirAngleNeg'] = ['parentId'];
-    this.elementTypeProperties['dirBranchPos'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
-    this.elementTypeProperties['dirBranchNeg'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+    //Directional branches (power flow is at the parent branch level)
+    this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction'];
+    // this.elementTypeProperties['dirBranchNeg'] = ['parentId', 'fromBus', 'toBus'];
 
 
 
@@ -128,7 +127,8 @@ export class ModelElementDefService {
       if (addDefaults) {
         properties[propertyTypeId] = this.getDefaultValueForProperty(propertyTypeId, elementType);
       }
-    }
+    } 
+
     return properties;
   }
 

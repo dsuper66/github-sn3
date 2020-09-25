@@ -10,12 +10,12 @@ exports.ModelElementDataService = void 0;
 var core_1 = require("@angular/core");
 var ModelElementDataService = /** @class */ (function () {
     function ModelElementDataService(modelElementDefService) {
-        //Manually Added Elements
-        //=======================
         this.modelElementDefService = modelElementDefService;
         this.modelElements = [];
         this.elementNextIndex = new Map();
-        //Child element defintions which will cause child elements to be created automatically with parent
+        //Manually Added Child element defintions which will
+        //cause child elements to be created automatically with parent
+        //--------------------------------------------------
         //Tranches
         //--------
         //Bid Tranches associated with load
@@ -53,17 +53,16 @@ var ModelElementDataService = /** @class */ (function () {
         //Unrestricted Elements
         //---------------------
         //Directional branches associated with branch
+        // this.modelElements.push({
+        //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
+        //   properties: this.makeDict([
+        //     { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
+        //   visible: false
+        // });
         this.modelElements.push({
-            elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
+            elementId: 'dirBranchDef', elementType: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }
-            ]),
-            visible: false
-        });
-        this.modelElements.push({
-            elementId: 'branchFlowNeg', elementType: 'unrestrictedDef',
-            properties: this.makeDict([
-                { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchNeg' }, { 'childCount': '1' }
+                { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }
             ]),
             visible: false
         });
