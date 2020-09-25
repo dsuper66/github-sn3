@@ -67,7 +67,7 @@ export class DataEntryViewComponent implements OnInit {
 
         if (formValue && formValue != "") {
 
-          // let newValue = Object(form)[propertyTypeId];
+          // let newValue = Object(form)[propertyType];
           console.log(">>>value>>>" + formName + ":" + formValue);
           const propertyId = this.formPropertyIds[index];
           const elementId = this.formElementIds[index];

@@ -30,39 +30,39 @@ function () {
 
     this.allProperties = [];
     this.elementPropertyTypes.push({
-      propertyTypeId: 'isRefBus',
+      propertyType: 'isRefBus',
       primitiveType: 'bool',
       defaultValue: true
     }, {
-      propertyTypeId: 'connId1',
+      propertyType: 'connId1',
       primitiveType: 'string',
       defaultValue: 'none'
     }, {
-      propertyTypeId: 'connId2',
+      propertyType: 'connId2',
       primitiveType: 'string',
       defaultValue: 'none'
     }, {
-      propertyTypeId: 'resistance',
+      propertyType: 'resistance',
       primitiveType: 'number',
       defaultValue: '10'
     }, {
-      propertyTypeId: 'susceptance',
+      propertyType: 'susceptance',
       primitiveType: 'number',
       defaultValue: '0.001'
     }, {
-      propertyTypeId: 'enBids',
+      propertyType: 'enBids',
       primitiveType: 'tranches',
       defaultValue: [100, 70]
     }, {
-      propertyTypeId: 'enOffers',
+      propertyType: 'enOffers',
       primitiveType: 'tranches',
       defaultValue: [50, 150]
     }, {
-      propertyTypeId: 'resOffers',
+      propertyType: 'resOffers',
       primitiveType: 'tranches',
       defaultValue: [50, 150]
     }, {
-      propertyTypeId: 'genCapacity',
+      propertyType: 'genCapacity',
       primitiveType: 'number',
       defaultValue: '100'
     }); //Element Types and their Property Types
@@ -108,17 +108,17 @@ function () {
     return elementId;
   };
 
-  ModelElementService.prototype.getValueForElementProperty = function (elementId, propertyTypeId) {
+  ModelElementService.prototype.getValueForElementProperty = function (elementId, propertyType) {
     var properties = this.modelElements.filter(function (element) {
       return element.elementId === elementId;
     })[0].properties;
-    return properties[propertyTypeId];
+    return properties[propertyType];
   };
 
-  ModelElementService.prototype.setValueForElementProperty = function (elementId, propertyTypeId, value) {
+  ModelElementService.prototype.setValueForElementProperty = function (elementId, propertyType, value) {
     this.modelElements.filter(function (element) {
       return element.elementId === elementId;
-    })[0].properties[propertyTypeId] = value;
+    })[0].properties[propertyType] = value;
   };
 
   ModelElementService.prototype.makePropertiesForElementType = function (elementTypeId) {
@@ -127,25 +127,25 @@ function () {
     console.log("makePropertiesForElementType of " + elementTypeId);
     var thesePropertyTypeIds = this.propertyTypeIdsOfElementType[elementTypeId];
     console.log("got property types: " + thesePropertyTypeIds); // let properties = this.elementPropertyTypes.filter(
-    //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyTypeId thesePropertyTypeIds)
+    //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyType thesePropertyTypeIds)
     // )
 
     var properties = {};
 
-    var _loop_1 = function _loop_1(propertyTypeId) {
-      console.log("looking for " + propertyTypeId);
+    var _loop_1 = function _loop_1(propertyType) {
+      console.log("looking for " + propertyType);
       var elementProperty = this_1.elementPropertyTypes.filter(function (elementPropertyType) {
-        return elementPropertyType.propertyTypeId === propertyTypeId;
+        return elementPropertyType.propertyType === propertyType;
       })[0];
-      properties[elementProperty.propertyTypeId] = elementProperty.defaultValue;
+      properties[elementProperty.propertyType] = elementProperty.defaultValue;
     };
 
     var this_1 = this;
 
     for (var _i = 0, thesePropertyTypeIds_1 = thesePropertyTypeIds; _i < thesePropertyTypeIds_1.length; _i++) {
-      var propertyTypeId = thesePropertyTypeIds_1[_i];
+      var propertyType = thesePropertyTypeIds_1[_i];
 
-      _loop_1(propertyTypeId);
+      _loop_1(propertyType);
     }
 
     return properties;

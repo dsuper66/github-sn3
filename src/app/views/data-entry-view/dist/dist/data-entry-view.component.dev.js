@@ -17,39 +17,58 @@ exports.DataEntryViewComponent = void 0;
 
 var core_1 = require("@angular/core");
 
-var forms_1 = require("@angular/forms");
-
 var DataEntryViewComponent =
 /** @class */
 function () {
-  function DataEntryViewComponent(modelElementService, router, shapeService) {
-    this.modelElementService = modelElementService;
+  function DataEntryViewComponent( // private modelElementService: ModelElementService,
+  modelElementDataService, modelElementDefService, router, route // private shapeService: ShapeService) 
+  ) {
+    var _this = this;
+
+    this.modelElementDataService = modelElementDataService;
+    this.modelElementDefService = modelElementDefService;
     this.router = router;
-    this.shapeService = shapeService; // myGroup = new FormGroup({
+    this.route = route; // myGroup = new FormGroup({
     //   firstName: new FormControl()
     // });
-    // propertiesFormArray = new FormArray([]);
+    // propertiesFormArray: FormControl[] = [];
 
-    this.propertiesFormArray = [];
-    this.formTitles = [];
+    this.formNames = [];
     this.formDefaults = [];
-    this.elementId = "none selected";
+    this.formElementIds = [];
+    this.formPropertyIds = [];
+    route.params.subscribe(function (params) {
+      _this.idOfDataEntryObject = params['id'];
+    });
   }
 
   DataEntryViewComponent.prototype.ngOnInit = function () {
-    this.getElementId();
-  };
+    console.log("GOT ID ", this.idOfDataEntryObject);
+    this.populateFormFromElementId(this.idOfDataEntryObject);
+  }; //To get the data back from the data-entry form
+  // dataIds: string[] = [];
+
 
   DataEntryViewComponent.prototype.onSubmit = function (form) {
-    console.log('you submitted value:', form);
+    var _this = this; //The form returns an object
 
-    for (var _i = 0, _a = this.propertyTypeIds.filter(function (id) {
-      return Object(form)[id] != "";
-    }); _i < _a.length; _i++) {
-      var propertyTypeId = _a[_i];
-      var newValue = Object(form)[propertyTypeId];
-      console.log(">>>" + propertyTypeId + ":" + newValue);
-      this.modelElementService.setValueForElementProperty(this.elementId, propertyTypeId, newValue);
+
+    console.log('you submitted value:', form); //Extract the data from the object
+    //Fields where no data has been entered are empty strings, so we don't update those
+
+    if (this.formNames) {
+      this.formNames.forEach(function (formName, index) {
+        var formValue = Object(form)[formName];
+
+        if (formValue && formValue != "") {
+          // let newValue = Object(form)[propertyType];
+          console.log(">>>value>>>" + formName + ":" + formValue);
+          var propertyId = _this.formPropertyIds[index];
+          var elementId = _this.formElementIds[index];
+
+          _this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
+        }
+      });
     } //Submit also navigates back
 
 
@@ -66,39 +85,56 @@ function () {
     // }
   };
 
-  DataEntryViewComponent.prototype.getElementId = function () {
+  DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
     //Get the element i.d. from the route
     // const elementId = this.route.snapshot.paramMap.get('elementId');
     // const elementId = this.route.snapshot.paramMap.get('elementId');
     // console.log(">>>Element ID:" + elementId 
     //   + " name:" + this.modelElementService.getElementName(elementId));
     // this.modelData.setValue(elementId);
-    this.selectedShape = this.shapeService.getSelectedShape();
+    // this.selectedShape = this.shapeService.getSelectedShape();
+    var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
 
-    if (this.selectedShape) {
-      this.elementId = this.selectedShape.elementId;
-      console.log(">>> " + this.selectedShape.elementTypeId);
-      this.propertyTypeIds = this.modelElementService.getPropertyTypeIdsOfElementType(this.selectedShape.elementTypeId);
-      console.log(this.propertyTypeIds); // interface Dict {
-      //   [key: string]: string;
+    if (selectedElement) {
+      console.log(">>> " + selectedElement.elementType);
+      var parentProperties = this.modelElementDefService.getPropertyTypeIdsFor(selectedElement.elementType);
+      this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId); //Populate the property fields
+      // for (const parentPropertyId of parentProperties) {
+      //   if (this.modelElementDataService.propertyIsVisible(parentPropertyId)) {
+      //     //Data Id
+      //     this.dataIds.push(parentPropertyId);
+      //     //Title
+      //     this.formTitles.push(parentPropertyId);
+      //     //Default value
+      //     const value = this.modelElementDataService.getValueForElementProperty(elementId, parentPropertyId);
+      //     this.formDefaults.push(value);
+      //     console.log(parentPropertyId + ": current value:" + value);
+      //   }
+      //   else {
+      //     console.log(parentPropertyId + ": not visible")
+      //   }
       // }
-      // let controlsConfig: Dict;
-      // var indexedArray: { [key: string]: any; } = {
-      //   'connId1': ['none'],
-      //   'connId2': ['none'],
-      //   'resistance': ['none']
-      // }
-      // indexedArray = {'connId1': ['none'],connId2':['none'],'resistance':['none']};
-      // var controlsConfig: {
-      //   [key: string]: any;}
+      //Get child records
 
-      for (var _i = 0, _a = this.propertyTypeIds; _i < _a.length; _i++) {
-        var propertyId = _a[_i];
-        this.formTitles.push(propertyId);
-        var value = this.modelElementService.getValueForElementProperty(this.elementId, propertyId);
-        this.formDefaults.push(value);
-        console.log("current value:" + value);
-        this.propertiesFormArray.push(new forms_1.FormControl(value));
+      var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
+
+      for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
+        var childElement = childElements_1[_i];
+        var childProperties = this.modelElementDefService.getPropertyTypeIdsFor(childElement.elementType);
+        this.populateFormFieldsFromProperties(childProperties, childElement.elementId); // for (const childPropertyId of childProperties) {
+        //   if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {
+        //     //Data Id
+        //     this.dataIds.push(childPropertyId);
+        //     //Title
+        //     this.formTitles.push(childPropertyId + "[" + childElement.elementId + "]");
+        //     //Default value
+        //     const value = this.modelElementDataService.getValueForElementProperty(childElement.elementId, childPropertyId);
+        //     this.formDefaults.push(value);
+        //   }
+        //   else {
+        //     console.log(childPropertyId + ": not visible")
+        //   }
+        // }
       } // console.log(">>>mm>>>" + indexedArray);
       //   this.myGroup = this.fb.group({
       //     'connId1': ['none'],
@@ -110,6 +146,29 @@ function () {
       // }
       // this.modelData.setValue(this.elementId);
 
+    }
+  };
+
+  DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
+    for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {
+      var propertyId = propertyIds_1[_i];
+
+      if (this.modelElementDefService.propertyIsVisible(propertyId)) {
+        //Data Id
+        // this.dataIds.push(propertyId);
+        //Name/Title
+        this.formNames.push(elementId + "-" + propertyId); //Default value
+
+        var value = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
+        this.formDefaults.push(value); //PropertyId
+
+        this.formPropertyIds.push(propertyId); //ElementId
+
+        this.formElementIds.push(elementId);
+        console.log(elementId + "-" + propertyId + "-value:" + value);
+      } else {
+        console.log(propertyId + ": not visible");
+      }
     }
   };
 

@@ -45,7 +45,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.formNames.forEach(function (formName, index) {
                 var formValue = Object(form)[formName];
                 if (formValue && formValue != "") {
-                    // let newValue = Object(form)[propertyTypeId];
+                    // let newValue = Object(form)[propertyType];
                     console.log(">>>value>>>" + formName + ":" + formValue);
                     var propertyId = _this.formPropertyIds[index];
                     var elementId = _this.formElementIds[index];

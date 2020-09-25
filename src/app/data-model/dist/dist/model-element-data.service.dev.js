@@ -23,9 +23,12 @@ function () {
   function ModelElementDataService(modelElementDefService) {
     this.modelElementDefService = modelElementDefService;
     this.modelElements = [];
-    this.elementNextIndex = new Map(); //Add child element defs... elements created automatically with parent
-    //parentTypeId is used to identify the parent
-    //Bid Tranches
+    this.elementNextIndex = new Map(); //Manually Added Child element defintions which will
+    //cause child elements to be created automatically with parent
+    //--------------------------------------------------
+    //Tranches
+    //--------
+    //Bid Tranches associated with load
 
     this.modelElements.push({
       elementId: 'bidTrancheDef',
@@ -38,7 +41,7 @@ function () {
         'childCount': '3'
       }]),
       visible: false
-    }); //Gen Tranches
+    }); //Energy Tranches associated with gen
 
     this.modelElements.push({
       elementId: 'enOfferTrancheDef',
@@ -51,7 +54,7 @@ function () {
         'childCount': '3'
       }]),
       visible: false
-    }); //Res Tranches
+    }); //Reserve Tranches associated with gen
 
     this.modelElements.push({
       elementId: 'resOfferTrancheDef',
@@ -64,7 +67,7 @@ function () {
         'childCount': '3'
       }]),
       visible: false
-    }); //Loss Tranches
+    }); //Flow-Loss Tranches associated with branch
 
     this.modelElements.push({
       elementId: 'lossTrancheDef',
@@ -77,55 +80,57 @@ function () {
         'childCount': '3'
       }]),
       visible: false
-    }); //Unrestricted - branch flow
+    }); //Unrestricted Elements
+    //---------------------
+    //Directional branches associated with branch
+    // this.modelElements.push({
+    //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
+    //   properties: this.makeDict([
+    //     { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
+    //   visible: false
+    // });
 
     this.modelElements.push({
-      elementId: 'branchFlowPos',
+      elementId: 'dirBranchDef',
       elementType: 'unrestrictedDef',
       properties: this.makeDict([{
         'parentTypeId': 'branch'
       }, {
-        'childTypeId': 'posFlow'
+        'childTypeId': 'dirBranch'
       }, {
-        'childCount': '1'
+        'childCount': '2'
       }]),
       visible: false
-    });
-    this.modelElements.push({
-      elementId: 'branchFlowNeg',
-      elementType: 'unrestrictedDef',
-      properties: this.makeDict([{
-        'parentTypeId': 'branch'
-      }, {
-        'childTypeId': 'negFlow'
-      }, {
-        'childCount': '1'
-      }]),
-      visible: false
-    }); //Unrestricted - bus angle
+    }); // //Unrestricted - bus angle
+    // this.modelElements.push({
+    //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
+    //   properties: this.makeDict([
+    //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+    //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
+    //   visible: false
+    // });
+    // this.modelElements.push({
+    //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
+    //   properties: this.makeDict([
+    //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+    //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
+    //   visible: false
+    // }); 
+    //Static components of the model
+    //mathModel has the objective as a variable
 
     this.modelElements.push({
-      elementId: 'phaseAnglePos',
-      elementType: 'unrestrictedDef',
-      properties: this.makeDict([{
-        'parentTypeId': 'bus'
-      }, {
-        'childTypeId': 'posAngle'
-      }, {
-        'childCount': '1'
-      }]),
+      elementId: 'mathmodel001',
+      elementType: 'mathModel',
+      properties: {},
       visible: false
-    });
+    }); //island has risk and reserve as variables 
+    //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
+
     this.modelElements.push({
-      elementId: 'phaseAngleNeg',
-      elementType: 'unrestrictedDef',
-      properties: this.makeDict([{
-        'parentTypeId': 'bus'
-      }, {
-        'childTypeId': 'negAngle'
-      }, {
-        'childCount': '1'
-      }]),
+      elementId: 'island001',
+      elementType: 'island',
+      properties: {},
       visible: false
     });
   }
@@ -154,8 +159,8 @@ function () {
     var dict = {};
     arrayOfMaps.forEach(function (obj) {
       Object.getOwnPropertyNames(obj).forEach(function (key) {
-        var value = obj[key];
-        console.log(key + '>>>>' + value);
+        var value = obj[key]; //console.log(key + '>>>>' + value);
+
         dict[key] = value;
       });
     });
@@ -192,8 +197,8 @@ function () {
       var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType);
 
       for (var _b = 0, propertyTypeIds_1 = propertyTypeIds; _b < propertyTypeIds_1.length; _b++) {
-        var propertyTypeId = propertyTypeIds_1[_b];
-        console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
+        var propertyType = propertyTypeIds_1[_b];
+        console.log("##>>" + element.elementId + " : " + propertyType + " : " + element.properties[propertyType]);
       }
     }
 
@@ -212,51 +217,50 @@ function () {
     })[0];
   };
 
-  ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyTypeId) {
+  ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
     var properties = this.modelElements.filter(function (element) {
       return element.elementId === elementId;
     })[0].properties;
-    return properties[propertyTypeId];
+    return properties[propertyType];
   };
 
-  ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyTypeId, value) {
+  ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyType, value) {
     return this.modelElements.filter(function (element) {
-      return element.properties[propertyTypeId] === value;
+      return element.properties[propertyType] === value;
     });
   };
 
-  ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyTypeId, value) {
-    console.log("setPropertyForElement");
-
+  ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
     if (value) {
       //Special cases
       //isRefBus... can only have one refBus so set all to false first if the new value is true
-      if (propertyTypeId === 'isRefBus' && value === 'true') {
-        this.setPropertyForAllElements(propertyTypeId, "false");
+      if (propertyType === 'isRefBus' && value === 'true') {
+        this.setPropertyForAllElements(propertyType, "false");
       } //Update the property for the element
 
 
       var elementToUpdate = this.modelElements.filter(function (element) {
         return element.elementId === elementId;
       })[0];
-      elementToUpdate.properties[propertyTypeId] = value;
+      elementToUpdate.properties[propertyType] = value;
+      console.log("Set property:" + propertyType + "for:" + elementId);
     } else {
-      console.log("NO VALUE");
+      console.log("Set property: no value");
     }
   };
 
-  ModelElementDataService.prototype.setPropertyForAllElements = function (propertyTypeId, value) {
+  ModelElementDataService.prototype.setPropertyForAllElements = function (propertyType, value) {
     console.log("setPropertyForAllElements");
 
     if (value) {
       var elementsToUpdate = this.modelElements.filter(function (element) {
-        return element.properties[propertyTypeId];
+        return element.properties[propertyType];
       });
 
       for (var _i = 0, elementsToUpdate_1 = elementsToUpdate; _i < elementsToUpdate_1.length; _i++) {
         var elementToUpdate = elementsToUpdate_1[_i];
-        console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementType + " to:" + value);
-        elementToUpdate.properties[propertyTypeId] = value;
+        console.log("update property:" + propertyType + " of:" + elementToUpdate.elementType + " to:" + value);
+        elementToUpdate.properties[propertyType] = value;
       }
     } else {
       console.log("NO VALUE");

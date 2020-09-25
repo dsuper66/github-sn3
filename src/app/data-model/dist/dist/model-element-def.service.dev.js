@@ -22,142 +22,160 @@ var ModelElementDefService =
 function () {
   function ModelElementDefService() {
     this.elementPropertyTypes = [];
-    this.elementTypeProperties = {}; //Property Types
+    this.elementTypeProperties = {};
+    this.defaultValueSettings = []; //Property Types
 
     this.elementPropertyTypes.push({
-      propertyTypeId: 'isRefBus',
+      propertyType: 'isRefBus',
       primitiveType: 'bool',
-      defaultValue: 'false',
       visible: true
     }, {
-      propertyTypeId: 'fromBus',
+      propertyType: 'fromBus',
       primitiveType: 'string',
-      defaultValue: 'none',
       visible: false
     }, {
-      propertyTypeId: 'toBus',
+      propertyType: 'toBus',
       primitiveType: 'string',
-      defaultValue: 'none',
       visible: false
     }, {
-      propertyTypeId: 'flowMax',
+      propertyType: 'flowMax',
       primitiveType: 'number',
-      defaultValue: '100',
       visible: true
     }, {
-      propertyTypeId: 'resistance',
+      propertyType: 'resistance',
       primitiveType: 'number',
-      defaultValue: '10',
       visible: true
     }, {
-      propertyTypeId: 'susceptance',
+      propertyType: 'susceptance',
       primitiveType: 'number',
-      defaultValue: '0.001',
       visible: true
     }, {
-      propertyTypeId: 'childCount',
+      propertyType: 'childCount',
       primitiveType: 'number',
-      defaultValue: '3',
       visible: false
     }, {
-      propertyTypeId: 'parentTypeId',
+      propertyType: 'parentTypeId',
       primitiveType: 'string',
-      defaultValue: 'none',
       visible: false
     }, {
-      propertyTypeId: 'childTypeId',
+      propertyType: 'childTypeId',
       primitiveType: 'string',
-      defaultValue: 'none',
       visible: false
     }, {
-      propertyTypeId: 'parentId',
+      propertyType: 'parentId',
       primitiveType: 'string',
-      defaultValue: 'none',
       visible: false
     }, {
-      propertyTypeId: 'enOfferTrancheLimit',
+      propertyType: 'trancheLimit',
       primitiveType: 'number',
-      defaultValue: '80',
       visible: true
     }, {
-      propertyTypeId: 'enOfferTranchePrice',
+      propertyType: 'tranchePrice',
       primitiveType: 'number',
-      defaultValue: '100',
       visible: true
     }, {
-      propertyTypeId: 'resOfferTrancheLimit',
+      propertyType: 'flowLimit',
       primitiveType: 'number',
-      defaultValue: '90',
       visible: true
     }, {
-      propertyTypeId: 'resOfferTranchePrice',
+      propertyType: 'lossLimit',
       primitiveType: 'number',
-      defaultValue: '10',
       visible: true
     }, {
-      propertyTypeId: 'bidTrancheLimit',
+      propertyType: 'capacityMax',
       primitiveType: 'number',
-      defaultValue: '70',
       visible: true
     }, {
-      propertyTypeId: 'bidTranchePrice',
+      propertyType: 'direction',
       primitiveType: 'number',
-      defaultValue: '150',
       visible: true
+    });
+    this.defaultValueSettings.push({
+      propertyType: 'isRefBus',
+      elementType: 'bus',
+      defaultValue: false
     }, {
-      propertyTypeId: 'flowTrancheLimit',
-      primitiveType: 'number',
-      defaultValue: '25',
-      visible: true
+      propertyType: 'flowMax',
+      elementType: 'branch',
+      defaultValue: 100
     }, {
-      propertyTypeId: 'lossTrancheLimit',
-      primitiveType: 'number',
-      defaultValue: '2',
-      visible: true
+      propertyType: 'resistance',
+      elementType: 'branch',
+      defaultValue: 10
     }, {
-      propertyTypeId: 'capacityMax',
-      primitiveType: 'number',
-      defaultValue: '100',
-      visible: true
+      propertyType: 'susceptance',
+      elementType: 'branch',
+      defaultValue: .001
+    }, {
+      propertyType: 'trancheLimit',
+      elementType: 'bidTranche',
+      defaultValue: 70
+    }, {
+      propertyType: 'tranchePrice',
+      elementType: 'bidTranche',
+      defaultValue: 150
+    }, {
+      propertyType: 'trancheLimit',
+      elementType: 'enOfferTranche',
+      defaultValue: 80
+    }, {
+      propertyType: 'tranchePrice',
+      elementType: 'enOfferTranche',
+      defaultValue: 100
+    }, {
+      propertyType: 'trancheLimit',
+      elementType: 'resOfferTranche',
+      defaultValue: 90
+    }, {
+      propertyType: 'tranchePrice',
+      elementType: 'resOfferTranche',
+      defaultValue: 40
+    }, {
+      propertyType: 'capacityMax',
+      elementType: 'gen',
+      defaultValue: 120
+    }, {
+      propertyType: 'childCount',
+      elementType: 'childDef',
+      defaultValue: 100
     }); //Element Types and Property Types
     //Parent elements
 
-    this.elementTypeProperties['bus'] = ['isRefBus'];
-    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'flowMax', 'susceptance'];
+    this.elementTypeProperties['bus'] = ['isRefBus']; //Branch (flow limit and losses are at the directional level)
+
+    this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance', 'flowMax'];
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
-    this.elementTypeProperties['load'] = ['fromBus']; //Element that defines a child
+    this.elementTypeProperties['load'] = ['fromBus']; //Element definitions (created in the data service) that define a child to be created 
 
     this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount']; //Child elements - tranches
 
-    this.elementTypeProperties['bidTranche'] = ['parentId', 'bidTrancheLimit', 'bidTranchePrice'];
-    this.elementTypeProperties['enOfferTranche'] = ['parentId', 'enOfferTrancheLimit', 'enOfferTranchePrice'];
-    this.elementTypeProperties['resOfferTranche'] = ['parentId', 'resOfferTrancheLimit', 'resOfferTranchePrice'];
-    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowTrancheLimit', 'lossTrancheLimit']; //Child elements - unrestricted variables
+    this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
+    this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
+    this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
+    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit']; //Child elements - unrestricted variables
+    //Directional branches (power flow is at the parent branch level)
 
-    this.elementTypeProperties['posFlow'] = ['parentId'];
-    this.elementTypeProperties['negFlow'] = ['parentId'];
-    this.elementTypeProperties['posAngle'] = ['parentId'];
-    this.elementTypeProperties['negAngle'] = ['parentId'];
-  } // private defaultPropertyValues: DefaultPropertyValue[] = [];
+    this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction']; // this.elementTypeProperties['dirBranchNeg'] = ['parentId', 'fromBus', 'toBus'];
+  }
 
-
-  ModelElementDefService.prototype.propertyIsVisible = function (propertyTypeId) {
-    console.log("get visible status for property:" + propertyTypeId);
+  ModelElementDefService.prototype.propertyIsVisible = function (propertyType) {
+    console.log("get visible status for property:" + propertyType);
     var propertyType = this.elementPropertyTypes.filter(function (property) {
-      return property.propertyTypeId === propertyTypeId;
+      return property.propertyType === propertyType;
     })[0];
     return propertyType.visible;
   };
 
-  ModelElementDefService.prototype.getDefaultPropertyForPropertTypeId = function (propertyTypeId) {
-    var elementProperty = this.elementPropertyTypes.filter(function (elementPropertyType) {
-      return elementPropertyType.propertyTypeId === propertyTypeId;
+  ModelElementDefService.prototype.getDefaultValueForProperty = function (propertyType, elementType) {
+    var defaultValueSetting = this.defaultValueSettings.filter(function (defaultValueSetting) {
+      return defaultValueSetting.propertyType === propertyType && defaultValueSetting.elementType == elementType;
     })[0];
 
-    if (elementProperty) {
-      return elementProperty.defaultValue;
+    if (defaultValueSetting) {
+      console.log("found default:" + defaultValueSetting.defaultValue);
+      return defaultValueSetting.defaultValue;
     } else {
-      console.log("%c" + "No Default found for:" + propertyTypeId, "color: red");
+      console.log("%c" + "No Default found for:" + elementType + " property:" + propertyType, "color: red");
       return "";
     }
   };
@@ -169,14 +187,25 @@ function () {
     return properties;
   };
 
-  ModelElementDefService.prototype.makeProperties = function (elementType, propertiesToAdd) {
+  ModelElementDefService.prototype.makeProperties = function (elementType, propertiesToAdd, childNum) {
     console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
-    var properties = {};
+    var properties = {}; //Get defaults
 
     for (var _i = 0, propertiesToAdd_1 = propertiesToAdd; _i < propertiesToAdd_1.length; _i++) {
-      var propertyTypeId = propertiesToAdd_1[_i];
-      console.log("looking for property: " + propertyTypeId);
-      properties[propertyTypeId] = this.getDefaultPropertyForPropertTypeId(propertyTypeId);
+      var propertyType = propertiesToAdd_1[_i];
+      console.log("looking for defaults for property: " + propertyType);
+      var addDefaults = true; //If child element, only add defaults to number 1
+
+      if (childNum) {
+        if (childNum != 1) {
+          addDefaults = false;
+        }
+      } //Add defaults
+
+
+      if (addDefaults) {
+        properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
+      }
     }
 
     return properties;

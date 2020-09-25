@@ -8,7 +8,7 @@ export interface ModelElement {
 
   properties: ElementProperties;
   visible: boolean;
-  // properties: {[propertyTypeId:string] : any};
+  // properties: {[propertyType:string] : any};
 
   // properties: Record<string, any>;
 }
@@ -17,7 +17,7 @@ export interface ModelElement {
 //https://stackoverflow.com/questions/15877362/declare-and-initialize-a-dictionary-in-typescript
 
 export interface ElementProperties {
-  [propertyTypeId: string]: any;
+  [propertyType: string]: any;
 }
 
 
@@ -25,7 +25,7 @@ export interface PropertyTypeId {
   id: string;
 }
 export interface ElementPropertyType {
-  propertyTypeId: string;
+  propertyType: string;
   primitiveType: string;
   visible: boolean;
 }

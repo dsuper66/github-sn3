@@ -6,7 +6,7 @@ import {
 } from './model-element';
 
 export interface DefaultValue {
-  propertyTypeId: string;
+  propertyType: string;
   elementType: string,
   defaultValue: any;
 }
@@ -20,39 +20,39 @@ export class ModelElementDefService {
 
 
     //Property Types
-    this.elementPropertyTypes.push(
-      { propertyTypeId: 'isRefBus', primitiveType: 'bool', visible: true },
-      { propertyTypeId: 'fromBus', primitiveType: 'string', visible: false },
-      { propertyTypeId: 'toBus', primitiveType: 'string', visible: false },
-      { propertyTypeId: 'flowMax', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'resistance', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'susceptance', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'childCount', primitiveType: 'number', visible: false },
-      { propertyTypeId: 'parentTypeId', primitiveType: 'string', visible: false },
-      { propertyTypeId: 'childTypeId', primitiveType: 'string', visible: false },
-      { propertyTypeId: 'parentId', primitiveType: 'string', visible: false },
-      { propertyTypeId: 'trancheLimit', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'tranchePrice', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'flowLimit', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'lossLimit', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'capacityMax', primitiveType: 'number', visible: true },
-      { propertyTypeId: 'direction', primitiveType: 'number', visible: true }
+    this.elementPropertyTypeSettings.push(
+      { propertyType: 'isRefBus', primitiveType: 'bool', visible: true },
+      { propertyType: 'fromBus', primitiveType: 'string', visible: false },
+      { propertyType: 'toBus', primitiveType: 'string', visible: false },
+      { propertyType: 'flowMax', primitiveType: 'number', visible: true },
+      { propertyType: 'resistance', primitiveType: 'number', visible: true },
+      { propertyType: 'susceptance', primitiveType: 'number', visible: true },
+      { propertyType: 'childCount', primitiveType: 'number', visible: false },
+      { propertyType: 'parentTypeId', primitiveType: 'string', visible: false },
+      { propertyType: 'childTypeId', primitiveType: 'string', visible: false },
+      { propertyType: 'parentId', primitiveType: 'string', visible: false },
+      { propertyType: 'trancheLimit', primitiveType: 'number', visible: true },
+      { propertyType: 'tranchePrice', primitiveType: 'number', visible: true },
+      { propertyType: 'flowLimit', primitiveType: 'number', visible: true },
+      { propertyType: 'lossLimit', primitiveType: 'number', visible: true },
+      { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
+      { propertyType: 'direction', primitiveType: 'number', visible: true }
 
     )
 
     this.defaultValueSettings.push(
-      { propertyTypeId: 'isRefBus', elementType: 'bus', defaultValue: false },
-      { propertyTypeId: 'flowMax', elementType: 'branch', defaultValue: 100 },
-      { propertyTypeId: 'resistance', elementType: 'branch', defaultValue: 10 },
-      { propertyTypeId: 'susceptance', elementType: 'branch', defaultValue: .001 },
-      { propertyTypeId: 'trancheLimit', elementType: 'bidTranche', defaultValue: 70 },
-      { propertyTypeId: 'tranchePrice', elementType: 'bidTranche', defaultValue: 150 },
-      { propertyTypeId: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 80 },
-      { propertyTypeId: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 100 },
-      { propertyTypeId: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 },
-      { propertyTypeId: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
-      { propertyTypeId: 'capacityMax', elementType: 'gen', defaultValue: 120 },
-      { propertyTypeId: 'childCount', elementType: 'childDef', defaultValue: 100 }
+      { propertyType: 'isRefBus', elementType: 'bus', defaultValue: false },
+      { propertyType: 'flowMax', elementType: 'branch', defaultValue: 100 },
+      { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 },
+      { propertyType: 'susceptance', elementType: 'branch', defaultValue: .001 },
+      { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 70 },
+      { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 150 },
+      { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 80 },
+      { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 100 },
+      { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 },
+      { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
+      { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
+      { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 }
     )
 
     //Element Types and Property Types
@@ -79,26 +79,26 @@ export class ModelElementDefService {
   }
 
 
-  private elementPropertyTypes: ElementPropertyType[] = [];
+  private elementPropertyTypeSettings: ElementPropertyType[] = [];
   private elementTypeProperties: { [elementType: string]: string[] } = {};
   private defaultValueSettings: DefaultValue[] = [];
 
-  propertyIsVisible(propertyTypeId: string) {
-    console.log("get visible status for property:" + propertyTypeId);
-    const propertyType = this.elementPropertyTypes.filter(property => property.propertyTypeId === propertyTypeId)[0];
-    return propertyType.visible;
+  propertyIsVisible(propertyType: string) {
+    console.log("get visible status for property:" + propertyType);
+    const propertyTypeSettings = this.elementPropertyTypeSettings.filter(property => property.propertyType === propertyType)[0];
+    return propertyTypeSettings.visible;
   }
 
-  getDefaultValueForProperty(propertyTypeId: string, elementType: string): any {
+  getDefaultValueForProperty(propertyType: string, elementType: string): any {
     const defaultValueSetting = this.defaultValueSettings.filter(
-      defaultValueSetting => defaultValueSetting.propertyTypeId === propertyTypeId
+      defaultValueSetting => defaultValueSetting.propertyType === propertyType
         && defaultValueSetting.elementType == elementType)[0];
     if (defaultValueSetting) {
       console.log("found default:" + defaultValueSetting.defaultValue);
       return defaultValueSetting.defaultValue;
     }
     else {
-      console.log("%c" + "No Default found for:" + elementType + " property:" + propertyTypeId, "color: red");
+      console.log("%c" + "No Default found for:" + elementType + " property:" + propertyType, "color: red");
       return "";
     }
   }
@@ -110,14 +110,14 @@ export class ModelElementDefService {
     return properties;
   }
 
-  makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyTypeId: string]: any } {
+  makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyType: string]: any } {
 
     console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
-    var properties: { [propertyTypeId: string]: any } = {};
+    var properties: { [propertyType: string]: any } = {};
 
     //Get defaults
-    for (const propertyTypeId of propertiesToAdd) {
-      console.log("looking for defaults for property: " + propertyTypeId);
+    for (const propertyType of propertiesToAdd) {
+      console.log("looking for defaults for property: " + propertyType);
       var addDefaults = true;
       //If child element, only add defaults to number 1
       if (childNum) {
@@ -125,7 +125,7 @@ export class ModelElementDefService {
       }
       //Add defaults
       if (addDefaults) {
-        properties[propertyTypeId] = this.getDefaultValueForProperty(propertyTypeId, elementType);
+        properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
       }
     } 
 

@@ -164,8 +164,8 @@ export class ModelElementDataService {
   listAllElements(elementId: string): ModelElement[] {
     for (const element of this.modelElements) {
       const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType)
-      for (const propertyTypeId of propertyTypeIds) {
-        console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
+      for (const propertyType of propertyTypeIds) {
+        console.log("##>>" + element.elementId + " : " + propertyType + " : " + element.properties[propertyType]);
       }
     }
     return this.modelElements.filter(
@@ -180,49 +180,49 @@ export class ModelElementDataService {
     return this.modelElements.filter(element => element.elementId === elementId)[0];
   }
 
-  getValueForElementProperty(elementId: string, propertyTypeId: string): string {
+  getValueForElementProperty(elementId: string, propertyType: string): string {
     let properties = this.modelElements.filter(
       element => element.elementId === elementId
     )[0].properties;
-    return properties[propertyTypeId];
+    return properties[propertyType];
   }
 
-  getElementsWithPropertyValue(propertyTypeId: string, value: string):ModelElement[] {
+  getElementsWithPropertyValue(propertyType: string, value: string):ModelElement[] {
     return this.modelElements.filter(
-      element => element.properties[propertyTypeId] === value);
+      element => element.properties[propertyType] === value);
   }
 
-  setPropertyForElement(elementId: string, propertyTypeId: string, value: any) {
+  setPropertyForElement(elementId: string, propertyType: string, value: any) {
     
     if (value) {
 
       //Special cases
       //isRefBus... can only have one refBus so set all to false first if the new value is true
-      if (propertyTypeId === 'isRefBus' && value === 'true') {
-        this.setPropertyForAllElements(propertyTypeId,"false");
+      if (propertyType === 'isRefBus' && value === 'true') {
+        this.setPropertyForAllElements(propertyType,"false");
       }
 
       //Update the property for the element
       const elementToUpdate = this.modelElements.filter(
         element => element.elementId === elementId)[0];
-      elementToUpdate.properties[propertyTypeId] = value;
-      console.log("Set property:" + propertyTypeId + "for:" + elementId);
+      elementToUpdate.properties[propertyType] = value;
+      console.log("Set property:" + propertyType + "for:" + elementId);
     }
     else {
       console.log("Set property: no value");
     }
   }
 
-  setPropertyForAllElements(propertyTypeId: string, value: any) {
+  setPropertyForAllElements(propertyType: string, value: any) {
     console.log("setPropertyForAllElements")
     if (value) {
 
       const elementsToUpdate = this.modelElements.filter(
-        element => element.properties[propertyTypeId]);
+        element => element.properties[propertyType]);
 
       for (const elementToUpdate of elementsToUpdate) {
-        console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementType + " to:" + value);
-        elementToUpdate.properties[propertyTypeId] = value;
+        console.log("update property:" + propertyType + " of:" + elementToUpdate.elementType + " to:" + value);
+        elementToUpdate.properties[propertyType] = value;
       }
     }
     else {

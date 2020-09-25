@@ -146,8 +146,8 @@ var ModelElementDataService = /** @class */ (function () {
             var element = _a[_i];
             var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType);
             for (var _b = 0, propertyTypeIds_1 = propertyTypeIds; _b < propertyTypeIds_1.length; _b++) {
-                var propertyTypeId = propertyTypeIds_1[_b];
-                console.log("##>>" + element.elementId + " : " + propertyTypeId + " : " + element.properties[propertyTypeId]);
+                var propertyType = propertyTypeIds_1[_b];
+                console.log("##>>" + element.elementId + " : " + propertyType + " : " + element.properties[propertyType]);
             }
         }
         return this.modelElements.filter(function (element) { return element.properties['parentId'] === elementId; });
@@ -158,37 +158,37 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.getModelElementForId = function (elementId) {
         return this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
     };
-    ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyTypeId) {
+    ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
         var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
-        return properties[propertyTypeId];
+        return properties[propertyType];
     };
-    ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyTypeId, value) {
-        return this.modelElements.filter(function (element) { return element.properties[propertyTypeId] === value; });
+    ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyType, value) {
+        return this.modelElements.filter(function (element) { return element.properties[propertyType] === value; });
     };
-    ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyTypeId, value) {
+    ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
         if (value) {
             //Special cases
             //isRefBus... can only have one refBus so set all to false first if the new value is true
-            if (propertyTypeId === 'isRefBus' && value === 'true') {
-                this.setPropertyForAllElements(propertyTypeId, "false");
+            if (propertyType === 'isRefBus' && value === 'true') {
+                this.setPropertyForAllElements(propertyType, "false");
             }
             //Update the property for the element
             var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
-            elementToUpdate.properties[propertyTypeId] = value;
-            console.log("Set property:" + propertyTypeId + "for:" + elementId);
+            elementToUpdate.properties[propertyType] = value;
+            console.log("Set property:" + propertyType + "for:" + elementId);
         }
         else {
             console.log("Set property: no value");
         }
     };
-    ModelElementDataService.prototype.setPropertyForAllElements = function (propertyTypeId, value) {
+    ModelElementDataService.prototype.setPropertyForAllElements = function (propertyType, value) {
         console.log("setPropertyForAllElements");
         if (value) {
-            var elementsToUpdate = this.modelElements.filter(function (element) { return element.properties[propertyTypeId]; });
+            var elementsToUpdate = this.modelElements.filter(function (element) { return element.properties[propertyType]; });
             for (var _i = 0, elementsToUpdate_1 = elementsToUpdate; _i < elementsToUpdate_1.length; _i++) {
                 var elementToUpdate = elementsToUpdate_1[_i];
-                console.log("update property:" + propertyTypeId + " of:" + elementToUpdate.elementType + " to:" + value);
-                elementToUpdate.properties[propertyTypeId] = value;
+                console.log("update property:" + propertyType + " of:" + elementToUpdate.elementType + " to:" + value);
+                elementToUpdate.properties[propertyType] = value;
             }
         }
         else {
