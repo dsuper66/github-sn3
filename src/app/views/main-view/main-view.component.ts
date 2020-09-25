@@ -142,7 +142,6 @@ export class MainViewComponent implements OnInit {
 
     //Send the model to the solver
     const solverInput: SolverInput = { inputJson: jString } as SolverInput;
-
     this.solverCallService
       .sendModelToSolver(solverInput)
       .subscribe(solverResults => {

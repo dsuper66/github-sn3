@@ -212,6 +212,7 @@ export class ShapeService {
   }
 
   saveConnectivityToModel() {
+    console.log("saveConnectivityToModel");
     //Non-bus elements reference back to the bus
     for (let nonBusEl of this.getShapesNotOfType('bus')) {
       // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];

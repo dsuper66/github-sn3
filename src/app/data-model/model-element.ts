@@ -27,9 +27,10 @@ export interface PropertyTypeId {
 export interface ElementPropertyType {
   propertyTypeId: string;
   primitiveType: string;
-  defaultValue: any;
   visible: boolean;
 }
+
+
 
 export interface ElementVarType {
   varTypeId: string;

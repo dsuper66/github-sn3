@@ -192,6 +192,7 @@ var ShapeService = /** @class */ (function () {
         return true;
     };
     ShapeService.prototype.saveConnectivityToModel = function () {
+        console.log("saveConnectivityToModel");
         //Non-bus elements reference back to the bus
         for (var _i = 0, _a = this.getShapesNotOfType('bus'); _i < _a.length; _i++) {
             var nonBusEl = _a[_i];

@@ -10,12 +10,15 @@ exports.ModelElementDataService = void 0;
 var core_1 = require("@angular/core");
 var ModelElementDataService = /** @class */ (function () {
     function ModelElementDataService(modelElementDefService) {
+        //Manually Added Elements
+        //=======================
         this.modelElementDefService = modelElementDefService;
         this.modelElements = [];
         this.elementNextIndex = new Map();
-        //Add child element defs... elements created automatically with parent
-        //parentTypeId is used to identify the parent
-        //Bid Tranches
+        //Child element defintions which will cause child elements to be created automatically with parent
+        //Tranches
+        //--------
+        //Bid Tranches associated with load
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
@@ -23,7 +26,7 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
-        //Gen Tranches
+        //Energy Tranches associated with gen
         this.modelElements.push({
             elementId: 'enOfferTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
@@ -31,7 +34,7 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
-        //Res Tranches
+        //Reserve Tranches associated with gen
         this.modelElements.push({
             elementId: 'resOfferTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
@@ -39,7 +42,7 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
-        //Loss Tranches
+        //Flow-Loss Tranches associated with branch
         this.modelElements.push({
             elementId: 'lossTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
@@ -47,7 +50,9 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             visible: false
         });
-        //Unrestricted - branch flow
+        //Unrestricted Elements
+        //---------------------
+        //Directional branches associated with branch
         this.modelElements.push({
             elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
             properties: this.makeDict([
@@ -76,7 +81,21 @@ var ModelElementDataService = /** @class */ (function () {
         //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
         //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
         //   visible: false
-        // });    
+        // }); 
+        //Static components of the model
+        //mathModel has the objective as a variable
+        this.modelElements.push({
+            elementId: 'mathmodel001', elementType: 'mathModel',
+            properties: {},
+            visible: false
+        });
+        //island has risk and reserve as variables 
+        //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
+        this.modelElements.push({
+            elementId: 'island001', elementType: 'island',
+            properties: {},
+            visible: false
+        });
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementType) {
         //Get next index for i.d.
@@ -100,7 +119,7 @@ var ModelElementDataService = /** @class */ (function () {
         arrayOfMaps.forEach(function (obj) {
             Object.getOwnPropertyNames(obj).forEach(function (key) {
                 var value = obj[key];
-                console.log(key + '>>>>' + value);
+                //console.log(key + '>>>>' + value);
                 dict[key] = value;
             });
         });
@@ -148,7 +167,6 @@ var ModelElementDataService = /** @class */ (function () {
         return this.modelElements.filter(function (element) { return element.properties[propertyTypeId] === value; });
     };
     ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyTypeId, value) {
-        console.log("setPropertyForElement");
         if (value) {
             //Special cases
             //isRefBus... can only have one refBus so set all to false first if the new value is true
@@ -158,9 +176,10 @@ var ModelElementDataService = /** @class */ (function () {
             //Update the property for the element
             var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
             elementToUpdate.properties[propertyTypeId] = value;
+            console.log("Set property:" + propertyTypeId + "for:" + elementId);
         }
         else {
-            console.log("NO VALUE");
+            console.log("Set property: no value");
         }
     };
     ModelElementDataService.prototype.setPropertyForAllElements = function (propertyTypeId, value) {

@@ -19,38 +19,43 @@ export class ModelElementDataService {
     private modelElementDefService: ModelElementDefService 
   ) {
 
-    //Add child element defs... elements created automatically with parent
-    //parentTypeId is used to identify the parent
-    //Bid Tranches
+    //Manually Added Elements
+    //=======================
+
+    //Child element defintions which will cause child elements to be created automatically with parent
+    //Tranches
+    //--------
+    //Bid Tranches associated with load
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]),
       visible: false
     });
-    //Gen Tranches
+    //Energy Tranches associated with gen
     this.modelElements.push({
       elementId: 'enOfferTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }]),
       visible: false
     });
-    //Res Tranches
+    //Reserve Tranches associated with gen
     this.modelElements.push({
       elementId: 'resOfferTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }]),
       visible: false
     });
-    //Loss Tranches
+    //Flow-Loss Tranches associated with branch
     this.modelElements.push({
       elementId: 'lossTrancheDef', elementType: 'trancheDef',
       properties: this.makeDict([
         { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
       visible: false
     });
-
-    //Unrestricted - branch flow
+    //Unrestricted Elements
+    //---------------------
+    //Directional branches associated with branch
     this.modelElements.push({
       elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
       properties: this.makeDict([
@@ -77,7 +82,23 @@ export class ModelElementDataService {
     //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
     //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
     //   visible: false
-    // });    
+    // }); 
+    
+    //Static components of the model
+    //mathModel has the objective as a variable
+    this.modelElements.push({
+      elementId: 'mathmodel001', elementType: 'mathModel',
+      properties: {},
+      visible: false
+    });   
+    //island has risk and reserve as variables 
+    //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
+    this.modelElements.push({
+      elementId: 'island001', elementType: 'island',
+      properties: {},
+      visible: false
+    });
+
 
   }
 
@@ -110,7 +131,7 @@ export class ModelElementDataService {
     arrayOfMaps.forEach(function (obj: { (key: string): any }) {
       Object.getOwnPropertyNames(obj).forEach(key => {
         let value = obj[key];
-        console.log(key + '>>>>' + value);
+        //console.log(key + '>>>>' + value);
         dict[key] = value;
       });
     })
@@ -173,7 +194,7 @@ export class ModelElementDataService {
   }
 
   setPropertyForElement(elementId: string, propertyTypeId: string, value: any) {
-    console.log("setPropertyForElement")
+    
     if (value) {
 
       //Special cases
@@ -186,9 +207,10 @@ export class ModelElementDataService {
       const elementToUpdate = this.modelElements.filter(
         element => element.elementId === elementId)[0];
       elementToUpdate.properties[propertyTypeId] = value;
+      console.log("Set property:" + propertyTypeId + "for:" + elementId);
     }
     else {
-      console.log("NO VALUE");
+      console.log("Set property: no value");
     }
   }
 
