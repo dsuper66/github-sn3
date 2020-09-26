@@ -34,7 +34,7 @@ function () {
       elementId: 'bidTrancheDef',
       elementType: 'trancheDef',
       properties: this.makeDict([{
-        'parentTypeId': 'load'
+        'parentType': 'load'
       }, {
         'childTypeId': 'bidTranche'
       }, {
@@ -47,7 +47,7 @@ function () {
       elementId: 'enOfferTrancheDef',
       elementType: 'trancheDef',
       properties: this.makeDict([{
-        'parentTypeId': 'gen'
+        'parentType': 'gen'
       }, {
         'childTypeId': 'enOfferTranche'
       }, {
@@ -60,7 +60,7 @@ function () {
       elementId: 'resOfferTrancheDef',
       elementType: 'trancheDef',
       properties: this.makeDict([{
-        'parentTypeId': 'gen'
+        'parentType': 'gen'
       }, {
         'childTypeId': 'resOfferTranche'
       }, {
@@ -73,7 +73,7 @@ function () {
       elementId: 'lossTrancheDef',
       elementType: 'trancheDef',
       properties: this.makeDict([{
-        'parentTypeId': 'branch'
+        'parentType': 'branch'
       }, {
         'childTypeId': 'lossTranche'
       }, {
@@ -86,7 +86,7 @@ function () {
     // this.modelElements.push({
     //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
     //   properties: this.makeDict([
-    //     { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
+    //     { 'parentType': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
     //   visible: false
     // });
 
@@ -94,7 +94,7 @@ function () {
       elementId: 'dirBranchDef',
       elementType: 'unrestrictedDef',
       properties: this.makeDict([{
-        'parentTypeId': 'branch'
+        'parentType': 'branch'
       }, {
         'childTypeId': 'dirBranch'
       }, {
@@ -105,14 +105,14 @@ function () {
     // this.modelElements.push({
     //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
     //   properties: this.makeDict([
-    //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+    //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
     //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
     //   visible: false
     // });
     // this.modelElements.push({
     //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
     //   properties: this.makeDict([
-    //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+    //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
     //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
     //   visible: false
     // }); 
@@ -180,7 +180,7 @@ function () {
 
   ModelElementDataService.prototype.getChildElementDefs = function (elementType) {
     return this.modelElements.filter(function (element) {
-      return element.properties['parentTypeId'] === elementType;
+      return element.properties['parentType'] === elementType;
     });
   };
 

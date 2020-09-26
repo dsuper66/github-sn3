@@ -28,7 +28,7 @@ export class ModelElementDefService {
       { propertyType: 'resistance', primitiveType: 'number', visible: true },
       { propertyType: 'susceptance', primitiveType: 'number', visible: true },
       { propertyType: 'childCount', primitiveType: 'number', visible: false },
-      { propertyType: 'parentTypeId', primitiveType: 'string', visible: false },
+      { propertyType: 'parentType', primitiveType: 'string', visible: false },
       { propertyType: 'childTypeId', primitiveType: 'string', visible: false },
       { propertyType: 'parentId', primitiveType: 'string', visible: false },
       { propertyType: 'trancheLimit', primitiveType: 'number', visible: true },
@@ -63,7 +63,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
     this.elementTypeProperties['load'] = ['fromBus'];
     //Element definitions (created in the data service) that define a child to be created 
-    this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount'];
+    this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount'];
     //Child elements - tranches
     this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];

@@ -256,7 +256,7 @@ export class ShapeService {
           nonBusEl.elementId, 'toBus', toBus);
         this.modelElementDataService.setPropertyForElement(
             nonBusEl.elementId, 'fromBus', fromBus);
-          
+                
       }
     }
   }

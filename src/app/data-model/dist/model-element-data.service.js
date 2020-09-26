@@ -22,7 +22,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
+                { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
             ]),
             visible: false
         });
@@ -30,7 +30,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'enOfferTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }
+                { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }
             ]),
             visible: false
         });
@@ -38,7 +38,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'resOfferTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }
+                { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }
             ]),
             visible: false
         });
@@ -46,7 +46,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'lossTrancheDef', elementType: 'trancheDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }
+                { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }
             ]),
             visible: false
         });
@@ -56,13 +56,13 @@ var ModelElementDataService = /** @class */ (function () {
         // this.modelElements.push({
         //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
         //   properties: this.makeDict([
-        //     { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
+        //     { 'parentType': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
         //   visible: false
         // });
         this.modelElements.push({
             elementId: 'dirBranchDef', elementType: 'unrestrictedDef',
             properties: this.makeDict([
-                { 'parentTypeId': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }
+                { 'parentType': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }
             ]),
             visible: false
         });
@@ -70,14 +70,14 @@ var ModelElementDataService = /** @class */ (function () {
         // this.modelElements.push({
         //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
         //   properties: this.makeDict([
-        //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+        //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
         //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
         //   visible: false
         // });
         // this.modelElements.push({
         //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
         //   properties: this.makeDict([
-        //     { 'parentTypeId': 'bus' }, //{ 'varId': 'phaseAngle' }, 
+        //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
         //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
         //   visible: false
         // }); 
@@ -135,7 +135,7 @@ var ModelElementDataService = /** @class */ (function () {
     };
     //Child elements
     ModelElementDataService.prototype.getChildElementDefs = function (elementType) {
-        return this.modelElements.filter(function (element) { return element.properties['parentTypeId'] === elementType; });
+        return this.modelElements.filter(function (element) { return element.properties['parentType'] === elementType; });
     };
     ModelElementDataService.prototype.getChildIdsForElementId = function (elementId) {
         return this.modelElements.filter(function (element) { return element.properties['parentId'] === elementId; });
@@ -166,20 +166,29 @@ var ModelElementDataService = /** @class */ (function () {
         return this.modelElements.filter(function (element) { return element.properties[propertyType] === value; });
     };
     ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
-        if (value) {
-            //Special cases
-            //isRefBus... can only have one refBus so set all to false first if the new value is true
-            if (propertyType === 'isRefBus' && value === 'true') {
-                this.setPropertyForAllElements(propertyType, "false");
-            }
-            //Update the property for the element
-            var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
+        // if (value != undefined) {
+        //Special cases
+        //isRefBus... can only have one refBus so set all to false first if the new value is true
+        if (propertyType === 'isRefBus' && value === 'true') {
+            this.setPropertyForAllElements(propertyType, "false");
+        }
+        //Update the property for the element
+        var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
+        //Update if found
+        if (elementToUpdate) {
             elementToUpdate.properties[propertyType] = value;
             console.log("Set property:" + propertyType + "for:" + elementId);
+            //If child elements have the same property then it also gets updated
+            //(i.e. fromBus and toBus for dirBranch)
+            for (var _i = 0, _a = this.getChildIdsForElementId(elementId); _i < _a.length; _i++) {
+                var childElement = _a[_i];
+                this.setPropertyForElement(childElement.elementId, propertyType, value);
+            }
         }
-        else {
-            console.log("Set property: no value");
-        }
+        // }
+        // else {
+        //   console.log("Set property: no value");
+        // }
     };
     ModelElementDataService.prototype.setPropertyForAllElements = function (propertyType, value) {
         console.log("setPropertyForAllElements");

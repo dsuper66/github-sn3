@@ -21,11 +21,11 @@ var ModelElementDefService =
 /** @class */
 function () {
   function ModelElementDefService() {
-    this.elementPropertyTypes = [];
+    this.elementPropertyTypeSettings = [];
     this.elementTypeProperties = {};
     this.defaultValueSettings = []; //Property Types
 
-    this.elementPropertyTypes.push({
+    this.elementPropertyTypeSettings.push({
       propertyType: 'isRefBus',
       primitiveType: 'bool',
       visible: true
@@ -54,7 +54,7 @@ function () {
       primitiveType: 'number',
       visible: false
     }, {
-      propertyType: 'parentTypeId',
+      propertyType: 'parentType',
       primitiveType: 'string',
       visible: false
     }, {
@@ -147,7 +147,7 @@ function () {
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
     this.elementTypeProperties['load'] = ['fromBus']; //Element definitions (created in the data service) that define a child to be created 
 
-    this.elementTypeProperties['childDef'] = ['parentTypeId', 'childTypeId', 'childCount']; //Child elements - tranches
+    this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount']; //Child elements - tranches
 
     this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
@@ -160,10 +160,10 @@ function () {
 
   ModelElementDefService.prototype.propertyIsVisible = function (propertyType) {
     console.log("get visible status for property:" + propertyType);
-    var propertyType = this.elementPropertyTypes.filter(function (property) {
+    var propertyTypeSettings = this.elementPropertyTypeSettings.filter(function (property) {
       return property.propertyType === propertyType;
     })[0];
-    return propertyType.visible;
+    return propertyTypeSettings.visible;
   };
 
   ModelElementDefService.prototype.getDefaultValueForProperty = function (propertyType, elementType) {

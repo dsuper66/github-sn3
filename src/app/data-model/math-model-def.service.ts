@@ -9,100 +9,55 @@ export class MathModelDefService {
 
     //Constraint Defs
     this.constraintDefs.push(
-      // { constraintId: 'nodeBal', elementType: 'bus', varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      // { constraintId: 'enOfferTrancheLimit', elementType: 'enOfferTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
-      // { constraintId: 'genSumTranches', elementType: 'gen', varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0 },
-      // { constraintId: 'bidTrancheLimit', elementType: 'bidTranche', varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'tranchMax', rhsValue: 0 },
-      // { constraintId: 'loadSumTranches', elementType: 'load', varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      // { constraintId: 'powerFlow', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      // { constraintId: 'brFlowLimit', elementType: 'branch', varType: 'nil', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0 },
-      // { constraintId: 'flowSumDirs', elementType: 'branch', varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      // { constraintId: 'angleSumDirs', elementType: 'bus', varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0 },
-      // { constraintId: 'objective', elementType: 'model', varType: 'objectiveVal', inEquality: 'eq', rhsProperty: '', rhsValue: 0 }
-
-      {
-        constraintId: 'nodeBal', elementType: 'bus',
-        varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'enOfferTrancheLimit', elementType: 'enOfferTranche',
-        varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'enOfferTrancheLimit', rhsValue: 0
-      },
-      {
-        constraintId: 'enOfferTrancheSum', elementType: 'gen',
-        varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'bidTrancheLimit', elementType: 'bidTranche',
-        varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'bidTrancheLimit', rhsValue: 0
-      },
-      {
-        constraintId: 'bidTrancheSum', elementType: 'load',
-        varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'powerFlow', elementType: 'branch',
-        varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'brDirFlowLimit', elementType: 'branch',
-        varType: '', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0
-      },
-      {
-        constraintId: 'brDirFlowSum', elementType: 'branch',
-        varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'angleSumDirs', elementType: 'bus',
-        varType: 'phaseAngle', inEquality: 'eq', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'riskCalc', elementType: 'pwrSystem',
-        varType: 'genRisk', inEquality: 'le', rhsProperty: '', rhsValue: 0
-      },
-      {
-        constraintId: 'objective', elementType: 'model',
-        varType: 'objectiveVal', inEquality: 'eq', rhsProperty: '', rhsValue: 0
-      }
+      { constraintId:'nodeBal', elementType:'bus', 
+        varType:'', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'' },      
+      { constraintId:'enOfferTrancheLimit', elementType:'enOfferTranche', 
+        varType:'trancheCleared', inEquality:'le', rhsProperty:'enOfferTrancheLimit', rhsValue:0, multProperty:'' },
+      { constraintId:'enOfferTrancheSum', elementType:'gen', 
+        varType:'genCleared', inEquality:'le', rhsProperty:'', rhsValue:0, multProperty:'' },
+      { constraintId:'bidTrancheLimit', elementType:'bidTranche', 
+        varType:'trancheCleared', inEquality:'le', rhsProperty:'bidTrancheLimit', rhsValue:0, multProperty:'' },
+      { constraintId:'bidTrancheSum', elementType:'load', 
+        varType:'loadCleared', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'' },
+      { constraintId:'powerFlow', elementType:'dirBranch', 
+        varType:'branchFlow', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'direction' },
+      { constraintId:'dirBranchLimit', elementType:'branch', 
+        varType:'', inEquality:'le', rhsProperty:'flowMax', rhsValue:0, multProperty:'' },
+      { constraintId:'riskCalc', elementType:'pwrSystem', 
+        varType:'genRisk', inEquality:'le', rhsProperty:'', rhsValue:0, multProperty:'' },
+      { constraintId:'objective', elementType:'mathModel', 
+        varType:'objectiveVal', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'' },      
 
     )
 
     //Constraint Components
     this.constraintComps.push(
       { constraintId: 'nodeBal', elementType: 'gen', propertyMapToParent: 'toBus', 
-        varType: 'genCleared', multParentProperty: '', multValue: 1 },
+        varType: 'genCleared', multParentProperty: '', multValue: 1, multProperty: '' },
       { constraintId: 'nodeBal', elementType: 'load', propertyMapToParent: 'fromBus', 
-        varType: 'loadCleared', multParentProperty: '', multValue: -1 },
-      { constraintId: 'nodeBal', elementType: 'branch', propertyMapToParent: 'fromBus', 
-        varType: 'branchFlow', multParentProperty: '', multValue: -1 },
-      { constraintId: 'nodeBal', elementType: 'branch', propertyMapToParent: 'toBus', 
-        varType: 'branchFlow', multParentProperty: '', multValue: 1 },
+        varType: 'loadCleared', multParentProperty: '', multValue: -1, multProperty: '' },
+      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMapToParent: 'fromBus', 
+        varType: 'branchFlow', multParentProperty: '', multValue: -1, multProperty: 'direction' },
+      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMapToParent: 'toBus', 
+        varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: 'direction' },
       { constraintId: 'enOfferTrancheSum', elementType: 'enOfferTranche', propertyMapToParent: 'parentId', 
-        varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
+        varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
       { constraintId: 'bidTrancheSum', elementType: 'bidTranche', propertyMapToParent: 'parentId', 
-        varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
+        varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
       { constraintId: 'powerFlow', elementType: 'bus', propertyMapToParent: 'fromBus', 
-        varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: -1 },
+        varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: -1, multProperty: '' },
       { constraintId: 'powerFlow', elementType: 'bus', propertyMapToParent: 'toBus', 
-        varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: 1 },
-      { constraintId: 'brDirFlowLimit', elementType: 'dirBranch', propertyMapToParent: 'parentId', 
-        varType: 'branchFlow', multParentProperty: '', multValue: 0 },
-      { constraintId: 'brDirFlowSum', elementType: 'dirFlowFwd', propertyMapToParent: 'parentId', 
-        varType: 'branchFlow', multParentProperty: '', multValue: -1 },
-      { constraintId: 'brDirFlowSum', elementType: 'dirFlowRev', propertyMapToParent: 'parentId', 
-        varType: 'branchFlow', multParentProperty: '', multValue: 1 },
-      { constraintId: 'angleSumDirs', elementType: 'dirAnglePos', propertyMapToParent: 'parentId', 
-        varType: 'phaseAngle', multParentProperty: '', multValue: -1 },
-      { constraintId: 'angleSumDirs', elementType: 'dirAngleNeg', propertyMapToParent: 'parentId', 
-        varType: 'phaseAngle', multParentProperty: '', multValue: 1 },
+        varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: 1, multProperty: '' },
+      { constraintId: 'dirBranchLimit', elementType: 'dirBranch', propertyMapToParent: 'parentId', 
+        varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: '' },
       { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem', 
-        varType: 'genCleared', multParentProperty: '', multValue: -1 },
+        varType: 'genCleared', multParentProperty: '', multValue: -1, multProperty: '' },
       { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem', 
-        varType: 'resCleared', multParentProperty: '', multValue: -1 },
+        varType: 'resCleared', multParentProperty: '', multValue: -1, multProperty: '' },
       { constraintId: 'objective', elementType: 'genTranche', propertyMapToParent: 'genPrice', 
-        varType: 'trancheCleared', multParentProperty: '', multValue: -1 },
+        varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
       { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice', 
-        varType: 'trancheCleared', multParentProperty: '', multValue: 1 }
+        varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: '' }
     )
 
   }
@@ -130,6 +85,7 @@ export interface ConstraintDef {
   inEquality: string;
   rhsProperty: string;
   rhsValue: number;
+  multProperty: string;
 }
 
 
@@ -140,4 +96,5 @@ export interface ConstraintComp {
   varType: string;
   multParentProperty: string;
   multValue: number;
+  multProperty: string;
 }
