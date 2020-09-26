@@ -24,7 +24,7 @@ var ModelElementDataService = /** @class */ (function () {
             properties: this.makeDict([
                 { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }
             ]),
-            visible: false
+            includeInModel: false
         });
         //Energy Tranches associated with gen
         this.modelElements.push({
@@ -32,7 +32,7 @@ var ModelElementDataService = /** @class */ (function () {
             properties: this.makeDict([
                 { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }
             ]),
-            visible: false
+            includeInModel: false
         });
         //Reserve Tranches associated with gen
         this.modelElements.push({
@@ -40,7 +40,7 @@ var ModelElementDataService = /** @class */ (function () {
             properties: this.makeDict([
                 { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }
             ]),
-            visible: false
+            includeInModel: false
         });
         //Flow-Loss Tranches associated with branch
         this.modelElements.push({
@@ -48,52 +48,30 @@ var ModelElementDataService = /** @class */ (function () {
             properties: this.makeDict([
                 { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }
             ]),
-            visible: false
+            includeInModel: false
         });
         //Unrestricted Elements
         //---------------------
-        //Directional branches associated with branch
-        // this.modelElements.push({
-        //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
-        //   properties: this.makeDict([
-        //     { 'parentType': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
-        //   visible: false
-        // });
         this.modelElements.push({
             elementId: 'dirBranchDef', elementType: 'unrestrictedDef',
             properties: this.makeDict([
                 { 'parentType': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }
             ]),
-            visible: false
+            includeInModel: false
         });
-        // //Unrestricted - bus angle
-        // this.modelElements.push({
-        //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
-        //   properties: this.makeDict([
-        //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
-        //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
-        //   visible: false
-        // });
-        // this.modelElements.push({
-        //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
-        //   properties: this.makeDict([
-        //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
-        //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
-        //   visible: false
-        // }); 
         //Static components of the model
         //mathModel has the objective as a variable
         this.modelElements.push({
             elementId: 'mathmodel001', elementType: 'mathModel',
             properties: {},
-            visible: false
+            includeInModel: true
         });
         //island has risk and reserve as variables 
         //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
         this.modelElements.push({
             elementId: 'island001', elementType: 'island',
             properties: {},
-            visible: false
+            includeInModel: true
         });
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementType) {
@@ -130,7 +108,7 @@ var ModelElementDataService = /** @class */ (function () {
             elementId: elementId,
             elementType: elementType,
             properties: properties,
-            visible: true
+            includeInModel: true
         });
     };
     //Child elements

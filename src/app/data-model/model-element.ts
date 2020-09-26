@@ -7,7 +7,7 @@ export interface ModelElement {
   // properties: Map<string, any>;
 
   properties: ElementProperties;
-  visible: boolean;
+  includeInModel: boolean;
   // properties: {[propertyType:string] : any};
 
   // properties: Record<string, any>;

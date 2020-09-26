@@ -40,13 +40,20 @@ export class MainViewComponent implements OnInit {
     return JSON.stringify(sectionName) + ":[";
   }
 
-  replaceLastChar(stringIn: string, newChar: string) {
+  replaceLastChar(stringIn: string, expectedLastChar: string, newLastChar: string) {
+    var returnString = stringIn;
     if (stringIn.length > 0) {
-      return stringIn.substring(0, stringIn.length - 1) + newChar;
+      //Check that the last char is what we expect
+      if (stringIn.substring(stringIn.length - 1, stringIn.length) === expectedLastChar) {
+        //Replace the last char
+        returnString = stringIn.substring(0, stringIn.length - 1) + newLastChar;
+      } 
+      else {
+        //Add the last char
+        returnString = stringIn + newLastChar;
+      }     
     }
-    else {
-      return stringIn;
-    }
+    return returnString;
   }
 
   jsonAddPair(key: string, value: any) {
@@ -65,7 +72,7 @@ export class MainViewComponent implements OnInit {
     jString += this.jsonStart("elements");
     //Individual Elements    
     let modelElements = this.modelElementDataService.getModelElements();
-    for (const modelElement of modelElements.filter(element => element.visible)) {
+    for (const modelElement of modelElements.filter(element => element.includeInModel)) {
 
       //Start Element
       jString += "{";
@@ -84,12 +91,13 @@ export class MainViewComponent implements OnInit {
           jString += JSON.stringify(propertyType) + ":" + JSON.stringify(value) + ","
         }
       }
-      //Remove the last comma and close properties object and close element object
-      // jString = jString.substring(0, jString.length - 1) + "}},";
-      jString = this.replaceLastChar(jString, "}") + "},";
+      //Remove the last comma and close properties object
+      jString = this.replaceLastChar(jString, ",","}");
+      //Close element object
+      jString += "},";
     }
     //Remove last comma and close Elements list
-    jString = this.replaceLastChar(jString, "]");
+    jString = this.replaceLastChar(jString,",", "]");
     // jString = jString.substring(0, jString.length - 1) + "]}";
 
     //Next "object"...  Elements "," ConstraintDefs
@@ -110,10 +118,10 @@ export class MainViewComponent implements OnInit {
       jString += this.jsonAddPair("multProperty", constraintDef.multProperty);
 
       //Remove last comma and close constraintDef object
-      jString = this.replaceLastChar(jString, "},");
+      jString = this.replaceLastChar(jString, ",","},");
     }
     //Remove last comma, close constraintDefs list
-    jString = this.replaceLastChar(jString, "]");
+    jString = this.replaceLastChar(jString,",", "]");
 
     //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps
     jString += ",";
@@ -133,10 +141,10 @@ export class MainViewComponent implements OnInit {
       jString += this.jsonAddPair("multProperty", constraintComp.multProperty);
 
       //Remove last comma and close constraintComp object
-      jString = this.replaceLastChar(jString, "},");
+      jString = this.replaceLastChar(jString,",", "},");
     }
     //Remove last comma, close constraintComps list
-    jString = this.replaceLastChar(jString, "]");
+    jString = this.replaceLastChar(jString,",", "]");
 
 
     //Close JSON

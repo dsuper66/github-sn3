@@ -18,6 +18,7 @@ var ModelElementDefService = /** @class */ (function () {
         //Separate so that different element types can have different defaults for the same properties
         this.defaultValueSettings.push({ propertyType: 'isRefBus', elementType: 'bus', defaultValue: false }, { propertyType: 'flowMax', elementType: 'branch', defaultValue: 100 }, { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 }, { propertyType: 'susceptance', elementType: 'branch', defaultValue: .001 }, { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 70 }, { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 150 }, { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 80 }, { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 100 }, { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 }, { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 }, { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 }, { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 });
         //Element Types and Property Types
+        //An Element Type that is included in the model must be defined here to know its properties
         //Parent elements
         this.elementTypeProperties['bus'] = ['isRefBus'];
         //Branch (flow limit and losses are at the directional level)
@@ -34,7 +35,9 @@ var ModelElementDefService = /** @class */ (function () {
         //Child elements - unrestricted variables
         //Directional branches (power flow is at the parent branch level)
         this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction', 'susceptance'];
-        // this.elementTypeProperties['dirBranchNeg'] = ['parentId', 'fromBus', 'toBus'];
+        //Static elements
+        this.elementTypeProperties['mathModel'] = [];
+        this.elementTypeProperties['island'] = [];
     }
     ModelElementDefService.prototype.propertyIsVisible = function (propertyType) {
         console.log("get visible status for property:" + propertyType);

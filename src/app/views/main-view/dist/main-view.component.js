@@ -27,13 +27,20 @@ var MainViewComponent = /** @class */ (function () {
     MainViewComponent.prototype.jsonStart = function (sectionName) {
         return JSON.stringify(sectionName) + ":[";
     };
-    MainViewComponent.prototype.replaceLastChar = function (stringIn, newChar) {
+    MainViewComponent.prototype.replaceLastChar = function (stringIn, expectedLastChar, newLastChar) {
+        var returnString = stringIn;
         if (stringIn.length > 0) {
-            return stringIn.substring(0, stringIn.length - 1) + newChar;
+            //Check that the last char is what we expect
+            if (stringIn.substring(stringIn.length - 1, stringIn.length) === expectedLastChar) {
+                //Replace the last char
+                returnString = stringIn.substring(0, stringIn.length - 1) + newLastChar;
+            }
+            else {
+                //Add the last char
+                returnString = stringIn + newLastChar;
+            }
         }
-        else {
-            return stringIn;
-        }
+        return returnString;
     };
     MainViewComponent.prototype.jsonAddPair = function (key, value) {
         // JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
@@ -49,7 +56,7 @@ var MainViewComponent = /** @class */ (function () {
         jString += this.jsonStart("elements");
         //Individual Elements    
         var modelElements = this.modelElementDataService.getModelElements();
-        for (var _i = 0, _a = modelElements.filter(function (element) { return element.visible; }); _i < _a.length; _i++) {
+        for (var _i = 0, _a = modelElements.filter(function (element) { return element.includeInModel; }); _i < _a.length; _i++) {
             var modelElement = _a[_i];
             //Start Element
             jString += "{";
@@ -67,12 +74,13 @@ var MainViewComponent = /** @class */ (function () {
                     jString += JSON.stringify(propertyType) + ":" + JSON.stringify(value) + ",";
                 }
             }
-            //Remove the last comma and close properties object and close element object
-            // jString = jString.substring(0, jString.length - 1) + "}},";
-            jString = this.replaceLastChar(jString, "}") + "},";
+            //Remove the last comma and close properties object
+            jString = this.replaceLastChar(jString, ",", "}");
+            //Close element object
+            jString += "},";
         }
         //Remove last comma and close Elements list
-        jString = this.replaceLastChar(jString, "]");
+        jString = this.replaceLastChar(jString, ",", "]");
         // jString = jString.substring(0, jString.length - 1) + "]}";
         //Next "object"...  Elements "," ConstraintDefs
         jString += ",";
@@ -91,10 +99,10 @@ var MainViewComponent = /** @class */ (function () {
             jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);
             jString += this.jsonAddPair("multProperty", constraintDef.multProperty);
             //Remove last comma and close constraintDef object
-            jString = this.replaceLastChar(jString, "},");
+            jString = this.replaceLastChar(jString, ",", "},");
         }
         //Remove last comma, close constraintDefs list
-        jString = this.replaceLastChar(jString, "]");
+        jString = this.replaceLastChar(jString, ",", "]");
         //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps
         jString += ",";
         //ConstraintComps
@@ -112,10 +120,10 @@ var MainViewComponent = /** @class */ (function () {
             jString += this.jsonAddPair("multValue", constraintComp.multValue);
             jString += this.jsonAddPair("multProperty", constraintComp.multProperty);
             //Remove last comma and close constraintComp object
-            jString = this.replaceLastChar(jString, "},");
+            jString = this.replaceLastChar(jString, ",", "},");
         }
         //Remove last comma, close constraintComps list
-        jString = this.replaceLastChar(jString, "]");
+        jString = this.replaceLastChar(jString, ",", "]");
         //Close JSON
         jString += "}";
         this.solverJsonInput = jString;

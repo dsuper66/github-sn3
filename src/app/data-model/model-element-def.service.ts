@@ -58,6 +58,7 @@ export class ModelElementDefService {
     )
 
     //Element Types and Property Types
+    //An Element Type that is included in the model must be defined here to know its properties
     //Parent elements
     this.elementTypeProperties['bus'] = ['isRefBus'];
     //Branch (flow limit and losses are at the directional level)
@@ -74,10 +75,9 @@ export class ModelElementDefService {
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)
     this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction','susceptance'];
-    // this.elementTypeProperties['dirBranchNeg'] = ['parentId', 'fromBus', 'toBus'];
-
-
-
+    //Static elements
+    this.elementTypeProperties['mathModel'] = [];
+    this.elementTypeProperties['island'] = [];
   }
 
 

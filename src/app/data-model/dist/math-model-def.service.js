@@ -35,9 +35,9 @@ var MathModelDefService = /** @class */ (function () {
             varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: 1, multProperty: '' }, { constraintId: 'dirBranchLimit', elementType: 'dirBranch', propertyMap: 'parentId',
             varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: '' }, { constraintId: 'riskCalc', elementType: 'gen', propertyMap: 'pwrSystem',
             varType: 'genCleared', multParentProperty: '', multValue: -1, multProperty: '' }, { constraintId: 'riskCalc', elementType: 'gen', propertyMap: 'pwrSystem',
-            varType: 'resCleared', multParentProperty: '', multValue: -1, multProperty: '' }, { constraintId: 'objective', elementType: 'genTranche', propertyMap: 'genPrice',
-            varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' }, { constraintId: 'objective', elementType: 'loadTranche', propertyMap: 'loadPrice',
-            varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: '' });
+            varType: 'resCleared', multParentProperty: '', multValue: -1, multProperty: '' }, { constraintId: 'objective', elementType: 'enOfferTranche', propertyMap: 'all',
+            varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: 'tranchePrice' }, { constraintId: 'objective', elementType: 'bidTranche', propertyMap: 'all',
+            varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: 'tranchePrice' });
     }
     // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
     MathModelDefService.prototype.getConstraintDefs = function () {
