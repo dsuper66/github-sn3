@@ -76,7 +76,7 @@ export class MainViewComponent implements OnInit {
       //Properties 
       jString += JSON.stringify("properties") + ":{";
       for (const propertyType
-        of this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementType)) {
+        of this.modelElementDefService.getPropertyTypesFor(modelElement.elementType)) {
 
         let value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyType);
         //Don't write undefined values, e.g., tranches with no data
@@ -107,6 +107,7 @@ export class MainViewComponent implements OnInit {
       jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
       jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);
       jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);
+      jString += this.jsonAddPair("multProperty", constraintDef.multProperty);
 
       //Remove last comma and close constraintDef object
       jString = this.replaceLastChar(jString, "},");
@@ -125,10 +126,11 @@ export class MainViewComponent implements OnInit {
       jString += "{";
       jString += this.jsonAddPair("constraintId", constraintComp.constraintId);
       jString += this.jsonAddPair("elementType", constraintComp.elementType);
-      jString += this.jsonAddPair("propertyMapToParent", constraintComp.propertyMapToParent);
+      jString += this.jsonAddPair("propertyMap", constraintComp.propertyMap);
       jString += this.jsonAddPair("varType", constraintComp.varType);
       jString += this.jsonAddPair("multParentProperty", constraintComp.multParentProperty);
       jString += this.jsonAddPair("multValue", constraintComp.multValue);
+      jString += this.jsonAddPair("multProperty", constraintComp.multProperty);
 
       //Remove last comma and close constraintComp object
       jString = this.replaceLastChar(jString, "},");

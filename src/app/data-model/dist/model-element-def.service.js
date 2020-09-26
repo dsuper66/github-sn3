@@ -32,7 +32,7 @@ var ModelElementDefService = /** @class */ (function () {
         this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
         //Child elements - unrestricted variables
         //Directional branches (power flow is at the parent branch level)
-        this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction'];
+        this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction', 'susceptance'];
         // this.elementTypeProperties['dirBranchNeg'] = ['parentId', 'fromBus', 'toBus'];
     }
     ModelElementDefService.prototype.propertyIsVisible = function (propertyType) {
@@ -52,7 +52,15 @@ var ModelElementDefService = /** @class */ (function () {
             return "";
         }
     };
-    ModelElementDefService.prototype.getPropertyTypeIdsFor = function (elementType) {
+    ModelElementDefService.prototype.getDefaultSettingsForElementType = function (elementType) {
+        return this.defaultValueSettings.filter(function (defaultValueSetting) { return defaultValueSetting.elementType == elementType; });
+    };
+    // setDefaultValues(element: ModelElement): any {
+    //   for (const defaultValueSetting of this.defaultValueSettings.filter(
+    //     defaultValueSetting => defaultValueSetting.elementType == element.elementType)) {
+    //     }
+    // }  
+    ModelElementDefService.prototype.getPropertyTypesFor = function (elementType) {
         console.log("Get properties for: " + elementType);
         var properties = this.elementTypeProperties[elementType];
         console.log("Got properties: " + properties);
@@ -74,6 +82,7 @@ var ModelElementDefService = /** @class */ (function () {
             }
             //Add defaults
             if (addDefaults) {
+                console.log("Added " + propertyType);
                 properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
             }
         }

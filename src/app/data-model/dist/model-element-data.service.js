@@ -144,7 +144,7 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.listAllElements = function (elementId) {
         for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
             var element = _a[_i];
-            var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType);
+            var propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(element.elementType);
             for (var _b = 0, propertyTypeIds_1 = propertyTypeIds; _b < propertyTypeIds_1.length; _b++) {
                 var propertyType = propertyTypeIds_1[_b];
                 console.log("##>>" + element.elementId + " : " + propertyType + " : " + element.properties[propertyType]);

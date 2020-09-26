@@ -32,31 +32,31 @@ export class MathModelDefService {
 
     //Constraint Components
     this.constraintComps.push(
-      { constraintId: 'nodeBal', elementType: 'gen', propertyMapToParent: 'toBus', 
+      { constraintId: 'nodeBal', elementType: 'gen', propertyMap: 'toBus', 
         varType: 'genCleared', multParentProperty: '', multValue: 1, multProperty: '' },
-      { constraintId: 'nodeBal', elementType: 'load', propertyMapToParent: 'fromBus', 
+      { constraintId: 'nodeBal', elementType: 'load', propertyMap: 'fromBus', 
         varType: 'loadCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMapToParent: 'fromBus', 
+      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMap: 'fromBus', 
         varType: 'branchFlow', multParentProperty: '', multValue: -1, multProperty: 'direction' },
-      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMapToParent: 'toBus', 
+      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', 
         varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: 'direction' },
-      { constraintId: 'enOfferTrancheSum', elementType: 'enOfferTranche', propertyMapToParent: 'parentId', 
+      { constraintId: 'enOfferTrancheSum', elementType: 'enOfferTranche', propertyMap: 'parentId', 
         varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'bidTrancheSum', elementType: 'bidTranche', propertyMapToParent: 'parentId', 
+      { constraintId: 'bidTrancheSum', elementType: 'bidTranche', propertyMap: 'parentId', 
         varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'powerFlow', elementType: 'bus', propertyMapToParent: 'fromBus', 
+      { constraintId: 'powerFlow', elementType: 'bus', propertyMap: 'fromBus', 
         varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: -1, multProperty: '' },
-      { constraintId: 'powerFlow', elementType: 'bus', propertyMapToParent: 'toBus', 
+      { constraintId: 'powerFlow', elementType: 'bus', propertyMap: 'toBus', 
         varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: 1, multProperty: '' },
-      { constraintId: 'dirBranchLimit', elementType: 'dirBranch', propertyMapToParent: 'parentId', 
+      { constraintId: 'dirBranchLimit', elementType: 'dirBranch', propertyMap: 'parentId', 
         varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: '' },
-      { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem', 
+      { constraintId: 'riskCalc', elementType: 'gen', propertyMap: 'pwrSystem', 
         varType: 'genCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'riskCalc', elementType: 'gen', propertyMapToParent: 'pwrSystem', 
+      { constraintId: 'riskCalc', elementType: 'gen', propertyMap: 'pwrSystem', 
         varType: 'resCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'objective', elementType: 'genTranche', propertyMapToParent: 'genPrice', 
+      { constraintId: 'objective', elementType: 'genTranche', propertyMap: 'genPrice', 
         varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'objective', elementType: 'loadTranche', propertyMapToParent: 'loadPrice', 
+      { constraintId: 'objective', elementType: 'loadTranche', propertyMap: 'loadPrice', 
         varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: '' }
     )
 
@@ -92,7 +92,7 @@ export interface ConstraintDef {
 export interface ConstraintComp {
   constraintId: string;
   elementType: string;
-  propertyMapToParent: string;
+  propertyMap: string;
   varType: string;
   multParentProperty: string;
   multValue: number;

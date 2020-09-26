@@ -22,7 +22,7 @@ var ModelElementService = /** @class */ (function () {
             ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
             : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
         //Properties
-        var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(elementTypeToAdd);
+        var propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
         var properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
         //Add the element
         this.modelElementDataService.addElement(elementIdForNewElement, elementTypeToAdd, properties);
@@ -53,6 +53,21 @@ var ModelElementService = /** @class */ (function () {
             //If no refBus then make this refBus = true
             if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
                 this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');
+            }
+        }
+        //Set default values
+        for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
+            var defaultValueSetting = _a[_i];
+            var addDefaults = true;
+            //If child element, only add defaults to number 1
+            if (childNum) {
+                if (childNum != 1) {
+                    addDefaults = false;
+                }
+            }
+            //Add defaults
+            if (addDefaults) {
+                this.modelElementDataService.setPropertyForElement(elementIdForNewElement, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
             }
         }
         return elementIdForNewElement;

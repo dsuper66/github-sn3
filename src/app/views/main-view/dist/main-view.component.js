@@ -59,7 +59,7 @@ var MainViewComponent = /** @class */ (function () {
             jString += JSON.stringify("elementType") + ":" + JSON.stringify(modelElement.elementType) + ",";
             //Properties 
             jString += JSON.stringify("properties") + ":{";
-            for (var _b = 0, _c = this.modelElementDefService.getPropertyTypeIdsFor(modelElement.elementType); _b < _c.length; _b++) {
+            for (var _b = 0, _c = this.modelElementDefService.getPropertyTypesFor(modelElement.elementType); _b < _c.length; _b++) {
                 var propertyType = _c[_b];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyType);
                 //Don't write undefined values, e.g., tranches with no data
@@ -89,6 +89,7 @@ var MainViewComponent = /** @class */ (function () {
             jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
             jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);
             jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);
+            jString += this.jsonAddPair("multProperty", constraintDef.multProperty);
             //Remove last comma and close constraintDef object
             jString = this.replaceLastChar(jString, "},");
         }
@@ -105,10 +106,11 @@ var MainViewComponent = /** @class */ (function () {
             jString += "{";
             jString += this.jsonAddPair("constraintId", constraintComp.constraintId);
             jString += this.jsonAddPair("elementType", constraintComp.elementType);
-            jString += this.jsonAddPair("propertyMapToParent", constraintComp.propertyMapToParent);
+            jString += this.jsonAddPair("propertyMap", constraintComp.propertyMap);
             jString += this.jsonAddPair("varType", constraintComp.varType);
             jString += this.jsonAddPair("multParentProperty", constraintComp.multParentProperty);
             jString += this.jsonAddPair("multValue", constraintComp.multValue);
+            jString += this.jsonAddPair("multProperty", constraintComp.multProperty);
             //Remove last comma and close constraintComp object
             jString = this.replaceLastChar(jString, "},");
         }

@@ -163,7 +163,7 @@ export class ModelElementDataService {
   //Test - get all properties of all
   listAllElements(elementId: string): ModelElement[] {
     for (const element of this.modelElements) {
-      const propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType)
+      const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(element.elementType)
       for (const propertyType of propertyTypeIds) {
         console.log("##>>" + element.elementId + " : " + propertyType + " : " + element.properties[propertyType]);
       }

@@ -30,188 +30,179 @@ function () {
       varType: '',
       inEquality: 'eq',
       rhsProperty: '',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: ''
     }, {
       constraintId: 'enOfferTrancheLimit',
       elementType: 'enOfferTranche',
       varType: 'trancheCleared',
       inEquality: 'le',
-      rhsProperty: 'tranchMax',
-      rhsValue: 0
+      rhsProperty: 'enOfferTrancheLimit',
+      rhsValue: 0,
+      multProperty: ''
     }, {
-      constraintId: 'genSumTranches',
+      constraintId: 'enOfferTrancheSum',
       elementType: 'gen',
       varType: 'genCleared',
       inEquality: 'le',
       rhsProperty: '',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: ''
     }, {
       constraintId: 'bidTrancheLimit',
       elementType: 'bidTranche',
       varType: 'trancheCleared',
       inEquality: 'le',
-      rhsProperty: 'tranchMax',
-      rhsValue: 0
+      rhsProperty: 'bidTrancheLimit',
+      rhsValue: 0,
+      multProperty: ''
     }, {
-      constraintId: 'loadSumTranches',
+      constraintId: 'bidTrancheSum',
       elementType: 'load',
       varType: 'loadCleared',
       inEquality: 'eq',
       rhsProperty: '',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: ''
     }, {
       constraintId: 'powerFlow',
-      elementType: 'branch',
+      elementType: 'dirBranch',
       varType: 'branchFlow',
       inEquality: 'eq',
       rhsProperty: '',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: 'direction'
     }, {
-      constraintId: 'brFlowLimit',
+      constraintId: 'dirBranchLimit',
       elementType: 'branch',
-      varType: 'nil',
+      varType: '',
       inEquality: 'le',
       rhsProperty: 'flowMax',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: ''
     }, {
-      constraintId: 'flowSumDirs',
-      elementType: 'branch',
-      varType: 'branchFlow',
-      inEquality: 'eq',
+      constraintId: 'riskCalc',
+      elementType: 'pwrSystem',
+      varType: 'genRisk',
+      inEquality: 'le',
       rhsProperty: '',
-      rhsValue: 0
-    }, {
-      constraintId: 'angleSumDirs',
-      elementType: 'bus',
-      varType: 'phaseAngle',
-      inEquality: 'eq',
-      rhsProperty: '',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: ''
     }, {
       constraintId: 'objective',
-      elementType: 'model',
+      elementType: 'mathModel',
       varType: 'objectiveVal',
       inEquality: 'eq',
       rhsProperty: '',
-      rhsValue: 0
+      rhsValue: 0,
+      multProperty: ''
     }); //Constraint Components
 
     this.constraintComps.push({
       constraintId: 'nodeBal',
       elementType: 'gen',
-      propertyMapToParent: 'toBus',
+      propertyMap: 'toBus',
       varType: 'genCleared',
       multParentProperty: '',
-      multValue: 1
+      multValue: 1,
+      multProperty: ''
     }, {
       constraintId: 'nodeBal',
       elementType: 'load',
-      propertyMapToParent: 'fromBus',
+      propertyMap: 'fromBus',
       varType: 'loadCleared',
       multParentProperty: '',
-      multValue: -1
+      multValue: -1,
+      multProperty: ''
     }, {
       constraintId: 'nodeBal',
-      elementType: 'branch',
-      propertyMapToParent: 'fromBus',
-      varType: 'branchFlow',
-      multParentProperty: '',
-      multValue: -1
-    }, {
-      constraintId: 'nodeBal',
-      elementType: 'branch',
-      propertyMapToParent: 'toBus',
-      varType: 'branchFlow',
-      multParentProperty: '',
-      multValue: 1
-    }, {
-      constraintId: 'genSumTranches',
-      elementType: 'enOfferTranche',
-      propertyMapToParent: 'parentId',
-      varType: 'trancheCleared',
-      multParentProperty: '',
-      multValue: -1
-    }, {
-      constraintId: 'loadSumTranches',
-      elementType: 'bidTranche',
-      propertyMapToParent: 'parentId',
-      varType: 'trancheCleared',
-      multParentProperty: '',
-      multValue: -1
-    }, {
-      constraintId: 'powerFlow',
-      elementType: 'bus',
-      propertyMapToParent: 'fromBus',
-      varType: 'phaseAngle',
-      multParentProperty: 'susceptance',
-      multValue: -1
-    }, {
-      constraintId: 'powerFlow',
-      elementType: 'bus',
-      propertyMapToParent: 'toBus',
-      varType: 'phaseAngle',
-      multParentProperty: 'susceptance',
-      multValue: 1
-    }, {
-      constraintId: 'branchLimit',
       elementType: 'dirBranch',
-      propertyMapToParent: 'parentId',
+      propertyMap: 'fromBus',
       varType: 'branchFlow',
       multParentProperty: '',
-      multValue: 0
+      multValue: -1,
+      multProperty: 'direction'
     }, {
-      constraintId: 'brFlowSumDirs',
-      elementType: 'dirFlowFwd',
-      propertyMapToParent: 'parentId',
+      constraintId: 'nodeBal',
+      elementType: 'dirBranch',
+      propertyMap: 'toBus',
       varType: 'branchFlow',
       multParentProperty: '',
-      multValue: -1
+      multValue: 1,
+      multProperty: 'direction'
     }, {
-      constraintId: 'brFlowSumDirs',
-      elementType: 'dirFlowRev',
-      propertyMapToParent: 'parentId',
-      varType: 'branchFlow',
-      multParentProperty: '',
-      multValue: 1
-    }, {
-      constraintId: 'angleSumDirs',
-      elementType: 'dirAngleFwd',
-      propertyMapToParent: 'parentId',
-      varType: 'phaseAngle',
-      multParentProperty: '',
-      multValue: -1
-    }, {
-      constraintId: 'angleSumDirs',
-      elementType: 'dirAngleRev',
-      propertyMapToParent: 'parentId',
-      varType: 'phaseAngle',
-      multParentProperty: '',
-      multValue: 1
-    }, {
-      constraintId: 'objective',
+      constraintId: 'enOfferTrancheSum',
       elementType: 'enOfferTranche',
-      propertyMapToParent: 'enOfferTranchePrice',
+      propertyMap: 'parentId',
       varType: 'trancheCleared',
       multParentProperty: '',
-      multValue: -1
+      multValue: -1,
+      multProperty: ''
+    }, {
+      constraintId: 'bidTrancheSum',
+      elementType: 'bidTranche',
+      propertyMap: 'parentId',
+      varType: 'trancheCleared',
+      multParentProperty: '',
+      multValue: -1,
+      multProperty: ''
+    }, {
+      constraintId: 'powerFlow',
+      elementType: 'bus',
+      propertyMap: 'fromBus',
+      varType: 'phaseAngle',
+      multParentProperty: 'susceptance',
+      multValue: -1,
+      multProperty: ''
+    }, {
+      constraintId: 'powerFlow',
+      elementType: 'bus',
+      propertyMap: 'toBus',
+      varType: 'phaseAngle',
+      multParentProperty: 'susceptance',
+      multValue: 1,
+      multProperty: ''
+    }, {
+      constraintId: 'dirBranchLimit',
+      elementType: 'dirBranch',
+      propertyMap: 'parentId',
+      varType: 'branchFlow',
+      multParentProperty: '',
+      multValue: 1,
+      multProperty: ''
+    }, {
+      constraintId: 'riskCalc',
+      elementType: 'gen',
+      propertyMap: 'pwrSystem',
+      varType: 'genCleared',
+      multParentProperty: '',
+      multValue: -1,
+      multProperty: ''
+    }, {
+      constraintId: 'riskCalc',
+      elementType: 'gen',
+      propertyMap: 'pwrSystem',
+      varType: 'resCleared',
+      multParentProperty: '',
+      multValue: -1,
+      multProperty: ''
     }, {
       constraintId: 'objective',
-      elementType: 'bidTranche',
-      propertyMapToParent: 'loadPrice',
+      elementType: 'genTranche',
+      propertyMap: 'genPrice',
       varType: 'trancheCleared',
       multParentProperty: '',
-      multValue: 1
-    }); //Variables for Element Types
-    // this.elementTypeVarTypes['bus'] =         ['phaseAngle'];
-    // this.elementTypeVarTypes['posAngle'] =    ['phaseAngle'];
-    // this.elementTypeVarTypes['negAngle'] =    ['phaseAngle'];
-    // this.elementTypeVarTypes['branch'] =      ['branchFlow','branchLoss'];
-    // this.elementTypeVarTypes['posFlow'] =     ['branchFlow','branchLoss'];
-    // this.elementTypeVarTypes['negFlow'] =     ['branchFlow','branchLoss'];
-    // this.elementTypeVarTypes['gen'] =         ['genCleared','resCleared'];
-    // this.elementTypeVarTypes['load'] =        ['loadCleared'];
-    // this.elementTypeVarTypes['enOfferTranche'] =  ['trancheCleared'];
-    // this.elementTypeVarTypes['bidTranche'] = ['trancheCleared'];
+      multValue: -1,
+      multProperty: ''
+    }, {
+      constraintId: 'objective',
+      elementType: 'loadTranche',
+      propertyMap: 'loadPrice',
+      varType: 'trancheCleared',
+      multParentProperty: '',
+      multValue: 1,
+      multProperty: ''
+    });
   } // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
 

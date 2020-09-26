@@ -78,7 +78,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
             console.log(">>> " + selectedElement.elementType);
-            var parentProperties = this.modelElementDefService.getPropertyTypeIdsFor(selectedElement.elementType);
+            var parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
             this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
             //Populate the property fields
             // for (const parentPropertyId of parentProperties) {
@@ -100,7 +100,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
             for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
                 var childElement = childElements_1[_i];
-                var childProperties = this.modelElementDefService.getPropertyTypeIdsFor(childElement.elementType);
+                var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
                 // for (const childPropertyId of childProperties) {
                 //   if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {

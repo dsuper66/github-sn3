@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import {
-  ElementPropertyType,
+  ElementPropertyType, ModelElement,
   // DefaultPropertyValue
 } from './model-element';
+import { ModelElementDataService } from './model-element-data.service';
 
 export interface DefaultValue {
   propertyType: string;
@@ -71,7 +72,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)
-    this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction'];
+    this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction','susceptance'];
     // this.elementTypeProperties['dirBranchNeg'] = ['parentId', 'fromBus', 'toBus'];
 
 
@@ -103,12 +104,25 @@ export class ModelElementDefService {
     }
   }
 
-  getPropertyTypeIdsFor(elementType: string): string[] {
+  getDefaultSettingsForElementType(elementType: string) {
+    return this.defaultValueSettings.filter(
+      defaultValueSetting => defaultValueSetting.elementType == elementType)
+  }
+
+  // setDefaultValues(element: ModelElement): any {
+  //   for (const defaultValueSetting of this.defaultValueSettings.filter(
+  //     defaultValueSetting => defaultValueSetting.elementType == element.elementType)) {
+        
+  //     }
+  // }  
+
+  getPropertyTypesFor(elementType: string): string[] {
     console.log("Get properties for: " + elementType);
     const properties = this.elementTypeProperties[elementType];
     console.log("Got properties: " + properties);
     return properties;
   }
+
 
   makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyType: string]: any } {
 
@@ -125,11 +139,31 @@ export class ModelElementDefService {
       }
       //Add defaults
       if (addDefaults) {
+        console.log("Added " + propertyType)
         properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
       }
     } 
 
     return properties;
   }
+
+  // setDefaultProperties(element: ModelElement, childNum?: number) {
+
+  //   for (const property of element.properties)) {
+  //     console.log("looking for defaults for property: " + propertyType);
+  //     var addDefaults = true;
+  //     //If child element, only add defaults to number 1
+  //     if (childNum) {
+  //       if (childNum != 1) {addDefaults = false}
+  //     }
+  //     //Add defaults
+  //     if (addDefaults) {
+  //       if 
+  //       console.log("Added " + propertyType)
+  //       this.setPropertyForElement(element.elementId,propertyType,)
+  //       properties[propertyType] = this.modelElementDefService.getDefaultValueForProperty(propertyType, elementType);
+  //     }
+  //   } 
+  // }
 
 }

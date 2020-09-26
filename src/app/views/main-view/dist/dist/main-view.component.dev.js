@@ -110,7 +110,8 @@ function () {
       jString += this.jsonAddPair("varType", constraintDef.varType);
       jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
       jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);
-      jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue); //Remove last comma and close constraintDef object
+      jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);
+      jString += this.jsonAddPair("multProperty", constraintDef.multProperty); //Remove last comma and close constraintDef object
 
       jString = this.replaceLastChar(jString, "},");
     } //Remove last comma, close constraintDefs list
@@ -129,10 +130,11 @@ function () {
       jString += "{";
       jString += this.jsonAddPair("constraintId", constraintComp.constraintId);
       jString += this.jsonAddPair("elementType", constraintComp.elementType);
-      jString += this.jsonAddPair("propertyMapToParent", constraintComp.propertyMapToParent);
+      jString += this.jsonAddPair("propertyMap", constraintComp.propertyMap);
       jString += this.jsonAddPair("varType", constraintComp.varType);
       jString += this.jsonAddPair("multParentProperty", constraintComp.multParentProperty);
-      jString += this.jsonAddPair("multValue", constraintComp.multValue); //Remove last comma and close constraintComp object
+      jString += this.jsonAddPair("multValue", constraintComp.multValue);
+      jString += this.jsonAddPair("multProperty", constraintComp.multProperty); //Remove last comma and close constraintComp object
 
       jString = this.replaceLastChar(jString, "},");
     } //Remove last comma, close constraintComps list
