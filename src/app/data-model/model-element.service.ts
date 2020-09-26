@@ -37,14 +37,14 @@ export class ModelElementService {
         : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
 
     //Properties
-    const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
-    const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
+    //const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
+    //const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
 
     //Add the element
     this.modelElementDataService.addElement(
       elementIdForNewElement,
       elementTypeToAdd,
-      properties
+      {} //properties... empty and then populated either by defaults or data input
     )
 
     //If this is a child then assign parent property

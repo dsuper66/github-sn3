@@ -15,6 +15,7 @@ var ModelElementDefService = /** @class */ (function () {
         this.defaultValueSettings = [];
         //Property Types
         this.elementPropertyTypeSettings.push({ propertyType: 'isRefBus', primitiveType: 'bool', visible: true }, { propertyType: 'fromBus', primitiveType: 'string', visible: false }, { propertyType: 'toBus', primitiveType: 'string', visible: false }, { propertyType: 'flowMax', primitiveType: 'number', visible: true }, { propertyType: 'resistance', primitiveType: 'number', visible: true }, { propertyType: 'susceptance', primitiveType: 'number', visible: true }, { propertyType: 'childCount', primitiveType: 'number', visible: false }, { propertyType: 'parentType', primitiveType: 'string', visible: false }, { propertyType: 'childTypeId', primitiveType: 'string', visible: false }, { propertyType: 'parentId', primitiveType: 'string', visible: false }, { propertyType: 'trancheLimit', primitiveType: 'number', visible: true }, { propertyType: 'tranchePrice', primitiveType: 'number', visible: true }, { propertyType: 'flowLimit', primitiveType: 'number', visible: true }, { propertyType: 'lossLimit', primitiveType: 'number', visible: true }, { propertyType: 'capacityMax', primitiveType: 'number', visible: true }, { propertyType: 'direction', primitiveType: 'number', visible: true });
+        //Separate so that different element types can have different defaults for the same properties
         this.defaultValueSettings.push({ propertyType: 'isRefBus', elementType: 'bus', defaultValue: false }, { propertyType: 'flowMax', elementType: 'branch', defaultValue: 100 }, { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 }, { propertyType: 'susceptance', elementType: 'branch', defaultValue: .001 }, { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 70 }, { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 150 }, { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 80 }, { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 100 }, { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 }, { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 }, { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 }, { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 });
         //Element Types and Property Types
         //Parent elements
@@ -64,28 +65,6 @@ var ModelElementDefService = /** @class */ (function () {
         console.log("Get properties for: " + elementType);
         var properties = this.elementTypeProperties[elementType];
         console.log("Got properties: " + properties);
-        return properties;
-    };
-    ModelElementDefService.prototype.makeProperties = function (elementType, propertiesToAdd, childNum) {
-        console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
-        var properties = {};
-        //Get defaults
-        for (var _i = 0, propertiesToAdd_1 = propertiesToAdd; _i < propertiesToAdd_1.length; _i++) {
-            var propertyType = propertiesToAdd_1[_i];
-            console.log("looking for defaults for property: " + propertyType);
-            var addDefaults = true;
-            //If child element, only add defaults to number 1
-            if (childNum) {
-                if (childNum != 1) {
-                    addDefaults = false;
-                }
-            }
-            //Add defaults
-            if (addDefaults) {
-                console.log("Added " + propertyType);
-                properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
-            }
-        }
         return properties;
     };
     ModelElementDefService = __decorate([

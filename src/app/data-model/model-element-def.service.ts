@@ -41,6 +41,7 @@ export class ModelElementDefService {
 
     )
 
+    //Separate so that different element types can have different defaults for the same properties
     this.defaultValueSettings.push(
       { propertyType: 'isRefBus', elementType: 'bus', defaultValue: false },
       { propertyType: 'flowMax', elementType: 'branch', defaultValue: 100 },
@@ -124,32 +125,13 @@ export class ModelElementDefService {
   }
 
 
-  makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyType: string]: any } {
+  // makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyType: string]: any } {
 
-    console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
-    var properties: { [propertyType: string]: any } = {};
+  //   console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
+  //   var properties: { [propertyType: string]: any } = {};
 
-    //Get defaults
-    for (const propertyType of propertiesToAdd) {
-      console.log("looking for defaults for property: " + propertyType);
-      var addDefaults = true;
-      //If child element, only add defaults to number 1
-      if (childNum) {
-        if (childNum != 1) {addDefaults = false}
-      }
-      //Add defaults
-      if (addDefaults) {
-        console.log("Added " + propertyType)
-        properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
-      }
-    } 
-
-    return properties;
-  }
-
-  // setDefaultProperties(element: ModelElement, childNum?: number) {
-
-  //   for (const property of element.properties)) {
+  //   //Get defaults
+  //   for (const propertyType of propertiesToAdd) {
   //     console.log("looking for defaults for property: " + propertyType);
   //     var addDefaults = true;
   //     //If child element, only add defaults to number 1
@@ -158,12 +140,13 @@ export class ModelElementDefService {
   //     }
   //     //Add defaults
   //     if (addDefaults) {
-  //       if 
   //       console.log("Added " + propertyType)
-  //       this.setPropertyForElement(element.elementId,propertyType,)
-  //       properties[propertyType] = this.modelElementDefService.getDefaultValueForProperty(propertyType, elementType);
+  //       properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
   //     }
   //   } 
+
+  //   return properties;
   // }
+
 
 }

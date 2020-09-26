@@ -22,10 +22,11 @@ var ModelElementService = /** @class */ (function () {
             ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
             : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
         //Properties
-        var propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
-        var properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
+        //const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
+        //const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
         //Add the element
-        this.modelElementDataService.addElement(elementIdForNewElement, elementTypeToAdd, properties);
+        this.modelElementDataService.addElement(elementIdForNewElement, elementTypeToAdd, {} //properties... empty and then populated either by defaults or data input
+        );
         //If this is a child then assign parent property
         if (parentId) {
             this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
