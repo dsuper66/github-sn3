@@ -13,28 +13,55 @@ var ModelElementService = /** @class */ (function () {
         this.modelElementDataService = modelElementDataService;
         this.modelElementDefService = modelElementDefService;
     }
+    ModelElementService.prototype.iff = function (condition, resultTrue, resultFalse) {
+        if (condition) {
+            return resultTrue;
+        }
+        else {
+            return resultFalse;
+        }
+    };
     //Add element (for child elements record their parent)
     ModelElementService.prototype.addModelElement = function (elementTypeToAdd, parentId, childNum) {
         //Add the new element
         console.log("addModelElement:" + elementTypeToAdd);
-        //ID for the new element (child element is from parent)
-        var elementIdForNewElement = (parentId && childNum)
-            ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
-            : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+        //ID for the new element 
+        // const newId
+        //   = (parentId && childNum) //child id incorporated parent id
+        //     ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
+        //     : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+        var newId;
+        if (parentId && childNum) {
+            //Special Case for directional branches
+            if (elementTypeToAdd == 'dirBranch') {
+                if (childNum == 1) {
+                    newId = parentId + elementTypeToAdd + "Pos";
+                }
+                else {
+                    newId = parentId + elementTypeToAdd + "Neg";
+                }
+            }
+            else { //child id is parent + child
+                newId = this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum);
+            }
+        }
+        else { //parent
+            newId = this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+        }
         //Properties
         //const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
         //const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
         //Add the element
-        this.modelElementDataService.addElement(elementIdForNewElement, elementTypeToAdd, {} //properties... empty and then populated either by defaults or data input
+        this.modelElementDataService.addElement(newId, elementTypeToAdd, {} //properties... empty and then populated either by defaults or data input
         );
         //If this is a child then assign parent property
         if (parentId) {
-            this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
+            this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
         }
         //Special case
         //dirBranch needs a direction property
         if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
-            this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'direction', childNum == 1 ? 1 : -1);
+            this.modelElementDataService.setPropertyForElement(newId, 'direction', childNum == 1 ? 1 : -1);
         }
         //Create any child elements (linked back to parent like a gen is to a bus)
         var self = this;
@@ -45,7 +72,7 @@ var ModelElementService = /** @class */ (function () {
             console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
             //Add the child record(s)
             for (var childNum_1 = 1; childNum_1 <= childCount; childNum_1++) {
-                self.addModelElement(childType, elementIdForNewElement, childNum_1);
+                self.addModelElement(childType, newId, childNum_1);
             }
         });
         //Special case
@@ -53,7 +80,7 @@ var ModelElementService = /** @class */ (function () {
         if (elementTypeToAdd === 'bus') {
             //If no refBus then make this refBus = true
             if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
-                this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');
+                this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
             }
         }
         //Set default values
@@ -68,10 +95,10 @@ var ModelElementService = /** @class */ (function () {
             }
             //Add defaults
             if (addDefaults) {
-                this.modelElementDataService.setPropertyForElement(elementIdForNewElement, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
+                this.modelElementDataService.setPropertyForElement(newId, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
             }
         }
-        return elementIdForNewElement;
+        return newId;
     };
     ModelElementService = __decorate([
         core_1.Injectable({

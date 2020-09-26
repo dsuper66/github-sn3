@@ -20,6 +20,14 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ModelElementService {
 
+  iff(condition: boolean, resultTrue: string, resultFalse: string) : string {
+    if (condition) {
+      return resultTrue;
+    }
+    else {
+      return resultFalse;
+    }
+  }
   constructor(
     private modelElementDataService: ModelElementDataService,
     private modelElementDefService: ModelElementDefService) { }
@@ -30,33 +38,51 @@ export class ModelElementService {
     //Add the new element
     console.log("addModelElement:" + elementTypeToAdd);
 
-    //ID for the new element (child element is from parent)
-    const elementIdForNewElement
-      = (parentId && childNum)
-        ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
-        : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
-
+    //ID for the new element 
+    // const newId
+    //   = (parentId && childNum) //child id incorporated parent id
+    //     ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
+    //     : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+    var newId: string;
+    if (parentId && childNum) {
+      //Special Case for directional branches
+      if (elementTypeToAdd == 'dirBranch') {
+        if (childNum == 1) {
+          newId = parentId + elementTypeToAdd + "Pos"
+        }
+        else {
+          newId = parentId + elementTypeToAdd + "Neg"
+        }
+      }
+      else {//child id is parent + child
+        newId = this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum);
+      }
+    }
+    else { //parent
+      newId = this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+    }
+     
     //Properties
     //const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
     //const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
 
     //Add the element
     this.modelElementDataService.addElement(
-      elementIdForNewElement,
+      newId,
       elementTypeToAdd,
       {} //properties... empty and then populated either by defaults or data input
     )
 
     //If this is a child then assign parent property
     if (parentId) {
-      this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'parentId', parentId);
+      this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
     }
 
     //Special case
     //dirBranch needs a direction property
     if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
       this.modelElementDataService.setPropertyForElement(
-        elementIdForNewElement, 'direction', childNum == 1 ? 1 : -1);
+        newId, 'direction', childNum == 1 ? 1 : -1);
     }  
 
     //Create any child elements (linked back to parent like a gen is to a bus)
@@ -69,7 +95,7 @@ export class ModelElementService {
 
       //Add the child record(s)
       for (let childNum = 1; childNum <= childCount; childNum++) {
-        self.addModelElement(childType, elementIdForNewElement, childNum);
+        self.addModelElement(childType, newId, childNum);
       }
     });
 
@@ -78,7 +104,7 @@ export class ModelElementService {
     if (elementTypeToAdd === 'bus') {
       //If no refBus then make this refBus = true
       if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
-        this.modelElementDataService.setPropertyForElement(elementIdForNewElement, 'isRefBus', 'true');
+        this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
       }
     } 
 
@@ -94,11 +120,11 @@ export class ModelElementService {
       //Add defaults
       if (addDefaults) {
         this.modelElementDataService.setPropertyForElement(
-          elementIdForNewElement,defaultValueSetting.propertyType,defaultValueSetting.defaultValue);
+          newId,defaultValueSetting.propertyType,defaultValueSetting.defaultValue);
       }
     }
 
-    return elementIdForNewElement;
+    return newId;
   }
 
 }
