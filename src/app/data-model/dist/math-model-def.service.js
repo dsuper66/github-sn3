@@ -15,9 +15,9 @@ var MathModelDefService = /** @class */ (function () {
         //Constraint Defs
         this.constraintDefs.push({ constraintId: 'nodeBal', elementType: 'bus',
             varType: '', inEquality: 'eq', rhsProperty: '', rhsValue: 0, multProperty: '' }, { constraintId: 'enOfferTrancheLimit', elementType: 'enOfferTranche',
-            varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'enOfferTrancheLimit', rhsValue: 0, multProperty: '' }, { constraintId: 'enOfferTrancheSum', elementType: 'gen',
+            varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'trancheLimit', rhsValue: 0, multProperty: '' }, { constraintId: 'enOfferTrancheSum', elementType: 'gen',
             varType: 'genCleared', inEquality: 'le', rhsProperty: '', rhsValue: 0, multProperty: '' }, { constraintId: 'bidTrancheLimit', elementType: 'bidTranche',
-            varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'bidTrancheLimit', rhsValue: 0, multProperty: '' }, { constraintId: 'bidTrancheSum', elementType: 'load',
+            varType: 'trancheCleared', inEquality: 'le', rhsProperty: 'trancheLimit', rhsValue: 0, multProperty: '' }, { constraintId: 'bidTrancheSum', elementType: 'load',
             varType: 'loadCleared', inEquality: 'eq', rhsProperty: '', rhsValue: 0, multProperty: '' }, { constraintId: 'powerFlow', elementType: 'dirBranch',
             varType: 'branchFlow', inEquality: 'eq', rhsProperty: '', rhsValue: 0, multProperty: 'direction' }, { constraintId: 'dirBranchLimit', elementType: 'branch',
             varType: '', inEquality: 'le', rhsProperty: 'flowMax', rhsValue: 0, multProperty: '' }, { constraintId: 'riskCalc', elementType: 'pwrSystem',
