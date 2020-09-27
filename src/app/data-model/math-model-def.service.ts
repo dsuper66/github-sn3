@@ -55,9 +55,9 @@ export class MathModelDefService {
       { constraintId: 'riskCalc', elementType: 'gen', propertyMap: 'pwrSystem', 
         varType: 'resCleared', multParentProperty: '', multValue: -1, multProperty: '' },
       { constraintId: 'objective', elementType: 'enOfferTranche', propertyMap: 'all', 
-        varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: 'tranchePrice' },
+        varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: 'tranchePrice' },
       { constraintId: 'objective', elementType: 'bidTranche', propertyMap: 'all', 
-        varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: 'tranchePrice' }
+        varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: 'tranchePrice' }
     )
 
   }

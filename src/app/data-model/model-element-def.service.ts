@@ -85,6 +85,11 @@ export class ModelElementDefService {
   private elementTypeProperties: { [elementType: string]: string[] } = {};
   private defaultValueSettings: DefaultValue[] = [];
 
+  elementTypeHasProperty(elementType: string, propertyType: string) {
+    return (this.elementTypeProperties[elementType].filter( 
+      elementProperties => elementProperties[propertyType])[0] != undefined);
+  }
+
   propertyIsVisible(propertyType: string) {
     console.log("get visible status for property:" + propertyType);
     const propertyTypeSettings = this.elementPropertyTypeSettings.filter(property => property.propertyType === propertyType)[0];

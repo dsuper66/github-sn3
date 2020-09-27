@@ -130,7 +130,7 @@ export class ModelElementDataService {
       element => element.properties['parentType'] === elementType);
   }
 
-  getChildIdsForElementId(elementId: string): ModelElement[] {
+  getChildElements(elementId: string): ModelElement[] {
     return this.modelElements.filter(
       element => element.properties['parentId'] === elementId);
   }
@@ -187,8 +187,10 @@ export class ModelElementDataService {
 
       //If child elements have the same property then it also gets updated
       //(i.e. fromBus and toBus for dirBranch)
-      for (const childElement of this.getChildIdsForElementId(elementId)) {
-        this.setPropertyForElement(childElement.elementId,propertyType,value);
+      for (const childElementWithProperty of this.getChildElements(elementId).filter(
+        childElement => this.modelElementDefService.elementTypeHasProperty(childElement.elementType,propertyType))) {
+
+        this.setPropertyForElement(childElementWithProperty.elementId,propertyType,value);
       }
     }
 

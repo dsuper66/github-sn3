@@ -97,7 +97,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             //   }
             // }
             //Get child records
-            var childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
+            var childElements = this.modelElementDataService.getChildElements(elementId);
             for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
                 var childElement = childElements_1[_i];
                 var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);

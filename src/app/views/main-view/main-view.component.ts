@@ -79,13 +79,19 @@ export class MainViewComponent implements OnInit {
       != this.modelElementDefService.getPropertyCount(element.elementType)) 
       ) 
     )
-    // && (element.properties.filter(property => (property['parentId'] != undefined)))
     for (const modelElement of modelElementsExcluded) {
-    console.log(">>>Excluded:" + modelElement.elementId);
+    console.log(">>>Excluded:" + modelElement.elementId + " only has ");
+      for (const property of Object.keys(modelElement.properties)) {
+        console.log("key:" + property);
+      }
     }
 
     //Write all the elements
-    for (const modelElement of modelElements.filter(element => element.includeInModel)) {
+    for (const modelElement of modelElements.filter(
+      element => element.includeInModel 
+      && !(modelElementsExcluded.map(element => element.elementId).includes(element.elementId)))) 
+    {
+
       console.log("write: " + modelElement.elementId);
       //Start this Element
       jString += "{";

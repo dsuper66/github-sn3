@@ -39,6 +39,9 @@ var ModelElementDefService = /** @class */ (function () {
         this.elementTypeProperties['mathModel'] = [];
         this.elementTypeProperties['island'] = [];
     }
+    ModelElementDefService.prototype.elementTypeHasProperty = function (elementType, propertyType) {
+        return (this.elementTypeProperties[elementType].filter(function (elementProperties) { return elementProperties[propertyType]; })[0] != undefined);
+    };
     ModelElementDefService.prototype.propertyIsVisible = function (propertyType) {
         console.log("get visible status for property:" + propertyType);
         var propertyTypeSettings = this.elementPropertyTypeSettings.filter(function (property) { return property.propertyType === propertyType; })[0];

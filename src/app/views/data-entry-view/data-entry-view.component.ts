@@ -130,7 +130,7 @@ export class DataEntryViewComponent implements OnInit {
       // }
 
       //Get child records
-      const childElements = this.modelElementDataService.getChildIdsForElementId(elementId);
+      const childElements = this.modelElementDataService.getChildElements(elementId);
       for (const childElement of childElements) {
 
         const childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
