@@ -23,28 +23,28 @@ export class ModelElementDataService {
     //--------
     //Bid Tranches associated with load
     this.modelElements.push({
-      elementId: 'bidTrancheDef', elementType: 'trancheDef',
+      elementId: 'bidTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
         { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]),
       includeInModel: false
     });
     //Energy Tranches associated with gen
     this.modelElements.push({
-      elementId: 'enOfferTrancheDef', elementType: 'trancheDef',
+      elementId: 'enOfferTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
         { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }]),
       includeInModel: false
     });
     //Reserve Tranches associated with gen
     this.modelElements.push({
-      elementId: 'resOfferTrancheDef', elementType: 'trancheDef',
+      elementId: 'resOfferTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
         { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }]),
       includeInModel: false
     });
     //Flow-Loss Tranches associated with branch
     this.modelElements.push({
-      elementId: 'lossTrancheDef', elementType: 'trancheDef',
+      elementId: 'lossTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
         { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
       includeInModel: false
@@ -52,7 +52,7 @@ export class ModelElementDataService {
     //Unrestricted Elements
     //---------------------
     this.modelElements.push({
-      elementId: 'dirBranchDef', elementType: 'unrestrictedDef',
+      elementId: 'dirBranchDef', elementType: 'childDef',
       properties: this.makeDict([
         { 'parentType': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }]),
       includeInModel: false

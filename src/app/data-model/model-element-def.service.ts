@@ -124,6 +124,16 @@ export class ModelElementDefService {
     return properties;
   }
 
+  getPropertyCount(elementType: string): number {
+    const propertyTypes = this.elementTypeProperties[elementType];
+    if (propertyTypes != undefined) {
+      return propertyTypes.length;
+    }
+    else {
+      return 0;
+    }
+  }
+
 
   // makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyType: string]: any } {
 

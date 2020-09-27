@@ -70,6 +70,15 @@ var ModelElementDefService = /** @class */ (function () {
         console.log("Got properties: " + properties);
         return properties;
     };
+    ModelElementDefService.prototype.getPropertyCount = function (elementType) {
+        var propertyTypes = this.elementTypeProperties[elementType];
+        if (propertyTypes != undefined) {
+            return propertyTypes.length;
+        }
+        else {
+            return 0;
+        }
+    };
     ModelElementDefService = __decorate([
         core_1.Injectable({
             providedIn: 'root'

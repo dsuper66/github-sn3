@@ -56,9 +56,19 @@ var MainViewComponent = /** @class */ (function () {
         jString += this.jsonStart("elements");
         //Individual Elements    
         var modelElements = this.modelElementDataService.getModelElements();
-        for (var _i = 0, _a = modelElements.filter(function (element) { return element.includeInModel; }); _i < _a.length; _i++) {
-            var modelElement = _a[_i];
-            //Start Element
+        //Don't write an element that has missing properties
+        var modelElementsExcluded = modelElements.filter(function (element) { return ((Object.keys(element.properties).length
+            != _this.modelElementDefService.getPropertyCount(element.elementType))); });
+        // && (element.properties.filter(property => (property['parentId'] != undefined)))
+        for (var _i = 0, modelElementsExcluded_1 = modelElementsExcluded; _i < modelElementsExcluded_1.length; _i++) {
+            var modelElement = modelElementsExcluded_1[_i];
+            console.log(">>>Excluded:" + modelElement.elementId);
+        }
+        //Write all the elements
+        for (var _a = 0, _b = modelElements.filter(function (element) { return element.includeInModel; }); _a < _b.length; _a++) {
+            var modelElement = _b[_a];
+            console.log("write: " + modelElement.elementId);
+            //Start this Element
             jString += "{";
             //ID
             jString += JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
@@ -66,8 +76,8 @@ var MainViewComponent = /** @class */ (function () {
             jString += JSON.stringify("elementType") + ":" + JSON.stringify(modelElement.elementType) + ",";
             //Properties 
             jString += JSON.stringify("properties") + ":{";
-            for (var _b = 0, _c = this.modelElementDefService.getPropertyTypesFor(modelElement.elementType); _b < _c.length; _b++) {
-                var propertyType = _c[_b];
+            for (var _c = 0, _d = this.modelElementDefService.getPropertyTypesFor(modelElement.elementType); _c < _d.length; _c++) {
+                var propertyType = _d[_c];
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyType);
                 //Don't write undefined values, e.g., tranches with no data
                 if (value != undefined) {
@@ -87,8 +97,8 @@ var MainViewComponent = /** @class */ (function () {
         //ConstraintDefs
         jString += this.jsonStart("constraintDefs");
         var constraintDefs = this.mathModelDefService.getConstraintDefs();
-        for (var _d = 0, constraintDefs_1 = constraintDefs; _d < constraintDefs_1.length; _d++) {
-            var constraintDef = constraintDefs_1[_d];
+        for (var _e = 0, constraintDefs_1 = constraintDefs; _e < constraintDefs_1.length; _e++) {
+            var constraintDef = constraintDefs_1[_e];
             //Start ConstraintDef
             jString += "{";
             jString += this.jsonAddPair("constraintId", constraintDef.constraintId);
@@ -108,8 +118,8 @@ var MainViewComponent = /** @class */ (function () {
         //ConstraintComps
         jString += this.jsonStart("constraintComps");
         var constraintComps = this.mathModelDefService.getConstraintComps();
-        for (var _e = 0, constraintComps_1 = constraintComps; _e < constraintComps_1.length; _e++) {
-            var constraintComp = constraintComps_1[_e];
+        for (var _f = 0, constraintComps_1 = constraintComps; _f < constraintComps_1.length; _f++) {
+            var constraintComp = constraintComps_1[_f];
             //Start ConstraintComps
             jString += "{";
             jString += this.jsonAddPair("constraintId", constraintComp.constraintId);

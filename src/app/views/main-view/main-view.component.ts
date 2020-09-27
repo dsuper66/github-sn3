@@ -72,9 +72,22 @@ export class MainViewComponent implements OnInit {
     jString += this.jsonStart("elements");
     //Individual Elements    
     let modelElements = this.modelElementDataService.getModelElements();
-    for (const modelElement of modelElements.filter(element => element.includeInModel)) {
+    
+    //Don't write an element that has missing properties
+    const modelElementsExcluded = modelElements.filter(
+      element => ((Object.keys(element.properties).length 
+      != this.modelElementDefService.getPropertyCount(element.elementType)) 
+      ) 
+    )
+    // && (element.properties.filter(property => (property['parentId'] != undefined)))
+    for (const modelElement of modelElementsExcluded) {
+    console.log(">>>Excluded:" + modelElement.elementId);
+    }
 
-      //Start Element
+    //Write all the elements
+    for (const modelElement of modelElements.filter(element => element.includeInModel)) {
+      console.log("write: " + modelElement.elementId);
+      //Start this Element
       jString += "{";
       //ID
       jString += JSON.stringify("elementId") + ":" + JSON.stringify(modelElement.elementId) + ",";
