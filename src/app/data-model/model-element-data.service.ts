@@ -188,7 +188,7 @@ export class ModelElementDataService {
       //If child elements have the same property then it also gets updated
       //(i.e. fromBus and toBus for dirBranch)
       for (const childElementWithProperty of this.getChildElements(elementId).filter(
-        childElement => this.modelElementDefService.elementTypeHasProperty(childElement.elementType,propertyType))) {
+        childElement => this.modelElementDefService.elementHasProperty(childElement,propertyType))) {
 
         this.setPropertyForElement(childElementWithProperty.elementId,propertyType,value);
       }

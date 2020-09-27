@@ -23,8 +23,8 @@ export class ModelElementDefService {
     //Property Types
     this.elementPropertyTypeSettings.push(
       { propertyType: 'isRefBus', primitiveType: 'bool', visible: true },
-      { propertyType: 'fromBus', primitiveType: 'string', visible: false },
-      { propertyType: 'toBus', primitiveType: 'string', visible: false },
+      { propertyType: 'fromBus', primitiveType: 'string', visible: true },
+      { propertyType: 'toBus', primitiveType: 'string', visible: true },
       { propertyType: 'flowMax', primitiveType: 'number', visible: true },
       { propertyType: 'resistance', primitiveType: 'number', visible: true },
       { propertyType: 'susceptance', primitiveType: 'number', visible: true },
@@ -85,9 +85,10 @@ export class ModelElementDefService {
   private elementTypeProperties: { [elementType: string]: string[] } = {};
   private defaultValueSettings: DefaultValue[] = [];
 
-  elementTypeHasProperty(elementType: string, propertyType: string) {
-    return (this.elementTypeProperties[elementType].filter( 
-      elementProperties => elementProperties[propertyType])[0] != undefined);
+  elementHasProperty(element: ModelElement, propertyType: string) {
+    const properties = this.elementTypeProperties[element.elementType];
+    return (properties.filter( 
+      property => property == propertyType)[0] != undefined);
   }
 
   propertyIsVisible(propertyType: string) {

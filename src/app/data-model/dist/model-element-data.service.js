@@ -159,7 +159,7 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("Set property:" + propertyType + "for:" + elementId);
             //If child elements have the same property then it also gets updated
             //(i.e. fromBus and toBus for dirBranch)
-            for (var _i = 0, _a = this.getChildElements(elementId).filter(function (childElement) { return _this.modelElementDefService.elementTypeHasProperty(childElement.elementType, propertyType); }); _i < _a.length; _i++) {
+            for (var _i = 0, _a = this.getChildElements(elementId).filter(function (childElement) { return _this.modelElementDefService.elementHasProperty(childElement, propertyType); }); _i < _a.length; _i++) {
                 var childElementWithProperty = _a[_i];
                 this.setPropertyForElement(childElementWithProperty.elementId, propertyType, value);
             }
