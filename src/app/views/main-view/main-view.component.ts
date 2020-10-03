@@ -128,7 +128,7 @@ export class MainViewComponent implements OnInit {
     for (const constraintDef of constraintDefs) {
       //Start ConstraintDef
       jString += "{";
-      jString += this.jsonAddPair("constraintId", constraintDef.constraintId);
+      jString += this.jsonAddPair("constraintType", constraintDef.constraintId);
       jString += this.jsonAddPair("elementType", constraintDef.elementType);
       jString += this.jsonAddPair("varType", constraintDef.varType);
       jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
@@ -151,7 +151,7 @@ export class MainViewComponent implements OnInit {
     for (const constraintComp of constraintComps) {
       //Start ConstraintComps
       jString += "{";
-      jString += this.jsonAddPair("constraintId", constraintComp.constraintId);
+      jString += this.jsonAddPair("constraintType", constraintComp.constraintId);
       jString += this.jsonAddPair("elementType", constraintComp.elementType);
       jString += this.jsonAddPair("propertyMap", constraintComp.propertyMap);
       jString += this.jsonAddPair("varType", constraintComp.varType);

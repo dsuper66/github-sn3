@@ -28,8 +28,8 @@ var ModelElementDefService = /** @class */ (function () {
         //Element definitions (created in the data service) that define a child to be created 
         this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount'];
         //Child elements - tranches
-        this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
-        this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
+        this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice', 'fromBus'];
+        this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice', 'toBus'];
         this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
         this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
         //Child elements - unrestricted variables
