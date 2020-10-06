@@ -105,7 +105,7 @@ var MainViewComponent = /** @class */ (function () {
             var constraintDef = constraintDefs_1[_g];
             //Start ConstraintDef
             jString += "{";
-            jString += this.jsonAddPair("constraintType", constraintDef.constraintId);
+            jString += this.jsonAddPair("constraintType", constraintDef.constraintType);
             jString += this.jsonAddPair("elementType", constraintDef.elementType);
             jString += this.jsonAddPair("varType", constraintDef.varType);
             jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
@@ -126,7 +126,7 @@ var MainViewComponent = /** @class */ (function () {
             var constraintComp = constraintComps_1[_h];
             //Start ConstraintComps
             jString += "{";
-            jString += this.jsonAddPair("constraintType", constraintComp.constraintId);
+            jString += this.jsonAddPair("constraintType", constraintComp.constraintType);
             jString += this.jsonAddPair("elementType", constraintComp.elementType);
             jString += this.jsonAddPair("propertyMap", constraintComp.propertyMap);
             jString += this.jsonAddPair("varType", constraintComp.varType);

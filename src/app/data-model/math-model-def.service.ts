@@ -8,37 +8,37 @@ export class MathModelDefService {
   constructor() {
 
     this.constraintDefs.push(
-      { constraintId:'nodeBal', elementType:'bus', 
+      { constraintType:'nodeBal', elementType:'bus', 
         varType:'', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'' },
-      { constraintId:'enOffertTrancheLimit', elementType:'enOfferTranche', 
+      { constraintType:'enOffertTrancheLimit', elementType:'enOfferTranche', 
         varType:'trancheCleared', inEquality:'le', rhsProperty:'trancheLimit', rhsValue:0, multProperty:'' },
-      { constraintId:'bidTrancheLimit', elementType:'bidTranche', 
+      { constraintType:'bidTrancheLimit', elementType:'bidTranche', 
         varType:'trancheCleared', inEquality:'le', rhsProperty:'trancheLimit', rhsValue:0, multProperty:'' },
-      { constraintId:'powerFlow', elementType:'dirBranch', 
+      { constraintType:'powerFlow', elementType:'dirBranch', 
         varType:'branchFlow', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'direction' },
-      { constraintId:'dirBranchLimit', elementType:'branch', varType:'', inEquality:'le', rhsProperty:'flowMax', rhsValue:0, multProperty:'' },
-      { constraintId:'objective', elementType:'mathModel', 
+      { constraintType:'dirBranchLimit', elementType:'branch', varType:'', inEquality:'le', rhsProperty:'flowMax', rhsValue:0, multProperty:'' },
+      { constraintType:'objective', elementType:'mathModel', 
         varType:'objectiveVal', inEquality:'eq', rhsProperty:'', rhsValue:0, multProperty:'' }      
     )
 
     this.constraintComps.push(
-      { constraintId: 'nodeBal', elementType: 'enOfferTranche', propertyMap: 'toBus', 
+      { constraintType: 'nodeBal', elementType: 'enOfferTranche', propertyMap: 'toBus', 
         varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: '' },
-      { constraintId: 'nodeBal', elementType: 'bidTranche', propertyMap: 'fromBus', 
+      { constraintType: 'nodeBal', elementType: 'bidTranche', propertyMap: 'fromBus', 
         varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: '' },
-      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMap: 'fromBus', 
+      { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'fromBus', 
         varType: 'branchFlow', multParentProperty: '', multValue: -1, multProperty: 'direction' },
-      { constraintId: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', 
+      { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', 
         varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: 'direction' },
-      { constraintId: 'powerFlow', elementType: 'bus', propertyMap: 'fromBus', 
+      { constraintType: 'powerFlow', elementType: 'bus', propertyMap: 'fromBus', 
         varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: -1, multProperty: '' },
-      { constraintId: 'powerFlow', elementType: 'bus', propertyMap: 'toBus', 
+      { constraintType: 'powerFlow', elementType: 'bus', propertyMap: 'toBus', 
         varType: 'phaseAngle', multParentProperty: 'susceptance', multValue: 1, multProperty: '' },
-      { constraintId: 'dirBranchLimit', elementType: 'dirBranch', propertyMap: 'parentId', 
+      { constraintType: 'dirBranchLimit', elementType: 'dirBranch', propertyMap: 'parentId', 
         varType: 'branchFlow', multParentProperty: '', multValue: 1, multProperty: '' },
-      { constraintId: 'objective', elementType: 'enOfferTranche', propertyMap: 'all', 
+      { constraintType: 'objective', elementType: 'enOfferTranche', propertyMap: 'all', 
         varType: 'trancheCleared', multParentProperty: '', multValue: 1, multProperty: 'tranchePrice' },
-      { constraintId: 'objective', elementType: 'bidTranche', propertyMap: 'all', 
+      { constraintType: 'objective', elementType: 'bidTranche', propertyMap: 'all', 
         varType: 'trancheCleared', multParentProperty: '', multValue: -1, multProperty: 'tranchePrice' }      
     )
 
@@ -61,7 +61,7 @@ export class MathModelDefService {
 
 
 export interface ConstraintDef {
-  constraintId: string;
+  constraintType: string;
   elementType: string;
   varType: string;
   inEquality: string;
@@ -72,7 +72,7 @@ export interface ConstraintDef {
 
 
 export interface ConstraintComp {
-  constraintId: string;
+  constraintType: string;
   elementType: string;
   propertyMap: string;
   varType: string;
