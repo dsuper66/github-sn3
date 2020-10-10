@@ -44,7 +44,7 @@ export class ModelElementDefService {
     //Separate so that different element types can have different defaults for the same properties
     this.defaultValueSettings.push(
       { propertyType: 'isRefBus', elementType: 'bus', defaultValue: false },
-      { propertyType: 'flowMax', elementType: 'branch', defaultValue: 100 },
+      { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 },
       { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 },
       { propertyType: 'susceptance', elementType: 'branch', defaultValue: -16 },
       { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 100 },

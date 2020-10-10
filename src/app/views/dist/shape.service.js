@@ -39,8 +39,9 @@ var ShapeService = /** @class */ (function () {
         }
     };
     //Delete
-    ShapeService.prototype.deleteShapeWithId = function (shapeIdToDelete) {
-        this.shapes = this.shapes.filter(function (shape) { return shape.elementId != shapeIdToDelete; });
+    ShapeService.prototype.deleteShape = function (elementId) {
+        this.shapes = this.shapes.filter(function (shape) { return shape.elementId != elementId; });
+        this.modelElementDataService.deleteElement(elementId);
     };
     //Get shapes
     ShapeService.prototype.getShapes = function () {

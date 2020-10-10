@@ -48,9 +48,10 @@ export class ShapeService {
   }
 
   //Delete
-  deleteShapeWithId(shapeIdToDelete: string) {
+  deleteShape(elementId: string) {
     this.shapes = this.shapes.filter(
-      shape => shape.elementId != shapeIdToDelete);
+      shape => shape.elementId != elementId);
+    this.modelElementDataService.deleteElement(elementId)
   }
 
   //Get shapes

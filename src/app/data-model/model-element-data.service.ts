@@ -16,11 +16,11 @@ export class ModelElementDataService {
     private modelElementDefService: ModelElementDefService
   ) {
 
-    //Manually Added Child element defintions which will
+    //Manually Add Child element defintions which will
     //cause child elements to be created automatically with parent
     //--------------------------------------------------
-    //Tranches
-    //--------
+    //Child Tranches
+    //--------------
     //Bid Tranches associated with load
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementType: 'childDef',
@@ -49,8 +49,8 @@ export class ModelElementDataService {
         { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
       includeInModel: false
     });
-    //Unrestricted Elements
-    //---------------------
+    //Child Unrestricted Elements
+    //---------------------------
     this.modelElements.push({
       elementId: 'dirBranchDef', elementType: 'childDef',
       properties: this.makeDict([
@@ -72,7 +72,6 @@ export class ModelElementDataService {
       properties: {},
       includeInModel: true
     });
-
 
   }
 
@@ -115,6 +114,7 @@ export class ModelElementDataService {
 
   //===DATA===
 
+  //Add element
   addElement(elementId: string, elementType: string, properties: ElementProperties) {
     this.modelElements.push({
       elementId: elementId,
@@ -124,15 +124,18 @@ export class ModelElementDataService {
     });
   }
 
-  //Child elements
-  getChildElementDefs(elementType: string): ModelElement[] {
-    return this.modelElements.filter(
-      element => element.properties['parentType'] === elementType);
+  //Delete element
+  deleteElement(elementId: string) {
+    this.modelElements = this.modelElements.filter(
+      e => e.elementId != elementId && e.properties['parentId'] != elementId)
   }
 
+  //Get child elements
+  getChildElementDefs(elementType: string): ModelElement[] {
+    return this.modelElements.filter(e => e.properties['parentType'] === elementType);
+  }
   getChildElements(elementId: string): ModelElement[] {
-    return this.modelElements.filter(
-      element => element.properties['parentId'] === elementId);
+    return this.modelElements.filter(e => e.properties['parentId'] === elementId);
   }
 
   //Test - get all properties of all
@@ -152,7 +155,7 @@ export class ModelElementDataService {
   }
 
   getModelElementForId(elementId: string): ModelElement | undefined {
-    return this.modelElements.filter(element => element.elementId === elementId)[0];
+    return this.modelElements.filter(e => e.elementId === elementId)[0];
   }
 
   getValueForElementProperty(elementId: string, propertyType: string): string {
@@ -169,9 +172,7 @@ export class ModelElementDataService {
 
   setPropertyForElement(elementId: string, propertyType: string, value: any) {
 
-    // if (value != undefined) {
-
-    //Special cases
+    //Special Case
     //isRefBus... can only have one refBus so set all to false first if the new value is true
     if (propertyType === 'isRefBus' && value === 'true') {
       this.setPropertyForAllElements(propertyType, "false");
@@ -194,10 +195,6 @@ export class ModelElementDataService {
       }
     }
 
-    // }
-    // else {
-    //   console.log("Set property: no value");
-    // }
   }
 
   setPropertyForAllElements(propertyType: string, value: any) {

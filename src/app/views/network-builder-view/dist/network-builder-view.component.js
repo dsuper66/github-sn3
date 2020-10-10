@@ -305,7 +305,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
     };
     NetworkBuilderViewComponent.prototype.deleteSelectedShape = function () {
         if (this.selectedShape != undefined) {
-            this.shapeService.deleteShapeWithId(this.selectedShape.elementId);
+            this.shapeService.deleteShape(this.selectedShape.elementId);
             this.shapesToDraw = this.shapeService.getShapes();
             this.selectedShape = undefined;
         }

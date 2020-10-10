@@ -31,26 +31,25 @@ var ModelElementService = /** @class */ (function () {
         //     ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
         //     : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
         var newId;
-        if (parentId && childNum) {
-            //Special Case for directional branches
+        if (parentId && childNum) { //child element
+            //Special Case
+            //dirBranch child id has a suffix name not number
             if (elementTypeToAdd == 'dirBranch') {
-                if (childNum == 1) {
-                    newId = parentId + elementTypeToAdd + "Pos";
-                }
-                else {
-                    newId = parentId + elementTypeToAdd + "Neg";
-                }
+                newId = parentId + elementTypeToAdd + (childNum == 1 ? "Pos" : "Neg");
+                // if (childNum == 1) {
+                //   newId = parentId + elementTypeToAdd + "Pos"
+                // }
+                // else {
+                //   newId = parentId + elementTypeToAdd + "Neg"
+                // }
             }
             else { //child id is parent + child
                 newId = this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum);
             }
         }
-        else { //parent
+        else { //parent element
             newId = this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
         }
-        //Properties
-        //const propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(elementTypeToAdd);
-        //const properties = this.modelElementDefService.makeProperties(elementTypeToAdd, propertyTypeIds, childNum);
         //Add the element
         this.modelElementDataService.addElement(newId, elementTypeToAdd, {} //properties... empty and then populated either by defaults or data input
         );
@@ -58,8 +57,8 @@ var ModelElementService = /** @class */ (function () {
         if (parentId) {
             this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
         }
-        //Special case
-        //dirBranch needs a direction property
+        //Special Case
+        //dirBranch needs a direction property (which is a multiplier)
         if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
             this.modelElementDataService.setPropertyForElement(newId, 'direction', childNum == 1 ? 1 : -1);
         }

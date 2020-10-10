@@ -13,11 +13,11 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
         this.modelElements = [];
         this.elementNextIndex = new Map();
-        //Manually Added Child element defintions which will
+        //Manually Add Child element defintions which will
         //cause child elements to be created automatically with parent
         //--------------------------------------------------
-        //Tranches
-        //--------
+        //Child Tranches
+        //--------------
         //Bid Tranches associated with load
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementType: 'childDef',
@@ -50,8 +50,8 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             includeInModel: false
         });
-        //Unrestricted Elements
-        //---------------------
+        //Child Unrestricted Elements
+        //---------------------------
         this.modelElements.push({
             elementId: 'dirBranchDef', elementType: 'childDef',
             properties: this.makeDict([
@@ -103,6 +103,7 @@ var ModelElementDataService = /** @class */ (function () {
         return dict;
     };
     //===DATA===
+    //Add element
     ModelElementDataService.prototype.addElement = function (elementId, elementType, properties) {
         this.modelElements.push({
             elementId: elementId,
@@ -111,12 +112,16 @@ var ModelElementDataService = /** @class */ (function () {
             includeInModel: true
         });
     };
-    //Child elements
+    //Delete element
+    ModelElementDataService.prototype.deleteElement = function (elementId) {
+        this.modelElements = this.modelElements.filter(function (e) { return e.elementId != elementId && e.properties['parentId'] != elementId; });
+    };
+    //Get child elements
     ModelElementDataService.prototype.getChildElementDefs = function (elementType) {
-        return this.modelElements.filter(function (element) { return element.properties['parentType'] === elementType; });
+        return this.modelElements.filter(function (e) { return e.properties['parentType'] === elementType; });
     };
     ModelElementDataService.prototype.getChildElements = function (elementId) {
-        return this.modelElements.filter(function (element) { return element.properties['parentId'] === elementId; });
+        return this.modelElements.filter(function (e) { return e.properties['parentId'] === elementId; });
     };
     //Test - get all properties of all
     ModelElementDataService.prototype.listAllElements = function (elementId) {
@@ -134,7 +139,7 @@ var ModelElementDataService = /** @class */ (function () {
         return this.modelElements;
     };
     ModelElementDataService.prototype.getModelElementForId = function (elementId) {
-        return this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
+        return this.modelElements.filter(function (e) { return e.elementId === elementId; })[0];
     };
     ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
         var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
@@ -144,9 +149,8 @@ var ModelElementDataService = /** @class */ (function () {
         return this.modelElements.filter(function (element) { return element.properties[propertyType] === value; });
     };
     ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
-        // if (value != undefined) {
         var _this = this;
-        //Special cases
+        //Special Case
         //isRefBus... can only have one refBus so set all to false first if the new value is true
         if (propertyType === 'isRefBus' && value === 'true') {
             this.setPropertyForAllElements(propertyType, "false");
@@ -164,10 +168,6 @@ var ModelElementDataService = /** @class */ (function () {
                 this.setPropertyForElement(childElementWithProperty.elementId, propertyType, value);
             }
         }
-        // }
-        // else {
-        //   console.log("Set property: no value");
-        // }
     };
     ModelElementDataService.prototype.setPropertyForAllElements = function (propertyType, value) {
         console.log("setPropertyForAllElements");
