@@ -41,3 +41,4 @@ interface SquareConfig {
   width?: number;
   [propName: string]: any;
 }
+

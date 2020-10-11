@@ -63,11 +63,6 @@ var ModelElementDefService = /** @class */ (function () {
     ModelElementDefService.prototype.getDefaultSettingsForElementType = function (elementType) {
         return this.defaultValueSettings.filter(function (defaultValueSetting) { return defaultValueSetting.elementType == elementType; });
     };
-    // setDefaultValues(element: ModelElement): any {
-    //   for (const defaultValueSetting of this.defaultValueSettings.filter(
-    //     defaultValueSetting => defaultValueSetting.elementType == element.elementType)) {
-    //     }
-    // }  
     ModelElementDefService.prototype.getPropertyTypesFor = function (elementType) {
         console.log("Get properties for: " + elementType);
         var properties = this.elementTypeProperties[elementType];

@@ -114,14 +114,7 @@ export class ModelElementDefService {
   getDefaultSettingsForElementType(elementType: string) {
     return this.defaultValueSettings.filter(
       defaultValueSetting => defaultValueSetting.elementType == elementType)
-  }
-
-  // setDefaultValues(element: ModelElement): any {
-  //   for (const defaultValueSetting of this.defaultValueSettings.filter(
-  //     defaultValueSetting => defaultValueSetting.elementType == element.elementType)) {
-        
-  //     }
-  // }  
+  } 
 
   getPropertyTypesFor(elementType: string): string[] {
     console.log("Get properties for: " + elementType);
@@ -140,29 +133,6 @@ export class ModelElementDefService {
     }
   }
 
-
-  // makeProperties(elementType: string, propertiesToAdd: string[], childNum?: number): { [propertyType: string]: any } {
-
-  //   console.log("Make Properties For:" + elementType + " from propertiesToAdd count:" + propertiesToAdd.length);
-  //   var properties: { [propertyType: string]: any } = {};
-
-  //   //Get defaults
-  //   for (const propertyType of propertiesToAdd) {
-  //     console.log("looking for defaults for property: " + propertyType);
-  //     var addDefaults = true;
-  //     //If child element, only add defaults to number 1
-  //     if (childNum) {
-  //       if (childNum != 1) {addDefaults = false}
-  //     }
-  //     //Add defaults
-  //     if (addDefaults) {
-  //       console.log("Added " + propertyType)
-  //       properties[propertyType] = this.getDefaultValueForProperty(propertyType, elementType);
-  //     }
-  //   } 
-
-  //   return properties;
-  // }
 
 
 }

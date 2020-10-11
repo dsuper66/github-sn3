@@ -4,6 +4,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { Variable } from '@angular/compiler/src/render3/r3_ast';
+import { ModelVariable, ModelConstraint } from '../data-model/math-model-def.service';
 
 const headers = new HttpHeaders({
     'Content-Type':  'application/json'
@@ -31,16 +33,34 @@ export class SolverCallService {
 
 
   /** POST: send model to solver */
-  sendModelToSolver(solverInput: SolverInput): Observable<string> {
+  // sendModelToSolver(solverInput: SolverInput): Observable<string> {
+
+  //   const httpOptions:Object = {
+  //     headers: new HttpHeaders({
+  //         'Content-Type': 'application/json'
+  //     }),
+  //     responseType: 'text'
+  //   }
+
+  //   return this.http.post<string>(
+  //     this.solverURL, 
+  //     solverInput.inputJson, 
+  //     httpOptions)
+  //     .pipe(
+  //       //catchError(this.handleError('sendModel', hero))
+  //     );
+  // }
+
+  sendModelToSolver(solverInput: SolverInput): Observable<ModelVariable[]> {
 
     const httpOptions:Object = {
       headers: new HttpHeaders({
           'Content-Type': 'application/json'
       }),
-      responseType: 'text'
+      responseType: 'json'
     }
 
-    return this.http.post<string>(
+    return this.http.post<ModelVariable[]>(
       this.solverURL, 
       solverInput.inputJson, 
       httpOptions)
@@ -48,7 +68,6 @@ export class SolverCallService {
         //catchError(this.handleError('sendModel', hero))
       );
   }
-
 
 
 

@@ -87,3 +87,24 @@ export interface ConstraintComp {
   factorValue: number;
   factorProperty: string;
 }
+
+export interface ModelVariable {
+  varId: string,
+  varType: string,
+  elementId: string,
+  result: number
+}
+
+export interface ModelConstraint {
+  constraintId: string,
+  constraintType: string,
+  elementId: string,
+  inequality: string,
+  rhsValue: number,
+  shadowPrice: number
+}
+
+export interface ModelResults {
+  modelConstraints: ModelConstraint[],
+  modelVariables: ModelVariable[]
+}

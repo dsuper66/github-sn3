@@ -19,7 +19,7 @@ var MainViewComponent = /** @class */ (function () {
         this.solverCallService = solverCallService;
         // shapes: Shape[] = [];
         this.solverJsonInput = "";
-        this.solverResults = "";
+        this.solverResultString = "";
     }
     MainViewComponent.prototype.ngOnInit = function () {
         this.getModelData();
@@ -147,7 +147,13 @@ var MainViewComponent = /** @class */ (function () {
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
             console.log("SOLVER RESULTS:" + solverResults);
-            _this.solverResults = solverResults;
+            var resultString = "";
+            for (var _i = 0, solverResults_1 = solverResults; _i < solverResults_1.length; _i++) {
+                var modelVar = solverResults_1[_i];
+                //console.log("varResult:" + modelVar.varId);
+                resultString += ("varResult:" + modelVar.varId + "=" + modelVar.result + "\n");
+            }
+            _this.solverResultString = resultString;
         });
     };
     MainViewComponent = __decorate([

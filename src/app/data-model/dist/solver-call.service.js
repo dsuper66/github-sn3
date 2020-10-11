@@ -19,12 +19,27 @@ var SolverCallService = /** @class */ (function () {
         this.solverURL = 'https://shrouded-escarpment-67155.herokuapp.com/api/solve';
     }
     /** POST: send model to solver */
+    // sendModelToSolver(solverInput: SolverInput): Observable<string> {
+    //   const httpOptions:Object = {
+    //     headers: new HttpHeaders({
+    //         'Content-Type': 'application/json'
+    //     }),
+    //     responseType: 'text'
+    //   }
+    //   return this.http.post<string>(
+    //     this.solverURL, 
+    //     solverInput.inputJson, 
+    //     httpOptions)
+    //     .pipe(
+    //       //catchError(this.handleError('sendModel', hero))
+    //     );
+    // }
     SolverCallService.prototype.sendModelToSolver = function (solverInput) {
         var httpOptions = {
             headers: new http_1.HttpHeaders({
                 'Content-Type': 'application/json'
             }),
-            responseType: 'text'
+            responseType: 'json'
         };
         return this.http.post(this.solverURL, solverInput.inputJson, httpOptions)
             .pipe(

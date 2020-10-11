@@ -4,13 +4,14 @@ import { Component, OnInit } from '@angular/core';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
-import { MathModelDefService } from '../../data-model/math-model-def.service';
+import { MathModelDefService, ModelVariable } from '../../data-model/math-model-def.service';
 
 
 import { Shape } from '../shape';
 import { ModelElement } from '../../data-model/model-element'
 import { SolverCallService } from '../../data-model/solver-call.service';
 import { SolverInput } from '../../data-model/solver-call.service';
+import { Variable } from '@angular/compiler/src/render3/r3_ast';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class MainViewComponent implements OnInit {
 
   // shapes: Shape[] = [];
   solverJsonInput = "";
-  solverResults = "";
+  solverResultString = "";
 
   ngOnInit(): void {
     this.getModelData();
@@ -177,7 +178,17 @@ export class MainViewComponent implements OnInit {
       .sendModelToSolver(solverInput)
       .subscribe(solverResults => {
         console.log("SOLVER RESULTS:" + solverResults);
-        this.solverResults = solverResults;
+
+        var resultString = ""
+        for (const modelVar of solverResults) {
+          
+          //console.log("varResult:" + modelVar.varId);
+
+          resultString += ("varResult:" + modelVar.varId +"=" + modelVar.result + "\n")
+
+        }
+
+        this.solverResultString = resultString;
       });
   }
 
