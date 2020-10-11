@@ -179,12 +179,12 @@ export class MainViewComponent implements OnInit {
       .subscribe(solverResults => {
         console.log("SOLVER RESULTS:" + solverResults);
 
-        var resultString = ""
+        var resultString = "\n"
         for (const modelVar of solverResults) {
           
           //console.log("varResult:" + modelVar.varId);
 
-          resultString += ("varResult:" + modelVar.varId +"=" + modelVar.result + "\n")
+          resultString += (modelVar.varId +"=" + modelVar.result + "\n")
 
         }
 

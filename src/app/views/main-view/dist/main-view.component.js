@@ -147,11 +147,11 @@ var MainViewComponent = /** @class */ (function () {
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
             console.log("SOLVER RESULTS:" + solverResults);
-            var resultString = "";
+            var resultString = "\n";
             for (var _i = 0, solverResults_1 = solverResults; _i < solverResults_1.length; _i++) {
                 var modelVar = solverResults_1[_i];
                 //console.log("varResult:" + modelVar.varId);
-                resultString += ("varResult:" + modelVar.varId + "=" + modelVar.result + "\n");
+                resultString += (modelVar.varId + "=" + modelVar.result + "\n");
             }
             _this.solverResultString = resultString;
         });
