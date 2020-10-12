@@ -142,17 +142,26 @@ var MainViewComponent = /** @class */ (function () {
         jString += "}";
         this.solverJsonInput = jString;
         //Send the model to the solver
+        //https://stackoverflow.com/questions/50524711/processing-a-complex-object-by-http-get-in-angular-6
+        //http://json2ts.com/
         var solverInput = { inputJson: jString };
         this.solverCallService
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
-            console.log("SOLVER RESULTS:" + solverResults);
             var resultString = "\n";
-            for (var _i = 0, solverResults_1 = solverResults; _i < solverResults_1.length; _i++) {
-                var modelVar = solverResults_1[_i];
-                //console.log("varResult:" + modelVar.varId);
+            // for (const modelResults of solverResults) {
+            //console.log("varResult:" + modelVar.varId);
+            for (var _i = 0, _a = solverResults.variables; _i < _a.length; _i++) {
+                var modelVar = _a[_i];
                 resultString += (modelVar.varId + "=" + modelVar.result + "\n");
             }
+            resultString += "\n\n";
+            for (var _b = 0, _c = solverResults.constraints; _b < _c.length; _b++) {
+                var modelCon = _c[_b];
+                resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
+            }
+            // }
+            console.log("SOLVER RESULTS:" + resultString);
             _this.solverResultString = resultString;
         });
     };

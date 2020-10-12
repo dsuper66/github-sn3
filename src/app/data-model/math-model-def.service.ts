@@ -105,6 +105,6 @@ export interface ModelConstraint {
 }
 
 export interface ModelResults {
-  modelConstraints: ModelConstraint[],
-  modelVariables: ModelVariable[]
+  variables: ModelVariable[],
+  constraints: ModelConstraint[]
 }

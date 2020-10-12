@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
-import { MathModelDefService, ModelVariable } from '../../data-model/math-model-def.service';
+import { MathModelDefService, ModelVariable, ModelConstraint, ModelResults } from '../../data-model/math-model-def.service';
 
 
 import { Shape } from '../shape';
@@ -173,21 +173,32 @@ export class MainViewComponent implements OnInit {
     this.solverJsonInput = jString;
 
     //Send the model to the solver
+    //https://stackoverflow.com/questions/50524711/processing-a-complex-object-by-http-get-in-angular-6
+    //http://json2ts.com/
+
     const solverInput: SolverInput = { inputJson: jString } as SolverInput;
     this.solverCallService
       .sendModelToSolver(solverInput)
       .subscribe(solverResults => {
-        console.log("SOLVER RESULTS:" + solverResults);
+        
 
         var resultString = "\n"
-        for (const modelVar of solverResults) {
+        // for (const modelResults of solverResults) {
           
           //console.log("varResult:" + modelVar.varId);
-
+          for (const modelVar of solverResults.variables){
           resultString += (modelVar.varId +"=" + modelVar.result + "\n")
+          }
 
-        }
+          resultString += "\n\n"
 
+          for (const modelCon of solverResults.constraints){
+            resultString += (modelCon.constraintId +"=" + modelCon.shadowPrice + "\n")
+            }
+
+        // }
+
+        console.log("SOLVER RESULTS:" + resultString);
         this.solverResultString = resultString;
       });
   }
