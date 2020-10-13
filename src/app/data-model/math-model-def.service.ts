@@ -92,7 +92,7 @@ export interface ModelVariable {
   varId: string,
   varType: string,
   elementId: string,
-  result: number
+  quantity: number
 }
 
 export interface ModelConstraint {

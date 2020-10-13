@@ -148,19 +148,21 @@ var MainViewComponent = /** @class */ (function () {
         this.solverCallService
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
+            //Empty Price and Quq=antity
+            //Variables
             var resultString = "\n";
-            // for (const modelResults of solverResults) {
-            //console.log("varResult:" + modelVar.varId);
             for (var _i = 0, _a = solverResults.variables; _i < _a.length; _i++) {
                 var modelVar = _a[_i];
-                resultString += (modelVar.varId + "=" + modelVar.result + "\n");
+                resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
+                _this.modelElementDataService.setQuantityForElement(modelVar.elementId, modelVar.varId, modelVar.quantity);
             }
+            //Constraints
             resultString += "\n\n";
             for (var _b = 0, _c = solverResults.constraints; _b < _c.length; _b++) {
                 var modelCon = _c[_b];
                 resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
+                _this.modelElementDataService.setPriceForElement(modelCon.elementId, modelCon.constraintId, modelCon.shadowPrice);
             }
-            // }
             console.log("SOLVER RESULTS:" + resultString);
             _this.solverResultString = resultString;
         });

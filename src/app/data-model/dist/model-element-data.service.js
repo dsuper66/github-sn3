@@ -183,6 +183,26 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("NO VALUE");
         }
     };
+    ModelElementDataService.prototype.setQuantityForElement = function (elementId, varId, value) {
+        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (elementToUpdate) {
+            if (!elementToUpdate.prices) {
+                elementToUpdate.prices = {};
+            }
+            elementToUpdate.prices[varId] = value;
+            console.log("Element:" + elementId + " set quantity:" + value + " for:" + varId);
+        }
+    };
+    ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintId, value) {
+        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (elementToUpdate) {
+            if (!elementToUpdate.quantities) {
+                elementToUpdate.quantities = {};
+            }
+            elementToUpdate.quantities[constraintId] = value;
+            console.log("Element:" + elementId + " set price:" + value + " for:" + constraintId);
+        }
+    };
     ModelElementDataService = __decorate([
         core_1.Injectable({
             providedIn: 'root'

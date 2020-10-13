@@ -7,10 +7,12 @@ export interface ModelElement {
   // properties: Map<string, any>;
 
   properties: ElementProperties;
-  includeInModel: boolean;
   // properties: {[propertyType:string] : any};
+  includeInModel: boolean;
 
-  // properties: Record<string, any>;
+  //Results
+  prices?: {[constraintId:string] : number};
+  quantities?: {[variableId:string] : number};
 }
 
 //Dictionary
@@ -19,6 +21,13 @@ export interface ModelElement {
 export interface ElementProperties {
   [propertyType: string]: any;
 }
+
+export interface ElementPrices {
+  [propertyType: string]: number;
+}
+// export interface ElementResults {
+//   [propertyType: string]: any;
+// }
 
 
 export interface PropertyTypeId {

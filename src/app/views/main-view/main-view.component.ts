@@ -181,22 +181,24 @@ export class MainViewComponent implements OnInit {
       .sendModelToSolver(solverInput)
       .subscribe(solverResults => {
         
+        //Empty Price and Quq=antity
 
+
+        //Variables
         var resultString = "\n"
-        // for (const modelResults of solverResults) {
-          
-          //console.log("varResult:" + modelVar.varId);
-          for (const modelVar of solverResults.variables){
-          resultString += (modelVar.varId +"=" + modelVar.result + "\n")
-          }
+        for (const modelVar of solverResults.variables) {
+          resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
+          this.modelElementDataService.setQuantityForElement(
+            modelVar.elementId,modelVar.varId,modelVar.quantity) 
+        }
 
-          resultString += "\n\n"
-
-          for (const modelCon of solverResults.constraints){
-            resultString += (modelCon.constraintId +"=" + modelCon.shadowPrice + "\n")
-            }
-
-        // }
+        //Constraints
+        resultString += "\n\n";
+        for (const modelCon of solverResults.constraints) {
+          resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
+          this.modelElementDataService.setPriceForElement(
+            modelCon.elementId,modelCon.constraintId,modelCon.shadowPrice) 
+        }
 
         console.log("SOLVER RESULTS:" + resultString);
         this.solverResultString = resultString;

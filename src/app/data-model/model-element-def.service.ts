@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import {
-  ElementPropertyType, ModelElement,
+  ElementPropertyType, 
+  ModelElement,
   // DefaultPropertyValue
 } from './model-element';
 import { ModelElementDataService } from './model-element-data.service';

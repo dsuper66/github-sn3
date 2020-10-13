@@ -2,7 +2,8 @@ import { isDefined } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import {
   ModelElement,
-  ElementProperties
+  ElementProperties,
+  ElementPrices
 } from './model-element';
 
 import { ModelElementDefService } from './model-element-def.service';
@@ -211,6 +212,34 @@ export class ModelElementDataService {
     }
     else {
       console.log("NO VALUE");
+    }
+  }
+
+  setQuantityForElement(elementId: string, varId: string, value: number) {
+    const elementToUpdate = this.modelElements.find(
+      element => element.elementId === elementId);
+    
+    if (elementToUpdate) {
+      if (!elementToUpdate.prices) {
+        elementToUpdate.prices = {}        
+      }
+      elementToUpdate.prices[varId] = value;
+      
+      console.log("Element:" + elementId + " set quantity:" + value + " for:" + varId);  
+    }
+  }
+
+  setPriceForElement(elementId: string, constraintId: string, value: number) {
+    const elementToUpdate = this.modelElements.find(
+      element => element.elementId === elementId);
+    
+    if (elementToUpdate) {
+      if (!elementToUpdate.quantities) {
+        elementToUpdate.quantities = {}        
+      }
+      elementToUpdate.quantities[constraintId] = value;
+      
+      console.log("Element:" + elementId + " set price:" + value + " for:" + constraintId);  
     }
   }
 
