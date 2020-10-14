@@ -183,6 +183,15 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("NO VALUE");
         }
     };
+    ModelElementDataService.prototype.resetResults = function () {
+        for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
+            var element = _a[_i];
+            for (var price in element.prices)
+                element.prices[price] = 0;
+            for (var quantity in element.quantities)
+                element.quantities[quantity] = 0;
+        }
+    };
     ModelElementDataService.prototype.setQuantityForElement = function (elementId, varType, varId, value) {
         console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });

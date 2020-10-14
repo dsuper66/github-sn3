@@ -182,7 +182,7 @@ export class MainViewComponent implements OnInit {
       .subscribe(solverResults => {
         
         //Empty Price and Quq=antity
-
+        this.modelElementDataService.resetResults();
 
         //Variables
         var resultString = "\n"
@@ -197,7 +197,7 @@ export class MainViewComponent implements OnInit {
         for (const modelCon of solverResults.constraints) {
           resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
           this.modelElementDataService.setPriceForElement(
-            modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice) 
+            modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice); 
         }
 
         console.log("SOLVER RESULTS:" + resultString);

@@ -215,6 +215,13 @@ export class ModelElementDataService {
     }
   }
 
+  resetResults() {
+    for (const element of this.modelElements) {
+      for (const price in element.prices) element.prices[price] = 0
+      for (const quantity in element.quantities) element.quantities[quantity] = 0
+    }
+  }
+
   setQuantityForElement(elementId: string, varType: string, varId: string, value: number) {
     console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
 

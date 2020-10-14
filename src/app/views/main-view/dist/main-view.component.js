@@ -149,6 +149,7 @@ var MainViewComponent = /** @class */ (function () {
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
             //Empty Price and Quq=antity
+            _this.modelElementDataService.resetResults();
             //Variables
             var resultString = "\n";
             for (var _i = 0, _a = solverResults.variables; _i < _a.length; _i++) {
