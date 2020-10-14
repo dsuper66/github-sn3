@@ -310,6 +310,12 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
             this.selectedShape = undefined;
         }
     };
+    NetworkBuilderViewComponent.prototype.getPrice = function (elementId) {
+        return "xxx";
+    };
+    NetworkBuilderViewComponent.prototype.getQuantity = function (elementId) {
+        return "yyy";
+    };
     NetworkBuilderViewComponent = __decorate([
         core_1.Component({
             selector: 'app-network-builder-view',

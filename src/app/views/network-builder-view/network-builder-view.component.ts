@@ -352,4 +352,11 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
+  getPrice(elementId: string) : string{
+    return "xxx"
+  }
+  getQuantity(elementId: string) : string{
+    return "yyy"
+  }  
+
 }
