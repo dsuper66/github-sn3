@@ -215,7 +215,7 @@ export class ModelElementDataService {
     }
   }
 
-  setQuantityForElement(elementId: string, varId: string, value: number) {
+  setQuantityForElement(elementId: string, varType: string, varId: string, value: number) {
     const elementToUpdate = this.modelElements.find(
       element => element.elementId === elementId);
     
@@ -223,13 +223,13 @@ export class ModelElementDataService {
       if (!elementToUpdate.prices) {
         elementToUpdate.prices = {}        
       }
-      elementToUpdate.prices[varId] = value;
+      elementToUpdate.prices[varType] = value;
       
-      console.log("Element:" + elementId + " set quantity:" + value + " for:" + varId);  
+      console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
     }
   }
 
-  setPriceForElement(elementId: string, constraintId: string, value: number) {
+  setPriceForElement(elementId: string, constraintType: string, constraintId: string, value: number) {
     const elementToUpdate = this.modelElements.find(
       element => element.elementId === elementId);
     
@@ -239,8 +239,21 @@ export class ModelElementDataService {
       }
       elementToUpdate.quantities[constraintId] = value;
       
-      console.log("Element:" + elementId + " set price:" + value + " for:" + constraintId);  
+      console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType);  
     }
+  }
+
+  getPrice(elementId: string): string {
+    let element = this.modelElements.find(
+      element => element.elementId === elementId
+    );
+    const prices = element?.prices
+    if (prices) {
+      return prices['nodeBal'].toString()
+    }
+    else {
+      return "ppp"
+    };
   }
 
 }

@@ -189,7 +189,7 @@ export class MainViewComponent implements OnInit {
         for (const modelVar of solverResults.variables) {
           resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
           this.modelElementDataService.setQuantityForElement(
-            modelVar.elementId,modelVar.varId,modelVar.quantity) 
+            modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity) 
         }
 
         //Constraints
@@ -197,7 +197,7 @@ export class MainViewComponent implements OnInit {
         for (const modelCon of solverResults.constraints) {
           resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
           this.modelElementDataService.setPriceForElement(
-            modelCon.elementId,modelCon.constraintId,modelCon.shadowPrice) 
+            modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice) 
         }
 
         console.log("SOLVER RESULTS:" + resultString);

@@ -183,25 +183,36 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("NO VALUE");
         }
     };
-    ModelElementDataService.prototype.setQuantityForElement = function (elementId, varId, value) {
+    ModelElementDataService.prototype.setQuantityForElement = function (elementId, varType, varId, value) {
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (elementToUpdate) {
             if (!elementToUpdate.prices) {
                 elementToUpdate.prices = {};
             }
-            elementToUpdate.prices[varId] = value;
-            console.log("Element:" + elementId + " set quantity:" + value + " for:" + varId);
+            elementToUpdate.prices[varType] = value;
+            console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);
         }
     };
-    ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintId, value) {
+    ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintType, constraintId, value) {
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (elementToUpdate) {
             if (!elementToUpdate.quantities) {
                 elementToUpdate.quantities = {};
             }
             elementToUpdate.quantities[constraintId] = value;
-            console.log("Element:" + elementId + " set price:" + value + " for:" + constraintId);
+            console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType);
         }
+    };
+    ModelElementDataService.prototype.getPrice = function (elementId) {
+        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        var prices = element === null || element === void 0 ? void 0 : element.prices;
+        if (prices) {
+            return prices['nodeBal'].toString();
+        }
+        else {
+            return "ppp";
+        }
+        ;
     };
     ModelElementDataService = __decorate([
         core_1.Injectable({

@@ -10,10 +10,11 @@ exports.NetworkBuilderViewComponent = void 0;
 var core_1 = require("@angular/core");
 // import { Router } from '@angular/router';
 var NetworkBuilderViewComponent = /** @class */ (function () {
-    function NetworkBuilderViewComponent(shapeService, 
+    function NetworkBuilderViewComponent(shapeService, dataService, 
     // private router: Router,
     renderer) {
         this.shapeService = shapeService;
+        this.dataService = dataService;
         this.renderer = renderer;
         this.shapesToDraw = [];
         this.busWidth = 14;
@@ -311,7 +312,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         }
     };
     NetworkBuilderViewComponent.prototype.getPrice = function (elementId) {
-        return "xxx";
+        return this.dataService.getPrice(elementId);
     };
     NetworkBuilderViewComponent.prototype.getQuantity = function (elementId) {
         return "yyy";
