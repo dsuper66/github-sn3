@@ -3,7 +3,7 @@ import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
 import { ControlContainer } from '@angular/forms';
-import { ModelElementDataService } from 'src/app/data-model/model-element-data.service';
+import { ModelElementDataService } from '../../data-model/model-element-data.service';
 // import { Router } from '@angular/router';
 
 
