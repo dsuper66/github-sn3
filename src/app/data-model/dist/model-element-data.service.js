@@ -184,23 +184,31 @@ var ModelElementDataService = /** @class */ (function () {
         }
     };
     ModelElementDataService.prototype.setQuantityForElement = function (elementId, varType, varId, value) {
-        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        if (elementToUpdate) {
-            if (!elementToUpdate.prices) {
-                elementToUpdate.prices = {};
-            }
-            elementToUpdate.prices[varType] = value;
-            console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);
-        }
-    };
-    ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintType, constraintId, value) {
+        console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (elementToUpdate) {
             if (!elementToUpdate.quantities) {
                 elementToUpdate.quantities = {};
             }
-            elementToUpdate.quantities[constraintId] = value;
-            console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType);
+            elementToUpdate.quantities['result'] = value;
+        }
+    };
+    ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintType, constraintId, value) {
+        console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType);
+        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (elementToUpdate) {
+            if (!elementToUpdate.prices) {
+                elementToUpdate.prices = {};
+            }
+            if (constraintType == "nodeBal" && constraintId.includes("LTE")) {
+                value *= -1.0;
+            }
+            if (elementToUpdate.prices[constraintType]) {
+                elementToUpdate.prices[constraintType] = elementToUpdate.prices[constraintType] + value;
+            }
+            else {
+                elementToUpdate.prices[constraintType] = value;
+            }
         }
     };
     ModelElementDataService.prototype.getPrice = function (elementId) {
@@ -211,6 +219,17 @@ var ModelElementDataService = /** @class */ (function () {
         }
         else {
             return "ppp";
+        }
+        ;
+    };
+    ModelElementDataService.prototype.getQuantity = function (elementId) {
+        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        var quantities = element === null || element === void 0 ? void 0 : element.quantities;
+        if (quantities) {
+            return quantities['result'].toString();
+        }
+        else {
+            return "qqq";
         }
         ;
     };

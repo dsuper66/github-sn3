@@ -216,30 +216,36 @@ export class ModelElementDataService {
   }
 
   setQuantityForElement(elementId: string, varType: string, varId: string, value: number) {
-    const elementToUpdate = this.modelElements.find(
-      element => element.elementId === elementId);
-    
-    if (elementToUpdate) {
-      if (!elementToUpdate.prices) {
-        elementToUpdate.prices = {}        
-      }
-      elementToUpdate.prices[varType] = value;
-      
-      console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
-    }
-  }
+    console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
 
-  setPriceForElement(elementId: string, constraintType: string, constraintId: string, value: number) {
     const elementToUpdate = this.modelElements.find(
       element => element.elementId === elementId);
-    
     if (elementToUpdate) {
       if (!elementToUpdate.quantities) {
         elementToUpdate.quantities = {}        
       }
-      elementToUpdate.quantities[constraintId] = value;
-      
-      console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType);  
+      elementToUpdate.quantities['result'] = value;            
+    }
+  }
+
+  setPriceForElement(elementId: string, constraintType: string, constraintId: string, value: number) {
+    console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType); 
+
+    const elementToUpdate = this.modelElements.find(
+      element => element.elementId === elementId);
+    if (elementToUpdate) {
+      if (!elementToUpdate.prices) {
+        elementToUpdate.prices = {}        
+      }
+      if (constraintType == "nodeBal" && constraintId.includes("LTE")) {
+        value *= -1.0;
+      }
+      if (elementToUpdate.prices[constraintType]) {
+        elementToUpdate.prices[constraintType] = elementToUpdate.prices[constraintType] + value;        
+      }
+      else {
+        elementToUpdate.prices[constraintType] = value;  
+      }
     }
   }
 
@@ -253,6 +259,19 @@ export class ModelElementDataService {
     }
     else {
       return "ppp"
+    };
+  }
+
+  getQuantity(elementId: string): string {
+    let element = this.modelElements.find(
+      element => element.elementId === elementId
+    );
+    const quantities = element?.quantities
+    if (quantities) {
+      return quantities['result'].toString()
+    }
+    else {
+      return "qqq"
     };
   }
 

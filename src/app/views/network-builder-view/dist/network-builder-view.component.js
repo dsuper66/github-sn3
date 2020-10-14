@@ -315,7 +315,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         return this.dataService.getPrice(elementId);
     };
     NetworkBuilderViewComponent.prototype.getQuantity = function (elementId) {
-        return "yyy";
+        return this.dataService.getQuantity(elementId);
     };
     NetworkBuilderViewComponent = __decorate([
         core_1.Component({

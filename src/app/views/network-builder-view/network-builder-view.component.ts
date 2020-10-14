@@ -358,7 +358,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     return this.dataService.getPrice(elementId)
   }
   getQuantity(elementId: string) : string{
-    return "yyy"
+    return this.dataService.getQuantity(elementId)
   }  
 
 }
