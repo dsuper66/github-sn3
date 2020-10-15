@@ -219,10 +219,12 @@ export class ModelElementDataService {
     for (const element of this.modelElements) {
       for (const price in element.prices) element.prices[price] = 0
       for (const quantity in element.quantities) element.quantities[quantity] = 0
+      for (const result in element.results) element.results[result] = 0
     }
   }
 
   setQuantityForElement(elementId: string, varType: string, varId: string, value: number) {
+    
     console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
 
     const elementToUpdate = this.modelElements.find(
@@ -231,7 +233,37 @@ export class ModelElementDataService {
       if (!elementToUpdate.quantities) {
         elementToUpdate.quantities = {}        
       }
-      elementToUpdate.quantities['result'] = value;            
+      elementToUpdate.quantities["result"] += value;
+      const parentId = elementToUpdate.properties["parentId"]
+      if (parentId) {
+        this.setQuantityForElement(parentId,varType,varId,value)
+      }
+      console.log("Element:" + elementId + " value:" + this.getQuantity(elementToUpdate.elementId));
+    }
+  }
+
+  addResult(elementId: string, resultType: string, resultId: string, value: number) {
+    console.log("Element:" + elementId + " set result:" + value + " for:" + resultType); 
+
+    const elementToUpdate = this.modelElements.find(
+      element => element.elementId === elementId);
+    if (elementToUpdate) {
+      if (!elementToUpdate.results) {
+        elementToUpdate.results = {}        
+      }
+      if (resultType == "nodeBal" && resultId.includes("LTE")) {
+        value *= -1.0;
+      }
+      if (elementToUpdate.results[resultType]) {
+        elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;        
+      }
+      else {
+        elementToUpdate.results[resultType] = value;  
+      }
+      const parentId = elementToUpdate.properties["parentId"]
+      if (parentId) {
+        this.addResult(parentId,resultType,resultId,value)
+      }
     }
   }
 
@@ -260,12 +292,12 @@ export class ModelElementDataService {
     let element = this.modelElements.find(
       element => element.elementId === elementId
     );
-    const prices = element?.prices
-    if (prices) {
-      return prices['nodeBal'].toString()
+    const results = element?.results
+    if (results) {
+      return results["nodeBal"].toString()
     }
     else {
-      return "ppp"
+      return "..."
     };
   }
 
@@ -273,12 +305,12 @@ export class ModelElementDataService {
     let element = this.modelElements.find(
       element => element.elementId === elementId
     );
-    const quantities = element?.quantities
-    if (quantities) {
-      return quantities['result'].toString()
+    const results = element?.results
+    if (results) {
+      return results["quantity"].toString()
     }
     else {
-      return "qqq"
+      return "..."
     };
   }
 

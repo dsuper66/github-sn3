@@ -190,6 +190,8 @@ var ModelElementDataService = /** @class */ (function () {
                 element.prices[price] = 0;
             for (var quantity in element.quantities)
                 element.quantities[quantity] = 0;
+            for (var result in element.results)
+                element.results[result] = 0;
         }
     };
     ModelElementDataService.prototype.setQuantityForElement = function (elementId, varType, varId, value) {
@@ -199,7 +201,34 @@ var ModelElementDataService = /** @class */ (function () {
             if (!elementToUpdate.quantities) {
                 elementToUpdate.quantities = {};
             }
-            elementToUpdate.quantities['result'] = value;
+            elementToUpdate.quantities["result"] += value;
+            var parentId = elementToUpdate.properties["parentId"];
+            if (parentId) {
+                this.setQuantityForElement(parentId, varType, varId, value);
+            }
+            console.log("Element:" + elementId + " value:" + this.getQuantity(elementToUpdate.elementId));
+        }
+    };
+    ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value) {
+        console.log("Element:" + elementId + " set result:" + value + " for:" + resultType);
+        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (elementToUpdate) {
+            if (!elementToUpdate.results) {
+                elementToUpdate.results = {};
+            }
+            if (resultType == "nodeBal" && resultId.includes("LTE")) {
+                value *= -1.0;
+            }
+            if (elementToUpdate.results[resultType]) {
+                elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;
+            }
+            else {
+                elementToUpdate.results[resultType] = value;
+            }
+            var parentId = elementToUpdate.properties["parentId"];
+            if (parentId) {
+                this.addResult(parentId, resultType, resultId, value);
+            }
         }
     };
     ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintType, constraintId, value) {
@@ -222,23 +251,23 @@ var ModelElementDataService = /** @class */ (function () {
     };
     ModelElementDataService.prototype.getPrice = function (elementId) {
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        var prices = element === null || element === void 0 ? void 0 : element.prices;
-        if (prices) {
-            return prices['nodeBal'].toString();
+        var results = element === null || element === void 0 ? void 0 : element.results;
+        if (results) {
+            return results["nodeBal"].toString();
         }
         else {
-            return "ppp";
+            return "...";
         }
         ;
     };
     ModelElementDataService.prototype.getQuantity = function (elementId) {
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        var quantities = element === null || element === void 0 ? void 0 : element.quantities;
-        if (quantities) {
-            return quantities['result'].toString();
+        var results = element === null || element === void 0 ? void 0 : element.results;
+        if (results) {
+            return results["quantity"].toString();
         }
         else {
-            return "qqq";
+            return "...";
         }
         ;
     };

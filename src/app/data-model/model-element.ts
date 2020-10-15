@@ -13,6 +13,7 @@ export interface ModelElement {
   //Results
   prices?: {[constraintId:string] : number};
   quantities?: {[variableId:string] : number};
+  results?: {[resultType:string] : number};  
 }
 
 //Dictionary
