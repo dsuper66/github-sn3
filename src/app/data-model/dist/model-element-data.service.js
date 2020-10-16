@@ -194,6 +194,28 @@ var ModelElementDataService = /** @class */ (function () {
                 element.results[result] = 0;
         }
     };
+    ModelElementDataService.prototype.getResultsText = function (elementId) {
+        var resultString = "";
+        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (element) {
+            // for (const modelElement of this.modelElements){
+            var results = element.results;
+            if (results) {
+                if (element.elementType == "bus") {
+                    if (results["nodelBal"]) {
+                        resultString = results["nodeBal"].toString();
+                    }
+                }
+                else {
+                    if (results["quantity"]) {
+                        resultString = results["quantity"].toString();
+                    }
+                }
+            }
+        }
+        // }
+        return resultString;
+    };
     ModelElementDataService.prototype.setQuantityForElement = function (elementId, varType, varId, value) {
         console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
@@ -250,6 +272,7 @@ var ModelElementDataService = /** @class */ (function () {
         }
     };
     ModelElementDataService.prototype.getPrice = function (elementId) {
+        console.log("get price for:" + elementId);
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
         var results = element === null || element === void 0 ? void 0 : element.results;
         if (results) {
@@ -261,6 +284,7 @@ var ModelElementDataService = /** @class */ (function () {
         ;
     };
     ModelElementDataService.prototype.getQuantity = function (elementId) {
+        console.log("get quantity for:" + elementId);
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
         var results = element === null || element === void 0 ? void 0 : element.results;
         if (results) {

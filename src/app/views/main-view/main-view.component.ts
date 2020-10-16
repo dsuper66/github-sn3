@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-// import { ShapeService } from '../shape.service';
+import { ShapeService } from '../shape.service';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
@@ -22,7 +22,7 @@ import { Variable } from '@angular/compiler/src/render3/r3_ast';
 export class MainViewComponent implements OnInit {
 
   constructor(
-    // private shapeService: ShapeService,
+    private shapeService: ShapeService,
     // private modelElementService: ModelElementService,
     private modelElementDataService: ModelElementDataService,
     private modelElementDefService: ModelElementDefService,
@@ -172,6 +172,7 @@ export class MainViewComponent implements OnInit {
 
     this.solverJsonInput = jString;
 
+    //===SOLVE===
     //Send the model to the solver
     //https://stackoverflow.com/questions/50524711/processing-a-complex-object-by-http-get-in-angular-6
     //http://json2ts.com/
@@ -203,6 +204,8 @@ export class MainViewComponent implements OnInit {
         //   this.modelElementDataService.setPriceForElement(
         //     modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice); 
         }
+
+        this.shapeService.setShapesText();
 
         console.log("SOLVER RESULTS:" + resultString);
         this.solverResultString = resultString;

@@ -243,7 +243,7 @@ export class ShapeService {
           }
           else {
             fromBus = nonBusEl.connId2;
-            toBus = nonBusEl.connId1;  
+            toBus = nonBusEl.connId1;
           }
         }
         //else only one end connected... assign the fromBus
@@ -256,9 +256,16 @@ export class ShapeService {
         this.modelElementDataService.setPropertyForElement(
           nonBusEl.elementId, 'toBus', toBus);
         this.modelElementDataService.setPropertyForElement(
-            nonBusEl.elementId, 'fromBus', fromBus);
-                
+          nonBusEl.elementId, 'fromBus', fromBus);
+
       }
+    }
+  }
+
+  //Results
+  setShapesText() {
+    for (const shape of this.shapes) {
+      shape.text1 = this.modelElementDataService.getResultsText(shape.elementId);
     }
   }
 }

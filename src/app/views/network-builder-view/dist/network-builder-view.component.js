@@ -24,9 +24,11 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.drawingState = "stopped";
         //Touch can lead to touch evt followed by mouse... use timer to stop mouse
         this.touchTime = Date.now();
+        this.doUpdateResults = false;
     }
     NetworkBuilderViewComponent.prototype.ngOnInit = function () {
         //If we navigate away then when we come back this will populate the display
+        // this.doUpdateResults = this.dataService.doUpdateResults();
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
     };
@@ -46,6 +48,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //If inside a shape then this is adjusting
         //console.log("start drawing checks");
         this.drawingState = "starting";
+        // this.doUpdateResults = false;
         var foundShape = false;
         for (var _i = 0, _a = this.shapesToDraw; _i < _a.length; _i++) {
             var checkShape = _a[_i];

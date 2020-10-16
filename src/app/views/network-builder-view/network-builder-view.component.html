@@ -49,14 +49,16 @@
             [attr.width]="shape.wOuter" [attr.height]="shape.hOuter"/>
         </svg>
 
-          <!-- Bus Text -->
+        <!-- Update Results -->
+        <!-- <svg *ngIf="getDoUpdateResults()"> -->
+          <!-- Bus Text -->      
           <svg *ngIf="shape.elementType=='bus'">
             <text 
             [attr.x]="shape.xInner + shape.wInner/2 - 6" 
             [attr.y]="shape.yInner + 2 * shape.hInner" 
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
-            fill="red">{{getPrice(shape.elementId)}}</text>
+            fill="red">{{shape.text1}}</text>
           </svg>    
           
           <!-- Branch Text -->
@@ -66,8 +68,9 @@
             [attr.y]="shape.yInner + shape.hInner/2" 
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
-            fill="red">{{getQuantity(shape.elementId)}}</text>
+            fill="red">{{shape.text1}}</text>
           </svg> 
+        <!-- </svg> -->
         
         <!-- Inner -->
           <rect 

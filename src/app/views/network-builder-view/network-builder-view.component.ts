@@ -22,9 +22,11 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
+    // this.doUpdateResults = this.dataService.doUpdateResults();
     this.selectedShape = this.shapeService.getSelectedShape();
     this.shapesToDraw = this.shapeService.getShapes();
   }
+
 
   shapesToDraw: Shape[] = [];
   selectedShape?: Shape;
@@ -61,6 +63,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     //If inside a shape then this is adjusting
     //console.log("start drawing checks");
     this.drawingState = "starting";
+    // this.doUpdateResults = false;
     var foundShape = false;
     for (let checkShape of this.shapesToDraw) {
       //Check if touch is inside any shape
@@ -354,7 +357,9 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
-  getPrice(elementId: string) : string{
+  doUpdateResults = false;
+
+  getPrice(elementId: string) : string {
     return this.dataService.getPrice(elementId)
   }
   getQuantity(elementId: string) : string{

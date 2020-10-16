@@ -9,10 +9,10 @@ exports.__esModule = true;
 exports.MainViewComponent = void 0;
 var core_1 = require("@angular/core");
 var MainViewComponent = /** @class */ (function () {
-    function MainViewComponent(
-    // private shapeService: ShapeService,
+    function MainViewComponent(shapeService, 
     // private modelElementService: ModelElementService,
     modelElementDataService, modelElementDefService, mathModelDefService, solverCallService) {
+        this.shapeService = shapeService;
         this.modelElementDataService = modelElementDataService;
         this.modelElementDefService = modelElementDefService;
         this.mathModelDefService = mathModelDefService;
@@ -141,6 +141,7 @@ var MainViewComponent = /** @class */ (function () {
         //Close JSON
         jString += "}";
         this.solverJsonInput = jString;
+        //===SOLVE===
         //Send the model to the solver
         //https://stackoverflow.com/questions/50524711/processing-a-complex-object-by-http-get-in-angular-6
         //http://json2ts.com/
@@ -168,6 +169,7 @@ var MainViewComponent = /** @class */ (function () {
                 //   this.modelElementDataService.setPriceForElement(
                 //     modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice); 
             }
+            _this.shapeService.setShapesText();
             console.log("SOLVER RESULTS:" + resultString);
             _this.solverResultString = resultString;
         });

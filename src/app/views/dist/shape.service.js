@@ -236,6 +236,13 @@ var ShapeService = /** @class */ (function () {
             }
         }
     };
+    //Results
+    ShapeService.prototype.setShapesText = function () {
+        for (var _i = 0, _a = this.shapes; _i < _a.length; _i++) {
+            var shape = _a[_i];
+            shape.text1 = this.modelElementDataService.getResultsText(shape.elementId);
+        }
+    };
     ShapeService = __decorate([
         core_1.Injectable({
             providedIn: 'root'

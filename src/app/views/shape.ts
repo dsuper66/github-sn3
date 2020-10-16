@@ -16,4 +16,5 @@ export class Shape {
     path2?:string; 
     connId1?:string="";
     connId2?:string="";
+    text1?:string="";
 }

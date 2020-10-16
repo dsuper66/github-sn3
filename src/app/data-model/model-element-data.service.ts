@@ -223,6 +223,31 @@ export class ModelElementDataService {
     }
   }
 
+  getResultsText(elementId: string): string {
+    var resultString = ""
+    let element = this.modelElements.find(
+      element => element.elementId === elementId
+    );
+    if (element) {
+    // for (const modelElement of this.modelElements){
+      const results = element.results
+      if (results) {
+        if (element.elementType == "bus") {
+          if (results["nodelBal"]) {
+            resultString = results["nodeBal"].toString()
+          }
+        }
+        else {
+          if (results["quantity"]) {
+            resultString = results["quantity"].toString()
+          }
+        }
+      }
+    }
+    // }
+    return resultString;
+  }
+  
   setQuantityForElement(elementId: string, varType: string, varId: string, value: number) {
     
     console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
@@ -289,6 +314,7 @@ export class ModelElementDataService {
   }
 
   getPrice(elementId: string): string {
+    console.log("get price for:" + elementId)
     let element = this.modelElements.find(
       element => element.elementId === elementId
     );
@@ -302,6 +328,7 @@ export class ModelElementDataService {
   }
 
   getQuantity(elementId: string): string {
+    console.log("get quantity for:" + elementId)
     let element = this.modelElements.find(
       element => element.elementId === elementId
     );

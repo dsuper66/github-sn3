@@ -8,6 +8,7 @@ var Shape = /** @class */ (function () {
         this.doResize = false;
         this.connId1 = "";
         this.connId2 = "";
+        this.text1 = "";
     }
     return Shape;
 }());
