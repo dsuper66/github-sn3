@@ -233,58 +233,48 @@ export class ModelElementDataService {
       const results = element.results
       if (results) {
         if (element.elementType == "bus") {
-          if (results["nodelBal"]) {
-            resultString = results["nodeBal"].toString()
+          if (results['nodeBal']) {
+            resultString = results['nodeBal'].toFixed(2).toString()          
           }
         }
         else {
           if (results["quantity"]) {
-            resultString = results["quantity"].toString()
+            resultString = results["quantity"].toFixed(2).toString()
           }
         }
       }
     }
     // }
+    console.log("got result:>>" + resultString + "<<");
     return resultString;
-  }
-  
-  setQuantityForElement(elementId: string, varType: string, varId: string, value: number) {
-    
-    console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);  
-
-    const elementToUpdate = this.modelElements.find(
-      element => element.elementId === elementId);
-    if (elementToUpdate) {
-      if (!elementToUpdate.quantities) {
-        elementToUpdate.quantities = {}        
-      }
-      elementToUpdate.quantities["result"] += value;
-      const parentId = elementToUpdate.properties["parentId"]
-      if (parentId) {
-        this.setQuantityForElement(parentId,varType,varId,value)
-      }
-      console.log("Element:" + elementId + " value:" + this.getQuantity(elementToUpdate.elementId));
-    }
   }
 
   addResult(elementId: string, resultType: string, resultId: string, value: number) {
-    console.log("Element:" + elementId + " set result:" + value + " for:" + resultType); 
+    console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<"); 
 
+    //Get the element
     const elementToUpdate = this.modelElements.find(
       element => element.elementId === elementId);
     if (elementToUpdate) {
+      //Add the results if necessary
       if (!elementToUpdate.results) {
         elementToUpdate.results = {}        
       }
+
+      //Node balance LTE constraint shadow price is negative
       if (resultType == "nodeBal" && resultId.includes("LTE")) {
         value *= -1.0;
       }
+
+      //The value adds to any existing value with the same key
       if (elementToUpdate.results[resultType]) {
         elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;        
       }
       else {
         elementToUpdate.results[resultType] = value;  
       }
+
+      //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]
       if (parentId) {
         this.addResult(parentId,resultType,resultId,value)
@@ -292,53 +282,5 @@ export class ModelElementDataService {
     }
   }
 
-  setPriceForElement(elementId: string, constraintType: string, constraintId: string, value: number) {
-    console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType); 
-
-    const elementToUpdate = this.modelElements.find(
-      element => element.elementId === elementId);
-    if (elementToUpdate) {
-      if (!elementToUpdate.prices) {
-        elementToUpdate.prices = {}        
-      }
-      if (constraintType == "nodeBal" && constraintId.includes("LTE")) {
-        value *= -1.0;
-      }
-      if (elementToUpdate.prices[constraintType]) {
-        elementToUpdate.prices[constraintType] = elementToUpdate.prices[constraintType] + value;        
-      }
-      else {
-        elementToUpdate.prices[constraintType] = value;  
-      }
-    }
-  }
-
-  getPrice(elementId: string): string {
-    console.log("get price for:" + elementId)
-    let element = this.modelElements.find(
-      element => element.elementId === elementId
-    );
-    const results = element?.results
-    if (results) {
-      return results["nodeBal"].toString()
-    }
-    else {
-      return "..."
-    };
-  }
-
-  getQuantity(elementId: string): string {
-    console.log("get quantity for:" + elementId)
-    let element = this.modelElements.find(
-      element => element.elementId === elementId
-    );
-    const results = element?.results
-    if (results) {
-      return results["quantity"].toString()
-    }
-    else {
-      return "..."
-    };
-  }
 
 }

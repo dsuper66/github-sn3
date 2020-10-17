@@ -202,98 +202,47 @@ var ModelElementDataService = /** @class */ (function () {
             var results = element.results;
             if (results) {
                 if (element.elementType == "bus") {
-                    if (results["nodelBal"]) {
-                        resultString = results["nodeBal"].toString();
+                    if (results['nodeBal']) {
+                        resultString = results['nodeBal'].toFixed(2).toString();
                     }
                 }
                 else {
                     if (results["quantity"]) {
-                        resultString = results["quantity"].toString();
+                        resultString = results["quantity"].toFixed(2).toString();
                     }
                 }
             }
         }
         // }
+        console.log("got result:>>" + resultString + "<<");
         return resultString;
     };
-    ModelElementDataService.prototype.setQuantityForElement = function (elementId, varType, varId, value) {
-        console.log("Element:" + elementId + " set quantity:" + value + " for:" + varType);
-        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        if (elementToUpdate) {
-            if (!elementToUpdate.quantities) {
-                elementToUpdate.quantities = {};
-            }
-            elementToUpdate.quantities["result"] += value;
-            var parentId = elementToUpdate.properties["parentId"];
-            if (parentId) {
-                this.setQuantityForElement(parentId, varType, varId, value);
-            }
-            console.log("Element:" + elementId + " value:" + this.getQuantity(elementToUpdate.elementId));
-        }
-    };
     ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value) {
-        console.log("Element:" + elementId + " set result:" + value + " for:" + resultType);
+        console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<");
+        //Get the element
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (elementToUpdate) {
+            //Add the results if necessary
             if (!elementToUpdate.results) {
                 elementToUpdate.results = {};
             }
+            //Node balance LTE constraint shadow price is negative
             if (resultType == "nodeBal" && resultId.includes("LTE")) {
                 value *= -1.0;
             }
+            //The value adds to any existing value with the same key
             if (elementToUpdate.results[resultType]) {
                 elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;
             }
             else {
                 elementToUpdate.results[resultType] = value;
             }
+            //If element has a parent then also add the result to the parent
             var parentId = elementToUpdate.properties["parentId"];
             if (parentId) {
                 this.addResult(parentId, resultType, resultId, value);
             }
         }
-    };
-    ModelElementDataService.prototype.setPriceForElement = function (elementId, constraintType, constraintId, value) {
-        console.log("Element:" + elementId + " set price:" + value + " for:" + constraintType);
-        var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        if (elementToUpdate) {
-            if (!elementToUpdate.prices) {
-                elementToUpdate.prices = {};
-            }
-            if (constraintType == "nodeBal" && constraintId.includes("LTE")) {
-                value *= -1.0;
-            }
-            if (elementToUpdate.prices[constraintType]) {
-                elementToUpdate.prices[constraintType] = elementToUpdate.prices[constraintType] + value;
-            }
-            else {
-                elementToUpdate.prices[constraintType] = value;
-            }
-        }
-    };
-    ModelElementDataService.prototype.getPrice = function (elementId) {
-        console.log("get price for:" + elementId);
-        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        var results = element === null || element === void 0 ? void 0 : element.results;
-        if (results) {
-            return results["nodeBal"].toString();
-        }
-        else {
-            return "...";
-        }
-        ;
-    };
-    ModelElementDataService.prototype.getQuantity = function (elementId) {
-        console.log("get quantity for:" + elementId);
-        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
-        var results = element === null || element === void 0 ? void 0 : element.results;
-        if (results) {
-            return results["quantity"].toString();
-        }
-        else {
-            return "...";
-        }
-        ;
     };
     ModelElementDataService = __decorate([
         core_1.Injectable({

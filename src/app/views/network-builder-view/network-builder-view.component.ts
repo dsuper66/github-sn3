@@ -357,13 +357,13 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
-  doUpdateResults = false;
+  // doUpdateResults = false;
 
-  getPrice(elementId: string) : string {
-    return this.dataService.getPrice(elementId)
-  }
-  getQuantity(elementId: string) : string{
-    return this.dataService.getQuantity(elementId)
-  }  
+  // getPrice(elementId: string) : string {
+  //   return this.dataService.getPrice(elementId)
+  // }
+  // getQuantity(elementId: string) : string{
+  //   return this.dataService.getQuantity(elementId)
+  // }  
 
 }

@@ -14,18 +14,6 @@ var ShapeService = /** @class */ (function () {
         this.modelElementService = modelElementService;
         this.modelElementDataService = modelElementDataService;
         this.shapes = [];
-        //Initial values
-        this.branchInitLength = 100;
-        this.busInitX = 50;
-        this.busInitY = 100;
-        this.busInitLength = 120;
-        //Standard values
-        this.branchWidth = 5;
-        this.busWidth = 14;
-        this.genLoadLength = 42;
-        this.genLoadWidth = 30;
-        //Selection box
-        this.selectWidth = 40;
     }
     ShapeService.prototype.setSelectedShapeId = function (selectedShapeId) {
         this.selectedShapeId = selectedShapeId;
@@ -72,60 +60,83 @@ var ShapeService = /** @class */ (function () {
     ShapeService.prototype.addShape = function (elementType) {
         //Add the element and get back the i.d.
         var newElementId = this.modelElementService.addModelElement(elementType);
-        //For deciding placement
-        //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
-        console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
         var newShape = new shape_1.Shape;
+        //Placement
+        console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
+        //Defaults
+        var branchInitLength = 100;
+        var busInitX = 50;
+        var busInitY = 100;
+        var busInitLength = 120;
+        var branchWidth = 5;
+        var busWidth = 14;
+        var genLoadLength = 42;
+        var genLoadWidth = 30;
+        //Derived
+        var insetFactor = 0.1;
+        var brInsetLeft = busInitX + insetFactor * busInitLength;
+        var brInsetRight = busInitX + (1 - insetFactor) * busInitLength - branchWidth;
+        //Selection box
+        var selectWidth = 40;
+        //Counts
+        var busCount = this.getCountShapesOfType('bus');
+        var brCount = this.getCountShapesOfType('branch');
         //BUS
         if (elementType == 'bus') {
-            var y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
+            //Place based on number of buses
+            var y_1 = busInitY * (1 + busCount);
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
-                xInner: this.busInitX,
-                yInner: y,
-                wInner: this.busInitLength,
-                hInner: this.busWidth,
-                xOuter: this.busInitX,
-                yOuter: y - (this.selectWidth - this.busWidth) / 2,
-                wOuter: this.busInitLength,
-                hOuter: this.selectWidth
+                xInner: busInitX,
+                yInner: y_1,
+                wInner: busInitLength,
+                hInner: busWidth,
+                xOuter: busInitX,
+                yOuter: y_1 - (selectWidth - busWidth) / 2,
+                wOuter: busInitLength,
+                hOuter: selectWidth
             });
-            console.log(">>>" + (this.busInitX) + " " + (y + this.busWidth / 2));
+            console.log(">>>" + (busInitX) + " " + (y_1 + busWidth / 2));
         }
         //BRANCH
         else if (elementType == 'branch') {
-            var branchCountNew = this.getCountShapesOfType('branch') + 1;
+            var branchCountNew = brCount + 1;
             var x = 0;
+            //Inset from left or right
             if (branchCountNew % 2 == 1) {
-                x = this.busInitX + 0.2 * this.busInitLength;
+                x = brInsetLeft;
             }
             else {
-                x = this.busInitX + 0.8 * this.busInitLength - this.branchWidth;
+                x = brInsetRight;
             }
             ;
-            var y = (this.busInitY * Math.ceil(branchCountNew / 2)) + this.busWidth / 2;
-            // this.shapes.push({
+            //Y position
+            var y_2 = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
                 xInner: x,
-                yInner: y,
-                wInner: this.branchWidth,
-                hInner: this.branchInitLength,
-                xOuter: x - (this.selectWidth - this.branchWidth) / 2,
-                yOuter: y,
-                wOuter: this.selectWidth,
-                hOuter: this.branchInitLength
+                yInner: y_2,
+                wInner: branchWidth,
+                hInner: branchInitLength,
+                xOuter: x - (selectWidth - branchWidth) / 2,
+                yOuter: y_2,
+                wOuter: selectWidth,
+                hOuter: branchInitLength
             });
         }
         //GEN & LOAD
         else if (elementType == 'gen' || elementType == 'load') {
             var genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load');
-            var h = this.genLoadLength;
-            var w = this.genLoadWidth;
-            var x_1 = this.busInitX + this.busInitLength / 2 - w / 2;
-            var y = (this.busInitY * (1 + genLoadCount)) - h;
+            var h = genLoadLength;
+            var w = genLoadWidth;
+            var x_1 = busInitX + busInitLength / 2 - w / 2;
+            //Y position
+            var y = busInitY - h;
+            if (busCount > 1 && genLoadCount > 0) { //position on last bus
+                y = (busInitY * busCount) - h;
+            }
             var path1;
             var path2;
             if (elementType == 'gen') {
@@ -149,9 +160,9 @@ var ShapeService = /** @class */ (function () {
                 yInner: y,
                 wInner: w,
                 hInner: h,
-                xOuter: x_1 - (this.selectWidth - w) / 2,
+                xOuter: x_1 - (selectWidth - w) / 2,
                 yOuter: y,
-                wOuter: this.selectWidth,
+                wOuter: selectWidth,
                 hOuter: h,
                 path1: path1,
                 path2: path2

@@ -24,7 +24,6 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.drawingState = "stopped";
         //Touch can lead to touch evt followed by mouse... use timer to stop mouse
         this.touchTime = Date.now();
-        this.doUpdateResults = false;
     }
     NetworkBuilderViewComponent.prototype.ngOnInit = function () {
         //If we navigate away then when we come back this will populate the display
@@ -313,12 +312,6 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
             this.shapesToDraw = this.shapeService.getShapes();
             this.selectedShape = undefined;
         }
-    };
-    NetworkBuilderViewComponent.prototype.getPrice = function (elementId) {
-        return this.dataService.getPrice(elementId);
-    };
-    NetworkBuilderViewComponent.prototype.getQuantity = function (elementId) {
-        return this.dataService.getQuantity(elementId);
     };
     NetworkBuilderViewComponent = __decorate([
         core_1.Component({

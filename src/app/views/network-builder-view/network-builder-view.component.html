@@ -62,9 +62,10 @@
           </svg>    
           
           <!-- Branch Text -->
+          <!-- [attr.x]="shape.xInner  - shape.wOuter + 6"  -->
           <svg *ngIf="shape.elementType=='branch'">
             <text 
-            [attr.x]="shape.xInner  - shape.wOuter + 6" 
+            [attr.x]="shape.xInner + 8" 
             [attr.y]="shape.yInner + shape.hInner/2" 
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"

@@ -15,23 +15,6 @@ export class ShapeService {
 
   private shapes: Shape[] = [];
 
-  //Initial values
-  branchInitLength = 100;
-  busInitX = 50;
-  busInitY = 100;
-  busInitLength = 120;
-
-  //Standard values
-  branchWidth = 5;
-  busWidth = 14;
-  genLoadLength = 42;
-  genLoadWidth = 30;
-
-  //Selection box
-  selectWidth = 40;
-
-
-
   //Selected shape... ONLY used so that we can define the selected shape 
   //when returning from another display
   private selectedShapeId?: string;
@@ -85,60 +68,86 @@ export class ShapeService {
     //Add the element and get back the i.d.
     let newElementId = this.modelElementService.addModelElement(elementType);
 
-    //For deciding placement
-    //let count = this.shapes.filter(shape => shape.elementType === elementType).length;
-    console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
-
     var newShape = new Shape;
+
+    //Placement
+    console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
+    //Defaults
+    const branchInitLength = 100;
+    const busInitX = 50;
+    const busInitY = 100;
+    const busInitLength = 120;
+    const branchWidth = 5;
+    const busWidth = 14;
+    const genLoadLength = 42;
+    const genLoadWidth = 30;
+    //Derived
+    const insetFactor = 0.1
+    const brInsetLeft = busInitX + insetFactor * busInitLength
+    const brInsetRight = busInitX + (1 - insetFactor) * busInitLength - branchWidth
+
+    //Selection box
+    const selectWidth = 40;
+
+    //Counts
+    const busCount = this.getCountShapesOfType('bus');
+    const brCount = this.getCountShapesOfType('branch');
     //BUS
     if (elementType == 'bus') {
-      let y = this.busInitY * (1 + this.getCountShapesOfType('bus'));
+      //Place based on number of buses
+      let y = busInitY * (1 + busCount);
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
-        xInner: this.busInitX,
+        xInner: busInitX,
         yInner: y,
-        wInner: this.busInitLength,
-        hInner: this.busWidth,
-        xOuter: this.busInitX,
-        yOuter: y - (this.selectWidth - this.busWidth) / 2,
-        wOuter: this.busInitLength,
-        hOuter: this.selectWidth
+        wInner: busInitLength,
+        hInner: busWidth,
+        xOuter: busInitX,
+        yOuter: y - (selectWidth - busWidth) / 2,
+        wOuter: busInitLength,
+        hOuter: selectWidth
       })
-      console.log(">>>" + (this.busInitX) + " " + (y + this.busWidth / 2))
+      console.log(">>>" + (busInitX) + " " + (y + busWidth / 2))
     }
     //BRANCH
     else if (elementType == 'branch') {
-      let branchCountNew = this.getCountShapesOfType('branch') + 1;
+      let branchCountNew = brCount + 1;
       var x = 0;
+      //Inset from left or right
       if (branchCountNew % 2 == 1) {
-        x = this.busInitX + 0.2 * this.busInitLength;
+        x = brInsetLeft;
       }
       else {
-        x = this.busInitX + 0.8 * this.busInitLength - this.branchWidth
+        x = brInsetRight
       };
-      let y = (this.busInitY * Math.ceil(branchCountNew / 2)) + this.busWidth / 2;
-      // this.shapes.push({
+      //Y position
+      let y = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
+      
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
         xInner: x,
         yInner: y,
-        wInner: this.branchWidth,
-        hInner: this.branchInitLength,
-        xOuter: x - (this.selectWidth - this.branchWidth) / 2,
+        wInner: branchWidth,
+        hInner: branchInitLength,
+        xOuter: x - (selectWidth - branchWidth) / 2,
         yOuter: y,
-        wOuter: this.selectWidth,
-        hOuter: this.branchInitLength
+        wOuter: selectWidth,
+        hOuter: branchInitLength
       })
     }
     //GEN & LOAD
     else if (elementType == 'gen' || elementType == 'load') {
       let genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
-      let h = this.genLoadLength;
-      let w = this.genLoadWidth;
-      let x = this.busInitX + this.busInitLength / 2 - w / 2;
-      let y = (this.busInitY * (1 + genLoadCount)) - h;
+      let h = genLoadLength;
+      let w = genLoadWidth;
+      let x = busInitX + busInitLength / 2 - w / 2;
+      //Y position
+      var y = busInitY - h;
+      if (busCount > 1 && genLoadCount > 0) { //position on last bus
+        y = (busInitY * busCount) - h;
+      }
       var path1: string | undefined;
       var path2: string | undefined;
 
@@ -164,9 +173,9 @@ export class ShapeService {
         yInner: y,
         wInner: w,
         hInner: h,
-        xOuter: x - (this.selectWidth - w) / 2,
+        xOuter: x - (selectWidth - w) / 2,
         yOuter: y,
-        wOuter: this.selectWidth,
+        wOuter: selectWidth,
         hOuter: h,
         path1,
         path2
