@@ -4,6 +4,9 @@ svg text{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  font-size: 14px;
+  stroke-width:1;
+  stroke:none;
 }
 
 .selected{

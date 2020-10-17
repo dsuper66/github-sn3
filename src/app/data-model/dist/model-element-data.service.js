@@ -203,7 +203,7 @@ var ModelElementDataService = /** @class */ (function () {
             if (results) {
                 if (element.elementType == "bus") {
                     if (results['nodeBal']) {
-                        resultString = results['nodeBal'].toFixed(2).toString();
+                        resultString = "$" + results['nodeBal'].toFixed(2).toString();
                     }
                 }
                 else {

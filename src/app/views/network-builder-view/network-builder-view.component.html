@@ -49,7 +49,7 @@
             [attr.width]="shape.wOuter" [attr.height]="shape.hOuter"/>
         </svg>
 
-        <!-- Update Results -->
+        <!-- Results -->
         <!-- <svg *ngIf="getDoUpdateResults()"> -->
           <!-- Bus Text -->      
           <svg *ngIf="shape.elementType=='bus'">
@@ -63,10 +63,11 @@
           
           <!-- Branch Text -->
           <!-- [attr.x]="shape.xInner  - shape.wOuter + 6"  -->
+          <!-- high side to allow fro gen/load text -->
           <svg *ngIf="shape.elementType=='branch'">
             <text 
             [attr.x]="shape.xInner + 8" 
-            [attr.y]="shape.yInner + shape.hInner/2" 
+            [attr.y]="shape.yInner + shape.hInner/3 + 4"
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
             fill="red">{{shape.text1}}</text>
@@ -121,9 +122,19 @@
         [attr.height]="shape.hInner" [attr.width]="shape.wInner"
         [attr.x]="shape.xInner" [attr.y]="shape.yInner"
         id="{{shape.elementId}}">
-
         <path [attr.d]="shape.path1"/>
       </svg>
+
+
+      <!-- Results -->
+      <svg>
+            <text 
+            [attr.x]="shape.xOuter" 
+            [attr.y]="shape.yInner - 2" 
+            [attr.width]="shape.wOuter"
+            [attr.height]="20"
+            fill="red">{{shape.text1}}</text>
+      </svg>   
       
     </svg>
 
