@@ -65,8 +65,19 @@ export class ShapeService {
 
   //Add a shape
   addShape(elementType: string): Shape {
-    //Add the element and get back the i.d.
-    let newElementId = this.modelElementService.addModelElement(elementType);
+
+    var newElementId = ""
+    if (elementType != 'island') {
+      //See if we need to add an island shape
+      if (!(this.shapes.find(s => s.elementType === 'island'))) {
+        this.addShape('island');
+      }
+      //Add the element and get back the i.d.
+      newElementId = this.modelElementService.addModelElement(elementType);
+    }
+    else {
+      newElementId = this.modelElementService.getOrAddIslandId()
+    }
 
     var newShape = new Shape;
 
@@ -180,6 +191,26 @@ export class ShapeService {
         path1,
         path2
       });
+    }
+    //ISLAND
+    else if (elementType == 'island') {
+      const x = busInitX + busInitLength + busInitX;
+      const y = busInitY - 20.0;
+      const margin = 6
+      const h = 60;
+      newShape = ({
+        elementType: elementType,
+        elementId: newElementId,
+        xInner: x + margin,
+        yInner: y,
+        wInner: selectWidth - 2 * margin,
+        hInner: h,
+        xOuter: x,
+        yOuter: y,
+        wOuter: selectWidth,
+        hOuter: h
+      })
+      
     }
 
     this.shapes.push(newShape);

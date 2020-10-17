@@ -32,7 +32,7 @@
   <ng-container *ngFor="let shape of shapesToDraw">
 
     <!--Branch or Bus-->
-    <svg *ngIf="shape.elementType=='bus' || shape.elementType=='branch'" >
+    <svg *ngIf="shape.elementType=='bus' || shape.elementType=='branch' || shape.elementType=='island'" >
 
       <!-- Bus or branch-->
        <!-- <svg *ngIf="shape.elementTypeId=='bus'"> -->

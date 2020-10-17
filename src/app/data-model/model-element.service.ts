@@ -125,4 +125,15 @@ export class ModelElementService {
     return newId;
   }
 
+  getOrAddIslandId(): string {
+    const existingIslands = this.modelElementDataService.getModelElements().filter(
+      e => e.elementType == 'island');
+    if (existingIslands.length == 0) {
+      return this.addModelElement('island');
+    }
+    else {
+      return existingIslands[0].elementId
+    }
+  }
+
 }

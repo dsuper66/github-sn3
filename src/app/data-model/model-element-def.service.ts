@@ -68,6 +68,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['load'] = ['fromBus'];
     //Element definitions (created in the data service) that define a child to be created 
     this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount'];
+
     //Child elements - tranches
     this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','fromBus'];
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','toBus'];
@@ -76,6 +77,7 @@ export class ModelElementDefService {
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)
     this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction','susceptance'];
+    
     //Static elements
     this.elementTypeProperties['mathModel'] = [];
     this.elementTypeProperties['island'] = [];

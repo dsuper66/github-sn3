@@ -58,8 +58,18 @@ var ShapeService = /** @class */ (function () {
     };
     //Add a shape
     ShapeService.prototype.addShape = function (elementType) {
-        //Add the element and get back the i.d.
-        var newElementId = this.modelElementService.addModelElement(elementType);
+        var newElementId = "";
+        if (elementType != 'island') {
+            //See if we need to add an island shape
+            if (!(this.shapes.find(function (s) { return s.elementType === 'island'; }))) {
+                this.addShape('island');
+            }
+            //Add the element and get back the i.d.
+            newElementId = this.modelElementService.addModelElement(elementType);
+        }
+        else {
+            newElementId = this.modelElementService.getOrAddIslandId();
+        }
         var newShape = new shape_1.Shape;
         //Placement
         console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
@@ -166,6 +176,25 @@ var ShapeService = /** @class */ (function () {
                 hOuter: h,
                 path1: path1,
                 path2: path2
+            });
+        }
+        //ISLAND
+        else if (elementType == 'island') {
+            var x_2 = busInitX + busInitLength + busInitX;
+            var y_3 = busInitY - 20.0;
+            var margin = 6;
+            var h = 60;
+            newShape = ({
+                elementType: elementType,
+                elementId: newElementId,
+                xInner: x_2 + margin,
+                yInner: y_3,
+                wInner: selectWidth - 2 * margin,
+                hInner: h,
+                xOuter: x_2,
+                yOuter: y_3,
+                wOuter: selectWidth,
+                hOuter: h
             });
         }
         this.shapes.push(newShape);
