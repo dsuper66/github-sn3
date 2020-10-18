@@ -59,16 +59,19 @@ var ShapeService = /** @class */ (function () {
     //Add a shape
     ShapeService.prototype.addShape = function (elementType) {
         var newElementId = "";
-        if (elementType != 'island') {
+        //Add the element to the model, so we have the i.d.
+        //Adding an island shape...
+        if (elementType === 'island') {
+            newElementId = this.modelElementService.getOrAddIslandId();
+        }
+        //...everything else
+        else {
             //See if we need to add an island shape
             if (!(this.shapes.find(function (s) { return s.elementType === 'island'; }))) {
                 this.addShape('island');
             }
             //Add the element and get back the i.d.
             newElementId = this.modelElementService.addModelElement(elementType);
-        }
-        else {
-            newElementId = this.modelElementService.getOrAddIslandId();
         }
         var newShape = new shape_1.Shape;
         //Placement
@@ -107,7 +110,7 @@ var ShapeService = /** @class */ (function () {
                 wOuter: busInitLength,
                 hOuter: selectWidth
             });
-            console.log(">>>" + (busInitX) + " " + (y_1 + busWidth / 2));
+            //console.log(">>>" + (busInitX) + " " + (y + busWidth / 2))
         }
         //BRANCH
         else if (elementType == 'branch') {

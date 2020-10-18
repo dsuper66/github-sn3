@@ -76,18 +76,22 @@ export class MainViewComponent implements OnInit {
     
     //Don't write an element that has missing properties
     const modelElementsExcluded = modelElements.filter(
-      element => ((Object.keys(element.properties).length 
+      element => {
+        (Object.keys(element.properties).length 
       != this.modelElementDefService.getPropertyCount(element.elementType)) 
-      ) 
+      }
     )
+    //Log what is excluded
     for (const modelElement of modelElementsExcluded) {
-    console.log(">>>Excluded:" + modelElement.elementId + " only has ");
+    console.log(">>>Excluded:" + modelElement.elementId + 
+      "expected count:" + this.modelElementDefService.getPropertyCount(modelElement.elementType) +
+      "but only has ");
       for (const property of Object.keys(modelElement.properties)) {
         console.log("key:" + property);
       }
     }
 
-    //Write all the elements
+    //==Elements JSON==
     for (const modelElement of modelElements.filter(
       element => element.includeInModel 
       && !(modelElementsExcluded.map(element => element.elementId).includes(element.elementId)))) 
@@ -123,7 +127,7 @@ export class MainViewComponent implements OnInit {
     //Next "object"...  Elements "," ConstraintDefs
     jString += ",";
 
-    //ConstraintDefs
+    //==ConstraintDefs JSON==
     jString += this.jsonStart("constraintDefs");
     let constraintDefs = this.mathModelDefService.getConstraintDefs();
     for (const constraintDef of constraintDefs) {
@@ -133,8 +137,9 @@ export class MainViewComponent implements OnInit {
       jString += this.jsonAddPair("elementType", constraintDef.elementType);
       jString += this.jsonAddPair("varType", constraintDef.varType);
       jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
-      jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);
-      jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);
+      jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);      
+      jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);      
+      jString += this.jsonAddPair("factorValue", constraintDef.factorValue);
       jString += this.jsonAddPair("factorProperty", constraintDef.factorProperty);
 
       //Remove last comma and close constraintDef object
@@ -146,7 +151,7 @@ export class MainViewComponent implements OnInit {
     //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps
     jString += ",";
 
-    //ConstraintComps
+    //==ConstraintComps JSON==
     jString += this.jsonStart("constraintComps");
     let constraintComps = this.mathModelDefService.getConstraintComps();
     for (const constraintComp of constraintComps) {

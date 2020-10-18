@@ -57,17 +57,22 @@ var MainViewComponent = /** @class */ (function () {
         //Individual Elements    
         var modelElements = this.modelElementDataService.getModelElements();
         //Don't write an element that has missing properties
-        var modelElementsExcluded = modelElements.filter(function (element) { return ((Object.keys(element.properties).length
-            != _this.modelElementDefService.getPropertyCount(element.elementType))); });
+        var modelElementsExcluded = modelElements.filter(function (element) {
+            (Object.keys(element.properties).length
+                != _this.modelElementDefService.getPropertyCount(element.elementType));
+        });
+        //Log what is excluded
         for (var _i = 0, modelElementsExcluded_1 = modelElementsExcluded; _i < modelElementsExcluded_1.length; _i++) {
             var modelElement = modelElementsExcluded_1[_i];
-            console.log(">>>Excluded:" + modelElement.elementId + " only has ");
+            console.log(">>>Excluded:" + modelElement.elementId +
+                "expected count:" + this.modelElementDefService.getPropertyCount(modelElement.elementType) +
+                "but only has ");
             for (var _a = 0, _b = Object.keys(modelElement.properties); _a < _b.length; _a++) {
                 var property = _b[_a];
                 console.log("key:" + property);
             }
         }
-        //Write all the elements
+        //==Elements JSON==
         for (var _c = 0, _d = modelElements.filter(function (element) { return element.includeInModel
             && !(modelElementsExcluded.map(function (element) { return element.elementId; }).includes(element.elementId)); }); _c < _d.length; _c++) {
             var modelElement = _d[_c];
@@ -98,7 +103,7 @@ var MainViewComponent = /** @class */ (function () {
         // jString = jString.substring(0, jString.length - 1) + "]}";
         //Next "object"...  Elements "," ConstraintDefs
         jString += ",";
-        //ConstraintDefs
+        //==ConstraintDefs JSON==
         jString += this.jsonStart("constraintDefs");
         var constraintDefs = this.mathModelDefService.getConstraintDefs();
         for (var _g = 0, constraintDefs_1 = constraintDefs; _g < constraintDefs_1.length; _g++) {
@@ -109,8 +114,9 @@ var MainViewComponent = /** @class */ (function () {
             jString += this.jsonAddPair("elementType", constraintDef.elementType);
             jString += this.jsonAddPair("varType", constraintDef.varType);
             jString += this.jsonAddPair("inEquality", constraintDef.inEquality);
-            jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);
             jString += this.jsonAddPair("rhsValue", constraintDef.rhsValue);
+            jString += this.jsonAddPair("rhsProperty", constraintDef.rhsProperty);
+            jString += this.jsonAddPair("factorValue", constraintDef.factorValue);
             jString += this.jsonAddPair("factorProperty", constraintDef.factorProperty);
             //Remove last comma and close constraintDef object
             jString = this.replaceLastChar(jString, ",", "},");
@@ -119,7 +125,7 @@ var MainViewComponent = /** @class */ (function () {
         jString = this.replaceLastChar(jString, ",", "]");
         //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps
         jString += ",";
-        //ConstraintComps
+        //==ConstraintComps JSON==
         jString += this.jsonStart("constraintComps");
         var constraintComps = this.mathModelDefService.getConstraintComps();
         for (var _h = 0, constraintComps_1 = constraintComps; _h < constraintComps_1.length; _h++) {

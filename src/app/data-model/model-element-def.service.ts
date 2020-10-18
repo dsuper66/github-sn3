@@ -22,6 +22,7 @@ export class ModelElementDefService {
 
 
     //Property Types
+    //All property types must have an entry here, for the data entry display
     this.elementPropertyTypeSettings.push(
       { propertyType: 'isRefBus', primitiveType: 'bool', visible: true },
       { propertyType: 'fromBus', primitiveType: 'string', visible: true },
@@ -38,8 +39,9 @@ export class ModelElementDefService {
       { propertyType: 'flowLimit', primitiveType: 'number', visible: true },
       { propertyType: 'lossLimit', primitiveType: 'number', visible: true },
       { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
-      { propertyType: 'direction', primitiveType: 'number', visible: true }
-
+      { propertyType: 'direction', primitiveType: 'number', visible: true },
+      { propertyType: 'islandId', primitiveType: 'string', visible: true },
+      { propertyType: 'reserveCVP', primitiveType: 'number', visible: true }
     )
 
     //Separate so that different element types can have different defaults for the same properties
@@ -58,13 +60,13 @@ export class ModelElementDefService {
       { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 }
     )
 
-    //Element Types and Property Types
+    //Define Element Types and Property Types
     //An Element Type that is included in the model must be defined here to know its properties
     //Parent elements
     this.elementTypeProperties['bus'] = ['isRefBus'];
     //Branch (flow limit and losses are at the directional level)
     this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance','flowMax'];
-    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax'];
+    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax','islandId'];
     this.elementTypeProperties['load'] = ['fromBus'];
     //Element definitions (created in the data service) that define a child to be created 
     this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount'];
@@ -77,10 +79,10 @@ export class ModelElementDefService {
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)
     this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction','susceptance'];
-    
+
     //Static elements
     this.elementTypeProperties['mathModel'] = [];
-    this.elementTypeProperties['island'] = [];
+    this.elementTypeProperties['island'] = ['reserveCVP'];
   }
 
 
@@ -124,6 +126,16 @@ export class ModelElementDefService {
     const properties = this.elementTypeProperties[elementType];
     console.log("Got properties: " + properties);
     return properties;
+  }
+
+  elementTypeHasPropertyType(elementType:string, propertyType: string):boolean{
+    const propertyTypes = this.elementTypeProperties[elementType];
+    if (propertyTypes) {
+      if (propertyTypes.find(pt => pt === propertyType)){
+        return true;
+      }
+    }
+    return false;
   }
 
   getPropertyCount(elementType: string): number {

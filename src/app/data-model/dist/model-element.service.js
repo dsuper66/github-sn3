@@ -24,7 +24,7 @@ var ModelElementService = /** @class */ (function () {
     //Add element (for child elements record their parent)
     ModelElementService.prototype.addModelElement = function (elementTypeToAdd, parentId, childNum) {
         //Add the new element
-        console.log("addModelElement:" + elementTypeToAdd);
+        console.log(">>>>>addModelElement:" + elementTypeToAdd);
         //ID for the new element 
         // const newId
         //   = (parentId && childNum) //child id incorporated parent id
@@ -78,7 +78,7 @@ var ModelElementService = /** @class */ (function () {
         //bus... need one (and only one) with isRefBus = true
         if (elementTypeToAdd === 'bus') {
             //If no refBus then make this refBus = true
-            if (this.modelElementDataService.getElementsWithPropertyValue('isRefBus', 'true').length == 0) {
+            if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
                 this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
             }
         }
@@ -97,11 +97,22 @@ var ModelElementService = /** @class */ (function () {
                 this.modelElementDataService.setPropertyForElement(newId, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
             }
         }
+        //Special case
+        //gen (and maybe others)... need an island 
+        //(when we created the shape we made sure that we had an island, for now there is only one)
+        var islandIdProperty = 'islandId';
+        if (this.modelElementDefService.elementTypeHasPropertyType(elementTypeToAdd, islandIdProperty)) {
+            var island = this.modelElementDataService.getModelElementOfType('island')[0];
+            if (island) {
+                console.log("###Island id:" + island.elementId);
+                this.modelElementDataService.setPropertyForElement(newId, islandIdProperty, island.elementId);
+            }
+        }
         return newId;
     };
     ModelElementService.prototype.getOrAddIslandId = function () {
         var existingIslands = this.modelElementDataService.getModelElements().filter(function (e) { return e.elementType == 'island'; });
-        if (existingIslands.length == 0) {
+        if (existingIslands.length === 0) {
             return this.addModelElement('island');
         }
         else {

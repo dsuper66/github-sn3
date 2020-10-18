@@ -141,11 +141,14 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.getModelElementForId = function (elementId) {
         return this.modelElements.filter(function (e) { return e.elementId === elementId; })[0];
     };
+    ModelElementDataService.prototype.getModelElementOfType = function (elementType) {
+        return this.modelElements.filter(function (e) { return e.elementType === elementType; });
+    };
     ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
         var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
         return properties[propertyType];
     };
-    ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyType, value) {
+    ModelElementDataService.prototype.getElementsWherePropertyValue = function (propertyType, value) {
         return this.modelElements.filter(function (element) { return element.properties[propertyType] === value; });
     };
     ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
@@ -160,7 +163,7 @@ var ModelElementDataService = /** @class */ (function () {
         //Update if found
         if (elementToUpdate) {
             elementToUpdate.properties[propertyType] = value;
-            console.log("Set property:" + propertyType + "for:" + elementId);
+            console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
             //If child elements have the same property then it also gets updated
             //(i.e. fromBus and toBus for dirBranch)
             for (var _i = 0, _a = this.getChildElements(elementId).filter(function (childElement) { return _this.modelElementDefService.elementHasProperty(childElement, propertyType); }); _i < _a.length; _i++) {

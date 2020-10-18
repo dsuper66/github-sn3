@@ -159,6 +159,10 @@ export class ModelElementDataService {
     return this.modelElements.filter(e => e.elementId === elementId)[0];
   }
 
+  getModelElementOfType(elementType: string): ModelElement[] {
+    return this.modelElements.filter(e => e.elementType === elementType);
+  }  
+
   getValueForElementProperty(elementId: string, propertyType: string): string {
     let properties = this.modelElements.filter(
       element => element.elementId === elementId
@@ -166,10 +170,11 @@ export class ModelElementDataService {
     return properties[propertyType];
   }
 
-  getElementsWithPropertyValue(propertyType: string, value: string): ModelElement[] {
+  getElementsWherePropertyValue(propertyType: string, value: string): ModelElement[] {
     return this.modelElements.filter(
       element => element.properties[propertyType] === value);
   }
+
 
   setPropertyForElement(elementId: string, propertyType: string, value: any) {
 
@@ -182,10 +187,11 @@ export class ModelElementDataService {
     //Update the property for the element
     const elementToUpdate = this.modelElements.filter(
       element => element.elementId === elementId)[0];
+
     //Update if found
     if (elementToUpdate) {
       elementToUpdate.properties[propertyType] = value;
-      console.log("Set property:" + propertyType + "for:" + elementId);
+      console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
 
       //If child elements have the same property then it also gets updated
       //(i.e. fromBus and toBus for dirBranch)

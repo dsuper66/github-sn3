@@ -22,186 +22,218 @@ var MathModelDefService =
 function () {
   function MathModelDefService() {
     this.constraintDefs = [];
-    this.constraintComps = []; //Constraint Defs
-
+    this.constraintComps = [];
     this.constraintDefs.push({
-      constraintId: 'nodeBal',
+      constraintType: 'nodeBal',
       elementType: 'bus',
       varType: '',
       inEquality: 'eq',
-      rhsProperty: '',
       rhsValue: 0,
-      multProperty: ''
+      rhsProperty: '',
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'enOfferTrancheLimit',
+      constraintType: 'enOffertTrancheLimit',
       elementType: 'enOfferTranche',
       varType: 'trancheCleared',
       inEquality: 'le',
-      rhsProperty: 'enOfferTrancheLimit',
       rhsValue: 0,
-      multProperty: ''
+      rhsProperty: 'trancheLimit',
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'enOfferTrancheSum',
-      elementType: 'gen',
-      varType: 'genCleared',
-      inEquality: 'le',
-      rhsProperty: '',
-      rhsValue: 0,
-      multProperty: ''
-    }, {
-      constraintId: 'bidTrancheLimit',
+      constraintType: 'bidTrancheLimit',
       elementType: 'bidTranche',
       varType: 'trancheCleared',
       inEquality: 'le',
-      rhsProperty: 'bidTrancheLimit',
       rhsValue: 0,
-      multProperty: ''
+      rhsProperty: 'trancheLimit',
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'bidTrancheSum',
-      elementType: 'load',
-      varType: 'loadCleared',
+      constraintType: 'powerFlow',
+      elementType: 'branch',
+      varType: '',
       inEquality: 'eq',
-      rhsProperty: '',
       rhsValue: 0,
-      multProperty: ''
-    }, {
-      constraintId: 'powerFlow',
-      elementType: 'dirBranch',
-      varType: 'branchFlow',
-      inEquality: 'eq',
       rhsProperty: '',
-      rhsValue: 0,
-      multProperty: 'direction'
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'dirBranchLimit',
+      constraintType: 'dirBranchLimit',
       elementType: 'branch',
       varType: '',
       inEquality: 'le',
+      rhsValue: 0,
       rhsProperty: 'flowMax',
-      rhsValue: 0,
-      multProperty: ''
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'riskCalc',
-      elementType: 'pwrSystem',
-      varType: 'genRisk',
-      inEquality: 'le',
-      rhsProperty: '',
-      rhsValue: 0,
-      multProperty: ''
-    }, {
-      constraintId: 'objective',
+      constraintType: 'objective',
       elementType: 'mathModel',
       varType: 'objectiveVal',
       inEquality: 'eq',
-      rhsProperty: '',
       rhsValue: 0,
-      multProperty: ''
-    }); //Constraint Components
-
-    this.constraintComps.push({
-      constraintId: 'nodeBal',
-      elementType: 'gen',
-      propertyMap: 'toBus',
-      varType: 'genCleared',
-      multParentProperty: '',
-      multValue: 1,
-      multProperty: ''
+      rhsProperty: '',
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'nodeBal',
+      constraintType: 'bidTrancheSum',
       elementType: 'load',
-      propertyMap: 'fromBus',
       varType: 'loadCleared',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: ''
+      inEquality: 'eq',
+      rhsValue: 0,
+      rhsProperty: '',
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'nodeBal',
+      constraintType: 'resOffertTrancheLimit',
+      elementType: 'resOfferTranche',
+      varType: 'trancheCleared',
+      inEquality: 'le',
+      rhsValue: 0,
+      rhsProperty: 'trancheLimit',
+      factorValue: 1,
+      factorProperty: ''
+    }, {
+      constraintType: 'genRiskCalc',
+      elementType: 'gen',
+      varType: 'genRisk',
+      inEquality: 'le',
+      rhsValue: 0,
+      rhsProperty: '',
+      factorValue: -1,
+      factorProperty: ''
+    }, {
+      constraintType: 'islandFindRisk',
+      elementType: 'island',
+      varType: 'islandRisk',
+      inEquality: 'le',
+      rhsValue: 0,
+      rhsProperty: '',
+      factorValue: -1,
+      factorProperty: ''
+    });
+    this.constraintComps.push({
+      constraintType: 'nodeBal',
+      elementType: 'enOfferTranche',
+      propertyMap: 'toBus',
+      varType: 'trancheCleared',
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: ''
+    }, {
+      constraintType: 'nodeBal',
+      elementType: 'bidTranche',
+      propertyMap: 'fromBus',
+      varType: 'trancheCleared',
+      factorParentProperty: '',
+      factorValue: -1,
+      factorProperty: ''
+    }, {
+      constraintType: 'nodeBal',
       elementType: 'dirBranch',
       propertyMap: 'fromBus',
       varType: 'branchFlow',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: 'direction'
+      factorParentProperty: '',
+      factorValue: -1,
+      factorProperty: 'direction'
     }, {
-      constraintId: 'nodeBal',
+      constraintType: 'nodeBal',
       elementType: 'dirBranch',
       propertyMap: 'toBus',
       varType: 'branchFlow',
-      multParentProperty: '',
-      multValue: 1,
-      multProperty: 'direction'
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: 'direction'
     }, {
-      constraintId: 'enOfferTrancheSum',
-      elementType: 'enOfferTranche',
+      constraintType: 'powerFlow',
+      elementType: 'bus',
+      propertyMap: 'fromBus',
+      varType: 'phaseAngle',
+      factorParentProperty: 'susceptance',
+      factorValue: -1,
+      factorProperty: ''
+    }, {
+      constraintType: 'powerFlow',
+      elementType: 'bus',
+      propertyMap: 'toBus',
+      varType: 'phaseAngle',
+      factorParentProperty: 'susceptance',
+      factorValue: 1,
+      factorProperty: ''
+    }, {
+      constraintType: 'powerFlow',
+      elementType: 'dirBranch',
       propertyMap: 'parentId',
-      varType: 'trancheCleared',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: ''
+      varType: 'branchFlow',
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: 'direction'
     }, {
-      constraintId: 'bidTrancheSum',
+      constraintType: 'dirBranchLimit',
+      elementType: 'dirBranch',
+      propertyMap: 'parentId',
+      varType: 'branchFlow',
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: ''
+    }, {
+      constraintType: 'objective',
+      elementType: 'enOfferTranche',
+      propertyMap: 'all',
+      varType: 'trancheCleared',
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: 'tranchePrice'
+    }, {
+      constraintType: 'objective',
+      elementType: 'bidTranche',
+      propertyMap: 'all',
+      varType: 'trancheCleared',
+      factorParentProperty: '',
+      factorValue: -1,
+      factorProperty: 'tranchePrice'
+    }, {
+      constraintType: 'objective',
+      elementType: 'resOfferTranche',
+      propertyMap: 'all',
+      varType: 'trancheCleared',
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: 'tranchePrice'
+    }, {
+      constraintType: 'bidTrancheSum',
       elementType: 'bidTranche',
       propertyMap: 'parentId',
       varType: 'trancheCleared',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: ''
+      factorParentProperty: '',
+      factorValue: -1,
+      factorProperty: ''
     }, {
-      constraintId: 'powerFlow',
-      elementType: 'bus',
-      propertyMap: 'fromBus',
-      varType: 'phaseAngle',
-      multParentProperty: 'susceptance',
-      multValue: -1,
-      multProperty: ''
-    }, {
-      constraintId: 'powerFlow',
-      elementType: 'bus',
-      propertyMap: 'toBus',
-      varType: 'phaseAngle',
-      multParentProperty: 'susceptance',
-      multValue: 1,
-      multProperty: ''
-    }, {
-      constraintId: 'dirBranchLimit',
-      elementType: 'dirBranch',
+      constraintType: 'genRiskCalc',
+      elementType: 'enOfferTranche',
       propertyMap: 'parentId',
-      varType: 'branchFlow',
-      multParentProperty: '',
-      multValue: 1,
-      multProperty: ''
-    }, {
-      constraintId: 'riskCalc',
-      elementType: 'gen',
-      propertyMap: 'pwrSystem',
-      varType: 'genCleared',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: ''
-    }, {
-      constraintId: 'riskCalc',
-      elementType: 'gen',
-      propertyMap: 'pwrSystem',
-      varType: 'resCleared',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: ''
-    }, {
-      constraintId: 'objective',
-      elementType: 'genTranche',
-      propertyMap: 'genPrice',
       varType: 'trancheCleared',
-      multParentProperty: '',
-      multValue: -1,
-      multProperty: ''
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: ''
     }, {
-      constraintId: 'objective',
-      elementType: 'loadTranche',
-      propertyMap: 'loadPrice',
+      constraintType: 'genRiskCalc',
+      elementType: 'resOfferTranche',
+      propertyMap: 'parentId',
       varType: 'trancheCleared',
-      multParentProperty: '',
-      multValue: 1,
-      multProperty: ''
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: ''
+    }, {
+      constraintType: 'islandFindRisk',
+      elementType: 'gen',
+      propertyMap: 'islandId',
+      varType: 'genRisk',
+      factorParentProperty: '',
+      factorValue: 1,
+      factorProperty: ''
     });
   } // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
