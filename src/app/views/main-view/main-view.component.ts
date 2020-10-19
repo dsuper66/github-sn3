@@ -195,7 +195,7 @@ export class MainViewComponent implements OnInit {
         for (const modelVar of solverResults.variables) {
           resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
           this.modelElementDataService.addResult(
-            modelVar.elementId,"quantity",modelVar.varId,modelVar.quantity)
+            modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity)
           // this.modelElementDataService.setQuantityForElement(
           //   modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity) 
         }

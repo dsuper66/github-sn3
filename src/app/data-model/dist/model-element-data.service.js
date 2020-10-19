@@ -208,10 +208,23 @@ var ModelElementDataService = /** @class */ (function () {
                     if (results['nodeBal']) {
                         resultString = "$" + results['nodeBal'].toFixed(2).toString();
                     }
+                    if (results['phaseAnglePos']) {
+                        resultString = resultString.concat(" ∠", results['phaseAnglePos'].toFixed(2).toString());
+                    }
                 }
-                else {
-                    if (results["quantity"]) {
-                        resultString = results["quantity"].toFixed(2).toString();
+                else if (element.elementType == "gen" || element.elementType == "load") {
+                    if (results["trancheCleared"]) {
+                        resultString = results["trancheCleared"].toFixed(2).toString();
+                    }
+                }
+                else if (element.elementType == "island") {
+                    if (results["islandRisk"]) {
+                        resultString = "risk:" + results["islandRisk"].toFixed(2).toString();
+                    }
+                }
+                else if (element.elementType == "branch") {
+                    if (results["branchFlow"]) {
+                        resultString = results["branchFlow"].toFixed(2).toString();
                     }
                 }
             }

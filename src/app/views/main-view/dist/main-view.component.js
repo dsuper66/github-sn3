@@ -162,7 +162,7 @@ var MainViewComponent = /** @class */ (function () {
             for (var _i = 0, _a = solverResults.variables; _i < _a.length; _i++) {
                 var modelVar = _a[_i];
                 resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
-                _this.modelElementDataService.addResult(modelVar.elementId, "quantity", modelVar.varId, modelVar.quantity);
+                _this.modelElementDataService.addResult(modelVar.elementId, modelVar.varType, modelVar.varId, modelVar.quantity);
                 // this.modelElementDataService.setQuantityForElement(
                 //   modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity) 
             }
