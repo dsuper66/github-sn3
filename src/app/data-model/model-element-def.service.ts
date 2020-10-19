@@ -76,6 +76,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','toBus'];
     this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+    
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)
     this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction','susceptance'];
