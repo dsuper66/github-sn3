@@ -49,7 +49,7 @@ export class ModelElementDefService {
       { propertyType: 'isRefBus', elementType: 'bus', defaultValue: false },
       { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 },
       { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 },
-      { propertyType: 'susceptance', elementType: 'branch', defaultValue: -16 },
+      { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 },
       { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 100 },
       { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 160 },
       { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 250 },
@@ -76,7 +76,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','toBus'];
     this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
     this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
-    
+
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)
     this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction','susceptance'];
