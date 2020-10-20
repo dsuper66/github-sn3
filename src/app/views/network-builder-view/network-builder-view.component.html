@@ -75,18 +75,27 @@
 
           <!-- Island Text -->
           <svg *ngIf="shape.elementType=='island'">
+            <!-- Result -->
             <text 
-            [attr.x]="shape.xInner + shape.wInner + 2" 
+            [attr.x]="shape.xInner + shape.wInner + 4" 
             [attr.y]="shape.yInner + shape.hInner/3 + 4"
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
             fill="red">{{shape.text1}}</text>
+
+            <!-- Title -->
+            <text id="island"
+            [attr.x]="shape.xInner + 3" 
+            [attr.y]="shape.yInner + (3/4) * shape.hInner"
+            [attr.width]="shape.wInner"
+            [attr.height]="shape.Inner"          
+            fill="blue">1</text>
           </svg> 
 
         <!-- </svg> -->
         
         <!-- Inner -->
-          <rect 
+          <rect class="shape"
           
           id="{{shape.elementId}}" 
           [attr.x]="shape.xInner" 
@@ -94,8 +103,26 @@
           [attr.width]="shape.wInner"
           [attr.height]="shape.hInner"
           [attr.rx]="shape.elementType=='bus'?8:2" 
+
+          [style.fill]="shape.elementType=='island'?'none':'black'"
+
+
           /> 
-      <!-- </svg> -->
+
+          <!-- stroke-width="2"
+
+                      [style.stroke]="black"
+          [style.stroke-width]="2"
+
+          stroke="black"
+          fill="white" 
+                  [style.stroke-width]="shape.elementType=='island'?'4':'0'"
+
+                  [style.stroke-width]="shape.elementType=='island'?'4':'1'"
+
+                  [style.fill]="shape.elementType=='island'?'white':'black'"
+
+        -->
 
  
 
@@ -141,7 +168,7 @@
       <svg>
             <text 
             [attr.x]="shape.xOuter" 
-            [attr.y]="shape.yInner - 2" 
+            [attr.y]="shape.yInner - 3" 
             [attr.width]="shape.wOuter"
             [attr.height]="20"
             fill="red">{{shape.text1}}</text>

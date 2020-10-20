@@ -211,24 +211,28 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.stopDrawing();
     };
     NetworkBuilderViewComponent.prototype.setConnectivity = function (shape) {
-        var isFullyConnected = (shape.elementType != 'branch' && shape.connId1 != "")
-            || (shape.connId1 != "" && shape.connId2 != "");
-        //Use renderer, not attribute
-        //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
-        //https://stackoverflow.com/questions/54507984/angular-how-to-modify-css-transform-property-of-html-elements-inside-a-compone
-        //(with changes to setProperty)
-        //Set connectivity colour
-        var el = document.getElementById(shape.elementId);
-        if (el != undefined) {
-            //Set stroke colour
-            this.renderer.setProperty(el.style, "stroke", (isFullyConnected ? "black" : "lime"));
-            //Bus and branch also set fill colour
-            if (shape.elementType === 'bus' || shape.elementType === 'branch') {
-                this.renderer.setProperty(el.style, "fill", (isFullyConnected ? "black" : "lime"));
+        if (shape.elementType != 'island') {
+            var isFullyConnected = (shape.elementType != 'branch' && shape.connId1 != "")
+                || (shape.connId1 != "" && shape.connId2 != "");
+            //Use renderer, not attribute
+            //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
+            //https://stackoverflow.com/questions/54507984/angular-how-to-modify-css-transform-property-of-html-elements-inside-a-compone
+            //(with changes to setProperty)
+            //Set connectivity colour
+            var el = document.getElementById(shape.elementId);
+            if (el != undefined) {
+                //Set stroke colour
+                this.renderer.setProperty(el.style, "stroke", (isFullyConnected ? "black" : "lime"));
+                //Bus and branch also set fill colour
+                if (shape.elementType === 'bus' || shape.elementType === 'branch') {
+                    this.renderer.setProperty(el.style, "fill", (isFullyConnected ? "black" : "lime"));
+                }
+                // this.renderer.setProperty(el.style,
+                //   "stroke-width", "4");
             }
+            //Save shape connectivity to element model
+            this.shapeService.saveConnectivityToModel();
         }
-        //Save shape connectivity to element model
-        this.shapeService.saveConnectivityToModel();
     };
     //CHECK FOR OVERLAPS
     NetworkBuilderViewComponent.prototype.checkForOverlaps = function () {

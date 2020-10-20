@@ -199,9 +199,9 @@ export class ShapeService {
     //ISLAND
     else if (elementType == 'island') {
       const x = busInitX + busInitLength + busInitX;
-      const y = busInitY - 20.0;
+      const y = busInitY - selectWidth;
       const margin = 6
-      const h = 60;
+      const h = 50;
       newShape = ({
         elementType: elementType,
         elementId: newElementId,

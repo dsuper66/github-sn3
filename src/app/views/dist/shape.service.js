@@ -184,9 +184,9 @@ var ShapeService = /** @class */ (function () {
         //ISLAND
         else if (elementType == 'island') {
             var x_2 = busInitX + busInitLength + busInitX;
-            var y_3 = busInitY - 20.0;
+            var y_3 = busInitY - selectWidth;
             var margin = 6;
-            var h = 60;
+            var h = 50;
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,

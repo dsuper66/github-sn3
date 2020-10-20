@@ -243,6 +243,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
 
   setConnectivity(shape: Shape) {
+    if (shape.elementType != 'island') {
     let isFullyConnected =
       (shape.elementType != 'branch' && shape.connId1 != "")
       || (shape.connId1 != "" && shape.connId2 != "");
@@ -263,10 +264,13 @@ export class NetworkBuilderViewComponent implements OnInit {
         this.renderer.setProperty(el.style,
           "fill", (isFullyConnected ? "black" : "lime"));
       }
+      // this.renderer.setProperty(el.style,
+      //   "stroke-width", "4");
     }
 
     //Save shape connectivity to element model
     this.shapeService.saveConnectivityToModel();
+    }
   }
 
   //CHECK FOR OVERLAPS
