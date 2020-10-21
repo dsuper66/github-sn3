@@ -86,7 +86,7 @@ var ModelElementService = /** @class */ (function () {
         for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
             var defaultValueSetting = _a[_i];
             var addDefaults = true;
-            //If child element, only add defaults to number 1
+            //If child element, only add defaults to number 1, i.e., don't repeat for all
             if (childNum) {
                 if (childNum != 1) {
                     addDefaults = false;

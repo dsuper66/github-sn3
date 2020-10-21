@@ -29,9 +29,11 @@ var ModelElementDefService = /** @class */ (function () {
         //Element definitions (created in the data service) that define a child to be created 
         this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount'];
         //Child elements - tranches
+        //Bid and offer need bus (inherited), so cleared quantities go to bus
         this.elementTypeProperties['bidTranche'] = ['parentId', 'trancheLimit', 'tranchePrice', 'fromBus'];
         this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice', 'toBus'];
-        this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice'];
+        //Reserve needs islandId (inherited), so cleared quantities go to island
+        this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice', 'islandId'];
         this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
         //Child elements - unrestricted variables
         //Directional branches (power flow is at the parent branch level)
