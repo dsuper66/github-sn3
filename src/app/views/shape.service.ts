@@ -88,10 +88,10 @@ export class ShapeService {
     //Placement
     console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
     //Defaults
-    const branchInitLength = 110;
+    const branchInitLength = 160;
     const busInitX = 50;
     const busInitY = branchInitLength;
-    const busInitLength = 140;
+    const busInitLength = 160;
     const branchWidth = 5;
     const busWidth = 14;
     const genLoadLength = 42;

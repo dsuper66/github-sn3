@@ -247,11 +247,20 @@ export class ModelElementDataService {
               results['phaseAnglePos'].toFixed(2).toString())
           }
         }
-        else if (element.elementType == "gen" || element.elementType == "load") {
-          if (results["trancheCleared"]) {
-            resultString = results["trancheCleared"].toFixed(2).toString()
+        else if (element.elementType == "gen") {
+          if (results["enTrancheCleared"]) {
+            resultString = results["enTrancheCleared"].toFixed(2).toString()
+          }
+          if (results["resTrancheCleared"]) {
+            resultString = resultString.concat(
+              "\nR ",results["resTrancheCleared"].toFixed(2).toString())
           }
         }
+        else if (element.elementType == "load") {
+          if (results["bidTrancheCleared"]) {
+            resultString = results["bidTrancheCleared"].toFixed(2).toString()
+          }
+        }        
         else if (element.elementType == "island") {
           if (results["islandRisk"]) {
             resultString = "risk:" + results["islandRisk"].toFixed(2).toString()
