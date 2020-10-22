@@ -57,7 +57,8 @@ export class ModelElementDefService {
       { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 },
       { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
       { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
-      { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 }
+      { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
+      { propertyType: 'resShortfallPrice', elementType: 'island', defaultValue: 9 }
     )
 
     //Define Element Types and Property Types
@@ -85,7 +86,7 @@ export class ModelElementDefService {
 
     //Static elements
     this.elementTypeProperties['mathModel'] = [];
-    this.elementTypeProperties['island'] = ['reserveCVP'];
+    this.elementTypeProperties['island'] = ['resShortfallPrice'];
   }
 
 

@@ -70,18 +70,20 @@ export class ShapeService {
 
     //Add the element to the model, so we have the i.d.
     //Adding an island shape...
-    if (elementType === 'island') {
-      newElementId = this.modelElementService.getOrAddIslandId();
-    }
-    //...everything else
-    else {
-      //See if we need to add an island shape
+    // if (elementType === 'island') {
+    //   newElementId = this.modelElementService.getOrAddIslandId();
+    // }
+    // //...everything else
+    // else {
+    //See if we need to add an island shape
+    if (elementType != 'island') {
       if (!(this.shapes.find(s => s.elementType === 'island'))) {
         this.addShape('island');
       }
-      //Add the element and get back the i.d.
-      newElementId = this.modelElementService.addModelElement(elementType);
     }
+    //Add the element and get back the i.d.
+    newElementId = this.modelElementService.addModelElement(elementType);
+
 
     var newShape = new Shape;
 
@@ -138,7 +140,7 @@ export class ShapeService {
       };
       //Y position
       let y = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
-      
+
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
@@ -214,7 +216,7 @@ export class ShapeService {
         wOuter: selectWidth,
         hOuter: h
       })
-      
+
     }
 
     this.shapes.push(newShape);

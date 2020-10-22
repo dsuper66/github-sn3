@@ -61,18 +61,19 @@ var ShapeService = /** @class */ (function () {
         var newElementId = "";
         //Add the element to the model, so we have the i.d.
         //Adding an island shape...
-        if (elementType === 'island') {
-            newElementId = this.modelElementService.getOrAddIslandId();
-        }
-        //...everything else
-        else {
-            //See if we need to add an island shape
+        // if (elementType === 'island') {
+        //   newElementId = this.modelElementService.getOrAddIslandId();
+        // }
+        // //...everything else
+        // else {
+        //See if we need to add an island shape
+        if (elementType != 'island') {
             if (!(this.shapes.find(function (s) { return s.elementType === 'island'; }))) {
                 this.addShape('island');
             }
-            //Add the element and get back the i.d.
-            newElementId = this.modelElementService.addModelElement(elementType);
         }
+        //Add the element and get back the i.d.
+        newElementId = this.modelElementService.addModelElement(elementType);
         var newShape = new shape_1.Shape;
         //Placement
         console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
