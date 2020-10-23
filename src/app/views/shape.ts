@@ -17,4 +17,6 @@ export class Shape {
     connId1?:string="";
     connId2?:string="";
     text1?:string="";
+    text2?:string="";
+    text3?:string="";     
 }

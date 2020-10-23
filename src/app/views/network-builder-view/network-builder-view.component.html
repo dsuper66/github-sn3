@@ -75,13 +75,27 @@
 
           <!-- Island Text -->
           <svg *ngIf="shape.elementType=='island'">
-            <!-- Result -->
+            <!-- Text 1 -->
             <text 
             [attr.x]="shape.xInner + shape.wInner + 4" 
-            [attr.y]="shape.yInner + shape.hInner/3 + 4"
+            [attr.y]="shape.yInner + shape.hInner/3"
             [attr.width]="shape.wOuter"
-            [attr.height]="shape.hOuter"
+            [attr.height]="10"
             fill="red">{{shape.text1}}</text>
+           <!-- Text 2 -->
+           <text 
+           [attr.x]="shape.xInner + shape.wInner +4" 
+           [attr.y]="shape.yInner + shape.hInner/3 + 15"
+           [attr.width]="shape.wOuter"
+           [attr.height]="10"
+           fill="red">{{shape.text2}}</text>  
+           <!-- Text 3 -->
+           <text 
+           [attr.x]="shape.xInner + shape.wInner +4" 
+           [attr.y]="shape.yInner + shape.hInner/3 + 15 + 15"
+           [attr.width]="shape.wOuter"
+           [attr.height]="10"
+           fill="red">{{shape.text3}}</text>                     
 
             <!-- Title -->
             <text id="island"

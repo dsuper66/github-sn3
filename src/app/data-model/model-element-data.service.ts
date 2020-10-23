@@ -229,8 +229,10 @@ export class ModelElementDataService {
     }
   }
 
-  getResultsText(elementId: string): string {
-    var resultString = ""
+  getTextFromElementResults(elementId: string): [string,string,string] {
+    var resultString1 = ""
+    var resultString2 = ""
+    var resultString3 = ""
     let element = this.modelElements.find(
       element => element.elementId === elementId
     );
@@ -240,43 +242,48 @@ export class ModelElementDataService {
       if (results) {
         if (element.elementType == "bus") {
           if (results['nodeBal']) {
-            resultString = "$" + results['nodeBal'].toFixed(2).toString();      
+            resultString1 = "$" + results['nodeBal'].toFixed(2).toString();      
           }
           if (results['phaseAnglePos']) {
-            resultString = resultString.concat(" ∠",
+            resultString1 = resultString1.concat(" ∠",
               results['phaseAnglePos'].toFixed(2).toString())
           }
         }
         else if (element.elementType == "gen") {
           if (results["enTrancheCleared"]) {
-            resultString = results["enTrancheCleared"].toFixed(2).toString()
+            resultString1 = results["enTrancheCleared"].toFixed(2).toString()
           }
           if (results["resTrancheCleared"]) {
-            resultString = resultString.concat(
-              "\nR ",results["resTrancheCleared"].toFixed(2).toString())
+            resultString2 = results["resTrancheCleared"].toFixed(2).toString()
           }
         }
         else if (element.elementType == "load") {
           if (results["bidTrancheCleared"]) {
-            resultString = results["bidTrancheCleared"].toFixed(2).toString()
+            resultString1 = results["bidTrancheCleared"].toFixed(2).toString()
           }
         }        
         else if (element.elementType == "island") {
           if (results["islandRisk"]) {
-            resultString = "risk:" + results["islandRisk"].toFixed(2).toString()
-          }          
+            resultString1 = "risk:" + results["islandRisk"].toFixed(2).toString()
+          }
+          if (results["islandRes"]) {
+            resultString2 = "res:" + results["islandRes"].toFixed(2).toString()
+          }  
+          if (results["resShortfall"]) {
+            resultString3 = "short:" + results["resShortfall"].toFixed(2).toString()
+          }            
         }
         else if (element.elementType == "branch") {
           if (results["branchFlow"]) {
-            resultString = results["branchFlow"].toFixed(2).toString()
+            resultString1 = results["branchFlow"].toFixed(2).toString()
           }          
         }
 
       }
     }
     // }
-    console.log("got result:>>" + resultString + "<<");
-    return resultString;
+    console.log("got result:>>" + resultString1 + "<<");
+    return [resultString1,resultString2,resultString3];
   }
 
   addResult(elementId: string, resultType: string, resultId: string, value: number) {

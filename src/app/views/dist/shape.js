@@ -9,6 +9,8 @@ var Shape = /** @class */ (function () {
         this.connId1 = "";
         this.connId2 = "";
         this.text1 = "";
+        this.text2 = "";
+        this.text3 = "";
     }
     return Shape;
 }());

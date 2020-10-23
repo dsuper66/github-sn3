@@ -282,9 +282,10 @@ var ShapeService = /** @class */ (function () {
     };
     //Results
     ShapeService.prototype.setShapesText = function () {
-        for (var _i = 0, _a = this.shapes; _i < _a.length; _i++) {
-            var shape = _a[_i];
-            shape.text1 = this.modelElementDataService.getResultsText(shape.elementId);
+        var _a;
+        for (var _i = 0, _b = this.shapes; _i < _b.length; _i++) {
+            var shape = _b[_i];
+            _a = this.modelElementDataService.getTextFromElementResults(shape.elementId), shape.text1 = _a[0], shape.text2 = _a[1], shape.text3 = _a[2];
         }
     };
     ShapeService = __decorate([
