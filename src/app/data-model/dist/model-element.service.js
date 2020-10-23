@@ -110,15 +110,6 @@ var ModelElementService = /** @class */ (function () {
         }
         return newId;
     };
-    ModelElementService.prototype.getOrAddIslandId = function () {
-        var existingIslands = this.modelElementDataService.getModelElements().filter(function (e) { return e.elementType == 'island'; });
-        if (existingIslands.length === 0) {
-            return this.addModelElement('island');
-        }
-        else {
-            return existingIslands[0].elementId;
-        }
-    };
     ModelElementService = __decorate([
         core_1.Injectable({
             //the preferred way to create a singleton service

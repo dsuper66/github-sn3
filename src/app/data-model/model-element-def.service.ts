@@ -41,7 +41,7 @@ export class ModelElementDefService {
       { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
       { propertyType: 'direction', primitiveType: 'number', visible: true },
       { propertyType: 'islandId', primitiveType: 'string', visible: true },
-      { propertyType: 'reserveCVP', primitiveType: 'number', visible: true }
+      { propertyType: 'resShortfallPrice', primitiveType: 'number', visible: true }
     )
 
     //Separate so that different element types can have different defaults for the same properties

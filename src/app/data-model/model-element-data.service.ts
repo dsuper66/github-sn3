@@ -68,11 +68,11 @@ export class ModelElementDataService {
     });
     //island has risk and reserve as variables 
     //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
-    this.modelElements.push({
-      elementId: 'island001', elementType: 'island',
-      properties: {},
-      includeInModel: true
-    });
+    // this.modelElements.push({
+    //   elementId: 'island001', elementType: 'island',
+    //   properties: {},
+    //   includeInModel: true
+    // });
 
   }
 
