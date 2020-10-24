@@ -11,6 +11,7 @@ var Shape = /** @class */ (function () {
         this.text1 = "";
         this.text2 = "";
         this.text3 = "";
+        this.text4 = "";
     }
     return Shape;
 }());

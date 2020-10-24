@@ -187,7 +187,7 @@ var ShapeService = /** @class */ (function () {
             var x_2 = busInitX + busInitLength + busInitX;
             var y_3 = busInitY - selectWidth;
             var margin = 6;
-            var h = 50;
+            var h = 55;
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
@@ -285,7 +285,7 @@ var ShapeService = /** @class */ (function () {
         var _a;
         for (var _i = 0, _b = this.shapes; _i < _b.length; _i++) {
             var shape = _b[_i];
-            _a = this.modelElementDataService.getTextFromElementResults(shape.elementId), shape.text1 = _a[0], shape.text2 = _a[1], shape.text3 = _a[2];
+            _a = this.modelElementDataService.getTextFromElementResults(shape.elementId), shape.text1 = _a[0], shape.text2 = _a[1], shape.text3 = _a[2], shape.text4 = _a[3];
         }
     };
     ShapeService = __decorate([

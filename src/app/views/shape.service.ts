@@ -203,7 +203,7 @@ export class ShapeService {
       const x = busInitX + busInitLength + busInitX;
       const y = busInitY - selectWidth;
       const margin = 6
-      const h = 50;
+      const h = 55;
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
@@ -311,7 +311,8 @@ export class ShapeService {
   //Results
   setShapesText() {
     for (const shape of this.shapes) {
-      [shape.text1,shape.text2,shape.text3] = this.modelElementDataService.getTextFromElementResults(shape.elementId);
+      [shape.text1,shape.text2,shape.text3,shape.text4] = 
+        this.modelElementDataService.getTextFromElementResults(shape.elementId);
     }
   }
 }

@@ -197,57 +197,76 @@ var ModelElementDataService = /** @class */ (function () {
                 element.results[result] = 0;
         }
     };
+    ModelElementDataService.prototype.checkGetResult = function (key, results) {
+        if (results[key] === undefined) {
+            console.log("MISSING RESULT: " + key);
+            return "###";
+        }
+        else {
+            return results[key].toFixed(2).toString();
+        }
+    };
     ModelElementDataService.prototype.getTextFromElementResults = function (elementId) {
         var resultString1 = "";
         var resultString2 = "";
         var resultString3 = "";
+        var resultString4 = "";
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (element) {
             // for (const modelElement of this.modelElements){
             var results = element.results;
             if (results) {
                 if (element.elementType == "bus") {
-                    if (results['nodeBal']) {
-                        resultString1 = "$" + results['nodeBal'].toFixed(2).toString();
-                    }
-                    if (results['phaseAnglePos']) {
-                        resultString1 = resultString1.concat(" ∠", results['phaseAnglePos'].toFixed(2).toString());
-                    }
+                    resultString1 = "$" + this.checkGetResult('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
+                    resultString2 = "∠" + this.checkGetResult('phaseAnglePos', results);
+                    // if (results['phaseAnglePos'] === undefined) {console.log("MISSING: phaseAnglePos")}
+                    // else {
+                    //   resultString1 = resultString1.concat(" ∠",
+                    //     results['phaseAnglePos'].toFixed(2).toString())
+                    // }
                 }
                 else if (element.elementType == "gen") {
-                    if (results["enTrancheCleared"]) {
-                        resultString1 = results["enTrancheCleared"].toFixed(2).toString();
-                    }
-                    if (results["resTrancheCleared"]) {
-                        resultString2 = results["resTrancheCleared"].toFixed(2).toString();
-                    }
+                    resultString1 = this.checkGetResult('enTrancheCleared', results);
+                    resultString2 = "R" + this.checkGetResult('resTrancheCleared', results);
+                    // if (results["enTrancheCleared"] != undefined) {
+                    //   resultString1 = results["enTrancheCleared"].toFixed(2).toString()
+                    // }
+                    // if (results["resTrancheCleared"]) {
+                    //   resultString2 = results["resTrancheCleared"].toFixed(2).toString()
+                    // }
                 }
                 else if (element.elementType == "load") {
-                    if (results["bidTrancheCleared"]) {
-                        resultString1 = results["bidTrancheCleared"].toFixed(2).toString();
-                    }
+                    resultString1 = this.checkGetResult('bidTrancheCleared', results);
+                    // if (results["bidTrancheCleared"]) {
+                    //   resultString1 = results["bidTrancheCleared"].toFixed(2).toString()
+                    // }
                 }
                 else if (element.elementType == "island") {
-                    if (results["islandRisk"]) {
-                        resultString1 = "risk:" + results["islandRisk"].toFixed(2).toString();
-                    }
-                    if (results["islandRes"]) {
-                        resultString2 = "res:" + results["islandRes"].toFixed(2).toString();
-                    }
-                    if (results["resShortfall"]) {
-                        resultString3 = "short:" + results["resShortfall"].toFixed(2).toString();
-                    }
+                    resultString1 = "$" + this.checkGetResult('resCover', results);
+                    resultString2 = "risk:" + this.checkGetResult('islandRisk', results);
+                    resultString3 = "res:" + this.checkGetResult('islandRes', results);
+                    resultString4 = "short:" + this.checkGetResult('resShortfall', results);
+                    // if (results["islandRisk"]) {
+                    //   resultString1 = "risk:" + results["islandRisk"].toFixed(2).toString()
+                    // }
+                    // if (results["islandRes"] != undefined) {
+                    //   resultString2 = "res:" + results["islandRes"].toFixed(2).toString()
+                    // }  
+                    // if (results["resShortfall"]) {
+                    //   resultString3 = "short:" + results["resShortfall"].toFixed(2).toString()
+                    // }            
                 }
                 else if (element.elementType == "branch") {
-                    if (results["branchFlow"]) {
-                        resultString1 = results["branchFlow"].toFixed(2).toString();
-                    }
+                    resultString1 = "$" + this.checkGetResult('branchFlow', results);
+                    // if (results["branchFlow"]) {
+                    //   resultString1 = results["branchFlow"].toFixed(2).toString()
+                    // }          
                 }
             }
         }
         // }
         console.log("got result:>>" + resultString1 + "<<");
-        return [resultString1, resultString2, resultString3];
+        return [resultString1, resultString2, resultString3, resultString4];
     };
     ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value) {
         console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<");

@@ -1,19 +1,20 @@
 <div class="header">
 
+  <!-- Top Buttons -->
+  <button routerLink="/main-component">Solve</button>
+  &nbsp;  
   <!-- Need a check to prevent adding undefined to the route -->
-  <button *ngIf="selectedShape"
-    routerLink="/data-entry-component/{{selectedShape.elementId}}">Data</button> 
+  <button *ngIf="selectedShape"routerLink="/data-entry-component/{{selectedShape.elementId}}">Data</button> 
   <button *ngIf="!selectedShape" [disabled]=true>Data</button>     
 
-    &nbsp;
+  <button 
+    [disabled]="!selectedShape" 
+    (click)="deleteSelectedShape()">Delete</button>
 
-    <button 
-      [disabled]="!selectedShape" 
-      (click)="deleteSelectedShape()">Delete</button>
-
-    <span *ngIf="(selectedShape)">
-      {{selectedShape.elementId}}@{{selectedShape.connId1}} {{selectedShape.connId2}}
-    </span>
+  <!-- Name of Selected Shape -->
+  <span *ngIf="(selectedShape)">
+    {{selectedShape.elementId}}@{{selectedShape.connId1}} {{selectedShape.connId2}}
+  </span>
     
 </div>
 
@@ -75,35 +76,42 @@
 
           <!-- Island Text -->
           <svg *ngIf="shape.elementType=='island'">
-            <!-- Text 1 -->
+              <!-- Text 1 -->
+              <text 
+              [attr.x]="shape.xInner + shape.wInner + 4" 
+              [attr.y]="shape.yInner + shape.hInner/5"
+              [attr.width]="shape.wOuter"
+              [attr.height]="10"
+              fill="red">{{shape.text1}}</text>
+            <!-- Text 2 -->
             <text 
-            [attr.x]="shape.xInner + shape.wInner + 4" 
-            [attr.y]="shape.yInner + shape.hInner/3"
+            [attr.x]="shape.xInner + shape.wInner +4" 
+            [attr.y]="shape.yInner + shape.hInner/5 + 15"
             [attr.width]="shape.wOuter"
             [attr.height]="10"
-            fill="red">{{shape.text1}}</text>
-           <!-- Text 2 -->
-           <text 
-           [attr.x]="shape.xInner + shape.wInner +4" 
-           [attr.y]="shape.yInner + shape.hInner/3 + 15"
-           [attr.width]="shape.wOuter"
-           [attr.height]="10"
-           fill="red">{{shape.text2}}</text>  
-           <!-- Text 3 -->
-           <text 
-           [attr.x]="shape.xInner + shape.wInner +4" 
-           [attr.y]="shape.yInner + shape.hInner/3 + 15 + 15"
-           [attr.width]="shape.wOuter"
-           [attr.height]="10"
-           fill="red">{{shape.text3}}</text>                     
+            fill="red">{{shape.text2}}</text>  
+            <!-- Text 3 -->
+            <text 
+            [attr.x]="shape.xInner + shape.wInner +4" 
+            [attr.y]="shape.yInner + shape.hInner/5 + 15 + 15"
+            [attr.width]="shape.wOuter"
+            [attr.height]="10"
+            fill="red">{{shape.text3}}</text>
+            <!-- Text 4 -->
+            <text 
+            [attr.x]="shape.xInner + shape.wInner +4" 
+            [attr.y]="shape.yInner + shape.hInner/5 + 15 + 15 + 15"
+            [attr.width]="shape.wOuter"
+            [attr.height]="10"
+            fill="red">{{shape.text4}}</text>                               
 
-            <!-- Title -->
+            <!-- Island Number -->
             <text id="island"
             [attr.x]="shape.xInner + 3" 
             [attr.y]="shape.yInner + (3/4) * shape.hInner"
             [attr.width]="shape.wInner"
             [attr.height]="shape.Inner"          
-            fill="blue">1</text>
+            fill="gray">1</text>
           </svg> 
 
         <!-- </svg> -->
@@ -178,15 +186,25 @@
       </svg>
 
 
-      <!-- TEXT Results -->
+      <!-- TEXT Results Gen Load-->
+      <!-- Text 1 -->
       <svg>
             <text 
             [attr.x]="shape.xOuter" 
-            [attr.y]="shape.yInner - 3" 
+            [attr.y]="shape.yInner - 3 - 15" 
             [attr.width]="shape.wOuter"
             [attr.height]="20"
             fill="red">{{shape.text1}}</text>
-      </svg>   
+      </svg>
+      <!-- Text 2 -->
+      <svg>
+        <text 
+        [attr.x]="shape.xOuter" 
+        [attr.y]="shape.yInner - 3" 
+        [attr.width]="shape.wOuter"
+        [attr.height]="20"
+        fill="red">{{shape.text2}}</text>
+      </svg>        
       
     </svg>
 
@@ -274,8 +292,6 @@
 
 
 <!-- Button area -->
-
-<!-- <div class="buttonArea"> -->
 <div class="footer">
   
   <button (click)="addElement('bus')">Bus</button>
@@ -283,13 +299,7 @@
   <button (click)="addElement('gen')">Gen</button>
   <button (click)="addElement('load')">Ld</button>
   &nbsp;
-  <button routerLink="/main-component">Solve</button>
-  &nbsp;
   <button routerLink="/main-component">Main</button>  
-  <!-- &nbsp;6 -->
-  <!-- <button style="float: right;margin-right: 8px;" 
-    [disabled]="!selectedShape" 
-    routerLink="/data-entry-component">Data</button> -->
 
 </div>
 
