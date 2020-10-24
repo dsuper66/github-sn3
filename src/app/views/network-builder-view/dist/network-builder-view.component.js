@@ -8,17 +8,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.NetworkBuilderViewComponent = void 0;
 var core_1 = require("@angular/core");
+var rxjs_1 = require("rxjs");
 // import { Router } from '@angular/router';
 var NetworkBuilderViewComponent = /** @class */ (function () {
     function NetworkBuilderViewComponent(shapeService, dataService, 
     // private router: Router,
     renderer) {
+        var _this = this;
         this.shapeService = shapeService;
         this.dataService = dataService;
         this.renderer = renderer;
+        //https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
+        this.timeLeft = "";
+        //source = timer(1000, 2000);
+        this.source = rxjs_1.timer(100, 200);
+        // subscribe = this.source.subscribe(val => this.timeLeft = val/100);
+        this.places = 4;
+        this.subscribe = this.source.subscribe(function (val) { return _this.timeLeft = String(val).padStart(_this.places, '0'); });
         this.shapesToDraw = [];
-        this.busWidth = 14;
-        this.headerH = 35;
         this.directionDone = true;
         //For knowing whether to draw or unselect
         this.drawingState = "stopped";
@@ -31,6 +38,8 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
     };
+    NetworkBuilderViewComponent.prototype.haveModel = function () { return this.shapeService.haveModel(); };
+    ;
     //Add Element
     NetworkBuilderViewComponent.prototype.addElement = function (type) {
         var _this = this;

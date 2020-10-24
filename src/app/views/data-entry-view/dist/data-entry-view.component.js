@@ -80,53 +80,13 @@ var DataEntryViewComponent = /** @class */ (function () {
             console.log(">>> " + selectedElement.elementType);
             var parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
             this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
-            //Populate the property fields
-            // for (const parentPropertyId of parentProperties) {
-            //   if (this.modelElementDataService.propertyIsVisible(parentPropertyId)) {
-            //     //Data Id
-            //     this.dataIds.push(parentPropertyId);
-            //     //Title
-            //     this.formTitles.push(parentPropertyId);
-            //     //Default value
-            //     const value = this.modelElementDataService.getValueForElementProperty(elementId, parentPropertyId);
-            //     this.formDefaults.push(value);
-            //     console.log(parentPropertyId + ": current value:" + value);
-            //   }
-            //   else {
-            //     console.log(parentPropertyId + ": not visible")
-            //   }
-            // }
             //Get child records
             var childElements = this.modelElementDataService.getChildElements(elementId);
             for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
                 var childElement = childElements_1[_i];
                 var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
-                // for (const childPropertyId of childProperties) {
-                //   if (this.modelElementDataService.propertyIsVisible(childPropertyId)) {
-                //     //Data Id
-                //     this.dataIds.push(childPropertyId);
-                //     //Title
-                //     this.formTitles.push(childPropertyId + "[" + childElement.elementId + "]");
-                //     //Default value
-                //     const value = this.modelElementDataService.getValueForElementProperty(childElement.elementId, childPropertyId);
-                //     this.formDefaults.push(value);
-                //   }
-                //   else {
-                //     console.log(childPropertyId + ": not visible")
-                //   }
-                // }
             }
-            // console.log(">>>mm>>>" + indexedArray);
-            //   this.myGroup = this.fb.group({
-            //     'connId1': ['none'],
-            //     'connId2':['none'],
-            //     'resistance':['none'] });
-            // }
-            // this.myGroup = this.fb.group({
-            //   indexedArray });
-            // }
-            // this.modelData.setValue(this.elementId);
         }
     };
     DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {

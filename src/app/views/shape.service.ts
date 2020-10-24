@@ -30,6 +30,9 @@ export class ShapeService {
     }
   }
 
+  //Whether to enable the solve button
+  haveModel():boolean{return(this.shapes.length > 0)}
+
   //Delete
   deleteShape(elementId: string) {
     this.shapes = this.shapes.filter(

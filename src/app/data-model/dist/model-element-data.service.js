@@ -213,54 +213,27 @@ var ModelElementDataService = /** @class */ (function () {
         var resultString4 = "";
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (element) {
-            // for (const modelElement of this.modelElements){
             var results = element.results;
             if (results) {
                 if (element.elementType == "bus") {
                     resultString1 = "$" + this.checkGetResult('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
                     resultString2 = "∠" + this.checkGetResult('phaseAnglePos', results);
-                    // if (results['phaseAnglePos'] === undefined) {console.log("MISSING: phaseAnglePos")}
-                    // else {
-                    //   resultString1 = resultString1.concat(" ∠",
-                    //     results['phaseAnglePos'].toFixed(2).toString())
-                    // }
                 }
                 else if (element.elementType == "gen") {
                     resultString1 = this.checkGetResult('enTrancheCleared', results);
                     resultString2 = "R" + this.checkGetResult('resTrancheCleared', results);
-                    // if (results["enTrancheCleared"] != undefined) {
-                    //   resultString1 = results["enTrancheCleared"].toFixed(2).toString()
-                    // }
-                    // if (results["resTrancheCleared"]) {
-                    //   resultString2 = results["resTrancheCleared"].toFixed(2).toString()
-                    // }
                 }
                 else if (element.elementType == "load") {
                     resultString1 = this.checkGetResult('bidTrancheCleared', results);
-                    // if (results["bidTrancheCleared"]) {
-                    //   resultString1 = results["bidTrancheCleared"].toFixed(2).toString()
-                    // }
                 }
                 else if (element.elementType == "island") {
                     resultString1 = "$" + this.checkGetResult('resCover', results);
                     resultString2 = "risk:" + this.checkGetResult('islandRisk', results);
                     resultString3 = "res:" + this.checkGetResult('islandRes', results);
                     resultString4 = "short:" + this.checkGetResult('resShortfall', results);
-                    // if (results["islandRisk"]) {
-                    //   resultString1 = "risk:" + results["islandRisk"].toFixed(2).toString()
-                    // }
-                    // if (results["islandRes"] != undefined) {
-                    //   resultString2 = "res:" + results["islandRes"].toFixed(2).toString()
-                    // }  
-                    // if (results["resShortfall"]) {
-                    //   resultString3 = "short:" + results["resShortfall"].toFixed(2).toString()
-                    // }            
                 }
                 else if (element.elementType == "branch") {
                     resultString1 = this.checkGetResult('branchFlow', results);
-                    // if (results["branchFlow"]) {
-                    //   resultString1 = results["branchFlow"].toFixed(2).toString()
-                    // }          
                 }
             }
         }

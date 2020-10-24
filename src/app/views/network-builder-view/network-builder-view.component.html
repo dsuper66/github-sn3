@@ -1,8 +1,11 @@
 <div class="header">
 
   <!-- Top Buttons -->
-  <button routerLink="/main-component">Solve</button>
+  <button 
+    [disabled]="!haveModel()" 
+    routerLink="/main-component">Solve</button>
   &nbsp;  
+  {{timeLeft}}
   <!-- Need a check to prevent adding undefined to the route -->
   <button *ngIf="selectedShape"routerLink="/data-entry-component/{{selectedShape.elementId}}">Data</button> 
   <button *ngIf="!selectedShape" [disabled]=true>Data</button>     
@@ -17,6 +20,7 @@
   </span>
     
 </div>
+
 
 <!-- The <div> is so that builder and data entry line up -->
 <!-- <div class="shapeCanvas"> -->
@@ -51,16 +55,23 @@
         </svg>
 
         <!-- TEXT Results -->
-        <!-- <svg *ngIf="getDoUpdateResults()"> -->
           <!-- Bus Text -->      
           <svg *ngIf="shape.elementType=='bus'">
+            <!-- Text 1 -->
             <text 
             [attr.x]="shape.xInner + shape.wInner/2 - 6" 
             [attr.y]="shape.yInner + 2 * shape.hInner" 
             [attr.width]="shape.wOuter"
-            [attr.height]="shape.hOuter"
+            [attr.height]="10"
             fill="red">{{shape.text1}}</text>
-          </svg>    
+          <!-- Text 2 -->
+            <text 
+            [attr.x]="shape.xInner + shape.wInner/2 - 6" 
+            [attr.y]="shape.yInner + 2 * shape.hInner + 15" 
+            [attr.width]="shape.wOuter"
+            [attr.height]="10"
+            fill="red">{{shape.text2}}</text>
+          </svg>            
           
           <!-- Branch Text -->
           <!-- [attr.x]="shape.xInner  - shape.wOuter + 6"  -->

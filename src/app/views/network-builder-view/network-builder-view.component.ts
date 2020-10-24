@@ -4,6 +4,8 @@ import { Point } from '../point';
 import { ShapeService } from '../shape.service';
 import { ControlContainer } from '@angular/forms';
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
+import { timer } from 'rxjs';
+
 // import { Router } from '@angular/router';
 
 
@@ -18,7 +20,9 @@ export class NetworkBuilderViewComponent implements OnInit {
     private shapeService: ShapeService,
     private dataService: ModelElementDataService,
     // private router: Router,
-    private renderer: Renderer2) { }
+    private renderer: Renderer2) { 
+
+    }
 
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
@@ -27,13 +31,20 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
+  //https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
+  timeLeft = "";
+  //source = timer(1000, 2000);
+  source = timer(100, 200);
+  // subscribe = this.source.subscribe(val => this.timeLeft = val/100);
+  places = 4;
+  subscribe = this.source.subscribe(val => this.timeLeft = String(val).padStart(this.places, '0'));
 
   shapesToDraw: Shape[] = [];
   selectedShape?: Shape;
 
-  busWidth = 14;
-
-  headerH = 35;
+  haveModel():boolean{return this.shapeService.haveModel()};
+  // busWidth = 14;
+  // headerH = 35;
   // infoWidth = 30;
   // selectedId: string;
 

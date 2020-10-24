@@ -26,6 +26,8 @@ var ShapeService = /** @class */ (function () {
             return undefined;
         }
     };
+    //Whether to enable the solve button
+    ShapeService.prototype.haveModel = function () { return (this.shapes.length > 0); };
     //Delete
     ShapeService.prototype.deleteShape = function (elementId) {
         this.shapes = this.shapes.filter(function (shape) { return shape.elementId != elementId; });
