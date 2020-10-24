@@ -200,7 +200,7 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.checkGetResult = function (key, results) {
         if (results[key] === undefined) {
             console.log("MISSING RESULT: " + key);
-            return "###";
+            return key;
         }
         else {
             return results[key].toFixed(2).toString();
@@ -257,7 +257,7 @@ var ModelElementDataService = /** @class */ (function () {
                     // }            
                 }
                 else if (element.elementType == "branch") {
-                    resultString1 = "$" + this.checkGetResult('branchFlow', results);
+                    resultString1 = this.checkGetResult('branchFlow', results);
                     // if (results["branchFlow"]) {
                     //   resultString1 = results["branchFlow"].toFixed(2).toString()
                     // }          

@@ -232,7 +232,7 @@ export class ModelElementDataService {
   checkGetResult(key: string, results: {[resultType:string] : number}):string {
     if (results[key] === undefined) {
       console.log("MISSING RESULT: " + key)
-      return "###"
+      return key
     }
     else {
       return results[key].toFixed(2).toString();
@@ -292,7 +292,7 @@ export class ModelElementDataService {
           // }            
         }
         else if (element.elementType == "branch") {
-          resultString1 = "$" + this.checkGetResult('branchFlow',results);
+          resultString1 = this.checkGetResult('branchFlow',results);
           // if (results["branchFlow"]) {
           //   resultString1 = results["branchFlow"].toFixed(2).toString()
           // }          
