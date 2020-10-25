@@ -312,7 +312,7 @@ export class ShapeService {
   }
 
   //Results
-  setShapesText() {
+  applyResultsToShapesText() {
     for (const shape of this.shapes) {
       [shape.text1,shape.text2,shape.text3,shape.text4] = 
         this.modelElementDataService.getTextFromElementResults(shape.elementId);

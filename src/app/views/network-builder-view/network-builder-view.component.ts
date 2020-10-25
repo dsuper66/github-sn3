@@ -5,6 +5,7 @@ import { ShapeService } from '../shape.service';
 import { ControlContainer } from '@angular/forms';
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { timer } from 'rxjs';
+import { SolverCallService } from '../../data-model/solver-call.service';
 
 // import { Router } from '@angular/router';
 
@@ -19,7 +20,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   constructor(
     private shapeService: ShapeService,
     private dataService: ModelElementDataService,
-    // private router: Router,
+    private solverCallService: SolverCallService,
     private renderer: Renderer2) { 
 
     }
@@ -31,22 +32,31 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.shapesToDraw = this.shapeService.getShapes();
   }
 
-  //https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
-  timeLeft = "";
+  //timer... https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
+  
   //source = timer(1000, 2000);
-  source = timer(100, 200);
+  // source = timer(1000, 1000);
   // subscribe = this.source.subscribe(val => this.timeLeft = val/100);
-  places = 4;
-  subscribe = this.source.subscribe(val => this.timeLeft = String(val).padStart(this.places, '0'));
+ 
 
   shapesToDraw: Shape[] = [];
   selectedShape?: Shape;
 
-  haveModel():boolean{return this.shapeService.haveModel()};
+  haveModel():boolean{return this.shapeService.haveModel()}
   // busWidth = 14;
   // headerH = 35;
   // infoWidth = 30;
   // selectedId: string;
+
+  solveInProgress(): boolean{return this.solverCallService.solveInProgress};
+
+  // timeLeft = "";
+  solveModel() {
+    // const source = timer(1000, 1000);
+    // const places = 3;
+    // const subscribe = source.subscribe(val => this.timeLeft = String(val).padStart(places, '0'));
+    this.solverCallService.solveModel();
+  }
 
   //Drawing declarations
   lastDrawingPoint?: Point; //For calculating delta as move progresses  

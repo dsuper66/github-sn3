@@ -175,7 +175,7 @@ var MainViewComponent = /** @class */ (function () {
                 //   this.modelElementDataService.setPriceForElement(
                 //     modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice); 
             }
-            _this.shapeService.setShapesText();
+            _this.shapeService.applyResultsToShapesText();
             console.log("SOLVER RESULTS:" + resultString);
             _this.solverResultString = resultString;
         });

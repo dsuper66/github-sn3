@@ -210,7 +210,7 @@ export class MainViewComponent implements OnInit {
         //     modelCon.elementId,modelCon.constraintType, modelCon.constraintId,modelCon.shadowPrice); 
         }
 
-        this.shapeService.setShapesText();
+        this.shapeService.applyResultsToShapesText();
 
         console.log("SOLVER RESULTS:" + resultString);
         this.solverResultString = resultString;

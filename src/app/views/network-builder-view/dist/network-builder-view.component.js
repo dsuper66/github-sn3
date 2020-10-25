@@ -8,23 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.NetworkBuilderViewComponent = void 0;
 var core_1 = require("@angular/core");
-var rxjs_1 = require("rxjs");
 // import { Router } from '@angular/router';
 var NetworkBuilderViewComponent = /** @class */ (function () {
-    function NetworkBuilderViewComponent(shapeService, dataService, 
-    // private router: Router,
-    renderer) {
-        var _this = this;
+    function NetworkBuilderViewComponent(shapeService, dataService, solverCallService, renderer) {
         this.shapeService = shapeService;
         this.dataService = dataService;
+        this.solverCallService = solverCallService;
         this.renderer = renderer;
-        //https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
-        this.timeLeft = "";
+        //timer... https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
         //source = timer(1000, 2000);
-        this.source = rxjs_1.timer(100, 200);
+        // source = timer(1000, 1000);
         // subscribe = this.source.subscribe(val => this.timeLeft = val/100);
-        this.places = 4;
-        this.subscribe = this.source.subscribe(function (val) { return _this.timeLeft = String(val).padStart(_this.places, '0'); });
         this.shapesToDraw = [];
         this.directionDone = true;
         //For knowing whether to draw or unselect
@@ -39,7 +33,19 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.shapesToDraw = this.shapeService.getShapes();
     };
     NetworkBuilderViewComponent.prototype.haveModel = function () { return this.shapeService.haveModel(); };
+    // busWidth = 14;
+    // headerH = 35;
+    // infoWidth = 30;
+    // selectedId: string;
+    NetworkBuilderViewComponent.prototype.solveInProgress = function () { return this.solverCallService.solveInProgress; };
     ;
+    // timeLeft = "";
+    NetworkBuilderViewComponent.prototype.solveModel = function () {
+        // const source = timer(1000, 1000);
+        // const places = 3;
+        // const subscribe = source.subscribe(val => this.timeLeft = String(val).padStart(places, '0'));
+        this.solverCallService.solveModel();
+    };
     //Add Element
     NetworkBuilderViewComponent.prototype.addElement = function (type) {
         var _this = this;

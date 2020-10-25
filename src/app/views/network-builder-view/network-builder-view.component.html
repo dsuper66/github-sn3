@@ -1,11 +1,11 @@
 <div class="header">
 
   <!-- Top Buttons -->
-  <button 
-    [disabled]="!haveModel()" 
-    routerLink="/main-component">Solve</button>
+  <button *ngIf="!solveInProgress()" [disabled]="!haveModel()" (click)="solveModel()">Solve</button>
+  <button *ngIf="solveInProgress()" [disabled]=true>Solving</button>
+    <!-- routerLink="/main-component">Solve</button> -->
   &nbsp;  
-  {{timeLeft}}
+  <!-- <span *ngIf="solveInProgress()">{{timeLeft}}</span> -->
   <!-- Need a check to prevent adding undefined to the route -->
   <button *ngIf="selectedShape"routerLink="/data-entry-component/{{selectedShape.elementId}}">Data</button> 
   <button *ngIf="!selectedShape" [disabled]=true>Data</button>     

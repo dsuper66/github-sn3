@@ -283,7 +283,7 @@ var ShapeService = /** @class */ (function () {
         }
     };
     //Results
-    ShapeService.prototype.setShapesText = function () {
+    ShapeService.prototype.applyResultsToShapesText = function () {
         var _a;
         for (var _i = 0, _b = this.shapes; _i < _b.length; _i++) {
             var shape = _b[_i];
