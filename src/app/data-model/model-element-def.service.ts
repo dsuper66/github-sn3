@@ -25,8 +25,8 @@ export class ModelElementDefService {
     //All property types must have an entry here, for the data entry display
     this.elementPropertyTypeSettings.push(
       { propertyType: 'isRefBus', primitiveType: 'bool', visible: true },
-      { propertyType: 'fromBus', primitiveType: 'string', visible: true },
-      { propertyType: 'toBus', primitiveType: 'string', visible: true },
+      { propertyType: 'fromBus', primitiveType: 'string', visible: false },
+      { propertyType: 'toBus', primitiveType: 'string', visible: false },
       { propertyType: 'flowMax', primitiveType: 'number', visible: true },
       { propertyType: 'resistance', primitiveType: 'number', visible: true },
       { propertyType: 'susceptance', primitiveType: 'number', visible: true },
@@ -40,7 +40,7 @@ export class ModelElementDefService {
       { propertyType: 'lossLimit', primitiveType: 'number', visible: true },
       { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
       { propertyType: 'direction', primitiveType: 'number', visible: true },
-      { propertyType: 'islandId', primitiveType: 'string', visible: true },
+      { propertyType: 'islandId', primitiveType: 'string', visible: false },
       { propertyType: 'resShortfallPrice', primitiveType: 'number', visible: true }
     )
 
@@ -57,7 +57,7 @@ export class ModelElementDefService {
       { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 },
       { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
       { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
-      { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
+      // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
       { propertyType: 'resShortfallPrice', elementType: 'island', defaultValue: 9 }
     )
 
@@ -69,7 +69,8 @@ export class ModelElementDefService {
     this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance','flowMax'];
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax','islandId'];
     this.elementTypeProperties['load'] = ['fromBus'];
-    //Element definitions (created in the data service) that define a child to be created 
+    //Element definitions (created in the data service constructor) that define a child to be created 
+    //(because the creation is not dynamic, this definition is not actually used)
     this.elementTypeProperties['childDef'] = ['parentType', 'childTypeId', 'childCount'];
 
     //Child elements - tranches

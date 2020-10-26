@@ -209,7 +209,7 @@ export class SolverCallService {
       .sendModelToSolver(solverInput)
       .subscribe(solverResults => {
         
-        //Empty Price and Quq=antity
+        //Empty Price and Quantity
         this.modelElementDataService.resetResults();
 
         //Variables
@@ -233,6 +233,7 @@ export class SolverCallService {
         console.log("SOLVER RESULTS:" + resultString);
         this.solverResultString = resultString;
 
+        //This gets back to component
         this.solveInProgress = false;
 
       });

@@ -26,32 +26,33 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '3' }]),
+        { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Energy Tranches associated with gen
     this.modelElements.push({
       elementId: 'enOfferTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '3' }]),
+        { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Reserve Tranches associated with gen
     this.modelElements.push({
       elementId: 'resOfferTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '3' }]),
+        { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Flow-Loss Tranches associated with branch
     this.modelElements.push({
       elementId: 'lossTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '3' }]),
+        { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Child Unrestricted Elements
     //---------------------------
+    //(2 child records... a forward direction and a reverse)
     this.modelElements.push({
       elementId: 'dirBranchDef', elementType: 'childDef',
       properties: this.makeDict([
@@ -262,10 +263,10 @@ export class ModelElementDataService {
           resultString1 = this.checkGetResult('bidTrancheCleared',results);
         }        
         else if (element.elementType == "island") {
-          resultString1 = "$" + this.checkGetResult('resCover',results);
+          resultString1 = "res$:" + this.checkGetResult('resCover',results);
           resultString2 = "risk:" + this.checkGetResult('islandRisk',results);
           resultString3 = "res:" + this.checkGetResult('islandRes',results);
-          resultString4 = "short:" + this.checkGetResult('resShortfall',results);         
+          resultString4 = "resShort:" + this.checkGetResult('resShortfall',results);         
         }
         else if (element.elementType == "branch") {
           resultString1 = this.checkGetResult('branchFlow',results);        

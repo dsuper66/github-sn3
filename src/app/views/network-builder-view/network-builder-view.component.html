@@ -78,7 +78,7 @@
           <!-- high side to allow for gen/load text -->
           <svg *ngIf="shape.elementType=='branch'">
             <text 
-            [attr.x]="shape.xInner + 8" 
+            [attr.x]="shape.xInner + shape.wInner + 4" 
             [attr.y]="shape.yInner + shape.hInner/3 + 4"
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
@@ -116,13 +116,13 @@
             [attr.height]="10"
             fill="red">{{shape.text4}}</text>                               
 
-            <!-- Island Number -->
+            <!-- Island Title -->
             <text id="island"
-            [attr.x]="shape.xInner + 3" 
+            [attr.x]="shape.xInner + 6" 
             [attr.y]="shape.yInner + (3/4) * shape.hInner"
             [attr.width]="shape.wInner"
             [attr.height]="shape.Inner"          
-            fill="gray">1</text>
+            fill="gray">i</text>
           </svg> 
 
         <!-- </svg> -->

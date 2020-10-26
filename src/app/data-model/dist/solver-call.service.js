@@ -168,7 +168,7 @@ var SolverCallService = /** @class */ (function () {
         this
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
-            //Empty Price and Quq=antity
+            //Empty Price and Quantity
             _this.modelElementDataService.resetResults();
             //Variables
             var resultString = "\n";
@@ -187,6 +187,7 @@ var SolverCallService = /** @class */ (function () {
             _this.shapeService.applyResultsToShapesText();
             console.log("SOLVER RESULTS:" + resultString);
             _this.solverResultString = resultString;
+            //This gets back to component
             _this.solveInProgress = false;
         });
     }; //done solveModel
