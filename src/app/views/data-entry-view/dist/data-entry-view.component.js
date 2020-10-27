@@ -11,7 +11,7 @@ var core_1 = require("@angular/core");
 var DataEntryViewComponent = /** @class */ (function () {
     function DataEntryViewComponent(
     // private modelElementService: ModelElementService,
-    modelElementDataService, modelElementDefService, router, route
+    modelElementDataService, modelElementDefService, router, route, mathModelDefService
     // private shapeService: ShapeService) 
     ) {
         var _this = this;
@@ -19,10 +19,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
         this.router = router;
         this.route = route;
-        // myGroup = new FormGroup({
-        //   firstName: new FormControl()
-        // });
-        // propertiesFormArray: FormControl[] = [];
+        this.mathModelDefService = mathModelDefService;
         this.formNames = [];
         this.formDefaults = [];
         this.formElementIds = [];
@@ -30,11 +27,16 @@ var DataEntryViewComponent = /** @class */ (function () {
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
-        console.log("GOT ID ", this.idOfDataEntryObject);
-        this.populateFormFromElementId(this.idOfDataEntryObject);
+        var id = this.idOfDataEntryObject;
+        console.log("GOT ID ", id); //this.idOfDataEntryObject);
+        if (id === "model-def") {
+            this.populateFormFromConstraints();
+        }
+        else {
+            this.populateFormFromElementId(id);
+        }
     };
-    //To get the data back from the data-entry form
-    // dataIds: string[] = [];
+    //===SUBMIT===
     DataEntryViewComponent.prototype.onSubmit = function (form) {
         var _this = this;
         //The form returns an object
@@ -67,14 +69,18 @@ var DataEntryViewComponent = /** @class */ (function () {
         //     console.log ("ppp");
         // }
     };
+    DataEntryViewComponent.prototype.populateFormFromConstraints = function () {
+        console.log("populateFormFromConstraints");
+        var constraintDefs = this.mathModelDefService.getConstraintDefs();
+        for (var _i = 0, constraintDefs_1 = constraintDefs; _i < constraintDefs_1.length; _i++) {
+            var constraintDef = constraintDefs_1[_i];
+            console.log(">>>" + constraintDef.constraintType);
+            this.formNames.push(constraintDef.constraintType);
+        }
+    };
     DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
         //Get the element i.d. from the route
         // const elementId = this.route.snapshot.paramMap.get('elementId');
-        // const elementId = this.route.snapshot.paramMap.get('elementId');
-        // console.log(">>>Element ID:" + elementId 
-        //   + " name:" + this.modelElementService.getElementName(elementId));
-        // this.modelData.setValue(elementId);
-        // this.selectedShape = this.shapeService.getSelectedShape();
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
             console.log(">>> " + selectedElement.elementType);
@@ -93,8 +99,6 @@ var DataEntryViewComponent = /** @class */ (function () {
         for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {
             var propertyId = propertyIds_1[_i];
             if (this.modelElementDefService.propertyIsVisible(propertyId)) {
-                //Data Id
-                // this.dataIds.push(propertyId);
                 //Name/Title
                 this.formNames.push(elementId + "-" + propertyId);
                 //Default value

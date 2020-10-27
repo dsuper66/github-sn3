@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, NgForm, Form, NgModel } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormArray } from '@angular/forms';
+// import { FormsModule } from '@angular/forms';
+// import { FormGroup } from '@angular/forms';
+// import { FormArray } from '@angular/forms';
 
 //So that we can extract the i.d.
 import { ActivatedRoute } from '@angular/router';
 
-import { ShapeService } from '../shape.service';
-import { ModelElementService } from '../../data-model/model-element.service';
-import { Shape } from '../shape';
-import { isDefined } from '@angular/compiler/src/util';
+// import { ShapeService } from '../shape.service';
+// import { ModelElementService } from '../../data-model/model-element.service';
+// import { Shape } from '../shape';
+// import { isDefined } from '@angular/compiler/src/util';
 import { Router } from '@angular/router';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
+import { MathModelDefService } from '../../data-model/math-model-def.service';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -29,31 +30,33 @@ export class DataEntryViewComponent implements OnInit {
     private modelElementDataService: ModelElementDataService,
     private modelElementDefService: ModelElementDefService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private mathModelDefService: MathModelDefService
     // private shapeService: ShapeService) 
   ) {
     route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
   }
 
   ngOnInit(): void {
-    console.log("GOT ID ", this.idOfDataEntryObject);
-    this.populateFormFromElementId(this.idOfDataEntryObject);
+    const id = this.idOfDataEntryObject;
+    console.log("GOT ID ", id); //this.idOfDataEntryObject);
+    if (id === "model-def") {
+      this.populateFormFromConstraints();
+    }
+    else {
+      this.populateFormFromElementId(id);
+    }
+    
   }
 
-  // myGroup = new FormGroup({
-  //   firstName: new FormControl()
-  // });
 
-
-  // propertiesFormArray: FormControl[] = [];
   formNames: string[] = [];
   formDefaults: string[] = [];
   formElementIds: string[] = [];
   formPropertyIds: string[] = [];
 
-  //To get the data back from the data-entry form
-  // dataIds: string[] = [];
 
+  //===SUBMIT===
   onSubmit(form: NgForm): void {
     //The form returns an object
     console.log('you submitted value:', form);
@@ -93,15 +96,20 @@ export class DataEntryViewComponent implements OnInit {
     // }
   }
 
+  populateFormFromConstraints(){
+    console.log("populateFormFromConstraints");
+    const constraintDefs = this.mathModelDefService.getConstraintDefs();
+    for (const constraintDef of constraintDefs) {
+      console.log(">>>" + constraintDef.constraintType);
+      this.formNames.push(constraintDef.constraintType);
+    }
+  }
+
+
   populateFormFromElementId(elementId: string): void {
     //Get the element i.d. from the route
     // const elementId = this.route.snapshot.paramMap.get('elementId');
-    // const elementId = this.route.snapshot.paramMap.get('elementId');
-    // console.log(">>>Element ID:" + elementId 
-    //   + " name:" + this.modelElementService.getElementName(elementId));
-    // this.modelData.setValue(elementId);
-
-    // this.selectedShape = this.shapeService.getSelectedShape();
+   
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {
 
@@ -122,9 +130,6 @@ export class DataEntryViewComponent implements OnInit {
   populateFormFieldsFromProperties(propertyIds: string[], elementId: string) {
     for (const propertyId of propertyIds) {
       if (this.modelElementDefService.propertyIsVisible(propertyId)) {
-
-        //Data Id
-        // this.dataIds.push(propertyId);
 
         //Name/Title
         this.formNames.push(elementId + "-" + propertyId);

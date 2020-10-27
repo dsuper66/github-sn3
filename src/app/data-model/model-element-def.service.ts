@@ -51,14 +51,14 @@ export class ModelElementDefService {
       { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 },
       { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 },
       { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 100 },
-      { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 160 },
+      { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 1000 },
       { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 250 },
       { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 70 },
-      { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 90 },
+      { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 0 },
       { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
       { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
       // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
-      { propertyType: 'resShortfallPrice', elementType: 'island', defaultValue: 9 }
+      { propertyType: 'resShortfallPrice', elementType: 'island', defaultValue: 0 }
     )
 
     //Define Element Types and Property Types
