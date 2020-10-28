@@ -1,6 +1,7 @@
 
  <!-- *ngIf="{{dataLink}}" -->
 
+ <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
  <div *ngIf="dataLink">
   <button routerLink="/network-builder-component">Back</button>
   <table table-layout="fixed">
@@ -12,10 +13,10 @@
         <!-- <td>{{formName}}</td> -->
 
         <td><button>{{formName}}</button><input #saveUserNameCheckBox
-          id="saveUserNameCheckBox" 
+          id="formName" 
           type="checkbox" 
-          [checked]="saveUsername" 
-          (change)="onSaveUsernameChanged(saveUserNameCheckBox.checked)" /></td>
+          [checked]="getIncludeStatus(formName)" 
+          (change)="setIncludeStatus(formName,saveUserNameCheckBox.checked)" /></td>
 
       </tr>
   </table>

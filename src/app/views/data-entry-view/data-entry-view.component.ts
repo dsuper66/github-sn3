@@ -62,6 +62,13 @@ export class DataEntryViewComponent implements OnInit {
   formPropertyIds: string[] = [];
 
 
+  setIncludeStatus(constraintName: string, status: boolean){
+    console.log(">>>" + constraintName + " >>>" + status);
+  }
+  getIncludeStatus(constraintName: string) {
+    return true;
+  }
+
   //===SUBMIT===
   onSubmit(form: NgForm): void {
     //The form returns an object

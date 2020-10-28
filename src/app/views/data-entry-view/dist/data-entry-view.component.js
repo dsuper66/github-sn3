@@ -40,6 +40,12 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.populateFormFromElementId(id);
         }
     };
+    DataEntryViewComponent.prototype.setIncludeStatus = function (constraintName, status) {
+        console.log(">>>" + constraintName + " >>>" + status);
+    };
+    DataEntryViewComponent.prototype.getIncludeStatus = function (constraintName) {
+        return true;
+    };
     //===SUBMIT===
     DataEntryViewComponent.prototype.onSubmit = function (form) {
         var _this = this;
