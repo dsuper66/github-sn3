@@ -1,29 +1,28 @@
 
-<!-- <div class="header">
-  <button
-  routerLink="/network-builder-component">Back</button>
-</div> -->
-  
-<!-- <div [formGroup]="myGroup"> -->
-  
-  <!-- 
-    <div *ngFor="let property of properties" class="form-row">
+ <!-- *ngIf="{{dataLink}}" -->
 
-      <label>
-        {{property}}:
-        <input type="text" formControlName="{{property}}">
-      </label>
-
-    </div>
-
-  </div> -->
-
-  <!-- <div *ngFor="let property of propertiesFormArray.controls; index as i"> -->
-<!-- 
+ <div *ngIf="dataLink">
   <button routerLink="/network-builder-component">Back</button>
-  &nbsp; -->
+  <table table-layout="fixed">
+      <tr><th>Constraint Details/Include</th></tr>
+      <tr *ngFor="let formName of formNames; index as i">
+  
+        <!-- The label -->
+        <!-- <td><button>{{formName}}</button></td> -->
+        <!-- <td>{{formName}}</td> -->
 
-  <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
+        <td><button>{{formName}}</button><input #saveUserNameCheckBox
+          id="saveUserNameCheckBox" 
+          type="checkbox" 
+          [checked]="saveUsername" 
+          (change)="onSaveUsernameChanged(saveUserNameCheckBox.checked)" /></td>
+
+      </tr>
+  </table>
+</div>
+ 
+  <!-- *ngIf="{{dataEntry}}"  -->
+ <form *ngIf="dataEntry" #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
       <!-- Prevent implicit submission of the form -->
     <button type="submit" disabled style="display: none" aria-hidden="true"></button>

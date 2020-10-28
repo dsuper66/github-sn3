@@ -37,18 +37,24 @@ export class DataEntryViewComponent implements OnInit {
     route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
   }
 
+
+
   ngOnInit(): void {
     const id = this.idOfDataEntryObject;
     console.log("GOT ID ", id); //this.idOfDataEntryObject);
     if (id === "model-def") {
+      this.dataLink = true;
       this.populateFormFromConstraints();
     }
     else {
+      this.dataEntry = true;
       this.populateFormFromElementId(id);
     }
     
   }
 
+  dataLink = false;
+  dataEntry = false;
 
   formNames: string[] = [];
   formDefaults: string[] = [];

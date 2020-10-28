@@ -9,6 +9,12 @@
     margin-left: 6px;
   }
 
+  td {
+    text-align: right; /* center checkbox horizontally */
+    vertical-align: middle; /* center checkbox vertically */
+    
+  }
+
   input {
     /* display: block; */
     /* width: 6em; */

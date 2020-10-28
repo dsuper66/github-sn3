@@ -20,6 +20,8 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.router = router;
         this.route = route;
         this.mathModelDefService = mathModelDefService;
+        this.dataLink = false;
+        this.dataEntry = false;
         this.formNames = [];
         this.formDefaults = [];
         this.formElementIds = [];
@@ -30,9 +32,11 @@ var DataEntryViewComponent = /** @class */ (function () {
         var id = this.idOfDataEntryObject;
         console.log("GOT ID ", id); //this.idOfDataEntryObject);
         if (id === "model-def") {
+            this.dataLink = true;
             this.populateFormFromConstraints();
         }
         else {
+            this.dataEntry = true;
             this.populateFormFromElementId(id);
         }
     };
