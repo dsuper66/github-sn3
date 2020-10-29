@@ -12,7 +12,8 @@
         <!-- <td><button>{{formName}}</button></td> -->
         <!-- <td>{{formName}}</td> -->
 
-        <td><button>{{formName}}</button><input #saveUserNameCheckBox
+        <td><button (click)="reload(formName)">{{formName}}</button>
+          <input #saveUserNameCheckBox
           id="formName" 
           type="checkbox" 
           [checked]="getIncludeStatus(formName)" 

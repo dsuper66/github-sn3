@@ -37,6 +37,13 @@ export class DataEntryViewComponent implements OnInit {
     route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
   }
 
+  //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
+  reload(target: string) {
+    console.log("##" + target);
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['../' + target], { relativeTo: this.route });
+  }
 
 
   ngOnInit(): void {

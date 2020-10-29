@@ -28,6 +28,13 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.formPropertyIds = [];
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
+    //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
+    DataEntryViewComponent.prototype.reload = function (target) {
+        console.log("##" + target);
+        this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['../' + target], { relativeTo: this.route });
+    };
     DataEntryViewComponent.prototype.ngOnInit = function () {
         var id = this.idOfDataEntryObject;
         console.log("GOT ID ", id); //this.idOfDataEntryObject);
