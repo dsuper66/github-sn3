@@ -26,10 +26,10 @@
 <div *ngIf="constraintComps">
   <button (click)="reloadMain()">Back</button>
   <table table-layout="fixed">
-      <tr><th>Constraint Components</th></tr>
-      <tr></tr>
+      <tr><th>{{pageTitle}}</th></tr>
+      <tr>&nbsp;</tr>
       <tr *ngFor="let formName of formNames; index as i">
-        {{formName}}
+        &nbsp;{{formName}}
       </tr>
   </table>
 </div>

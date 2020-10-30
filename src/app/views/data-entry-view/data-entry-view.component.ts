@@ -130,6 +130,8 @@ export class DataEntryViewComponent implements OnInit {
     // }
   }
 
+  pageTitle = "";
+
   populateFromConstraintDefs(){
     console.log("populateFromConstraintDefs");
     const constraintDefs = this.mathModelDefService.getConstraintDefsAll();
@@ -141,15 +143,15 @@ export class DataEntryViewComponent implements OnInit {
 
   populateFromConstraintComps(constraintType: string){
     console.log("populateFromConstraintComps");
+    this.pageTitle = "Constraint Components for: " + constraintType;
     const constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
     for (const constraintComp of constraintComps) {
       console.log(">>>" + constraintComp.varType);
-      this.formNames.push(constraintComp.elementType);
+      this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
+      this.formNames.push(constraintComp.propertyMap);
       this.formNames.push(constraintComp.factorParentProperty);
       this.formNames.push(constraintComp.factorProperty);
       this.formNames.push(constraintComp.factorValue.toString());
-      this.formNames.push(constraintComp.propertyMap);
-      this.formNames.push(constraintComp.varType);
       this.formNames.push("=========");
     }
   }  

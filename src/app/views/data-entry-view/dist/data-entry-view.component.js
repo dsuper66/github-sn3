@@ -27,6 +27,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.formDefaults = [];
         this.formElementIds = [];
         this.formPropertyIds = [];
+        this.pageTitle = "";
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
@@ -111,16 +112,16 @@ var DataEntryViewComponent = /** @class */ (function () {
     };
     DataEntryViewComponent.prototype.populateFromConstraintComps = function (constraintType) {
         console.log("populateFromConstraintComps");
+        this.pageTitle = "Constraint Components for: " + constraintType;
         var constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
         for (var _i = 0, constraintComps_1 = constraintComps; _i < constraintComps_1.length; _i++) {
             var constraintComp = constraintComps_1[_i];
             console.log(">>>" + constraintComp.varType);
-            this.formNames.push(constraintComp.elementType);
+            this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
+            this.formNames.push(constraintComp.propertyMap);
             this.formNames.push(constraintComp.factorParentProperty);
             this.formNames.push(constraintComp.factorProperty);
             this.formNames.push(constraintComp.factorValue.toString());
-            this.formNames.push(constraintComp.propertyMap);
-            this.formNames.push(constraintComp.varType);
             this.formNames.push("=========");
         }
     };
