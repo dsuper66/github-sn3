@@ -149,7 +149,7 @@ export class SolverCallService {
 
     //==ConstraintDefs JSON==
     jString += this.jsonStart("constraintDefs");
-    let constraintDefs = this.mathModelDefService.getConstraintDefs();
+    let constraintDefs = this.mathModelDefService.getConstraintDefsAll();
     for (const constraintDef of constraintDefs) {
       //Start ConstraintDef
       jString += "{";
@@ -173,7 +173,7 @@ export class SolverCallService {
 
     //==ConstraintComps JSON==
     jString += this.jsonStart("constraintComps");
-    let constraintComps = this.mathModelDefService.getConstraintComps();
+    let constraintComps = this.mathModelDefService.getConstraintCompsAll();
     for (const constraintComp of constraintComps) {
       //Start ConstraintComps
       jString += "{";

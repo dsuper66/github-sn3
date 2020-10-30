@@ -20,7 +20,8 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.router = router;
         this.route = route;
         this.mathModelDefService = mathModelDefService;
-        this.dataLink = false;
+        this.constraintDefs = false;
+        this.constraintComps = false;
         this.dataEntry = false;
         this.formNames = [];
         this.formDefaults = [];
@@ -31,16 +32,29 @@ var DataEntryViewComponent = /** @class */ (function () {
     //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
     DataEntryViewComponent.prototype.reload = function (target) {
         console.log("##" + target);
+        // this.populateFromConstraintComps(target);
         this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
         this.router.onSameUrlNavigation = 'reload';
-        this.router.navigate(['../' + target], { relativeTo: this.route });
+        // this.router.navigate(['../' + target], { relativeTo: this.route });
+        this.router.navigate(['../constraintComp?' + target], { relativeTo: this.route });
+    };
+    DataEntryViewComponent.prototype.reloadMain = function () {
+        this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
+        this.router.onSameUrlNavigation = 'reload';
+        // this.router.navigate(['../' + target], { relativeTo: this.route });
+        this.router.navigate(['../model-def'], { relativeTo: this.route });
     };
     DataEntryViewComponent.prototype.ngOnInit = function () {
         var id = this.idOfDataEntryObject;
         console.log("GOT ID ", id); //this.idOfDataEntryObject);
         if (id === "model-def") {
-            this.dataLink = true;
-            this.populateFormFromConstraints();
+            this.constraintDefs = true;
+            this.populateFromConstraintDefs();
+        }
+        else if (id.includes("constraintComp")) {
+            this.constraintComps = true;
+            var startPos = id.indexOf("?") + 1;
+            this.populateFromConstraintComps(id.substr(startPos));
         }
         else {
             this.dataEntry = true;
@@ -86,13 +100,28 @@ var DataEntryViewComponent = /** @class */ (function () {
         //     console.log ("ppp");
         // }
     };
-    DataEntryViewComponent.prototype.populateFormFromConstraints = function () {
-        console.log("populateFormFromConstraints");
-        var constraintDefs = this.mathModelDefService.getConstraintDefs();
+    DataEntryViewComponent.prototype.populateFromConstraintDefs = function () {
+        console.log("populateFromConstraintDefs");
+        var constraintDefs = this.mathModelDefService.getConstraintDefsAll();
         for (var _i = 0, constraintDefs_1 = constraintDefs; _i < constraintDefs_1.length; _i++) {
             var constraintDef = constraintDefs_1[_i];
             console.log(">>>" + constraintDef.constraintType);
             this.formNames.push(constraintDef.constraintType);
+        }
+    };
+    DataEntryViewComponent.prototype.populateFromConstraintComps = function (constraintType) {
+        console.log("populateFromConstraintComps");
+        var constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
+        for (var _i = 0, constraintComps_1 = constraintComps; _i < constraintComps_1.length; _i++) {
+            var constraintComp = constraintComps_1[_i];
+            console.log(">>>" + constraintComp.varType);
+            this.formNames.push(constraintComp.elementType);
+            this.formNames.push(constraintComp.factorParentProperty);
+            this.formNames.push(constraintComp.factorProperty);
+            this.formNames.push(constraintComp.factorValue.toString());
+            this.formNames.push(constraintComp.propertyMap);
+            this.formNames.push(constraintComp.varType);
+            this.formNames.push("=========");
         }
     };
     DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {

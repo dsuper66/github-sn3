@@ -117,7 +117,7 @@ var SolverCallService = /** @class */ (function () {
         jString += ",";
         //==ConstraintDefs JSON==
         jString += this.jsonStart("constraintDefs");
-        var constraintDefs = this.mathModelDefService.getConstraintDefs();
+        var constraintDefs = this.mathModelDefService.getConstraintDefsAll();
         for (var _g = 0, constraintDefs_1 = constraintDefs; _g < constraintDefs_1.length; _g++) {
             var constraintDef = constraintDefs_1[_g];
             //Start ConstraintDef
@@ -139,7 +139,7 @@ var SolverCallService = /** @class */ (function () {
         jString += ",";
         //==ConstraintComps JSON==
         jString += this.jsonStart("constraintComps");
-        var constraintComps = this.mathModelDefService.getConstraintComps();
+        var constraintComps = this.mathModelDefService.getConstraintCompsAll();
         for (var _h = 0, constraintComps_1 = constraintComps; _h < constraintComps_1.length; _h++) {
             var constraintComp = constraintComps_1[_h];
             //Start ConstraintComps

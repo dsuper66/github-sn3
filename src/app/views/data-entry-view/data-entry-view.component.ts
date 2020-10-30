@@ -40,19 +40,32 @@ export class DataEntryViewComponent implements OnInit {
   //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
   reload(target: string) {
     console.log("##" + target);
+    // this.populateFromConstraintComps(target);
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['../' + target], { relativeTo: this.route });
+    // this.router.navigate(['../' + target], { relativeTo: this.route });
+    this.router.navigate(['../constraintComp?' + target], { relativeTo: this.route });
   }
+  reloadMain() {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    // this.router.navigate(['../' + target], { relativeTo: this.route });
+    this.router.navigate(['../model-def'], { relativeTo: this.route });
+  }  
 
 
   ngOnInit(): void {
     const id = this.idOfDataEntryObject;
     console.log("GOT ID ", id); //this.idOfDataEntryObject);
     if (id === "model-def") {
-      this.dataLink = true;
-      this.populateFormFromConstraints();
+      this.constraintDefs = true;
+      this.populateFromConstraintDefs();
     }
+    else if (id.includes("constraintComp")) {
+      this.constraintComps = true;
+      const startPos = id.indexOf("?") + 1;
+      this.populateFromConstraintComps(id.substr(startPos));
+    }   
     else {
       this.dataEntry = true;
       this.populateFormFromElementId(id);
@@ -60,7 +73,8 @@ export class DataEntryViewComponent implements OnInit {
     
   }
 
-  dataLink = false;
+  constraintDefs = false;
+  constraintComps = false;
   dataEntry = false;
 
   formNames: string[] = [];
@@ -116,15 +130,29 @@ export class DataEntryViewComponent implements OnInit {
     // }
   }
 
-  populateFormFromConstraints(){
-    console.log("populateFormFromConstraints");
-    const constraintDefs = this.mathModelDefService.getConstraintDefs();
+  populateFromConstraintDefs(){
+    console.log("populateFromConstraintDefs");
+    const constraintDefs = this.mathModelDefService.getConstraintDefsAll();
     for (const constraintDef of constraintDefs) {
       console.log(">>>" + constraintDef.constraintType);
       this.formNames.push(constraintDef.constraintType);
     }
   }
 
+  populateFromConstraintComps(constraintType: string){
+    console.log("populateFromConstraintComps");
+    const constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
+    for (const constraintComp of constraintComps) {
+      console.log(">>>" + constraintComp.varType);
+      this.formNames.push(constraintComp.elementType);
+      this.formNames.push(constraintComp.factorParentProperty);
+      this.formNames.push(constraintComp.factorProperty);
+      this.formNames.push(constraintComp.factorValue.toString());
+      this.formNames.push(constraintComp.propertyMap);
+      this.formNames.push(constraintComp.varType);
+      this.formNames.push("=========");
+    }
+  }  
 
   populateFormFromElementId(elementId: string): void {
     //Get the element i.d. from the route

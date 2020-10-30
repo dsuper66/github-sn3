@@ -85,12 +85,17 @@ export class MathModelDefService {
   private constraintComps: ConstraintComp[] = [];
   // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
-  getConstraintDefs() {
+  getConstraintDefsAll() {
     return this.constraintDefs;
   }
 
-  getConstraintComps() {
+  getConstraintCompsAll() {
     return this.constraintComps;
+  }
+
+  getConstraintComps(constraintType: string) {
+    console.log("get constraint comps of type:" + constraintType);
+    return this.constraintComps.filter(cc => cc.constraintType === constraintType);
   }
 
 }

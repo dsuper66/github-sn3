@@ -2,7 +2,7 @@
  <!-- *ngIf="{{dataLink}}" -->
 
  <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
- <div *ngIf="dataLink">
+ <div *ngIf="constraintDefs">
   <button routerLink="/network-builder-component">Back</button>
   <table table-layout="fixed">
       <tr><th>Constraint Details/Include</th></tr>
@@ -19,6 +19,17 @@
           [checked]="getIncludeStatus(formName)" 
           (change)="setIncludeStatus(formName,saveUserNameCheckBox.checked)" /></td>
 
+      </tr>
+  </table>
+</div>
+
+<div *ngIf="constraintComps">
+  <button (click)="reloadMain()">Back</button>
+  <table table-layout="fixed">
+      <tr><th>Constraint Components</th></tr>
+      <tr></tr>
+      <tr *ngFor="let formName of formNames; index as i">
+        {{formName}}
       </tr>
   </table>
 </div>
