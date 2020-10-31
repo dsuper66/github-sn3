@@ -150,31 +150,34 @@ export class DataEntryViewComponent implements OnInit {
     const constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
 
     var a:string[] = [];    
-    this.cdArray.push("parent:" + constraintDef.elementType)
-    if (constraintDef.rhsProperty != "") {
-      this.cdArray.push(constraintDef.inEquality + " " + constraintDef.rhsProperty)
-    }
-    else {
-      this.cdArray.push(constraintDef.inEquality + " " + constraintDef.rhsValue.toString())
-    }
+    this.cdArray.push("parent elementType: " + constraintDef.elementType)
+    this.cdArray.push("inequality: " + constraintDef.inEquality)
+    this.cdArray.push("rhsProperty: " + constraintDef.rhsProperty)
+    this.cdArray.push("rhsValue: " + constraintDef.rhsValue)
+    
     //If the parent has a var in the equation
     if (constraintDef.varType != "") {
-      this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType)
-      this.cdArray.push(constraintDef.factorValue.toString() + " x ");
-      if (constraintDef.factorProperty != "") {a.push(constraintDef.factorProperty)};
+      // this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType)
+      // const mult = constraintDef.factorValue.toString() + " x ";
+      // if (constraintDef.factorProperty != "") {a.push(mult + constraintDef.factorProperty)};
+
+      // this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
+
+      this.cdArray.push("parent varType: " + constraintDef.varType);
+      this.cdArray.push("parent factorValue: " + constraintDef.factorValue.toString());
+      this.cdArray.push("parent factorProperty: " + constraintDef.factorProperty);
     }
     //The child vars in the equation
     for (const constraintComp of constraintComps) {
       this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
       console.log(">>>" + constraintComp.varType);
       var a:string[] = [];
-      // a.push(constraintComp.elementType);
       a.push("[" + constraintComp.propertyMap + "]");
-      a.push(constraintComp.factorValue.toString() + " x ");
-      if (constraintComp.factorProperty != "") {a.push(constraintComp.factorProperty)};
-      if (constraintComp.factorParentProperty != "") {a.push(constraintComp.factorParentProperty)};
-      
-      // a.push(constraintComp.varType);
+      var factors = constraintComp.factorValue.toString() + " x ";
+      if (constraintComp.factorProperty != "") {factors += constraintComp.factorProperty};
+      if (constraintComp.factorParentProperty != "") {factors += constraintComp.factorParentProperty};
+      a.push(factors);
+
       this.ccArray.push(a);
       
       // this.formNames.push("=========");
