@@ -15,6 +15,10 @@
     
   }
 
+  th {
+    text-align:left;
+  }
+
   input {
     /* display: block; */
     /* width: 6em; */

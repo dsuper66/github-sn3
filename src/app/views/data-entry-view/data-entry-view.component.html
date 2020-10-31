@@ -5,13 +5,9 @@
  <div *ngIf="doConstraintDefs">
   <button routerLink="/network-builder-component">Back</button>
   <table table-layout="fixed">
+      <tr>&nbsp;</tr>
       <tr><th>Constraint Details/Include</th></tr>
       <tr *ngFor="let formName of formNames; index as i">
-  
-        <!-- The label -->
-        <!-- <td><button>{{formName}}</button></td> -->
-        <!-- <td>{{formName}}</td> -->
-
         <td><button (click)="reload(formName)">{{formName}}</button>
           <input #saveUserNameCheckBox
           id="formName" 
@@ -26,6 +22,7 @@
 <div *ngIf="doConstraintComps">
   <button (click)="reloadMain()">Back</button>
   <table table-layout="fixed">
+      <tr>&nbsp;</tr>
       <tr><th>{{pageTitle}}</th></tr>
       <tr>&nbsp;</tr>
 
