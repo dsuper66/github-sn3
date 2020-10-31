@@ -89,6 +89,13 @@ export class DataEntryViewComponent implements OnInit {
   getIncludeStatus(constraintName: string) {
     return true;
   }
+  //Factor tick box
+  getFactorStatus(factorId: string): boolean {
+    return this.mathModelDefService.factorIsEnabled(factorId);
+  }
+  setFactorStatus(factorId: string, isEnabled: boolean) {
+    return this.mathModelDefService.setFactorStatus(factorId, isEnabled);
+  }
 
   //===SUBMIT===
   onSubmit(form: NgForm): void {
@@ -152,8 +159,12 @@ export class DataEntryViewComponent implements OnInit {
     var a:string[] = [];    
     this.cdArray.push("parent elementType: " + constraintDef.elementType)
     this.cdArray.push("inequality: " + constraintDef.inEquality)
-    this.cdArray.push("rhsProperty: " + constraintDef.rhsProperty)
-    this.cdArray.push("rhsValue: " + constraintDef.rhsValue)
+    if (constraintDef.rhsProperty != "") {
+      this.cdArray.push("rhsProperty: " + constraintDef.rhsProperty)
+    }
+    else {
+      this.cdArray.push("rhsValue: " + constraintDef.rhsValue)
+    }
     
     //If the parent has a var in the equation
     if (constraintDef.varType != "") {
@@ -164,6 +175,7 @@ export class DataEntryViewComponent implements OnInit {
       
       this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
       var a:string[] = [];
+      a.push("[parent var]")
       var factors = constraintDef.factorValue.toString() + " x ";
       if (constraintDef.factorProperty != "") {factors += constraintDef.factorProperty};
       a.push(factors)

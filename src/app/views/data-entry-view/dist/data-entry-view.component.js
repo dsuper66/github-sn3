@@ -70,6 +70,13 @@ var DataEntryViewComponent = /** @class */ (function () {
     DataEntryViewComponent.prototype.getIncludeStatus = function (constraintName) {
         return true;
     };
+    //Factor tick box
+    DataEntryViewComponent.prototype.getFactorStatus = function (factorId) {
+        return this.mathModelDefService.factorIsEnabled(factorId);
+    };
+    DataEntryViewComponent.prototype.setFactorStatus = function (factorId, isEnabled) {
+        return this.mathModelDefService.setFactorStatus(factorId, isEnabled);
+    };
     //===SUBMIT===
     DataEntryViewComponent.prototype.onSubmit = function (form) {
         var _this = this;
@@ -120,8 +127,12 @@ var DataEntryViewComponent = /** @class */ (function () {
         var a = [];
         this.cdArray.push("parent elementType: " + constraintDef.elementType);
         this.cdArray.push("inequality: " + constraintDef.inEquality);
-        this.cdArray.push("rhsProperty: " + constraintDef.rhsProperty);
-        this.cdArray.push("rhsValue: " + constraintDef.rhsValue);
+        if (constraintDef.rhsProperty != "") {
+            this.cdArray.push("rhsProperty: " + constraintDef.rhsProperty);
+        }
+        else {
+            this.cdArray.push("rhsValue: " + constraintDef.rhsValue);
+        }
         //If the parent has a var in the equation
         if (constraintDef.varType != "") {
             // this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType)
@@ -129,6 +140,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             // if (constraintDef.factorProperty != "") {a.push(mult + constraintDef.factorProperty)};
             this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
             var a = [];
+            a.push("[parent var]");
             var factors = constraintDef.factorValue.toString() + " x ";
             if (constraintDef.factorProperty != "") {
                 factors += constraintDef.factorProperty;

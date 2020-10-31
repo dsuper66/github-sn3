@@ -78,12 +78,30 @@ export class MathModelDefService {
 
       )
 
+      this.disabledFactors.push ('resOfferTranche.resTrancheCleared');
+
   }
 
 
   private constraintDefs: ConstraintDef[] = [];
   private constraintComps: ConstraintComp[] = [];
   // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
+
+  //Factors are identified by elementType.varType
+  private disabledFactors: string[] = [];
+  private disabledConstraints: string[] = [];
+
+  factorIsEnabled(factorId: string) {
+    return this.disabledFactors.filter(f => f === factorId).length == 0;
+  }
+  setFactorStatus(factorId: string, isEnabled: boolean) {
+    if (isEnabled) { //remove from the disabledFactors array
+      this.disabledFactors = this.disabledFactors.filter(f => f != factorId)
+    }
+    else if (this.factorIsEnabled(factorId)) { //add to the disabledFactors array if not already
+      this.disabledFactors.push(factorId)
+    }
+  }
 
   getConstraintDefsAll() {
     return this.constraintDefs;

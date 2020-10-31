@@ -36,8 +36,8 @@
         <input #saveUserNameCheckBox
           id="formName" 
           type="checkbox" 
-          [checked]="getIncludeStatus(formName)" 
-          (change)="setIncludeStatus(formName,saveUserNameCheckBox.checked)" /> 
+          [checked]="getFactorStatus(formName)" 
+          (change)="setFactorStatus(formName,saveUserNameCheckBox.checked)" /> 
         </tr>
 
           <tr *ngFor="let cc of ccArray[i + 1]">
