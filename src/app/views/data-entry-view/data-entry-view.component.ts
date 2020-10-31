@@ -161,12 +161,15 @@ export class DataEntryViewComponent implements OnInit {
       // const mult = constraintDef.factorValue.toString() + " x ";
       // if (constraintDef.factorProperty != "") {a.push(mult + constraintDef.factorProperty)};
 
-      // this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
-
-      this.cdArray.push("parent varType: " + constraintDef.varType);
-      this.cdArray.push("parent factorValue: " + constraintDef.factorValue.toString());
-      this.cdArray.push("parent factorProperty: " + constraintDef.factorProperty);
+      
+      this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
+      var a:string[] = [];
+      var factors = constraintDef.factorValue.toString() + " x ";
+      if (constraintDef.factorProperty != "") {factors += constraintDef.factorProperty};
+      a.push(factors)
+      this.ccArray.push(a);
     }
+
     //The child vars in the equation
     for (const constraintComp of constraintComps) {
       this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);

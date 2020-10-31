@@ -127,10 +127,15 @@ var DataEntryViewComponent = /** @class */ (function () {
             // this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType)
             // const mult = constraintDef.factorValue.toString() + " x ";
             // if (constraintDef.factorProperty != "") {a.push(mult + constraintDef.factorProperty)};
-            // this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
-            this.cdArray.push("parent varType: " + constraintDef.varType);
-            this.cdArray.push("parent factorValue: " + constraintDef.factorValue.toString());
-            this.cdArray.push("parent factorProperty: " + constraintDef.factorProperty);
+            this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
+            var a = [];
+            var factors = constraintDef.factorValue.toString() + " x ";
+            if (constraintDef.factorProperty != "") {
+                factors += constraintDef.factorProperty;
+            }
+            ;
+            a.push(factors);
+            this.ccArray.push(a);
         }
         //The child vars in the equation
         for (var _i = 0, constraintComps_1 = constraintComps; _i < constraintComps_1.length; _i++) {
