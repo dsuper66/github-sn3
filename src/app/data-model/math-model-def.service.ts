@@ -93,6 +93,11 @@ export class MathModelDefService {
     return this.constraintComps;
   }
 
+  getConstraintDef(constraintType: string):ConstraintDef {
+    console.log("get constraint def of type:" + constraintType);
+    return this.constraintDefs.filter(cc => cc.constraintType === constraintType)[0];
+  }
+
   getConstraintComps(constraintType: string) {
     console.log("get constraint comps of type:" + constraintType);
     return this.constraintComps.filter(cc => cc.constraintType === constraintType);

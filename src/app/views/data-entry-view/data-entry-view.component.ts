@@ -58,24 +58,24 @@ export class DataEntryViewComponent implements OnInit {
     const id = this.idOfDataEntryObject;
     console.log("GOT ID ", id); //this.idOfDataEntryObject);
     if (id === "model-def") {
-      this.constraintDefs = true;
+      this.doConstraintDefs = true;
       this.populateFromConstraintDefs();
     }
     else if (id.includes("constraintComp")) {
-      this.constraintComps = true;
+      this.doConstraintComps = true;
       const startPos = id.indexOf("?") + 1;
       this.populateFromConstraintComps(id.substr(startPos));
     }   
     else {
-      this.dataEntry = true;
+      this.doDataEntry = true;
       this.populateFormFromElementId(id);
     }
     
   }
 
-  constraintDefs = false;
-  constraintComps = false;
-  dataEntry = false;
+  doConstraintDefs = false;
+  doConstraintComps = false;
+  doDataEntry = false;
 
   formNames: string[] = [];
   formDefaults: string[] = [];
@@ -131,6 +131,8 @@ export class DataEntryViewComponent implements OnInit {
   }
 
   pageTitle = "";
+  ccArray: [string[]] = [[]];
+  cdArray:string[] = [];
 
   populateFromConstraintDefs(){
     console.log("populateFromConstraintDefs");
@@ -143,16 +145,39 @@ export class DataEntryViewComponent implements OnInit {
 
   populateFromConstraintComps(constraintType: string){
     console.log("populateFromConstraintComps");
-    this.pageTitle = "Constraint Components for: " + constraintType;
+    this.pageTitle = "Constraint: " + constraintType;
+    const constraintDef = this.mathModelDefService.getConstraintDef(constraintType);
     const constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
+
+    var a:string[] = [];    
+    this.cdArray.push("parent:" + constraintDef.elementType)
+    if (constraintDef.rhsProperty != "") {
+      this.cdArray.push(constraintDef.inEquality + " " + constraintDef.rhsProperty)
+    }
+    else {
+      this.cdArray.push(constraintDef.inEquality + " " + constraintDef.rhsValue.toString())
+    }
+    //If the parent has a var in the equation
+    if (constraintDef.varType != "") {
+      this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType)
+      this.cdArray.push(constraintDef.factorValue.toString() + " x ");
+      if (constraintDef.factorProperty != "") {a.push(constraintDef.factorProperty)};
+    }
+    //The child vars in the equation
     for (const constraintComp of constraintComps) {
-      console.log(">>>" + constraintComp.varType);
       this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
-      this.formNames.push(constraintComp.propertyMap);
-      this.formNames.push(constraintComp.factorParentProperty);
-      this.formNames.push(constraintComp.factorProperty);
-      this.formNames.push(constraintComp.factorValue.toString());
-      this.formNames.push("=========");
+      console.log(">>>" + constraintComp.varType);
+      var a:string[] = [];
+      // a.push(constraintComp.elementType);
+      a.push("[" + constraintComp.propertyMap + "]");
+      a.push(constraintComp.factorValue.toString() + " x ");
+      if (constraintComp.factorProperty != "") {a.push(constraintComp.factorProperty)};
+      if (constraintComp.factorParentProperty != "") {a.push(constraintComp.factorParentProperty)};
+      
+      // a.push(constraintComp.varType);
+      this.ccArray.push(a);
+      
+      // this.formNames.push("=========");
     }
   }  
 

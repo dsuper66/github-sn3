@@ -2,7 +2,7 @@
  <!-- *ngIf="{{dataLink}}" -->
 
  <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
- <div *ngIf="constraintDefs">
+ <div *ngIf="doConstraintDefs">
   <button routerLink="/network-builder-component">Back</button>
   <table table-layout="fixed">
       <tr><th>Constraint Details/Include</th></tr>
@@ -23,19 +23,37 @@
   </table>
 </div>
 
-<div *ngIf="constraintComps">
+<div *ngIf="doConstraintComps">
   <button (click)="reloadMain()">Back</button>
   <table table-layout="fixed">
       <tr><th>{{pageTitle}}</th></tr>
       <tr>&nbsp;</tr>
-      <tr *ngFor="let formName of formNames; index as i">
-        &nbsp;{{formName}}
+
+      <tr *ngFor="let cd of cdArray">
+        &nbsp;{{cd}}
       </tr>
+      <tr>===============</tr>
+
+      <div *ngFor="let formName of formNames; index as i">
+        <tr>&nbsp;{{formName}}
+        <input #saveUserNameCheckBox
+          id="formName" 
+          type="checkbox" 
+          [checked]="getIncludeStatus(formName)" 
+          (change)="setIncludeStatus(formName,saveUserNameCheckBox.checked)" /> 
+        </tr>
+
+          <tr *ngFor="let cc of ccArray[i + 1]">
+            &nbsp;{{cc}}
+          </tr>
+          <tr>===============</tr>
+
+        </div>
   </table>
 </div>
  
   <!-- *ngIf="{{dataEntry}}"  -->
- <form *ngIf="dataEntry" #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
+ <form *ngIf="doDataEntry" #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
       <!-- Prevent implicit submission of the form -->
     <button type="submit" disabled style="display: none" aria-hidden="true"></button>

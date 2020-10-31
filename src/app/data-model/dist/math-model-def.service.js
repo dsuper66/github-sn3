@@ -53,6 +53,10 @@ var MathModelDefService = /** @class */ (function () {
     MathModelDefService.prototype.getConstraintCompsAll = function () {
         return this.constraintComps;
     };
+    MathModelDefService.prototype.getConstraintDef = function (constraintType) {
+        console.log("get constraint def of type:" + constraintType);
+        return this.constraintDefs.filter(function (cc) { return cc.constraintType === constraintType; })[0];
+    };
     MathModelDefService.prototype.getConstraintComps = function (constraintType) {
         console.log("get constraint comps of type:" + constraintType);
         return this.constraintComps.filter(function (cc) { return cc.constraintType === constraintType; });

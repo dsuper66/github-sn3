@@ -20,14 +20,16 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.router = router;
         this.route = route;
         this.mathModelDefService = mathModelDefService;
-        this.constraintDefs = false;
-        this.constraintComps = false;
-        this.dataEntry = false;
+        this.doConstraintDefs = false;
+        this.doConstraintComps = false;
+        this.doDataEntry = false;
         this.formNames = [];
         this.formDefaults = [];
         this.formElementIds = [];
         this.formPropertyIds = [];
         this.pageTitle = "";
+        this.ccArray = [[]];
+        this.cdArray = [];
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
@@ -49,16 +51,16 @@ var DataEntryViewComponent = /** @class */ (function () {
         var id = this.idOfDataEntryObject;
         console.log("GOT ID ", id); //this.idOfDataEntryObject);
         if (id === "model-def") {
-            this.constraintDefs = true;
+            this.doConstraintDefs = true;
             this.populateFromConstraintDefs();
         }
         else if (id.includes("constraintComp")) {
-            this.constraintComps = true;
+            this.doConstraintComps = true;
             var startPos = id.indexOf("?") + 1;
             this.populateFromConstraintComps(id.substr(startPos));
         }
         else {
-            this.dataEntry = true;
+            this.doDataEntry = true;
             this.populateFormFromElementId(id);
         }
     };
@@ -112,17 +114,46 @@ var DataEntryViewComponent = /** @class */ (function () {
     };
     DataEntryViewComponent.prototype.populateFromConstraintComps = function (constraintType) {
         console.log("populateFromConstraintComps");
-        this.pageTitle = "Constraint Components for: " + constraintType;
+        this.pageTitle = "Constraint: " + constraintType;
+        var constraintDef = this.mathModelDefService.getConstraintDef(constraintType);
         var constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
+        var a = [];
+        this.cdArray.push("parent:" + constraintDef.elementType);
+        if (constraintDef.rhsProperty != "") {
+            this.cdArray.push(constraintDef.inEquality + " " + constraintDef.rhsProperty);
+        }
+        else {
+            this.cdArray.push(constraintDef.inEquality + " " + constraintDef.rhsValue.toString());
+        }
+        //If the parent has a var in the equation
+        if (constraintDef.varType != "") {
+            this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType);
+            this.cdArray.push(constraintDef.factorValue.toString() + " x ");
+            if (constraintDef.factorProperty != "") {
+                a.push(constraintDef.factorProperty);
+            }
+            ;
+        }
+        //The child vars in the equation
         for (var _i = 0, constraintComps_1 = constraintComps; _i < constraintComps_1.length; _i++) {
             var constraintComp = constraintComps_1[_i];
-            console.log(">>>" + constraintComp.varType);
             this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
-            this.formNames.push(constraintComp.propertyMap);
-            this.formNames.push(constraintComp.factorParentProperty);
-            this.formNames.push(constraintComp.factorProperty);
-            this.formNames.push(constraintComp.factorValue.toString());
-            this.formNames.push("=========");
+            console.log(">>>" + constraintComp.varType);
+            var a = [];
+            // a.push(constraintComp.elementType);
+            a.push("[" + constraintComp.propertyMap + "]");
+            a.push(constraintComp.factorValue.toString() + " x ");
+            if (constraintComp.factorProperty != "") {
+                a.push(constraintComp.factorProperty);
+            }
+            ;
+            if (constraintComp.factorParentProperty != "") {
+                a.push(constraintComp.factorParentProperty);
+            }
+            ;
+            // a.push(constraintComp.varType);
+            this.ccArray.push(a);
+            // this.formNames.push("=========");
         }
     };
     DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
