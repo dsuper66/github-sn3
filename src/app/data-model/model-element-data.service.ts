@@ -266,7 +266,7 @@ export class ModelElementDataService {
           resultString1 = "res$:" + this.checkGetResult('resCover',results);
           resultString2 = "risk:" + this.checkGetResult('islandRisk',results);
           resultString3 = "res:" + this.checkGetResult('islandRes',results);
-          resultString4 = "resShort:" + this.checkGetResult('resShortfall',results);         
+          resultString4 = "resShort:" + this.checkGetResult('islandResShortfall',results);         
         }
         else if (element.elementType == "branch") {
           resultString1 = this.checkGetResult('branchFlow',results);        

@@ -15,18 +15,18 @@ var ModelElementDefService = /** @class */ (function () {
         this.defaultValueSettings = [];
         //Property Types
         //All property types must have an entry here, for the data entry display
-        this.elementPropertyTypeSettings.push({ propertyType: 'isRefBus', primitiveType: 'bool', visible: true }, { propertyType: 'fromBus', primitiveType: 'string', visible: false }, { propertyType: 'toBus', primitiveType: 'string', visible: false }, { propertyType: 'flowMax', primitiveType: 'number', visible: true }, { propertyType: 'resistance', primitiveType: 'number', visible: true }, { propertyType: 'susceptance', primitiveType: 'number', visible: true }, { propertyType: 'childCount', primitiveType: 'number', visible: false }, { propertyType: 'parentType', primitiveType: 'string', visible: false }, { propertyType: 'childTypeId', primitiveType: 'string', visible: false }, { propertyType: 'parentId', primitiveType: 'string', visible: false }, { propertyType: 'trancheLimit', primitiveType: 'number', visible: true }, { propertyType: 'tranchePrice', primitiveType: 'number', visible: true }, { propertyType: 'flowLimit', primitiveType: 'number', visible: true }, { propertyType: 'lossLimit', primitiveType: 'number', visible: true }, { propertyType: 'capacityMax', primitiveType: 'number', visible: true }, { propertyType: 'direction', primitiveType: 'number', visible: true }, { propertyType: 'islandId', primitiveType: 'string', visible: false }, { propertyType: 'resShortfallPrice', primitiveType: 'number', visible: true });
+        this.elementPropertyTypeSettings.push({ propertyType: 'isRefBus', primitiveType: 'bool', visible: true }, { propertyType: 'fromBus', primitiveType: 'string', visible: false }, { propertyType: 'toBus', primitiveType: 'string', visible: false }, { propertyType: 'flowMax', primitiveType: 'number', visible: true }, { propertyType: 'resistance', primitiveType: 'number', visible: true }, { propertyType: 'susceptance', primitiveType: 'number', visible: true }, { propertyType: 'childCount', primitiveType: 'number', visible: false }, { propertyType: 'parentType', primitiveType: 'string', visible: false }, { propertyType: 'childTypeId', primitiveType: 'string', visible: false }, { propertyType: 'parentId', primitiveType: 'string', visible: false }, { propertyType: 'trancheLimit', primitiveType: 'number', visible: true }, { propertyType: 'tranchePrice', primitiveType: 'number', visible: true }, { propertyType: 'flowLimit', primitiveType: 'number', visible: true }, { propertyType: 'lossLimit', primitiveType: 'number', visible: true }, { propertyType: 'capacityMax', primitiveType: 'number', visible: true }, { propertyType: 'direction', primitiveType: 'number', visible: true }, { propertyType: 'islandId', primitiveType: 'string', visible: false }, { propertyType: 'islandResShortfallPrice', primitiveType: 'number', visible: true }, { propertyType: 'genResShortfallPrice', primitiveType: 'number', visible: true });
         //Separate so that different element types can have different defaults for the same properties
         this.defaultValueSettings.push({ propertyType: 'isRefBus', elementType: 'bus', defaultValue: false }, { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 }, { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 }, { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 }, { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 100 }, { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 1000 }, { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 250 }, { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 70 }, { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 0 }, { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 }, { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 }, 
         // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
-        { propertyType: 'resShortfallPrice', elementType: 'island', defaultValue: 0 });
+        { propertyType: 'islandResShortfallPrice', elementType: 'island', defaultValue: 0 }, { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 0 });
         //Define Element Types and Property Types
         //An Element Type that is included in the model must be defined here to know its properties
         //Parent elements
         this.elementTypeProperties['bus'] = ['isRefBus'];
         //Branch (flow limit and losses are at the directional level)
         this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance', 'flowMax'];
-        this.elementTypeProperties['gen'] = ['toBus', 'capacityMax', 'islandId'];
+        this.elementTypeProperties['gen'] = ['toBus', 'capacityMax', 'islandId', 'genResShortfallPrice'];
         this.elementTypeProperties['load'] = ['fromBus'];
         //Element definitions (created in the data service constructor) that define a child to be created 
         //(because the creation is not dynamic, this definition is not actually used)
@@ -43,7 +43,7 @@ var ModelElementDefService = /** @class */ (function () {
         this.elementTypeProperties['dirBranch'] = ['parentId', 'fromBus', 'toBus', 'direction', 'susceptance'];
         //Static elements
         this.elementTypeProperties['mathModel'] = [];
-        this.elementTypeProperties['island'] = ['resShortfallPrice'];
+        this.elementTypeProperties['island'] = ['islandResShortfallPrice'];
     }
     ModelElementDefService.prototype.elementHasProperty = function (element, propertyType) {
         var properties = this.elementTypeProperties[element.elementType];

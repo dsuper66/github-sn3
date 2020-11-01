@@ -41,7 +41,8 @@ export class ModelElementDefService {
       { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
       { propertyType: 'direction', primitiveType: 'number', visible: true },
       { propertyType: 'islandId', primitiveType: 'string', visible: false },
-      { propertyType: 'resShortfallPrice', primitiveType: 'number', visible: true }
+      { propertyType: 'islandResShortfallPrice', primitiveType: 'number', visible: true },
+      { propertyType: 'genResShortfallPrice', primitiveType: 'number', visible: true }
     )
 
     //Separate so that different element types can have different defaults for the same properties
@@ -58,7 +59,8 @@ export class ModelElementDefService {
       { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
       { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
       // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
-      { propertyType: 'resShortfallPrice', elementType: 'island', defaultValue: 0 }
+      { propertyType: 'islandResShortfallPrice', elementType: 'island', defaultValue: 0 },
+      { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 0 }
     )
 
     //Define Element Types and Property Types
@@ -67,7 +69,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['bus'] = ['isRefBus'];
     //Branch (flow limit and losses are at the directional level)
     this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance','flowMax'];
-    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax','islandId'];
+    this.elementTypeProperties['gen'] = ['toBus', 'capacityMax','islandId','genResShortfallPrice'];
     this.elementTypeProperties['load'] = ['fromBus'];
     //Element definitions (created in the data service constructor) that define a child to be created 
     //(because the creation is not dynamic, this definition is not actually used)
@@ -87,7 +89,7 @@ export class ModelElementDefService {
 
     //Static elements
     this.elementTypeProperties['mathModel'] = [];
-    this.elementTypeProperties['island'] = ['resShortfallPrice'];
+    this.elementTypeProperties['island'] = ['islandResShortfallPrice'];
   }
 
 
