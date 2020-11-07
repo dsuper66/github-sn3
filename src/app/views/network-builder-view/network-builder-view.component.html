@@ -37,7 +37,12 @@
   <ng-container *ngFor="let shape of shapesToDraw">
 
     <!--Branch or Bus-->
-    <svg *ngIf="shape.elementType=='bus' || shape.elementType=='branch' || shape.elementType=='island'" >
+    <svg *ngIf="
+      shape.elementType=='bus' 
+    || shape.elementType=='branch' 
+    || shape.elementType=='island'
+    || shape.elementType=='mathModel'
+    " >
 
       <!-- Bus or branch-->
        <!-- <svg *ngIf="shape.elementTypeId=='bus'"> -->
@@ -86,7 +91,7 @@
           </svg> 
 
           <!-- Island Text -->
-          <svg *ngIf="shape.elementType=='island'">
+          <svg *ngIf="shape.elementType=='island' || shape.elementType=='mathModel'">
               <!-- Text 1 -->
               <text 
               [attr.x]="shape.xInner + shape.wInner + 4" 
@@ -122,7 +127,7 @@
             [attr.y]="shape.yInner + (3/4) * shape.hInner"
             [attr.width]="shape.wInner"
             [attr.height]="shape.Inner"          
-            fill="gray">i</text>
+            fill="gray">{{textForShape(shape.elementType)}}</text>
           </svg> 
 
         <!-- </svg> -->
@@ -137,7 +142,7 @@
           [attr.height]="shape.hInner"
           [attr.rx]="shape.elementType=='bus'?8:2" 
 
-          [style.fill]="shape.elementType=='island'?'none':'black'"
+          [style.fill]="(shape.elementType=='island' || shape.elementType=='mathModel') ? 'none' : 'black'"
 
 
           /> 

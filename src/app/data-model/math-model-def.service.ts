@@ -162,6 +162,7 @@ export interface ModelConstraint {
   elementId: string,
   inequality: string,
   rhsValue: number,
+  constraintString: string,
   shadowPrice: number
 }
 

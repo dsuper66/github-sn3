@@ -71,19 +71,16 @@ export class ShapeService {
 
     var newElementId = ""
 
-    //Add the element to the model, so we have the i.d.
-    //Adding an island shape...
-    // if (elementType === 'island') {
-    //   newElementId = this.modelElementService.getOrAddIslandId();
-    // }
-    // //...everything else
-    // else {
-    //See if we need to add an island shape
-    if (elementType != 'island') {
+    //See if we need to add an island or mathModel
+    if (elementType != 'island' && elementType != 'mathModel') {
       if (!(this.shapes.find(s => s.elementType === 'island'))) {
         this.addShape('island');
       }
-    }
+      if (!(this.shapes.find(s => s.elementType === 'mathModel'))) {
+        this.addShape('mathModel');
+      }
+    }    
+
     //Add the element and get back the i.d.
     newElementId = this.modelElementService.addModelElement(elementType);
 
@@ -201,22 +198,26 @@ export class ShapeService {
         path2
       });
     }
-    //ISLAND
-    else if (elementType == 'island') {
+    //ISLAND & MATHMODEL
+    else if (elementType == 'island' || elementType == 'mathModel') {
       const x = busInitX + busInitLength + busInitX;
-      const y = busInitY - selectWidth;
+      var y = busInitY - selectWidth;
       const margin = 6
       const h = 55;
+      const w = selectWidth + 10
+      if (elementType == 'mathModel') {
+        y = y - h - 10
+      }
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
         xInner: x + margin,
         yInner: y,
-        wInner: selectWidth - 2 * margin,
+        wInner: w - 2 * margin,
         hInner: h,
         xOuter: x,
         yOuter: y,
-        wOuter: selectWidth,
+        wOuter: w,
         hOuter: h
       })
 

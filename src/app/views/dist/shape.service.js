@@ -61,17 +61,13 @@ var ShapeService = /** @class */ (function () {
     //Add a shape
     ShapeService.prototype.addShape = function (elementType) {
         var newElementId = "";
-        //Add the element to the model, so we have the i.d.
-        //Adding an island shape...
-        // if (elementType === 'island') {
-        //   newElementId = this.modelElementService.getOrAddIslandId();
-        // }
-        // //...everything else
-        // else {
-        //See if we need to add an island shape
-        if (elementType != 'island') {
+        //See if we need to add an island or mathModel
+        if (elementType != 'island' && elementType != 'mathModel') {
             if (!(this.shapes.find(function (s) { return s.elementType === 'island'; }))) {
                 this.addShape('island');
+            }
+            if (!(this.shapes.find(function (s) { return s.elementType === 'mathModel'; }))) {
+                this.addShape('mathModel');
             }
         }
         //Add the element and get back the i.d.
@@ -184,22 +180,26 @@ var ShapeService = /** @class */ (function () {
                 path2: path2
             });
         }
-        //ISLAND
-        else if (elementType == 'island') {
+        //ISLAND & MATHMODEL
+        else if (elementType == 'island' || elementType == 'mathModel') {
             var x_2 = busInitX + busInitLength + busInitX;
-            var y_3 = busInitY - selectWidth;
+            var y = busInitY - selectWidth;
             var margin = 6;
             var h = 55;
+            var w = selectWidth + 10;
+            if (elementType == 'mathModel') {
+                y = y - h - 10;
+            }
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
                 xInner: x_2 + margin,
-                yInner: y_3,
-                wInner: selectWidth - 2 * margin,
+                yInner: y,
+                wInner: w - 2 * margin,
                 hInner: h,
                 xOuter: x_2,
-                yOuter: y_3,
-                wOuter: selectWidth,
+                yOuter: y,
+                wOuter: w,
                 hOuter: h
             });
         }

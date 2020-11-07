@@ -32,6 +32,14 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
     };
+    NetworkBuilderViewComponent.prototype.textForShape = function (shapeType) {
+        if (shapeType === 'island') {
+            return "i";
+        }
+        else if (shapeType === 'mathModel') {
+            return "m";
+        }
+    };
     NetworkBuilderViewComponent.prototype.haveModel = function () { return this.shapeService.haveModel(); };
     // busWidth = 14;
     // headerH = 35;

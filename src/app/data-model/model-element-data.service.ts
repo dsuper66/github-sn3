@@ -62,11 +62,11 @@ export class ModelElementDataService {
 
     //Static components of the model
     //mathModel has the objective as a variable
-    this.modelElements.push({
-      elementId: 'mathmodel001', elementType: 'mathModel',
-      properties: {},
-      includeInModel: true
-    });
+    // this.modelElements.push({
+    //   elementId: 'mathmodel001', elementType: 'mathModel',
+    //   properties: {},
+    //   includeInModel: true
+    // });
     //island has risk and reserve as variables 
     //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
     // this.modelElements.push({
@@ -268,6 +268,9 @@ export class ModelElementDataService {
           resultString3 = "res:" + this.checkGetResult('islandRes',results);
           resultString4 = "resShort:" + this.checkGetResult('islandResShortfall',results);         
         }
+        else if (element.elementType == "mathModel") {
+          resultString1 = "objVal:" + this.checkGetResult('objective',results);
+        }        
         else if (element.elementType == "branch") {
           resultString1 = this.checkGetResult('branchFlow',results);        
         }

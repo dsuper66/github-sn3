@@ -42,6 +42,15 @@ export class NetworkBuilderViewComponent implements OnInit {
   shapesToDraw: Shape[] = [];
   selectedShape?: Shape;
 
+  textForShape(shapeType: string) {
+    if (shapeType === 'island') {
+      return "i"
+    }
+    else if (shapeType === 'mathModel') {
+      return "m"
+    }
+  }
+
   haveModel():boolean{return this.shapeService.haveModel()}
   // busWidth = 14;
   // headerH = 35;

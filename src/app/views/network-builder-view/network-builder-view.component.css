@@ -10,9 +10,11 @@ svg text{
 }
 
 #island{
-  font-size: 50px;
-  /* font-family:"Helvetica"; */
+  font-size: 40px;
+  /* font-family: "Helvetica"; */
+  font-family: "Courier";  
   font-style: italic;
+  /* white-space: pre; */
 }
 
   
