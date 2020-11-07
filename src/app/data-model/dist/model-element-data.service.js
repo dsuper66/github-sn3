@@ -13,6 +13,8 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
         this.modelElements = [];
         this.elementNextIndex = new Map();
+        this.resultsDP = 2;
+        this.prevObjectiveVal = 0.0;
         //Manually Add Child element defintions which will
         //cause child elements to be created automatically with parent
         //--------------------------------------------------
@@ -198,15 +200,26 @@ var ModelElementDataService = /** @class */ (function () {
                 element.results[result] = 0;
         }
     };
-    ModelElementDataService.prototype.checkGetResult = function (key, results) {
+    ModelElementDataService.prototype.getResultString = function (key, results) {
         if (results[key] === undefined) {
             console.log("MISSING RESULT: " + key);
             return key;
         }
         else {
-            return results[key].toFixed(2).toString();
+            return results[key].toFixed(this.resultsDP).toString();
         }
     };
+    ModelElementDataService.prototype.getResultVal = function (key, results) {
+        if (results[key] === undefined) {
+            console.log("MISSING RESULT: " + key);
+            return -1.0;
+        }
+        else {
+            return results[key];
+        }
+    };
+    //The results are the shadow price of every constraint and the value of every variable
+    //...to get the result we just need the constraintType or varType string
     ModelElementDataService.prototype.getTextFromElementResults = function (elementId) {
         var resultString1 = "";
         var resultString2 = "";
@@ -217,27 +230,32 @@ var ModelElementDataService = /** @class */ (function () {
             var results = element.results;
             if (results) {
                 if (element.elementType == "bus") {
-                    resultString1 = "$" + this.checkGetResult('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
-                    resultString2 = "∠" + this.checkGetResult('phaseAnglePos', results);
+                    resultString1 = "$" + this.getResultString('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
+                    resultString2 = "∠" + this.getResultString('phaseAnglePos', results);
                 }
                 else if (element.elementType == "gen") {
-                    resultString1 = this.checkGetResult('enTrancheCleared', results);
-                    resultString2 = "R" + this.checkGetResult('resTrancheCleared', results);
+                    resultString1 = this.getResultString('enTrancheCleared', results);
+                    resultString2 = "R" + this.getResultString('resTrancheCleared', results);
                 }
                 else if (element.elementType == "load") {
-                    resultString1 = this.checkGetResult('bidTrancheCleared', results);
+                    resultString1 = this.getResultString('bidTrancheCleared', results);
                 }
                 else if (element.elementType == "island") {
-                    resultString1 = "res$:" + this.checkGetResult('resCover', results);
-                    resultString2 = "risk:" + this.checkGetResult('islandRisk', results);
-                    resultString3 = "res:" + this.checkGetResult('islandRes', results);
-                    resultString4 = "resShort:" + this.checkGetResult('islandResShortfall', results);
+                    resultString1 = "res$:" + this.getResultString('resCover', results);
+                    resultString2 = "risk:" + this.getResultString('islandRisk', results);
+                    resultString3 = "res:" + this.getResultString('islandRes', results);
+                    resultString4 = "resShort:" + this.getResultString('islandResShortfall', results);
                 }
                 else if (element.elementType == "mathModel") {
-                    resultString1 = "objVal:" + this.checkGetResult('objective', results);
+                    var objectiveVal = this.getResultVal('objectiveVal', results);
+                    var deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
+                    this.prevObjectiveVal = objectiveVal;
+                    resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
+                    resultString2 = "prev:" + objectiveVal.toFixed(this.resultsDP).toString();
+                    resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.resultsDP).toString();
                 }
                 else if (element.elementType == "branch") {
-                    resultString1 = this.checkGetResult('branchFlow', results);
+                    resultString1 = this.getResultString('branchFlow', results);
                 }
             }
         }
