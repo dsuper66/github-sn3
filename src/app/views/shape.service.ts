@@ -92,7 +92,7 @@ export class ShapeService {
     //Defaults
     const branchInitLength = 160;
     const busInitX = 30;
-    const busInitY = branchInitLength;
+    const busInitY = 120;
     const busInitLength = 160;
     const branchWidth = 5;
     const busWidth = 14;
@@ -112,7 +112,7 @@ export class ShapeService {
     //BUS
     if (elementType == 'bus') {
       //Place based on number of buses
-      let y = busInitY * (1 + busCount);
+      let y = busInitY + branchInitLength * busCount;
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
@@ -163,7 +163,7 @@ export class ShapeService {
       //Y position
       var y = busInitY - h;
       if (busCount > 1 && genLoadCount > 0) { //position on last bus
-        y = (busInitY * busCount) - h;
+        y = busInitY + (branchInitLength * (busCount - 1)) - h;
       }
       var path1: string | undefined;
       var path2: string | undefined;
@@ -202,12 +202,12 @@ export class ShapeService {
     else if (elementType == 'island' || elementType == 'mathModel') {
       const xDistFromBus = 22
       const x = busInitX + busInitLength + xDistFromBus;
-      var y = busInitY - selectWidth;
+      var y = 50;
       const margin = 6
       const h = 55;
       const w = selectWidth + 10
-      if (elementType == 'mathModel') {
-        y = y - h - 10
+      if (elementType == 'island') {
+        y = y + h + 10
       }
       newShape = ({
         elementType: elementType,

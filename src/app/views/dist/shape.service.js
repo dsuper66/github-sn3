@@ -78,7 +78,7 @@ var ShapeService = /** @class */ (function () {
         //Defaults
         var branchInitLength = 160;
         var busInitX = 30;
-        var busInitY = branchInitLength;
+        var busInitY = 120;
         var busInitLength = 160;
         var branchWidth = 5;
         var busWidth = 14;
@@ -96,7 +96,7 @@ var ShapeService = /** @class */ (function () {
         //BUS
         if (elementType == 'bus') {
             //Place based on number of buses
-            var y_1 = busInitY * (1 + busCount);
+            var y_1 = busInitY + branchInitLength * busCount;
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
@@ -147,7 +147,7 @@ var ShapeService = /** @class */ (function () {
             //Y position
             var y = busInitY - h;
             if (busCount > 1 && genLoadCount > 0) { //position on last bus
-                y = (busInitY * busCount) - h;
+                y = busInitY + (branchInitLength * (busCount - 1)) - h;
             }
             var path1;
             var path2;
@@ -184,12 +184,12 @@ var ShapeService = /** @class */ (function () {
         else if (elementType == 'island' || elementType == 'mathModel') {
             var xDistFromBus = 22;
             var x_2 = busInitX + busInitLength + xDistFromBus;
-            var y = busInitY - selectWidth;
+            var y = 50;
             var margin = 6;
             var h = 55;
             var w = selectWidth + 10;
-            if (elementType == 'mathModel') {
-                y = y - h - 10;
+            if (elementType == 'island') {
+                y = y + h + 10;
             }
             newShape = ({
                 elementType: elementType,
