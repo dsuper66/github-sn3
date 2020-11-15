@@ -20,7 +20,8 @@ var SolverCallService = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
         this.mathModelDefService = mathModelDefService;
         this.shapeService = shapeService;
-        this.solverURL = 'https://shrouded-escarpment-67155.herokuapp.com/api/solve';
+        // solverURL = 'https://shrouded-escarpment-67155.herokuapp.com/api/solve';
+        this.solverURL = 'https://scala-solver.herokuapp.com/api/solve';
         this.solverJsonInput = "";
         this.solverResultString = "";
         this.solveInProgress = false;
@@ -175,14 +176,14 @@ var SolverCallService = /** @class */ (function () {
             for (var _i = 0, _a = solverResults.variables; _i < _a.length; _i++) {
                 var modelVar = _a[_i];
                 resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
-                _this.modelElementDataService.addResult(modelVar.elementId, modelVar.varType, modelVar.varId, modelVar.quantity);
+                _this.modelElementDataService.addResult(modelVar.elementId, modelVar.varType, modelVar.varId, modelVar.quantity, "");
             }
             //Constraints
             resultString += "\n\n";
             for (var _b = 0, _c = solverResults.constraints; _b < _c.length; _b++) {
                 var modelCon = _c[_b];
                 resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
-                _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice);
+                _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString);
             }
             _this.shapeService.applyResultsToShapesText();
             console.log("SOLVER RESULTS:" + resultString);

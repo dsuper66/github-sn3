@@ -37,7 +37,9 @@ export class SolverCallService {
     private shapeService: ShapeService)
     { }
 
-  solverURL = 'https://shrouded-escarpment-67155.herokuapp.com/api/solve';
+  // solverURL = 'https://shrouded-escarpment-67155.herokuapp.com/api/solve';
+  solverURL = 'https://scala-solver.herokuapp.com/api/solve';
+
   solverJsonInput = "";
   solverResultString = "";  
 
@@ -217,7 +219,7 @@ export class SolverCallService {
         for (const modelVar of solverResults.variables) {
           resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
           this.modelElementDataService.addResult(
-            modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity)
+            modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity,"")
         }
 
         //Constraints
@@ -225,7 +227,7 @@ export class SolverCallService {
         for (const modelCon of solverResults.constraints) {
           resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
           this.modelElementDataService.addResult(
-            modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice)
+            modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice,modelCon.constraintString)
         }
 
         this.shapeService.applyResultsToShapesText();

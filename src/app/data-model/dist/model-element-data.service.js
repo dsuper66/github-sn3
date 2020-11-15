@@ -263,7 +263,7 @@ var ModelElementDataService = /** @class */ (function () {
         console.log("got result:>>" + resultString1 + "<<");
         return [resultString1, resultString2, resultString3, resultString4];
     };
-    ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value) {
+    ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value, constraintString) {
         console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<");
         //Get the element
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
@@ -286,7 +286,7 @@ var ModelElementDataService = /** @class */ (function () {
             //If element has a parent then also add the result to the parent
             var parentId = elementToUpdate.properties["parentId"];
             if (parentId) {
-                this.addResult(parentId, resultType, resultId, value);
+                this.addResult(parentId, resultType, resultId, value, constraintString);
             }
         }
     };

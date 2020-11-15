@@ -300,7 +300,7 @@ export class ModelElementDataService {
     return [resultString1,resultString2,resultString3,resultString4];
   }
 
-  addResult(elementId: string, resultType: string, resultId: string, value: number) {
+  addResult(elementId: string, resultType: string, resultId: string, value: number, constraintString: string) {
     console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<"); 
 
     //Get the element
@@ -328,7 +328,7 @@ export class ModelElementDataService {
       //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]
       if (parentId) {
-        this.addResult(parentId,resultType,resultId,value)
+        this.addResult(parentId,resultType,resultId,value,constraintString)
       }
     }
   }

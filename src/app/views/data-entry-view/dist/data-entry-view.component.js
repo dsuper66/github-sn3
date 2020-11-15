@@ -32,21 +32,6 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.cdArray = [];
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
-    //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
-    DataEntryViewComponent.prototype.reload = function (target) {
-        console.log("##" + target);
-        // this.populateFromConstraintComps(target);
-        this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
-        this.router.onSameUrlNavigation = 'reload';
-        // this.router.navigate(['../' + target], { relativeTo: this.route });
-        this.router.navigate(['../constraintComp?' + target], { relativeTo: this.route });
-    };
-    DataEntryViewComponent.prototype.reloadMain = function () {
-        this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
-        this.router.onSameUrlNavigation = 'reload';
-        // this.router.navigate(['../' + target], { relativeTo: this.route });
-        this.router.navigate(['../model-def'], { relativeTo: this.route });
-    };
     DataEntryViewComponent.prototype.ngOnInit = function () {
         var id = this.idOfDataEntryObject;
         console.log("GOT ID ", id); //this.idOfDataEntryObject);
@@ -64,13 +49,30 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.populateFormFromElementId(id);
         }
     };
+    //Call this component from itself
+    //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
+    DataEntryViewComponent.prototype.reload = function (target) {
+        console.log("##" + target);
+        // this.populateFromConstraintComps(target);
+        this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
+        this.router.onSameUrlNavigation = 'reload';
+        // this.router.navigate(['../' + target], { relativeTo: this.route });
+        this.router.navigate(['../constraintComp?' + target], { relativeTo: this.route });
+    };
+    DataEntryViewComponent.prototype.reloadMain = function () {
+        this.router.routeReuseStrategy.shouldReuseRoute = function () { return false; };
+        this.router.onSameUrlNavigation = 'reload';
+        // this.router.navigate(['../' + target], { relativeTo: this.route });
+        this.router.navigate(['../model-def'], { relativeTo: this.route });
+    };
+    //Constraint Defintions
     DataEntryViewComponent.prototype.setIncludeStatus = function (constraintName, status) {
         console.log(">>>" + constraintName + " >>>" + status);
     };
     DataEntryViewComponent.prototype.getIncludeStatus = function (constraintName) {
         return true;
     };
-    //Factor tick box
+    //Constraint Components
     DataEntryViewComponent.prototype.getFactorStatus = function (factorId) {
         return this.mathModelDefService.factorIsEnabled(factorId);
     };
@@ -98,17 +100,6 @@ var DataEntryViewComponent = /** @class */ (function () {
         }
         //Submit also navigates back
         this.router.navigate(['/network-builder-component']);
-        // console.log('resistance:' , document.getElementById("resistance")[0].value)
-        // console.log('resistance:' , form["resistance"]);
-        // let items = form as {[property: string]: any};
-        // for (let formItem of Object.values(form.controls) as {key:string,value:any}) {
-        //   console.log("value:" + formItem.value)
-        // form.forEach(element => {
-        //   console.log(element)
-        // }); 
-        // for (const name in form.controls) {
-        //     console.log ("ppp");
-        // }
     };
     DataEntryViewComponent.prototype.populateFromConstraintDefs = function () {
         console.log("populateFromConstraintDefs");

@@ -1,16 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, NgForm, Form, NgModel } from '@angular/forms';
-// import { FormsModule } from '@angular/forms';
-// import { FormGroup } from '@angular/forms';
-// import { FormArray } from '@angular/forms';
+
 
 //So that we can extract the i.d.
 import { ActivatedRoute } from '@angular/router';
 
-// import { ShapeService } from '../shape.service';
-// import { ModelElementService } from '../../data-model/model-element.service';
-// import { Shape } from '../shape';
-// import { isDefined } from '@angular/compiler/src/util';
 import { Router } from '@angular/router';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
@@ -36,23 +30,6 @@ export class DataEntryViewComponent implements OnInit {
   ) {
     route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
   }
-
-  //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
-  reload(target: string) {
-    console.log("##" + target);
-    // this.populateFromConstraintComps(target);
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.router.onSameUrlNavigation = 'reload';
-    // this.router.navigate(['../' + target], { relativeTo: this.route });
-    this.router.navigate(['../constraintComp?' + target], { relativeTo: this.route });
-  }
-  reloadMain() {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.router.onSameUrlNavigation = 'reload';
-    // this.router.navigate(['../' + target], { relativeTo: this.route });
-    this.router.navigate(['../model-def'], { relativeTo: this.route });
-  }  
-
 
   ngOnInit(): void {
     const id = this.idOfDataEntryObject;
@@ -83,13 +60,31 @@ export class DataEntryViewComponent implements OnInit {
   formPropertyIds: string[] = [];
 
 
+  //Call this component from itself
+  //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
+  reload(target: string) {
+    console.log("##" + target);
+    // this.populateFromConstraintComps(target);
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    // this.router.navigate(['../' + target], { relativeTo: this.route });
+    this.router.navigate(['../constraintComp?' + target], { relativeTo: this.route });
+  }
+  reloadMain() {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    // this.router.navigate(['../' + target], { relativeTo: this.route });
+    this.router.navigate(['../model-def'], { relativeTo: this.route });
+  }  
+
+  //Constraint Defintions
   setIncludeStatus(constraintName: string, status: boolean){
     console.log(">>>" + constraintName + " >>>" + status);
   }
   getIncludeStatus(constraintName: string) {
     return true;
   }
-  //Factor tick box
+  //Constraint Components
   getFactorStatus(factorId: string): boolean {
     return this.mathModelDefService.factorIsEnabled(factorId);
   }
@@ -123,18 +118,6 @@ export class DataEntryViewComponent implements OnInit {
     //Submit also navigates back
     this.router.navigate(['/network-builder-component']);
 
-    // console.log('resistance:' , document.getElementById("resistance")[0].value)
-    // console.log('resistance:' , form["resistance"]);
-    // let items = form as {[property: string]: any};
-    // for (let formItem of Object.values(form.controls) as {key:string,value:any}) {
-    //   console.log("value:" + formItem.value)
-    // form.forEach(element => {
-
-    //   console.log(element)
-    // }); 
-    // for (const name in form.controls) {
-    //     console.log ("ppp");
-    // }
   }
 
   pageTitle = "";
