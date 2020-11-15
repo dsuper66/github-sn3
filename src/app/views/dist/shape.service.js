@@ -77,7 +77,7 @@ var ShapeService = /** @class */ (function () {
         console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
         //Defaults
         var branchInitLength = 160;
-        var busInitX = 35;
+        var busInitX = 30;
         var busInitY = branchInitLength;
         var busInitLength = 160;
         var branchWidth = 5;
@@ -182,7 +182,7 @@ var ShapeService = /** @class */ (function () {
         }
         //ISLAND & MATHMODEL
         else if (elementType == 'island' || elementType == 'mathModel') {
-            var xDistFromBus = 25;
+            var xDistFromBus = 22;
             var x_2 = busInitX + busInitLength + xDistFromBus;
             var y = busInitY - selectWidth;
             var margin = 6;

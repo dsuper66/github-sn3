@@ -91,7 +91,7 @@ export class ShapeService {
     console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
     //Defaults
     const branchInitLength = 160;
-    const busInitX = 35;
+    const busInitX = 30;
     const busInitY = branchInitLength;
     const busInitLength = 160;
     const branchWidth = 5;
@@ -200,7 +200,7 @@ export class ShapeService {
     }
     //ISLAND & MATHMODEL
     else if (elementType == 'island' || elementType == 'mathModel') {
-      const xDistFromBus = 25
+      const xDistFromBus = 22
       const x = busInitX + busInitLength + xDistFromBus;
       var y = busInitY - selectWidth;
       const margin = 6
