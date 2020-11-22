@@ -149,10 +149,13 @@ export interface ConstraintComp {
   factorProperty: string;
 }
 
+//Returned by the solver...
+
 export interface ModelVariable {
   varId: string,
   varType: string,
   elementId: string,
+  //result
   quantity: number
 }
 
@@ -162,7 +165,9 @@ export interface ModelConstraint {
   elementId: string,
   inequality: string,
   rhsValue: number,
+  //constraint string created by solver pre-processing
   constraintString: string,
+  //result
   shadowPrice: number
 }
 

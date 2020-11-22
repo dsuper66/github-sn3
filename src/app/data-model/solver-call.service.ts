@@ -211,6 +211,10 @@ export class SolverCallService {
       .sendModelToSolver(solverInput)
       .subscribe(solverResults => {
         
+        //===Extract Results===
+        //Save the resultType to the results array for the element
+        //where resultType is either varType or constraintType
+
         //Empty Price and Quantity
         this.modelElementDataService.resetResults();
 
@@ -230,20 +234,30 @@ export class SolverCallService {
             modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice,modelCon.constraintString)
         }
 
+        //Add the results to the shapes
         this.shapeService.applyResultsToShapesText();
 
+        //Add the constraint strings to the resultString
+        for (const modelElement of modelElements) {
+          let elementConstraintString = ""
+          for (const constraint of solverResults.constraints.filter(c => c.elementId == modelElement.elementId)){
+            resultString += constraint.constraintString;
+          }
+
+        }
+
+        //Display the resultString
+        //Write to consolve
         console.log("SOLVER RESULTS:" + resultString);
+        //Show on main display
         this.solverResultString = resultString;
 
-        //This gets back to component
+
+        //Let the component know the solve is done
         this.solveInProgress = false;
 
       });
 
   }//done solveModel
 
-
-
 }
-
-

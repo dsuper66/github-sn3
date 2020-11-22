@@ -313,7 +313,7 @@ export class ShapeService {
     }
   }
 
-  //Results
+  //Assign results to display text fields of the shapes
   applyResultsToShapesText() {
     for (const shape of this.shapes) {
       [shape.text1,shape.text2,shape.text3,shape.text4] = 

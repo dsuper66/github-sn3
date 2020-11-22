@@ -189,13 +189,14 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("NO VALUE");
         }
     };
+    //===RESULTS===
+    //All values (prices and quantities) are stored in the results array of the element
+    //indexed by a string which is either the name of the constraint or variable
     ModelElementDataService.prototype.resetResults = function () {
         for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
             var element = _a[_i];
-            for (var price in element.prices)
-                element.prices[price] = 0;
-            for (var quantity in element.quantities)
-                element.quantities[quantity] = 0;
+            // for (const price in element.prices) element.prices[price] = 0
+            // for (const quantity in element.quantities) element.quantities[quantity] = 0
             for (var result in element.results)
                 element.results[result] = 0;
         }
@@ -218,8 +219,8 @@ var ModelElementDataService = /** @class */ (function () {
             return results[key];
         }
     };
-    //The results are the shadow price of every constraint and the value of every variable
-    //...to get the result we just need the constraintType or varType string
+    //Result string for display... for the element get pre-determined result types
+    //(where a result type is either a constraintType or varType) as an array of strings
     ModelElementDataService.prototype.getTextFromElementResults = function (elementId) {
         var resultString1 = "";
         var resultString2 = "";
@@ -263,6 +264,8 @@ var ModelElementDataService = /** @class */ (function () {
         console.log("got result:>>" + resultString1 + "<<");
         return [resultString1, resultString2, resultString3, resultString4];
     };
+    //The results are the shadow price of every constraint and the value of every variable
+    //...to get the result we just need the constraintType or varType string
     ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value, constraintString) {
         console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<");
         //Get the element

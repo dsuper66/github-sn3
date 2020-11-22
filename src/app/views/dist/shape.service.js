@@ -283,7 +283,7 @@ var ShapeService = /** @class */ (function () {
             }
         }
     };
-    //Results
+    //Assign results to display text fields of the shapes
     ShapeService.prototype.applyResultsToShapesText = function () {
         var _a;
         for (var _i = 0, _b = this.shapes; _i < _b.length; _i++) {

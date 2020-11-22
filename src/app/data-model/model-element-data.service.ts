@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {
   ModelElement,
   ElementProperties,
-  ElementPrices
+  // ElementPrices
 } from './model-element';
 
 import { ModelElementDefService } from './model-element-def.service';
@@ -222,15 +222,20 @@ export class ModelElementDataService {
     }
   }
 
+  //===RESULTS===
+  //All values (prices and quantities) are stored in the results array of the element
+  //indexed by a string which is either the name of the constraint or variable
+
   resetResults() {
     for (const element of this.modelElements) {
-      for (const price in element.prices) element.prices[price] = 0
-      for (const quantity in element.quantities) element.quantities[quantity] = 0
+      // for (const price in element.prices) element.prices[price] = 0
+      // for (const quantity in element.quantities) element.quantities[quantity] = 0
       for (const result in element.results) element.results[result] = 0
     }
   }
 
   private resultsDP = 2;
+
   getResultString(key: string, results: {[resultType:string] : number}):string {
     if (results[key] === undefined) {
       console.log("MISSING RESULT: " + key)
@@ -252,8 +257,8 @@ export class ModelElementDataService {
   }
 
   private prevObjectiveVal = 0.0;
-  //The results are the shadow price of every constraint and the value of every variable
-  //...to get the result we just need the constraintType or varType string
+  //Result string for display... for the element get pre-determined result types
+  //(where a result type is either a constraintType or varType) as an array of strings
   getTextFromElementResults(elementId: string): [string,string,string,string] {
     var resultString1 = ""
     var resultString2 = ""
@@ -300,6 +305,8 @@ export class ModelElementDataService {
     return [resultString1,resultString2,resultString3,resultString4];
   }
 
+  //The results are the shadow price of every constraint and the value of every variable
+  //...to get the result we just need the constraintType or varType string
   addResult(elementId: string, resultType: string, resultId: string, value: number, constraintString: string) {
     console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<"); 
 

@@ -169,6 +169,9 @@ var SolverCallService = /** @class */ (function () {
         this
             .sendModelToSolver(solverInput)
             .subscribe(function (solverResults) {
+            //===Extract Results===
+            //Save the resultType to the results array for the element
+            //where resultType is either varType or constraintType
             //Empty Price and Quantity
             _this.modelElementDataService.resetResults();
             //Variables
@@ -185,10 +188,26 @@ var SolverCallService = /** @class */ (function () {
                 resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
                 _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString);
             }
+            //Add the results to the shapes
             _this.shapeService.applyResultsToShapesText();
+            var _loop_1 = function (modelElement) {
+                var elementConstraintString = "";
+                for (var _i = 0, _a = solverResults.constraints.filter(function (c) { return c.elementId == modelElement.elementId; }); _i < _a.length; _i++) {
+                    var constraint = _a[_i];
+                    resultString += constraint.constraintString;
+                }
+            };
+            //Add the constraint strings to the resultString
+            for (var _d = 0, modelElements_1 = modelElements; _d < modelElements_1.length; _d++) {
+                var modelElement = modelElements_1[_d];
+                _loop_1(modelElement);
+            }
+            //Display the resultString
+            //Write to consolve
             console.log("SOLVER RESULTS:" + resultString);
+            //Show on main display
             _this.solverResultString = resultString;
-            //This gets back to component
+            //Let the component know the solve is done
             _this.solveInProgress = false;
         });
     }; //done solveModel

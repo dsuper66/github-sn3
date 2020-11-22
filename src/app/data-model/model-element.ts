@@ -1,19 +1,12 @@
 export interface ModelElement {
   elementId: string;
   elementType: string;
-  // bus1: string;
-  // bus2: string;
-  // properties: ElementProperties;
-  // properties: Map<string, any>;
-
   properties: ElementProperties;
-  // properties: {[propertyType:string] : any};
   includeInModel: boolean;
 
-  //Results
-  prices?: {[constraintId:string] : number};
-  quantities?: {[variableId:string] : number};
-  results?: {[resultType:string] : number};  
+  //Results  
+  results?: {[resultType:string] : number}; //resultType is varType (quantity) or constraintType (shadow price)
+  constraintString?: string; //all the constraints for this element
 }
 
 //Dictionary
@@ -23,13 +16,12 @@ export interface ElementProperties {
   [propertyType: string]: any;
 }
 
-export interface ElementPrices {
-  [propertyType: string]: number;
-}
+// export interface ElementPrices {
+//   [propertyType: string]: number;
+// }
 // export interface ElementResults {
 //   [propertyType: string]: any;
 // }
-
 
 export interface PropertyTypeId {
   id: string;
@@ -40,15 +32,13 @@ export interface ElementPropertyType {
   visible: boolean;
 }
 
-
-
 export interface ElementVarType {
   varTypeId: string;
 }
 
-interface SquareConfig {
-  color?: string;
-  width?: number;
-  [propName: string]: any;
-}
+// interface SquareConfig {
+//   color?: string;
+//   width?: number;
+//   [propName: string]: any;
+// }
 
