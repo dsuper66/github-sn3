@@ -234,16 +234,20 @@ export class SolverCallService {
             modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice,modelCon.constraintString)
         }
 
-        //Add the results to the shapes
+        //Add the Var and Con results to the shapes
         this.shapeService.applyResultsToShapesText();
 
-        //Add the constraint strings to the resultString
+        //Constraint String
+        resultString += "\n\n";
         for (const modelElement of modelElements) {
-          let elementConstraintString = ""
-          for (const constraint of solverResults.constraints.filter(c => c.elementId == modelElement.elementId)){
-            resultString += constraint.constraintString;
+          modelElement.constraintStrings = [];
+          for (const modelCon of solverResults.constraints.filter(c => c.elementId == modelElement.elementId)){            
+            modelElement.constraintStrings.push(modelCon.constraintString);
+            resultString += modelCon.constraintString;
+            // elementConstraintString += ">";
           }
-
+          resultString += "\n";
+          console.log (">>>>>" + modelElement.constraintStrings);
         }
 
         //Display the resultString
@@ -257,6 +261,7 @@ export class SolverCallService {
         this.solveInProgress = false;
 
       });
+      
 
   }//done solveModel
 

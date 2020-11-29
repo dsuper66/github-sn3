@@ -166,7 +166,8 @@ var DataEntryViewComponent = /** @class */ (function () {
         // const elementId = this.route.snapshot.paramMap.get('elementId');
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
-            console.log(">>> " + selectedElement.elementType);
+            this.constraintStrings = selectedElement.constraintStrings;
+            console.log(">>> " + selectedElement.constraintStrings);
             var parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
             this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
             //Get child records

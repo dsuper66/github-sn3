@@ -188,16 +188,21 @@ var SolverCallService = /** @class */ (function () {
                 resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
                 _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString);
             }
-            //Add the results to the shapes
+            //Add the Var and Con results to the shapes
             _this.shapeService.applyResultsToShapesText();
+            //Constraint String
+            resultString += "\n\n";
             var _loop_1 = function (modelElement) {
-                var elementConstraintString = "";
+                modelElement.constraintStrings = [];
                 for (var _i = 0, _a = solverResults.constraints.filter(function (c) { return c.elementId == modelElement.elementId; }); _i < _a.length; _i++) {
-                    var constraint = _a[_i];
-                    resultString += constraint.constraintString;
+                    var modelCon = _a[_i];
+                    modelElement.constraintStrings.push(modelCon.constraintString);
+                    resultString += modelCon.constraintString;
+                    // elementConstraintString += ">";
                 }
+                resultString += "\n";
+                console.log(">>>>>" + modelElement.constraintStrings);
             };
-            //Add the constraint strings to the resultString
             for (var _d = 0, modelElements_1 = modelElements; _d < modelElements_1.length; _d++) {
                 var modelElement = modelElements_1[_d];
                 _loop_1(modelElement);

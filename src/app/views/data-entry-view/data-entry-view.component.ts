@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
 import { MathModelDefService } from '../../data-model/math-model-def.service';
+import { ModelElement } from 'src/app/data-model/model-element';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -182,14 +183,15 @@ export class DataEntryViewComponent implements OnInit {
     }
   }  
 
+  constraintStrings?: string[];
   populateFormFromElementId(elementId: string): void {
     //Get the element i.d. from the route
     // const elementId = this.route.snapshot.paramMap.get('elementId');
    
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
-    if (selectedElement) {
-
-      console.log(">>> " + selectedElement.elementType);
+    if (selectedElement) {      
+      this.constraintStrings = selectedElement.constraintStrings;
+      console.log(">>> " + selectedElement.constraintStrings);
       const parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
       this.populateFormFieldsFromProperties(parentProperties,selectedElement.elementId);
 

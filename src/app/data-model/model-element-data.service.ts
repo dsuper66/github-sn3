@@ -202,7 +202,6 @@ export class ModelElementDataService {
         this.setPropertyForElement(childElementWithProperty.elementId,propertyType,value);
       }
     }
-
   }
 
   setPropertyForAllElements(propertyType: string, value: any) {

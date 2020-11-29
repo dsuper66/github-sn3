@@ -1,6 +1,7 @@
 
  <!-- *ngIf="{{dataLink}}" -->
 
+ <!-- CONSTRAINT DEF PARENT -->
  <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
  <div *ngIf="doConstraintDefs">
   <button routerLink="/network-builder-component">Back</button>
@@ -19,6 +20,7 @@
   </table>
 </div>
 
+<!-- CONSTRAINT COMPONENTS -->
 <div *ngIf="doConstraintComps">
   <button (click)="reloadMain()">Back</button>
   <table table-layout="fixed">
@@ -49,7 +51,7 @@
   </table>
 </div>
  
-  <!-- *ngIf="{{dataEntry}}"  -->
+<!-- DATA ENTRY AND CONSTRAINT STRING-->
  <form *ngIf="doDataEntry" #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
       <!-- Prevent implicit submission of the form -->
@@ -61,9 +63,8 @@
     <br>
     <br>
 
-    <!-- <table table-layout="fixed" > -->
+    <!-- Data Entry -->
     <table table-layout="fixed">
-
     <tr *ngFor="let formName of formNames; index as i">
 
       <!-- The label -->
@@ -82,14 +83,19 @@
         
         ngModel>
       </td>
-
-      <!-- type="number"  -->
-
       </tr>
-    <!-- </div> -->
     </table>
     
   </form>
+     
+  <!-- Constraint String -->
+  <br>
+  <div class="text">===============</div>
+  <div class="text" *ngFor="let constraintString of constraintStrings">
+    {{constraintString}}
+    <br><br>
+  </div>
+
 
 
 <!-- <div class="footer">
