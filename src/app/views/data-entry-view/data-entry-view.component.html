@@ -52,7 +52,8 @@
 </div>
  
 <!-- DATA ENTRY AND CONSTRAINT STRING-->
- <form *ngIf="doDataEntry" #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
+<div *ngIf="doDataEntry">
+ <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
       <!-- Prevent implicit submission of the form -->
     <button type="submit" disabled style="display: none" aria-hidden="true"></button>
@@ -90,12 +91,14 @@
      
   <!-- Constraint String -->
   <br>
-  <div class="text">===============</div>
+  <div class="text">
+    Constraints
+  </div>
   <div class="text" *ngFor="let constraintString of constraintStrings">
     {{constraintString}}
     <br><br>
   </div>
-
+</div>
 
 
 <!-- <div class="footer">

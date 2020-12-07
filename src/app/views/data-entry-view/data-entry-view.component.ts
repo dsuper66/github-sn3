@@ -184,24 +184,25 @@ export class DataEntryViewComponent implements OnInit {
   }  
 
   constraintStrings?: string[];
+  
   populateFormFromElementId(elementId: string): void {
-    //Get the element i.d. from the route
-    // const elementId = this.route.snapshot.paramMap.get('elementId');
    
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {      
-      this.constraintStrings = selectedElement.constraintStrings;
-      console.log(">>> " + selectedElement.constraintStrings);
+      //Properties
       const parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
       this.populateFormFieldsFromProperties(parentProperties,selectedElement.elementId);
 
       //Get child records
       const childElements = this.modelElementDataService.getChildElements(elementId);
       for (const childElement of childElements) {
-
         const childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
         this.populateFormFieldsFromProperties(childProperties,childElement.elementId);
       }
+
+      //Constraint components
+      this.constraintStrings = selectedElement.constraintStrings;
+      console.log(">>> " + selectedElement.constraintStrings);
     }
   }
 

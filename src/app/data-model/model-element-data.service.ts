@@ -312,11 +312,15 @@ export class ModelElementDataService {
     //Get the element
     const elementToUpdate = this.modelElements.find(
       element => element.elementId === elementId);
+
     if (elementToUpdate) {
-      //Add the results if necessary
+      //Add the arrays if they does not exist
       if (!elementToUpdate.results) {
         elementToUpdate.results = {}        
       }
+      if (!elementToUpdate.constraintStrings) {
+        elementToUpdate.constraintStrings = []        
+      }      
 
       //Node balance LTE constraint shadow price is negative
       if (resultType == "nodeBal" && resultId.includes("LTE")) {
@@ -324,12 +328,15 @@ export class ModelElementDataService {
       }
 
       //The value adds to any existing value with the same key
+      //(e.g. cleared offers add up at the parent level)
       if (elementToUpdate.results[resultType]) {
         elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;        
       }
       else {
         elementToUpdate.results[resultType] = value;  
       }
+
+      elementToUpdate.constraintStrings.push(constraintString);
 
       //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]

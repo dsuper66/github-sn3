@@ -228,8 +228,10 @@ export class SolverCallService {
 
         //Constraints
         resultString += "\n\n";
+        var constraintString = "\n";
         for (const modelCon of solverResults.constraints) {
-          resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
+          resultString += (modelCon.constraintId + "= $" + modelCon.shadowPrice + "\n");
+          constraintString += modelCon.constraintString + "\n";
           this.modelElementDataService.addResult(
             modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice,modelCon.constraintString)
         }
@@ -238,23 +240,22 @@ export class SolverCallService {
         this.shapeService.applyResultsToShapesText();
 
         //Constraint String
-        resultString += "\n\n";
-        for (const modelElement of modelElements) {
-          modelElement.constraintStrings = [];
-          for (const modelCon of solverResults.constraints.filter(c => c.elementId == modelElement.elementId)){            
-            modelElement.constraintStrings.push(modelCon.constraintString);
-            resultString += modelCon.constraintString;
-            // elementConstraintString += ">";
-          }
-          resultString += "\n";
-          console.log (">>>>>" + modelElement.constraintStrings);
-        }
+        // resultString += "\n\n";
+        // for (const modelElement of modelElements) {
+        //   modelElement.constraintStrings = [];
+        //   for (const modelCon of solverResults.constraints.filter(c => c.elementId == modelElement.elementId)){            
+        //     modelElement.constraintStrings.push(modelCon.constraintString);
+        //     resultString += modelCon.constraintString;
+        //   }
+        //   resultString += "\n";
+        //   console.log (">>>>>" + modelElement.constraintStrings);
+        // }
 
         //Display the resultString
         //Write to consolve
-        console.log("SOLVER RESULTS:" + resultString);
+        console.log("SOLVER RESULTS:" + resultString + constraintString);
         //Show on main display
-        this.solverResultString = resultString;
+        this.solverResultString = resultString + constraintString;
 
 
         //Let the component know the solve is done

@@ -183,35 +183,31 @@ var SolverCallService = /** @class */ (function () {
             }
             //Constraints
             resultString += "\n\n";
+            var constraintString = "\n";
             for (var _b = 0, _c = solverResults.constraints; _b < _c.length; _b++) {
                 var modelCon = _c[_b];
-                resultString += (modelCon.constraintId + "=" + modelCon.shadowPrice + "\n");
+                resultString += (modelCon.constraintId + "= $" + modelCon.shadowPrice + "\n");
+                constraintString += modelCon.constraintString + "\n";
                 _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString);
             }
             //Add the Var and Con results to the shapes
             _this.shapeService.applyResultsToShapesText();
             //Constraint String
-            resultString += "\n\n";
-            var _loop_1 = function (modelElement) {
-                modelElement.constraintStrings = [];
-                for (var _i = 0, _a = solverResults.constraints.filter(function (c) { return c.elementId == modelElement.elementId; }); _i < _a.length; _i++) {
-                    var modelCon = _a[_i];
-                    modelElement.constraintStrings.push(modelCon.constraintString);
-                    resultString += modelCon.constraintString;
-                    // elementConstraintString += ">";
-                }
-                resultString += "\n";
-                console.log(">>>>>" + modelElement.constraintStrings);
-            };
-            for (var _d = 0, modelElements_1 = modelElements; _d < modelElements_1.length; _d++) {
-                var modelElement = modelElements_1[_d];
-                _loop_1(modelElement);
-            }
+            // resultString += "\n\n";
+            // for (const modelElement of modelElements) {
+            //   modelElement.constraintStrings = [];
+            //   for (const modelCon of solverResults.constraints.filter(c => c.elementId == modelElement.elementId)){            
+            //     modelElement.constraintStrings.push(modelCon.constraintString);
+            //     resultString += modelCon.constraintString;
+            //   }
+            //   resultString += "\n";
+            //   console.log (">>>>>" + modelElement.constraintStrings);
+            // }
             //Display the resultString
             //Write to consolve
-            console.log("SOLVER RESULTS:" + resultString);
+            console.log("SOLVER RESULTS:" + resultString + constraintString);
             //Show on main display
-            _this.solverResultString = resultString;
+            _this.solverResultString = resultString + constraintString;
             //Let the component know the solve is done
             _this.solveInProgress = false;
         });

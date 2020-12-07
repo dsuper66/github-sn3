@@ -162,12 +162,9 @@ var DataEntryViewComponent = /** @class */ (function () {
         }
     };
     DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
-        //Get the element i.d. from the route
-        // const elementId = this.route.snapshot.paramMap.get('elementId');
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
-            this.constraintStrings = selectedElement.constraintStrings;
-            console.log(">>> " + selectedElement.constraintStrings);
+            //Properties
             var parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
             this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
             //Get child records
@@ -177,6 +174,9 @@ var DataEntryViewComponent = /** @class */ (function () {
                 var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
             }
+            //Constraint components
+            this.constraintStrings = selectedElement.constraintStrings;
+            console.log(">>> " + selectedElement.constraintStrings);
         }
     };
     DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
