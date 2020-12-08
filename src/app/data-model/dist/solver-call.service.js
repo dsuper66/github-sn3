@@ -186,6 +186,7 @@ var SolverCallService = /** @class */ (function () {
             var constraintString = "\n";
             for (var _b = 0, _c = solverResults.constraints; _b < _c.length; _b++) {
                 var modelCon = _c[_b];
+                // console.log ("Constraint: Id:" + modelCon.constraintId + " elementId:" + modelCon.elementId);
                 resultString += (modelCon.constraintId + "= $" + modelCon.shadowPrice + "\n");
                 constraintString += modelCon.constraintString + "\n";
                 _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString);

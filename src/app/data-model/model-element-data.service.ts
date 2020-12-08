@@ -307,7 +307,7 @@ export class ModelElementDataService {
   //The results are the shadow price of every constraint and the value of every variable
   //...to get the result we just need the constraintType or varType string
   addResult(elementId: string, resultType: string, resultId: string, value: number, constraintString: string) {
-    console.log("Element:" + elementId + " set result:" + value + " for result type:>>" + resultType + "<<"); 
+    console.log("Element:" + elementId + " add result:" + value + " for result type:>>" + resultType + "<<"); 
 
     //Get the element
     const elementToUpdate = this.modelElements.find(
@@ -336,7 +336,10 @@ export class ModelElementDataService {
         elementToUpdate.results[resultType] = value;  
       }
 
-      elementToUpdate.constraintString += "\n\n" + ">" + constraintString + "<";
+      //ConstraintString is empty for var result
+      if (constraintString != "") {
+        elementToUpdate.constraintString += "\n\n" + constraintString;
+      }
 
       //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]

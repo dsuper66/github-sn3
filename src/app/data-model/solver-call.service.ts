@@ -230,6 +230,7 @@ export class SolverCallService {
         resultString += "\n\n";
         var constraintString = "\n";
         for (const modelCon of solverResults.constraints) {
+          // console.log ("Constraint: Id:" + modelCon.constraintId + " elementId:" + modelCon.elementId);
           resultString += (modelCon.constraintId + "= $" + modelCon.shadowPrice + "\n");
           constraintString += modelCon.constraintString + "\n";
           this.modelElementDataService.addResult(
