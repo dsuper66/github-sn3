@@ -318,8 +318,8 @@ export class ModelElementDataService {
       if (!elementToUpdate.results) {
         elementToUpdate.results = {}        
       }
-      if (!elementToUpdate.constraintStrings) {
-        elementToUpdate.constraintStrings = []        
+      if (!elementToUpdate.constraintString) {
+        elementToUpdate.constraintString = ""        
       }      
 
       //Node balance LTE constraint shadow price is negative
@@ -336,7 +336,7 @@ export class ModelElementDataService {
         elementToUpdate.results[resultType] = value;  
       }
 
-      elementToUpdate.constraintStrings.push(constraintString);
+      elementToUpdate.constraintString += "\n\n" + ">" + constraintString + "<";
 
       //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]

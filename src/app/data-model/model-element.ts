@@ -6,7 +6,7 @@ export interface ModelElement {
 
   //Results  
   results?: {[resultType:string] : number}; //resultType is varType (quantity) or constraintType (shadow price)
-  constraintStrings?:string[]; //strings containing constraints for element, as created by the solver
+  constraintString?:string; //strings containing constraints for element, as created by the solver
 }
 
 //Dictionary

@@ -183,7 +183,7 @@ export class DataEntryViewComponent implements OnInit {
     }
   }  
 
-  constraintStrings?: string[];
+  constraintString: string = "";
   
   populateFormFromElementId(elementId: string): void {
    
@@ -201,8 +201,10 @@ export class DataEntryViewComponent implements OnInit {
       }
 
       //Constraint components
-      this.constraintStrings = selectedElement.constraintStrings;
-      console.log(">>> " + selectedElement.constraintStrings);
+      if (selectedElement.constraintString) {
+        this.constraintString = selectedElement.constraintString;
+      }
+      console.log(">>> " + selectedElement.constraintString);
     }
   }
 

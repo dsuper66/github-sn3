@@ -275,8 +275,8 @@ var ModelElementDataService = /** @class */ (function () {
             if (!elementToUpdate.results) {
                 elementToUpdate.results = {};
             }
-            if (!elementToUpdate.constraintStrings) {
-                elementToUpdate.constraintStrings = [];
+            if (!elementToUpdate.constraintString) {
+                elementToUpdate.constraintString = "";
             }
             //Node balance LTE constraint shadow price is negative
             if (resultType == "nodeBal" && resultId.includes("LTE")) {
@@ -290,7 +290,7 @@ var ModelElementDataService = /** @class */ (function () {
             else {
                 elementToUpdate.results[resultType] = value;
             }
-            elementToUpdate.constraintStrings.push(constraintString);
+            elementToUpdate.constraintString += "\n\n" + ">" + constraintString + "<";
             //If element has a parent then also add the result to the parent
             var parentId = elementToUpdate.properties["parentId"];
             if (parentId) {

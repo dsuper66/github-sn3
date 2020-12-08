@@ -30,6 +30,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.pageTitle = "";
         this.ccArray = [[]];
         this.cdArray = [];
+        this.constraintString = "";
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
@@ -175,8 +176,10 @@ var DataEntryViewComponent = /** @class */ (function () {
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
             }
             //Constraint components
-            this.constraintStrings = selectedElement.constraintStrings;
-            console.log(">>> " + selectedElement.constraintStrings);
+            if (selectedElement.constraintString) {
+                this.constraintString = selectedElement.constraintString;
+            }
+            console.log(">>> " + selectedElement.constraintString);
         }
     };
     DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
