@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ShapeService } from '../shape.service';
-
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
-import { MathModelDefService, ModelVariable, ModelConstraint, ModelResults } from '../../data-model/math-model-def.service';
-
-
-import { Shape } from '../shape';
-import { ModelElement } from '../../data-model/model-element'
+import { MathModelDefService } from '../../data-model/math-model-def.service';
 import { SolverCallService } from '../../data-model/solver-call.service';
-import { SolverInput } from '../../data-model/solver-call.service';
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
+import { SettingsService } from '../../data-model/settings.service';
 
 
 @Component({
@@ -22,11 +16,12 @@ import { Variable } from '@angular/compiler/src/render3/r3_ast';
 export class MainViewComponent implements OnInit {
 
   constructor(
-    private shapeService: ShapeService,
-    // private modelElementService: ModelElementService,
-    private modelElementDataService: ModelElementDataService,
-    private modelElementDefService: ModelElementDefService,
-    private mathModelDefService: MathModelDefService,
+    // private shapeService: ShapeService,
+    // // private modelElementService: ModelElementService,
+    // private modelElementDataService: ModelElementDataService,
+    // private modelElementDefService: ModelElementDefService,
+    // private mathModelDefService: MathModelDefService,
+    private settingsService: SettingsService,
     private solverCallService: SolverCallService) { }
 
   solverJsonInput = this.solverCallService.solverJsonInput;
@@ -39,6 +34,15 @@ export class MainViewComponent implements OnInit {
   //   this.getModelData();
   }
 
+  getAllSettingIds():string[]{
+    return this.settingsService.getAllSettingIds();
+  }
+  getStatus(settingsId: string): boolean {
+    return this.settingsService.getStatus(settingsId);
+  }
+  setStatus(settingsId: string, isEnabled: boolean) {
+    this.settingsService.setStatus(settingsId,isEnabled);
+  }
   // jsonStart(sectionName: string) {
   //   return JSON.stringify(sectionName) + ":[";
   // }

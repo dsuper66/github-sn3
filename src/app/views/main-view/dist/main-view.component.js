@@ -9,13 +9,14 @@ exports.__esModule = true;
 exports.MainViewComponent = void 0;
 var core_1 = require("@angular/core");
 var MainViewComponent = /** @class */ (function () {
-    function MainViewComponent(shapeService, 
-    // private modelElementService: ModelElementService,
-    modelElementDataService, modelElementDefService, mathModelDefService, solverCallService) {
-        this.shapeService = shapeService;
-        this.modelElementDataService = modelElementDataService;
-        this.modelElementDefService = modelElementDefService;
-        this.mathModelDefService = mathModelDefService;
+    function MainViewComponent(
+    // private shapeService: ShapeService,
+    // // private modelElementService: ModelElementService,
+    // private modelElementDataService: ModelElementDataService,
+    // private modelElementDefService: ModelElementDefService,
+    // private mathModelDefService: MathModelDefService,
+    settingsService, solverCallService) {
+        this.settingsService = settingsService;
         this.solverCallService = solverCallService;
         this.solverJsonInput = this.solverCallService.solverJsonInput;
         this.solverResultString = this.solverCallService.solverResultString;
@@ -24,6 +25,15 @@ var MainViewComponent = /** @class */ (function () {
     // solverResultString = "";
     MainViewComponent.prototype.ngOnInit = function () {
         //   this.getModelData();
+    };
+    MainViewComponent.prototype.getAllSettingIds = function () {
+        return this.settingsService.getAllSettingIds();
+    };
+    MainViewComponent.prototype.getStatus = function (settingsId) {
+        return this.settingsService.getStatus(settingsId);
+    };
+    MainViewComponent.prototype.setStatus = function (settingsId, isEnabled) {
+        this.settingsService.setStatus(settingsId, isEnabled);
     };
     MainViewComponent = __decorate([
         core_1.Component({

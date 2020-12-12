@@ -9,16 +9,13 @@ exports.__esModule = true;
 exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
 var DataEntryViewComponent = /** @class */ (function () {
-    function DataEntryViewComponent(
-    // private modelElementService: ModelElementService,
-    modelElementDataService, modelElementDefService, router, route, mathModelDefService
-    // private shapeService: ShapeService) 
-    ) {
+    function DataEntryViewComponent(modelElementDataService, modelElementDefService, router, route, settingsService, mathModelDefService) {
         var _this = this;
         this.modelElementDataService = modelElementDataService;
         this.modelElementDefService = modelElementDefService;
         this.router = router;
         this.route = route;
+        this.settingsService = settingsService;
         this.mathModelDefService = mathModelDefService;
         this.doConstraintDefs = false;
         this.doConstraintComps = false;
@@ -50,7 +47,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.populateFormFromElementId(id);
         }
     };
-    //Call this component from itself
+    //Call this component from itself to display something different
     //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
     DataEntryViewComponent.prototype.reload = function (target) {
         console.log("##" + target);
@@ -183,9 +180,10 @@ var DataEntryViewComponent = /** @class */ (function () {
         }
     };
     DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
+        var showAllProperties = this.settingsService.getStatus("showHiddenProperties");
         for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {
             var propertyId = propertyIds_1[_i];
-            if (this.modelElementDefService.propertyIsVisible(propertyId)) {
+            if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
                 //Name/Title
                 this.formNames.push(elementId + "-" + propertyId);
                 //Default value

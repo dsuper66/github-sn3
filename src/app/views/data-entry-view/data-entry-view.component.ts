@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
 import { MathModelDefService } from '../../data-model/math-model-def.service';
-import { ModelElement } from 'src/app/data-model/model-element';
+import { SettingsService } from '../../data-model/settings.service';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -21,13 +21,12 @@ export class DataEntryViewComponent implements OnInit {
   idOfDataEntryObject: string;
 
   constructor(
-    // private modelElementService: ModelElementService,
     private modelElementDataService: ModelElementDataService,
     private modelElementDefService: ModelElementDefService,
     private router: Router,
     private route: ActivatedRoute,
+    private settingsService: SettingsService,
     private mathModelDefService: MathModelDefService
-    // private shapeService: ShapeService) 
   ) {
     route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
   }
@@ -61,7 +60,7 @@ export class DataEntryViewComponent implements OnInit {
   formPropertyIds: string[] = [];
 
 
-  //Call this component from itself
+  //Call this component from itself to display something different
   //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
   reload(target: string) {
     console.log("##" + target);
@@ -209,8 +208,9 @@ export class DataEntryViewComponent implements OnInit {
   }
 
   populateFormFieldsFromProperties(propertyIds: string[], elementId: string) {
+    const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
     for (const propertyId of propertyIds) {
-      if (this.modelElementDefService.propertyIsVisible(propertyId)) {
+      if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
 
         //Name/Title
         this.formNames.push(elementId + "-" + propertyId);
