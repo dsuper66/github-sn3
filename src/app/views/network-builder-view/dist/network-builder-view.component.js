@@ -152,7 +152,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                     }
                 }
             }
-            //Check for ROTATE
+            //Direction is done, also check for ROTATE (not used)
             else if (this.selectedShape.elementType == 'branch'
                 && this.selectedShape.doResize) {
                 deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
@@ -198,6 +198,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                 this.selectedShape.xOuter += deltaX;
                 this.selectedShape.yOuter += deltaY;
             }
+            //===Connectivity processing===
             // if (deltaX > 5 || deltaY > 5) {
             this.checkForOverlaps();
             // }
@@ -233,6 +234,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
     NetworkBuilderViewComponent.prototype.stopDrawingTouch = function () {
         this.stopDrawing();
     };
+    //Update connectivity (after checking for overlaps)
     NetworkBuilderViewComponent.prototype.setConnectivity = function (shape) {
         if (shape.elementType != 'island') {
             var isFullyConnected = (shape.elementType != 'branch' && shape.connId1 != "")
@@ -257,7 +259,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
             this.shapeService.saveConnectivityToModel();
         }
     };
-    //CHECK FOR OVERLAPS
+    //Check for overlaps (then call Connectivity Processing)
     NetworkBuilderViewComponent.prototype.checkForOverlaps = function () {
         // var overlap = !(rect1.right < rect2.left || 
         //   rect1.left > rect2.right || 

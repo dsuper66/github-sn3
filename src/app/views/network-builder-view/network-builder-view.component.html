@@ -203,24 +203,34 @@
 
 
       <!-- TEXT Results Gen Load-->
-      <!-- Text 1 -->
+      <!-- Text 3 -->
+      <svg>
+        <text 
+        [attr.x]="shape.xOuter" 
+        [attr.y]="shape.yInner - 3 - 30" 
+        [attr.width]="shape.wOuter"
+        [attr.height]="20"
+        fill="red">{{shape.text3}}</text>
+      </svg>      
+      <!-- Text 2 -->
       <svg>
             <text 
             [attr.x]="shape.xOuter" 
             [attr.y]="shape.yInner - 3 - 15" 
             [attr.width]="shape.wOuter"
             [attr.height]="20"
-            fill="red">{{shape.text1}}</text>
+            fill="red">{{shape.text2}}</text>
       </svg>
-      <!-- Text 2 -->
+      <!-- Text 1 -->
       <svg>
         <text 
         [attr.x]="shape.xOuter" 
         [attr.y]="shape.yInner - 3" 
         [attr.width]="shape.wOuter"
         [attr.height]="20"
-        fill="red">{{shape.text2}}</text>
-      </svg>        
+        fill="red">{{shape.text1}}</text>
+      </svg> 
+      
       
     </svg>
 

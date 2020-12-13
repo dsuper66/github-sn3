@@ -178,8 +178,9 @@ var SolverCallService = /** @class */ (function () {
             var resultString = "\n";
             for (var _i = 0, _a = solverResults.variables; _i < _a.length; _i++) {
                 var modelVar = _a[_i];
-                resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
-                _this.modelElementDataService.addResult(modelVar.elementId, modelVar.varType, modelVar.varId, modelVar.quantity, "");
+                var thisResultString = modelVar.varId + "=" + modelVar.quantity;
+                resultString += thisResultString + "\n";
+                _this.modelElementDataService.addResult(modelVar.elementId, modelVar.varType, modelVar.varId, modelVar.quantity, "", thisResultString);
             }
             //Constraints
             resultString += "\n\n";
@@ -187,9 +188,10 @@ var SolverCallService = /** @class */ (function () {
             for (var _b = 0, _c = solverResults.constraints; _b < _c.length; _b++) {
                 var modelCon = _c[_b];
                 // console.log ("Constraint: Id:" + modelCon.constraintId + " elementId:" + modelCon.elementId);
-                resultString += (modelCon.constraintId + "= $" + modelCon.shadowPrice + "\n");
+                var thisResultString = modelCon.constraintId + "=$" + modelCon.shadowPrice;
+                resultString += thisResultString + "\n";
                 constraintString += modelCon.constraintString + "\n";
-                _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString);
+                _this.modelElementDataService.addResult(modelCon.elementId, modelCon.constraintType, modelCon.constraintId, modelCon.shadowPrice, modelCon.constraintString, thisResultString);
             }
             //Add the Var and Con results to the shapes
             _this.shapeService.applyResultsToShapesText();

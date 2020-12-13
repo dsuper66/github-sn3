@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Shape } from './shape';
 import { ModelElementService } from '../data-model/model-element.service'
 import { ModelElementDataService } from '../data-model/model-element-data.service'
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -263,29 +264,32 @@ export class ShapeService {
     return true;
   }
 
+  //Convert the shape connectivity to model connectivity
   saveConnectivityToModel() {
     console.log("saveConnectivityToModel");
+
     //Non-bus elements reference back to the bus
     for (let nonBusEl of this.getShapesNotOfType('bus')) {
-      // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
+      var fromBus: string | undefined = undefined;
+      var toBus: string | undefined = undefined;
 
       //load and gen... only have connId1
       if (nonBusEl.elementType != 'branch' && nonBusEl.connId1) {
         //In terms of the load, the bus is a fromBus
         if (nonBusEl.elementType === 'load') {
-          this.modelElementDataService.setPropertyForElement(
-            nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
+          fromBus = nonBusEl.connId1;
+          // this.modelElementDataService.setPropertyForElement(
+          //   nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
         }
         //...for a gen, the bus is a toBus
         else if (nonBusEl.elementType === 'gen') {
-          this.modelElementDataService.setPropertyForElement(
-            nonBusEl.elementId, 'toBus', nonBusEl.connId1);
+          toBus = nonBusEl.connId1;
+          // this.modelElementDataService.setPropertyForElement(
+          //   nonBusEl.elementId, 'toBus', nonBusEl.connId1);
         }
       }
       //branch
       else if (nonBusEl.elementType === 'branch') {
-        var fromBus: string | undefined;
-        var toBus: string | undefined;
         //If fully connected then fromBus is lowest alphabetically, other is toBus
         if (nonBusEl.connId1 && nonBusEl.connId2) {
           if (nonBusEl.connId1 < nonBusEl.connId2) {
@@ -304,12 +308,12 @@ export class ShapeService {
         else if (nonBusEl.connId2) {
           fromBus = nonBusEl.connId2;
         }
-        this.modelElementDataService.setPropertyForElement(
-          nonBusEl.elementId, 'toBus', toBus);
-        this.modelElementDataService.setPropertyForElement(
-          nonBusEl.elementId, 'fromBus', fromBus);
-
       }
+
+      this.modelElementDataService.setPropertyForElement(
+        nonBusEl.elementId, 'toBus', toBus);
+      this.modelElementDataService.setPropertyForElement(
+        nonBusEl.elementId, 'fromBus', fromBus);
     }
   }
 

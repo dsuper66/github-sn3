@@ -194,11 +194,13 @@ var ModelElementDataService = /** @class */ (function () {
     //indexed by a string which is either the name of the constraint or variable
     ModelElementDataService.prototype.resetResults = function () {
         for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
-            var element = _a[_i];
+            var e = _a[_i];
             // for (const price in element.prices) element.prices[price] = 0
             // for (const quantity in element.quantities) element.quantities[quantity] = 0
-            for (var result in element.results)
-                element.results[result] = 0;
+            e.results = {};
+            // for (const result in e.results) e.results[result] = 0
+            e.constraintString = "";
+            e.resultString = "";
         }
     };
     ModelElementDataService.prototype.getResultString = function (key, results) {
@@ -236,7 +238,8 @@ var ModelElementDataService = /** @class */ (function () {
                 }
                 else if (element.elementType == "gen") {
                     resultString1 = this.getResultString('enTrancheCleared', results);
-                    resultString2 = "R" + this.getResultString('resTrancheCleared', results);
+                    resultString2 = "res" + this.getResultString('resTrancheCleared', results);
+                    resultString3 = "-risk" + this.getResultString('genResShortfall', results);
                 }
                 else if (element.elementType == "load") {
                     resultString1 = this.getResultString('bidTrancheCleared', results);
@@ -266,38 +269,44 @@ var ModelElementDataService = /** @class */ (function () {
     };
     //The results are the shadow price of every constraint and the value of every variable
     //...to get the result we just need the constraintType or varType string
-    ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value, constraintString) {
+    ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value, constraintString, resultString) {
         console.log("Element:" + elementId + " add result:" + value + " for result type:>>" + resultType + "<<");
         //Get the element
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (elementToUpdate) {
             //Add the arrays if they does not exist
-            if (!elementToUpdate.results) {
-                elementToUpdate.results = {};
-            }
-            if (!elementToUpdate.constraintString) {
-                elementToUpdate.constraintString = "";
-            }
+            // if (!elementToUpdate.results) {
+            //   elementToUpdate.results = {}        
+            // }
+            // if (!elementToUpdate.constraintString) {
+            //   elementToUpdate.constraintString = ""        
+            // }
+            // if (!elementToUpdate.resultString) {
+            //   elementToUpdate.resultString = ""        
+            // }             
             //Node balance LTE constraint shadow price is negative
             if (resultType == "nodeBal" && resultId.includes("LTE")) {
                 value *= -1.0;
             }
             //The value adds to any existing value with the same key
             //(e.g. cleared offers add up at the parent level)
-            if (elementToUpdate.results[resultType]) {
-                elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;
-            }
-            else {
-                elementToUpdate.results[resultType] = value;
+            if (elementToUpdate.results) {
+                if (elementToUpdate.results[resultType]) {
+                    elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;
+                }
+                else {
+                    elementToUpdate.results[resultType] = value;
+                }
             }
             //ConstraintString is empty for var result
             if (constraintString != "") {
                 elementToUpdate.constraintString += "\n\n" + constraintString;
             }
+            elementToUpdate.resultString += "\n" + resultString;
             //If element has a parent then also add the result to the parent
             var parentId = elementToUpdate.properties["parentId"];
             if (parentId) {
-                this.addResult(parentId, resultType, resultId, value, constraintString);
+                this.addResult(parentId, resultType, resultId, value, constraintString, resultString);
             }
         }
     };

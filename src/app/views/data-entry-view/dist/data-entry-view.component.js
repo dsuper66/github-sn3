@@ -27,7 +27,9 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.pageTitle = "";
         this.ccArray = [[]];
         this.cdArray = [];
+        //Data - data entry and results
         this.constraintString = "";
+        this.resultString = "";
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
@@ -99,6 +101,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         //Submit also navigates back
         this.router.navigate(['/network-builder-component']);
     };
+    //Constraint Defs - Parent
     DataEntryViewComponent.prototype.populateFromConstraintDefs = function () {
         console.log("populateFromConstraintDefs");
         var constraintDefs = this.mathModelDefService.getConstraintDefsAll();
@@ -108,6 +111,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.formNames.push(constraintDef.constraintType);
         }
     };
+    //Constraint Defs - Components
     DataEntryViewComponent.prototype.populateFromConstraintComps = function (constraintType) {
         console.log("populateFromConstraintComps");
         this.pageTitle = "Constraint: " + constraintType;
@@ -162,23 +166,28 @@ var DataEntryViewComponent = /** @class */ (function () {
     DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
-            //Properties
+            //Properties for this element
             var parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
             this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
-            //Get child records
+            //Properties for child elements
             var childElements = this.modelElementDataService.getChildElements(elementId);
             for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
                 var childElement = childElements_1[_i];
                 var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
             }
-            //Constraint components
+            //Constraint string
             if (selectedElement.constraintString) {
                 this.constraintString = selectedElement.constraintString;
             }
             console.log(">>> " + selectedElement.constraintString);
+            //Results string
+            if (selectedElement.resultString) {
+                this.resultString = selectedElement.resultString;
+            }
         }
     };
+    //Data entry fields (called from Data above)
     DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
         var showAllProperties = this.settingsService.getStatus("showHiddenProperties");
         for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {

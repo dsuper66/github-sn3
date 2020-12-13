@@ -226,10 +226,13 @@ export class ModelElementDataService {
   //indexed by a string which is either the name of the constraint or variable
 
   resetResults() {
-    for (const element of this.modelElements) {
+    for (const e of this.modelElements) {
       // for (const price in element.prices) element.prices[price] = 0
       // for (const quantity in element.quantities) element.quantities[quantity] = 0
-      for (const result in element.results) element.results[result] = 0
+      e.results = {};
+      // for (const result in e.results) e.results[result] = 0
+      e.constraintString = ""
+      e.resultString = ""
     }
   }
 
@@ -275,7 +278,8 @@ export class ModelElementDataService {
         }
         else if (element.elementType == "gen") {
           resultString1 = this.getResultString('enTrancheCleared',results);
-          resultString2 = "R" + this.getResultString('resTrancheCleared',results);
+          resultString2 = "res" + this.getResultString('resTrancheCleared',results);
+          resultString3 = "-risk" + this.getResultString('genResShortfall',results);
         }
         else if (element.elementType == "load") {
           resultString1 = this.getResultString('bidTrancheCleared',results);
@@ -306,7 +310,9 @@ export class ModelElementDataService {
 
   //The results are the shadow price of every constraint and the value of every variable
   //...to get the result we just need the constraintType or varType string
-  addResult(elementId: string, resultType: string, resultId: string, value: number, constraintString: string) {
+  addResult(elementId: string, resultType: string, resultId: string, value: number, 
+    constraintString: string, resultString: string) {
+
     console.log("Element:" + elementId + " add result:" + value + " for result type:>>" + resultType + "<<"); 
 
     //Get the element
@@ -314,13 +320,17 @@ export class ModelElementDataService {
       element => element.elementId === elementId);
 
     if (elementToUpdate) {
+
       //Add the arrays if they does not exist
-      if (!elementToUpdate.results) {
-        elementToUpdate.results = {}        
-      }
-      if (!elementToUpdate.constraintString) {
-        elementToUpdate.constraintString = ""        
-      }      
+      // if (!elementToUpdate.results) {
+      //   elementToUpdate.results = {}        
+      // }
+      // if (!elementToUpdate.constraintString) {
+      //   elementToUpdate.constraintString = ""        
+      // }
+      // if (!elementToUpdate.resultString) {
+      //   elementToUpdate.resultString = ""        
+      // }             
 
       //Node balance LTE constraint shadow price is negative
       if (resultType == "nodeBal" && resultId.includes("LTE")) {
@@ -329,22 +339,25 @@ export class ModelElementDataService {
 
       //The value adds to any existing value with the same key
       //(e.g. cleared offers add up at the parent level)
-      if (elementToUpdate.results[resultType]) {
-        elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;        
-      }
-      else {
-        elementToUpdate.results[resultType] = value;  
+      if (elementToUpdate.results) {
+        if (elementToUpdate.results[resultType]) {
+          elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;        
+        }
+        else {
+          elementToUpdate.results[resultType] = value;  
+        }
       }
 
       //ConstraintString is empty for var result
       if (constraintString != "") {
         elementToUpdate.constraintString += "\n\n" + constraintString;
       }
+      elementToUpdate.resultString += "\n" + resultString;
 
       //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]
       if (parentId) {
-        this.addResult(parentId,resultType,resultId,value,constraintString)
+        this.addResult(parentId,resultType,resultId,value,constraintString,resultString)
       }
     }
   }

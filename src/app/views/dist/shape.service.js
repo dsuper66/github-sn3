@@ -239,27 +239,31 @@ var ShapeService = /** @class */ (function () {
         }
         return true;
     };
+    //Convert the shape connectivity to model connectivity
     ShapeService.prototype.saveConnectivityToModel = function () {
         console.log("saveConnectivityToModel");
         //Non-bus elements reference back to the bus
         for (var _i = 0, _a = this.getShapesNotOfType('bus'); _i < _a.length; _i++) {
             var nonBusEl = _a[_i];
-            // var propertyTypeIds: {propertyTyepId:string,busId:string} [] = [];
+            var fromBus = undefined;
+            var toBus = undefined;
             //load and gen... only have connId1
             if (nonBusEl.elementType != 'branch' && nonBusEl.connId1) {
                 //In terms of the load, the bus is a fromBus
                 if (nonBusEl.elementType === 'load') {
-                    this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
+                    fromBus = nonBusEl.connId1;
+                    // this.modelElementDataService.setPropertyForElement(
+                    //   nonBusEl.elementId, 'fromBus', nonBusEl.connId1);
                 }
                 //...for a gen, the bus is a toBus
                 else if (nonBusEl.elementType === 'gen') {
-                    this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'toBus', nonBusEl.connId1);
+                    toBus = nonBusEl.connId1;
+                    // this.modelElementDataService.setPropertyForElement(
+                    //   nonBusEl.elementId, 'toBus', nonBusEl.connId1);
                 }
             }
             //branch
             else if (nonBusEl.elementType === 'branch') {
-                var fromBus;
-                var toBus;
                 //If fully connected then fromBus is lowest alphabetically, other is toBus
                 if (nonBusEl.connId1 && nonBusEl.connId2) {
                     if (nonBusEl.connId1 < nonBusEl.connId2) {
@@ -278,9 +282,9 @@ var ShapeService = /** @class */ (function () {
                 else if (nonBusEl.connId2) {
                     fromBus = nonBusEl.connId2;
                 }
-                this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'toBus', toBus);
-                this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', fromBus);
             }
+            this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'toBus', toBus);
+            this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', fromBus);
         }
     };
     //Assign results to display text fields of the shapes

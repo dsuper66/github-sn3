@@ -124,6 +124,7 @@ export class DataEntryViewComponent implements OnInit {
   ccArray: [string[]] = [[]];
   cdArray:string[] = [];
 
+  //Constraint Defs - Parent
   populateFromConstraintDefs(){
     console.log("populateFromConstraintDefs");
     const constraintDefs = this.mathModelDefService.getConstraintDefsAll();
@@ -133,6 +134,7 @@ export class DataEntryViewComponent implements OnInit {
     }
   }
 
+  //Constraint Defs - Components
   populateFromConstraintComps(constraintType: string){
     console.log("populateFromConstraintComps");
     this.pageTitle = "Constraint: " + constraintType;
@@ -182,31 +184,37 @@ export class DataEntryViewComponent implements OnInit {
     }
   }  
 
+  //Data - data entry and results
   constraintString: string = "";
-  
+  resultString: string = "";
+
   populateFormFromElementId(elementId: string): void {
-   
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {      
-      //Properties
+      //Properties for this element
       const parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
       this.populateFormFieldsFromProperties(parentProperties,selectedElement.elementId);
 
-      //Get child records
+      //Properties for child elements
       const childElements = this.modelElementDataService.getChildElements(elementId);
       for (const childElement of childElements) {
         const childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
         this.populateFormFieldsFromProperties(childProperties,childElement.elementId);
       }
 
-      //Constraint components
+      //Constraint string
       if (selectedElement.constraintString) {
         this.constraintString = selectedElement.constraintString;
       }
       console.log(">>> " + selectedElement.constraintString);
+      //Results string
+      if (selectedElement.resultString) {
+        this.resultString = selectedElement.resultString;
+      }
+
     }
   }
-
+  //Data entry fields (called from Data above)
   populateFormFieldsFromProperties(propertyIds: string[], elementId: string) {
     const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
     for (const propertyId of propertyIds) {

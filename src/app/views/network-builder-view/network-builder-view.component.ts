@@ -183,7 +183,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           }
         }
       }
-      //Check for ROTATE
+      //Direction is done, also check for ROTATE (not used)
       else if (this.selectedShape.elementType == 'branch'
         && this.selectedShape.doResize) {
         deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
@@ -232,9 +232,12 @@ export class NetworkBuilderViewComponent implements OnInit {
         this.selectedShape.xOuter += deltaX;
         this.selectedShape.yOuter += deltaY;
       }
+
+      //===Connectivity processing===
       // if (deltaX > 5 || deltaY > 5) {
       this.checkForOverlaps();
       // }
+
       this.lastDrawingPoint = drawingPoint;
     }
   }
@@ -272,6 +275,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.stopDrawing();
   }
 
+  //Update connectivity (after checking for overlaps)
   setConnectivity(shape: Shape) {
     if (shape.elementType != 'island') {
     let isFullyConnected =
@@ -303,7 +307,7 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
-  //CHECK FOR OVERLAPS
+  //Check for overlaps (then call Connectivity Processing)
   checkForOverlaps() {
     // var overlap = !(rect1.right < rect2.left || 
     //   rect1.left > rect2.right || 

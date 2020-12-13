@@ -221,9 +221,10 @@ export class SolverCallService {
         //Variables
         var resultString = "\n"
         for (const modelVar of solverResults.variables) {
-          resultString += (modelVar.varId + "=" + modelVar.quantity + "\n");
+          const thisResultString = modelVar.varId + "=" + modelVar.quantity;
+          resultString += thisResultString + "\n";
           this.modelElementDataService.addResult(
-            modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity,"")
+            modelVar.elementId,modelVar.varType,modelVar.varId,modelVar.quantity,"",thisResultString)
         }
 
         //Constraints
@@ -231,10 +232,12 @@ export class SolverCallService {
         var constraintString = "\n";
         for (const modelCon of solverResults.constraints) {
           // console.log ("Constraint: Id:" + modelCon.constraintId + " elementId:" + modelCon.elementId);
-          resultString += (modelCon.constraintId + "= $" + modelCon.shadowPrice + "\n");
+          const thisResultString = modelCon.constraintId + "=$" + modelCon.shadowPrice;
+          resultString += thisResultString + "\n";
           constraintString += modelCon.constraintString + "\n";
           this.modelElementDataService.addResult(
-            modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice,modelCon.constraintString)
+            modelCon.elementId,modelCon.constraintType,modelCon.constraintId,modelCon.shadowPrice,
+            modelCon.constraintString,thisResultString)
         }
 
         //Add the Var and Con results to the shapes
