@@ -1,13 +1,30 @@
 
  <!-- *ngIf="{{dataLink}}" -->
 
+<!-- JSON Model -->
+<div *ngIf="doJSONModel">
+  <button routerLink="/main-component">Back</button>
+  <div class="textBox marginAll">
+    <br>
+    {{jsonModel}}
+  </div>
+</div>
+
+<!-- Solver Out -->
+<div *ngIf="doSolverOut">
+  <button routerLink="/main-component">Back</button>
+  <pre class="textBox marginAll">
+  {{solverOutString}}
+  </pre>
+</div>
+
  <!-- CONSTRAINT DEF PARENT -->
  <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
  <div *ngIf="doConstraintDefs">
   <button routerLink="/network-builder-component">Back</button>
   <table table-layout="fixed">
       <tr>&nbsp;</tr>
-      <tr><th>Constraint Details/Include</th></tr>
+      <tr><th>Constraint Details</th></tr>
       <tr *ngFor="let formName of formNames; index as i">
         <td><button (click)="reload(formName)">{{formName}}</button>
           <input #saveUserNameCheckBox
@@ -22,7 +39,8 @@
 
 <!-- CONSTRAINT COMPONENTS -->
 <div *ngIf="doConstraintComps">
-  <button (click)="reloadMain()">Back</button>
+  <!-- <button (click)="reloadMain()">Back</button> -->
+  <button routerLink="/main-component">Back</button>
   <table table-layout="fixed">
       <tr>&nbsp;</tr>
       <tr><th>{{pageTitle}}</th></tr>
@@ -53,7 +71,7 @@
  
 <!-- DATA ENTRY AND CONSTRAINT STRING-->
 <div *ngIf="doDataEntry">
- <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
       <!-- Prevent implicit submission of the form -->
     <button type="submit" disabled style="display: none" aria-hidden="true"></button>
@@ -94,6 +112,7 @@
     {{constraintString}}
     {{resultString}}
   </pre>
+
 </div>
 
 

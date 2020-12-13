@@ -9,14 +9,17 @@ exports.__esModule = true;
 exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
 var DataEntryViewComponent = /** @class */ (function () {
-    function DataEntryViewComponent(modelElementDataService, modelElementDefService, router, route, settingsService, mathModelDefService) {
+    function DataEntryViewComponent(modelElementDataService, modelElementDefService, router, route, settingsService, solverCallService, mathModelDefService) {
         var _this = this;
         this.modelElementDataService = modelElementDataService;
         this.modelElementDefService = modelElementDefService;
         this.router = router;
         this.route = route;
         this.settingsService = settingsService;
+        this.solverCallService = solverCallService;
         this.mathModelDefService = mathModelDefService;
+        this.doJSONModel = false;
+        this.doSolverOut = false;
         this.doConstraintDefs = false;
         this.doConstraintComps = false;
         this.doDataEntry = false;
@@ -24,6 +27,8 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.formDefaults = [];
         this.formElementIds = [];
         this.formPropertyIds = [];
+        this.jsonModel = "";
+        this.solverOutString = "";
         this.pageTitle = "";
         this.ccArray = [[]];
         this.cdArray = [];
@@ -43,6 +48,14 @@ var DataEntryViewComponent = /** @class */ (function () {
             this.doConstraintComps = true;
             var startPos = id.indexOf("?") + 1;
             this.populateFromConstraintComps(id.substr(startPos));
+        }
+        else if (id === "json-model") {
+            this.doJSONModel = true;
+            this.jsonModel = this.solverCallService.solverJsonInput;
+        }
+        else if (id === "solver-out") {
+            this.doSolverOut = true;
+            this.solverOutString = this.solverCallService.solverResultString;
         }
         else {
             this.doDataEntry = true;

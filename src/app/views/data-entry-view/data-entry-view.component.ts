@@ -11,6 +11,7 @@ import { ModelElementDataService } from '../../data-model/model-element-data.ser
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
 import { MathModelDefService } from '../../data-model/math-model-def.service';
 import { SettingsService } from '../../data-model/settings.service';
+import { SolverCallService } from '../../data-model/solver-call.service';
 
 @Component({
   selector: 'app-data-entry-view',
@@ -26,6 +27,7 @@ export class DataEntryViewComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private settingsService: SettingsService,
+    private solverCallService: SolverCallService,
     private mathModelDefService: MathModelDefService
   ) {
     route.params.subscribe(params => { this.idOfDataEntryObject = params['id']; });
@@ -42,7 +44,15 @@ export class DataEntryViewComponent implements OnInit {
       this.doConstraintComps = true;
       const startPos = id.indexOf("?") + 1;
       this.populateFromConstraintComps(id.substr(startPos));
-    }   
+    }
+    else if (id === "json-model") {
+      this.doJSONModel = true;
+      this.jsonModel = this.solverCallService.solverJsonInput;
+    }
+    else if (id === "solver-out") {
+      this.doSolverOut = true;
+      this.solverOutString = this.solverCallService.solverResultString;
+    }    
     else {
       this.doDataEntry = true;
       this.populateFormFromElementId(id);
@@ -50,6 +60,8 @@ export class DataEntryViewComponent implements OnInit {
     
   }
 
+  doJSONModel = false;
+  doSolverOut = false;
   doConstraintDefs = false;
   doConstraintComps = false;
   doDataEntry = false;
@@ -59,6 +71,8 @@ export class DataEntryViewComponent implements OnInit {
   formElementIds: string[] = [];
   formPropertyIds: string[] = [];
 
+  jsonModel = "";
+  solverOutString = "";
 
   //Call this component from itself to display something different
   //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081

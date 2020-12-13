@@ -278,8 +278,8 @@ export class ModelElementDataService {
         }
         else if (element.elementType == "gen") {
           resultString1 = this.getResultString('enTrancheCleared',results);
-          resultString2 = "res" + this.getResultString('resTrancheCleared',results);
-          resultString3 = "-risk" + this.getResultString('genResShortfall',results);
+          resultString2 = "res:" + this.getResultString('resTrancheCleared',results);
+          resultString3 = "-risk:" + this.getResultString('genResShortfall',results);
         }
         else if (element.elementType == "load") {
           resultString1 = this.getResultString('bidTrancheCleared',results);
@@ -288,7 +288,7 @@ export class ModelElementDataService {
           resultString1 = "res$:" + this.getResultString('resCover',results);
           resultString2 = "risk:" + this.getResultString('islandRisk',results);
           resultString3 = "res:" + this.getResultString('islandRes',results);
-          resultString4 = "resShort:" + this.getResultString('islandResShortfall',results);         
+          resultString4 = "-risk:" + this.getResultString('islandResShortfall',results);         
         }
         else if (element.elementType == "mathModel") {
           var objectiveVal = this.getResultVal('objectiveVal',results);
