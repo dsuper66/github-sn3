@@ -19,7 +19,7 @@ var ModelElementDefService = /** @class */ (function () {
         //Separate so that different element types can have different defaults for the same properties
         this.defaultValueSettings.push({ propertyType: 'isRefBus', elementType: 'bus', defaultValue: false }, { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 }, { propertyType: 'resistance', elementType: 'branch', defaultValue: 10 }, { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 }, { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 100 }, { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 1000 }, { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 250 }, { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 70 }, { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 0 }, { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 }, { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 }, 
         // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
-        { propertyType: 'islandResShortfallPrice', elementType: 'island', defaultValue: 0 }, { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 0 });
+        { propertyType: 'islandResShortfallPrice', elementType: 'island', defaultValue: 9000 }, { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 20000 });
         //Define Element Types and Property Types
         //An Element Type that is included in the model must be defined here to know its properties
         //Parent elements

@@ -30,6 +30,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.fieldRefIdChild = [];
         this.jsonModel = "";
         this.solverOutString = "";
+        this.backButtonRoute = "";
         this.pageTitle = "";
         //Constraint Defs
         this.cdArray = [];
@@ -45,6 +46,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         if (id === "element-def") {
             this.doElementDefs = true;
             this.populateFromElementDefs();
+            this.backButtonRoute = "/main-component";
         }
         else if (id === "model-def") {
             this.doConstraintDefs = true;
@@ -66,6 +68,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         else {
             this.doDataEntry = true;
             this.populateFromElementId(id);
+            this.backButtonRoute = "/network-builder-component";
         }
     };
     //Call this component from itself to display something different
@@ -125,7 +128,8 @@ var DataEntryViewComponent = /** @class */ (function () {
             });
         }
         //Submit also navigates back
-        this.router.navigate(['/network-builder-component']);
+        //this.router.navigate(['/network-builder-component']);
+        this.router.navigate([this.backButtonRoute]);
     };
     //Element Defs  
     DataEntryViewComponent.prototype.populateFromElementDefs = function () {

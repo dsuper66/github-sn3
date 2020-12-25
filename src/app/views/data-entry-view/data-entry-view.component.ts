@@ -39,6 +39,7 @@ export class DataEntryViewComponent implements OnInit {
     if (id === "element-def") {
       this.doElementDefs = true;
       this.populateFromElementDefs();
+      this.backButtonRoute = "/main-component";
     }    
     else if (id === "model-def") {
       this.doConstraintDefs = true;
@@ -60,6 +61,7 @@ export class DataEntryViewComponent implements OnInit {
     else {
       this.doDataEntry = true;
       this.populateFromElementId(id);
+      this.backButtonRoute = "/network-builder-component";
     }
     
   }
@@ -78,6 +80,8 @@ export class DataEntryViewComponent implements OnInit {
 
   jsonModel = "";
   solverOutString = "";
+
+  backButtonRoute = "";
 
   //Call this component from itself to display something different
   //https://stackoverflow.com/questions/52389376/angular-6-how-to-reload-current-page/52492081
@@ -143,7 +147,8 @@ export class DataEntryViewComponent implements OnInit {
       })
     }
     //Submit also navigates back
-    this.router.navigate(['/network-builder-component']);
+    //this.router.navigate(['/network-builder-component']);
+    this.router.navigate([this.backButtonRoute]);
 
   }
 
