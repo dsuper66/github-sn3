@@ -54,20 +54,34 @@ var ModelElementDefService = /** @class */ (function () {
         var propertyTypeSettings = this.elementPropertyTypeSettings.filter(function (property) { return property.propertyType === propertyType; })[0];
         return propertyTypeSettings.visible;
     };
-    ModelElementDefService.prototype.getDefaultValueForProperty = function (propertyType, elementType) {
-        var defaultValueSetting = this.defaultValueSettings.filter(function (defaultValueSetting) { return defaultValueSetting.propertyType === propertyType
-            && defaultValueSetting.elementType == elementType; })[0];
-        if (defaultValueSetting) {
-            console.log("found default:" + defaultValueSetting.defaultValue);
-            return defaultValueSetting.defaultValue;
-        }
-        else {
-            console.log("%c" + "No Default found for:" + elementType + " property:" + propertyType, "color: red");
-            return "";
-        }
+    /*
+    getDefaultValueForProperty(propertyType: string, elementType: string): any {
+      const defaultValueSetting = this.defaultValueSettings.filter(
+        defaultValueSetting => defaultValueSetting.propertyType === propertyType
+          && defaultValueSetting.elementType == elementType)[0];
+      if (defaultValueSetting) {
+        console.log("found default:" + defaultValueSetting.defaultValue);
+        return defaultValueSetting.defaultValue;
+      }
+      else {
+        console.log("%c" + "No Default found for:" + elementType + " property:" + propertyType, "color: red");
+        return "";
+      }
+    }*/
+    ModelElementDefService.prototype.getDefaultSettingsAll = function () {
+        return this.defaultValueSettings;
     };
     ModelElementDefService.prototype.getDefaultSettingsForElementType = function (elementType) {
         return this.defaultValueSettings.filter(function (defaultValueSetting) { return defaultValueSetting.elementType == elementType; });
+    };
+    ModelElementDefService.prototype.setDefaultValue = function (elementType, propertType, value) {
+        var defaultSetting = this.defaultValueSettings.find(function (defaultValueSetting) {
+            return defaultValueSetting.elementType == elementType
+                && defaultValueSetting.propertyType == propertType;
+        });
+        if (defaultSetting) {
+            defaultSetting.defaultValue = value;
+        }
     };
     ModelElementDefService.prototype.getPropertyTypesFor = function (elementType) {
         console.log("Get properties for: " + elementType);

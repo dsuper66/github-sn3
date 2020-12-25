@@ -20,18 +20,20 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.mathModelDefService = mathModelDefService;
         this.doJSONModel = false;
         this.doSolverOut = false;
+        this.doElementDefs = false;
         this.doConstraintDefs = false;
         this.doConstraintComps = false;
         this.doDataEntry = false;
         this.formNames = [];
         this.formDefaults = [];
-        this.formElementIds = [];
-        this.formPropertyIds = [];
+        this.fieldRefIdParent = [];
+        this.fieldRefIdChild = [];
         this.jsonModel = "";
         this.solverOutString = "";
         this.pageTitle = "";
-        this.ccArray = [[]];
+        //Constraint Defs
         this.cdArray = [];
+        this.ccArray = [[]];
         //Data - data entry and results
         this.constraintString = "";
         this.resultString = "";
@@ -40,7 +42,11 @@ var DataEntryViewComponent = /** @class */ (function () {
     DataEntryViewComponent.prototype.ngOnInit = function () {
         var id = this.idOfDataEntryObject;
         console.log("GOT ID ", id); //this.idOfDataEntryObject);
-        if (id === "model-def") {
+        if (id === "element-def") {
+            this.doElementDefs = true;
+            this.populateFromElementDefs();
+        }
+        else if (id === "model-def") {
             this.doConstraintDefs = true;
             this.populateFromConstraintDefs();
         }
@@ -59,7 +65,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         }
         else {
             this.doDataEntry = true;
-            this.populateFormFromElementId(id);
+            this.populateFromElementId(id);
         }
     };
     //Call this component from itself to display something different
@@ -105,17 +111,36 @@ var DataEntryViewComponent = /** @class */ (function () {
                 if (formValue && formValue != "") {
                     // let newValue = Object(form)[propertyType];
                     console.log(">>>value>>>" + formName + ":" + formValue);
-                    var propertyId = _this.formPropertyIds[index];
-                    var elementId = _this.formElementIds[index];
-                    _this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
+                    if (_this.doDataEntry) {
+                        var elementId = _this.fieldRefIdParent[index];
+                        var propertyId = _this.fieldRefIdChild[index];
+                        _this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
+                    }
+                    else if (_this.doElementDefs) {
+                        var elementType = _this.fieldRefIdParent[index];
+                        var propertyType = _this.fieldRefIdChild[index];
+                        _this.modelElementDefService.setDefaultValue(elementType, propertyType, formValue);
+                    }
                 }
             });
         }
         //Submit also navigates back
         this.router.navigate(['/network-builder-component']);
     };
+    //Element Defs  
+    DataEntryViewComponent.prototype.populateFromElementDefs = function () {
+        this.pageTitle = "Property Defaults";
+        for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsAll(); _i < _a.length; _i++) {
+            var propertyDef = _a[_i];
+            this.formNames.push(propertyDef.elementType + "-" + propertyDef.propertyType);
+            this.formDefaults.push(propertyDef.defaultValue);
+            this.fieldRefIdParent.push(propertyDef.elementType);
+            this.fieldRefIdChild.push(propertyDef.propertyType);
+        }
+    };
     //Constraint Defs - Parent
     DataEntryViewComponent.prototype.populateFromConstraintDefs = function () {
+        this.pageTitle = "Constraint Definitions";
         console.log("populateFromConstraintDefs");
         var constraintDefs = this.mathModelDefService.getConstraintDefsAll();
         for (var _i = 0, constraintDefs_1 = constraintDefs; _i < constraintDefs_1.length; _i++) {
@@ -176,7 +201,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             // this.formNames.push("=========");
         }
     };
-    DataEntryViewComponent.prototype.populateFormFromElementId = function (elementId) {
+    DataEntryViewComponent.prototype.populateFromElementId = function (elementId) {
         var selectedElement = this.modelElementDataService.getModelElementForId(elementId);
         if (selectedElement) {
             //Properties for this element
@@ -208,14 +233,14 @@ var DataEntryViewComponent = /** @class */ (function () {
             if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
                 //Name/Title
                 this.formNames.push(elementId + "-" + propertyId);
-                //Default value
-                var value = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
-                this.formDefaults.push(value);
                 //PropertyId
-                this.formPropertyIds.push(propertyId);
-                //ElementId
-                this.formElementIds.push(elementId);
-                console.log(elementId + "-" + propertyId + "-value:" + value);
+                this.fieldRefIdChild.push(propertyId);
+                //ElementId (for assigning any data entry)
+                this.fieldRefIdParent.push(elementId);
+                //Default value
+                var defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
+                this.formDefaults.push(defaultValue);
+                console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
             }
             else {
                 console.log(propertyId + ": not visible");

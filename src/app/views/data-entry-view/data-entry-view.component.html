@@ -18,13 +18,26 @@
   </pre>
 </div>
 
+ <!-- ELEMENT DEF -->
+ <!-- <div *ngIf="doElementDefs">
+  <button routerLink="/main-component">Back</button>
+  <table table-layout="fixed">
+      <tr>&nbsp;</tr>
+      <tr><th>Element Properties</th></tr>
+      <tr *ngFor="let formName of formNames; index as i">
+        <td>{{formName}}</td>
+
+      </tr>
+  </table>
+</div> -->
+
  <!-- CONSTRAINT DEF PARENT -->
  <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
  <div *ngIf="doConstraintDefs">
-  <button routerLink="/network-builder-component">Back</button>
+  <button routerLink="/main-component">Back</button>
   <table table-layout="fixed">
       <tr>&nbsp;</tr>
-      <tr><th>Constraint Details</th></tr>
+      <tr><th>{{pageTitle}}</th></tr>
       <tr *ngFor="let formName of formNames; index as i">
         <td><button (click)="reload(formName)">{{formName}}</button>
           <input #saveUserNameCheckBox
@@ -40,7 +53,7 @@
 <!-- CONSTRAINT COMPONENTS -->
 <div *ngIf="doConstraintComps">
   <!-- <button (click)="reloadMain()">Back</button> -->
-  <button routerLink="/main-component">Back</button>
+  <button routerLink="/data-entry-component/model-def">Back</button>
   <table table-layout="fixed">
       <tr>&nbsp;</tr>
       <tr><th>{{pageTitle}}</th></tr>
@@ -70,7 +83,7 @@
 </div>
  
 <!-- DATA ENTRY AND CONSTRAINT STRING-->
-<div *ngIf="doDataEntry">
+<div *ngIf="doDataEntry || doElementDefs">
   <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" >
 
       <!-- Prevent implicit submission of the form -->
@@ -80,10 +93,10 @@
     &nbsp;
     <button routerLink="/network-builder-component">Cancel</button>
     <br>
-    <br>
-
+    <br>    
     <!-- Data Entry -->
     <table table-layout="fixed">
+    <th>{{pageTitle}}</th>
     <tr *ngFor="let formName of formNames; index as i">
 
       <!-- The label -->
@@ -93,13 +106,10 @@
       <td>
         <input
         style="text-align:right; width:120px"
-
         type="text"
         step="any"
-
         placeholder="{{formDefaults[i]}}"
         name="{{formName}}"
-        
         ngModel>
       </td>
       </tr>
@@ -108,7 +118,7 @@
   </form>
      
   <!-- Constraint and Result String -->
-  <pre class="textBox marginAll">
+  <pre *ngIf="doDataEntry" class="textBox marginAll">
     {{constraintString}}
     {{resultString}}
   </pre>

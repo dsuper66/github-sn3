@@ -36,7 +36,11 @@ export class DataEntryViewComponent implements OnInit {
   ngOnInit(): void {
     const id = this.idOfDataEntryObject;
     console.log("GOT ID ", id); //this.idOfDataEntryObject);
-    if (id === "model-def") {
+    if (id === "element-def") {
+      this.doElementDefs = true;
+      this.populateFromElementDefs();
+    }    
+    else if (id === "model-def") {
       this.doConstraintDefs = true;
       this.populateFromConstraintDefs();
     }
@@ -55,21 +59,22 @@ export class DataEntryViewComponent implements OnInit {
     }    
     else {
       this.doDataEntry = true;
-      this.populateFormFromElementId(id);
+      this.populateFromElementId(id);
     }
     
   }
 
   doJSONModel = false;
   doSolverOut = false;
+  doElementDefs = false;
   doConstraintDefs = false;
   doConstraintComps = false;
   doDataEntry = false;
 
   formNames: string[] = [];
   formDefaults: string[] = [];
-  formElementIds: string[] = [];
-  formPropertyIds: string[] = [];
+  fieldRefIdParent: string[] = [];
+  fieldRefIdChild: string[] = [];
 
   jsonModel = "";
   solverOutString = "";
@@ -122,10 +127,18 @@ export class DataEntryViewComponent implements OnInit {
 
           // let newValue = Object(form)[propertyType];
           console.log(">>>value>>>" + formName + ":" + formValue);
-          const propertyId = this.formPropertyIds[index];
-          const elementId = this.formElementIds[index];
 
-          this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
+          if (this.doDataEntry) {
+            const elementId = this.fieldRefIdParent[index];
+            const propertyId = this.fieldRefIdChild[index];          
+            this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
+          }
+          else if (this.doElementDefs) {
+            const elementType = this.fieldRefIdParent[index];
+            const propertyType = this.fieldRefIdChild[index];          
+            this.modelElementDefService.setDefaultValue(elementType,propertyType,formValue);
+          }
+
         }
       })
     }
@@ -135,11 +148,27 @@ export class DataEntryViewComponent implements OnInit {
   }
 
   pageTitle = "";
-  ccArray: [string[]] = [[]];
-  cdArray:string[] = [];
 
+  //Element Defs  
+  populateFromElementDefs (){
+    this.pageTitle = "Property Defaults"
+  for (const propertyDef of
+    this.modelElementDefService.getDefaultSettingsAll()) {
+      this.formNames.push(propertyDef.elementType + "-" + propertyDef.propertyType)
+      this.formDefaults.push(propertyDef.defaultValue);  
+
+      this.fieldRefIdParent.push(propertyDef.elementType)
+      this.fieldRefIdChild.push(propertyDef.propertyType)
+    }
+  }  
+
+
+  //Constraint Defs
+  cdArray:string[] = [];  
+  ccArray: [string[]] = [[]];
   //Constraint Defs - Parent
   populateFromConstraintDefs(){
+    this.pageTitle = "Constraint Definitions";
     console.log("populateFromConstraintDefs");
     const constraintDefs = this.mathModelDefService.getConstraintDefsAll();
     for (const constraintDef of constraintDefs) {
@@ -147,7 +176,6 @@ export class DataEntryViewComponent implements OnInit {
       this.formNames.push(constraintDef.constraintType);
     }
   }
-
   //Constraint Defs - Components
   populateFromConstraintComps(constraintType: string){
     console.log("populateFromConstraintComps");
@@ -202,7 +230,7 @@ export class DataEntryViewComponent implements OnInit {
   constraintString: string = "";
   resultString: string = "";
 
-  populateFormFromElementId(elementId: string): void {
+  populateFromElementId(elementId: string): void {
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
     if (selectedElement) {      
       //Properties for this element
@@ -236,15 +264,17 @@ export class DataEntryViewComponent implements OnInit {
 
         //Name/Title
         this.formNames.push(elementId + "-" + propertyId);
-        //Default value
-        const value = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
-        this.formDefaults.push(value);
-        //PropertyId
-        this.formPropertyIds.push(propertyId);
-        //ElementId
-        this.formElementIds.push(elementId);
 
-        console.log(elementId + "-" + propertyId + "-value:" + value);
+        //PropertyId
+        this.fieldRefIdChild.push(propertyId);
+        //ElementId (for assigning any data entry)
+        this.fieldRefIdParent.push(elementId);
+
+        //Default value
+        const defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
+        this.formDefaults.push(defaultValue);        
+
+        console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
 
       }
       else {

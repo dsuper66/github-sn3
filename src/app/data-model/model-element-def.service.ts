@@ -109,6 +109,7 @@ export class ModelElementDefService {
     return propertyTypeSettings.visible;
   }
 
+  /*
   getDefaultValueForProperty(propertyType: string, elementType: string): any {
     const defaultValueSetting = this.defaultValueSettings.filter(
       defaultValueSetting => defaultValueSetting.propertyType === propertyType
@@ -121,11 +122,25 @@ export class ModelElementDefService {
       console.log("%c" + "No Default found for:" + elementType + " property:" + propertyType, "color: red");
       return "";
     }
+  }*/
+
+  getDefaultSettingsAll(){
+    return this.defaultValueSettings;
   }
 
   getDefaultSettingsForElementType(elementType: string) {
     return this.defaultValueSettings.filter(
       defaultValueSetting => defaultValueSetting.elementType == elementType)
+  } 
+
+  setDefaultValue(elementType: string, propertType: string, value: number) {
+    const defaultSetting = this.defaultValueSettings.find(
+      defaultValueSetting => 
+        defaultValueSetting.elementType == elementType
+        && defaultValueSetting.propertyType == propertType)
+    if (defaultSetting) {
+      defaultSetting.defaultValue = value;
+    }
   } 
 
   getPropertyTypesFor(elementType: string): string[] {
