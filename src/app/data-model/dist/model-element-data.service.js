@@ -151,6 +151,21 @@ var ModelElementDataService = /** @class */ (function () {
         var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
         return properties[propertyType];
     };
+    ModelElementDataService.prototype.sumForChildren = function (elementId, childElementType, childPropertyType) {
+        var childElements = this.modelElements.filter(function (e) {
+            return e.properties['parentId'] == elementId
+                && e.elementType == childElementType;
+        });
+        var sum = 0.0;
+        for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
+            var e = childElements_1[_i];
+            var value = e.properties[childPropertyType];
+            if (value) {
+                sum += value;
+            }
+        }
+        return sum;
+    };
     ModelElementDataService.prototype.getElementsWherePropertyValue = function (propertyType, value) {
         return this.modelElements.filter(function (element) { return element.properties[propertyType] === value; });
     };
@@ -215,7 +230,7 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.getResultVal = function (key, results) {
         if (results[key] === undefined) {
             console.log("MISSING RESULT: " + key);
-            return -1.0;
+            return -9999.0;
         }
         else {
             return results[key];
@@ -243,6 +258,10 @@ var ModelElementDataService = /** @class */ (function () {
                 }
                 else if (element.elementType == "load") {
                     resultString1 = this.getResultString('bidTrancheCleared', results);
+                    var uncleared = this.sumForChildren(elementId, 'bidTranche', 'trancheLimit') - this.getResultVal('bidTrancheCleared', results);
+                    if (uncleared > 0) {
+                        resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
+                    }
                 }
                 else if (element.elementType == "island") {
                     resultString1 = "res$:" + this.getResultString('resCover', results);

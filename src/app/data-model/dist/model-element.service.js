@@ -57,6 +57,14 @@ var ModelElementService = /** @class */ (function () {
         if (parentId) {
             this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
         }
+        //Special case
+        //bus... need one (and only one) with isRefBus = true
+        if (elementTypeToAdd === 'bus') {
+            //If no refBus then make this refBus = true
+            if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
+                this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
+            }
+        }
         //Special Case
         //dirBranch needs a direction property (which is a multiplier)
         if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
@@ -74,14 +82,6 @@ var ModelElementService = /** @class */ (function () {
                 self.addModelElement(childType, newId, childNum_1);
             }
         });
-        //Special case
-        //bus... need one (and only one) with isRefBus = true
-        if (elementTypeToAdd === 'bus') {
-            //If no refBus then make this refBus = true
-            if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
-                this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
-            }
-        }
         //Set default values
         for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
             var defaultValueSetting = _a[_i];

@@ -171,6 +171,20 @@ export class ModelElementDataService {
     return properties[propertyType];
   }
 
+  sumForChildren(elementId: string, childElementType: string, childPropertyType: string): number {
+    const childElements = this.modelElements.filter(e => 
+      e.properties['parentId'] == elementId
+      && e.elementType == childElementType)
+    let sum = 0.0;
+    for (const e of childElements) {
+      const value = e.properties[childPropertyType]
+      if (value) {
+        sum += value;
+      }
+    }
+    return sum;
+  }
+
   getElementsWherePropertyValue(propertyType: string, value: string): ModelElement[] {
     return this.modelElements.filter(
       element => element.properties[propertyType] === value);
@@ -251,7 +265,7 @@ export class ModelElementDataService {
   getResultVal(key: string, results: {[resultType:string] : number}):number {
     if (results[key] === undefined) {
       console.log("MISSING RESULT: " + key)
-      return -1.0
+      return -9999.0
     }
     else {
       return results[key];
@@ -283,6 +297,11 @@ export class ModelElementDataService {
         }
         else if (element.elementType == "load") {
           resultString1 = this.getResultString('bidTrancheCleared',results);
+          const uncleared = 
+            this.sumForChildren(elementId,'bidTranche','trancheLimit') - this.getResultVal('bidTrancheCleared',results);
+          if (uncleared > 0) {
+            resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
+          }          
         }        
         else if (element.elementType == "island") {
           resultString1 = "res$:" + this.getResultString('resCover',results);

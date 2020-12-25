@@ -76,6 +76,15 @@ export class ModelElementService {
       this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
     }
 
+    //Special case
+    //bus... need one (and only one) with isRefBus = true
+    if (elementTypeToAdd === 'bus') {
+      //If no refBus then make this refBus = true
+      if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
+        this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
+      }
+    }    
+
     //Special Case
     //dirBranch needs a direction property (which is a multiplier)
     if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
@@ -96,15 +105,6 @@ export class ModelElementService {
         self.addModelElement(childType, newId, childNum);
       }
     });
-
-    //Special case
-    //bus... need one (and only one) with isRefBus = true
-    if (elementTypeToAdd === 'bus') {
-      //If no refBus then make this refBus = true
-      if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
-        this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
-      }
-    }
 
     //Set default values
     for (const defaultValueSetting of
@@ -133,7 +133,6 @@ export class ModelElementService {
         this.modelElementDataService.setPropertyForElement(newId,islandIdProperty,island.elementId);
       }
     }
-
 
     return newId;
   }
