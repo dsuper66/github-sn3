@@ -59,8 +59,8 @@ export class ModelElementDefService {
       { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
       { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
       // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },
-      { propertyType: 'islandResShortfallPrice', elementType: 'island', defaultValue: 9000 },
-      { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 20000 }
+      { propertyType: 'islandResShortfallPrice', elementType: 'island', defaultValue: 0 },
+      { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 900 }
     )
 
     //Define Element Types and Property Types

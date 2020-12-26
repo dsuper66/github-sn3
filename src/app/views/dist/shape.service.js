@@ -125,6 +125,14 @@ var ShapeService = /** @class */ (function () {
             ;
             //Y position
             var y_2 = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
+            var xOuter = x - (selectWidth - branchWidth) / 2;
+            //Flow direction Arrow
+            var w = selectWidth;
+            var arrowH = 15;
+            //const h = branchInitLength;
+            //Capital letters means absolutely positioned, lower cases means relatively positioned.
+            //path1 = `M 0 0 l ${w/2} ${arrowH} l ${w/2} ${-arrowH}`;
+            path1 = "M 0 " + (arrowH + 2) + " l " + w / 2 + " " + -arrowH + " l " + w / 2 + " " + arrowH;
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
@@ -132,10 +140,11 @@ var ShapeService = /** @class */ (function () {
                 yInner: y_2,
                 wInner: branchWidth,
                 hInner: branchInitLength,
-                xOuter: x - (selectWidth - branchWidth) / 2,
+                xOuter: xOuter,
                 yOuter: y_2,
                 wOuter: selectWidth,
-                hOuter: branchInitLength
+                hOuter: branchInitLength,
+                path1: path1
             });
         }
         //GEN & LOAD
@@ -152,6 +161,7 @@ var ShapeService = /** @class */ (function () {
             var path1;
             var path2;
             if (elementType == 'gen') {
+                //gen sine wave
                 var sineStartX = 6;
                 var sineStartY = w / 2;
                 var sineW = w - 2 * sineStartX;
@@ -159,6 +169,7 @@ var ShapeService = /** @class */ (function () {
                 path2 = "M " + (sineStartX + sineW / 2) + " " + sineStartY + " q " + sineW / 4 + " " + sineW / 2 + "  " + sineW / 2 + " 0";
             }
             else if (elementType == 'load') {
+                //load arrow
                 var arrowH = 10;
                 //<path id="lineAB" d="M 20 100 l 0 -98 m -18 18 l 18 -18 l 18 18"
                 path1 = "M " + w / 2 + " " + h + " l 0 " + -(h - 2) + " m " + -arrowH + " " + arrowH + " l " + arrowH + " " + -arrowH + " l " + arrowH + " " + arrowH;
@@ -287,7 +298,7 @@ var ShapeService = /** @class */ (function () {
             this.modelElementDataService.setPropertyForElement(nonBusEl.elementId, 'fromBus', fromBus);
         }
     };
-    //Assign results to display text fields of the shapes
+    //Assign results to text fields of the shapes
     ShapeService.prototype.applyResultsToShapesText = function () {
         var _a;
         for (var _i = 0, _b = this.shapes; _i < _b.length; _i++) {

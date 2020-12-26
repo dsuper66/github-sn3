@@ -15,8 +15,11 @@ var ModelElementDataService = /** @class */ (function () {
         this.elementNextIndex = new Map();
         this.resultsDP = 2;
         this.prevObjectiveVal = 0.0;
-        //Manually Add Child element defintions which will
-        //cause child elements to be created automatically with parent
+        //The model elements (branch, bus, etc) are added by the user
+        //There are also the following "singleton" elements
+        //These are manually added here
+        //They are child element defintions which will
+        //cause child elements to be created automatically when the parent element is added
         //--------------------------------------------------
         //Child Tranches
         //--------------
@@ -105,7 +108,9 @@ var ModelElementDataService = /** @class */ (function () {
         });
         return dict;
     };
-    //===DATA===
+    //==========
+    //   DATA
+    //==========
     //Add element
     ModelElementDataService.prototype.addElement = function (elementId, elementType, properties) {
         this.modelElements.push({
@@ -151,6 +156,7 @@ var ModelElementDataService = /** @class */ (function () {
         var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
         return properties[propertyType];
     };
+    //Sum the child element properties, e.g., sum the bid quantities
     ModelElementDataService.prototype.sumForChildren = function (elementId, childElementType, childPropertyType) {
         var childElements = this.modelElements.filter(function (e) {
             return e.properties['parentId'] == elementId
@@ -204,7 +210,9 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("NO VALUE");
         }
     };
-    //===RESULTS===
+    //=============
+    //   RESULTS
+    //=============
     //All values (prices and quantities) are stored in the results array of the element
     //indexed by a string which is either the name of the constraint or variable
     ModelElementDataService.prototype.resetResults = function () {
@@ -303,9 +311,15 @@ var ModelElementDataService = /** @class */ (function () {
             // if (!elementToUpdate.resultString) {
             //   elementToUpdate.resultString = ""        
             // }             
+            //Special case
             //Node balance LTE constraint shadow price is negative
             if (resultType == "nodeBal" && resultId.includes("LTE")) {
                 value *= -1.0;
+            }
+            //Directional results
+            var direction = this.getValueForElementProperty(elementId, 'direction');
+            if (direction) {
+                value *= Number(direction);
             }
             //The value adds to any existing value with the same key
             //(e.g. cleared offers add up at the parent level)

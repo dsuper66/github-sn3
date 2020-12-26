@@ -17,8 +17,11 @@ export class ModelElementDataService {
     private modelElementDefService: ModelElementDefService
   ) {
 
-    //Manually Add Child element defintions which will
-    //cause child elements to be created automatically with parent
+    //The model elements (branch, bus, etc) are added by the user
+    //There are also the following "singleton" elements
+    //These are manually added here
+    //They are child element defintions which will
+    //cause child elements to be created automatically when the parent element is added
     //--------------------------------------------------
     //Child Tranches
     //--------------
@@ -114,7 +117,9 @@ export class ModelElementDataService {
     return dict;
   }
 
-  //===DATA===
+  //==========
+  //   DATA
+  //==========
 
   //Add element
   addElement(elementId: string, elementType: string, properties: ElementProperties) {
@@ -171,6 +176,7 @@ export class ModelElementDataService {
     return properties[propertyType];
   }
 
+  //Sum the child element properties, e.g., sum the bid quantities
   sumForChildren(elementId: string, childElementType: string, childPropertyType: string): number {
     const childElements = this.modelElements.filter(e => 
       e.properties['parentId'] == elementId
@@ -235,7 +241,10 @@ export class ModelElementDataService {
     }
   }
 
-  //===RESULTS===
+  //=============
+  //   RESULTS
+  //=============
+
   //All values (prices and quantities) are stored in the results array of the element
   //indexed by a string which is either the name of the constraint or variable
 
@@ -351,10 +360,17 @@ export class ModelElementDataService {
       //   elementToUpdate.resultString = ""        
       // }             
 
+      //Special case
       //Node balance LTE constraint shadow price is negative
       if (resultType == "nodeBal" && resultId.includes("LTE")) {
         value *= -1.0;
       }
+      //Directional results
+      const direction = this.getValueForElementProperty(elementId,'direction');
+      if (direction) {
+        value *= Number(direction);
+      }
+      
 
       //The value adds to any existing value with the same key
       //(e.g. cleared offers add up at the parent level)

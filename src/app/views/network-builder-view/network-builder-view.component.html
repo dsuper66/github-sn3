@@ -129,10 +129,8 @@
             [attr.height]="shape.Inner"          
             fill="gray">{{textForShape(shape.elementType)}}</text>
           </svg> 
-
-        <!-- </svg> -->
         
-        <!-- Inner -->
+          <!-- Bus, Branch, Island... Inner -->
           <rect class="shape"
           
           id="{{shape.elementId}}" 
@@ -140,29 +138,22 @@
           [attr.y]="shape.yInner" 
           [attr.width]="shape.wInner"
           [attr.height]="shape.hInner"
+
           [attr.rx]="shape.elementType=='bus'?8:2" 
 
           [style.fill]="(shape.elementType=='island' || shape.elementType=='mathModel') ? 'none' : 'black'"
-
-
           /> 
+          <!-- stroke="black"
+          fill="none" -->
 
-          <!-- stroke-width="2"
-
-                      [style.stroke]="black"
-          [style.stroke-width]="2"
-
-          stroke="black"
-          fill="white" 
-                  [style.stroke-width]="shape.elementType=='island'?'4':'0'"
-
-                  [style.stroke-width]="shape.elementType=='island'?'4':'1'"
-
-                  [style.fill]="shape.elementType=='island'?'white':'black'"
-
-        -->
-
- 
+          <!--Branch arrow-->   
+          <svg *ngIf="shape.elementType=='branch'" class="path" 
+          [attr.x]="shape.xOuter" 
+          [attr.y]="shape.yOuter + shape.hOuter/2 - 15.0" 
+          [attr.width]="shape.wOuter"
+          [attr.height]="60">
+          <path [attr.d] = "shape.path1"/>
+          </svg>
 
     </svg>
 
@@ -193,7 +184,7 @@
         <path [attr.d]="shape.path1"/>
         <path [attr.d]="shape.path2"/>
       </svg>  
-      <!--Load-->
+      <!--Load arrows-->
       <svg *ngIf="shape.elementType=='load'"
         [attr.height]="shape.hInner" [attr.width]="shape.wInner"
         [attr.x]="shape.xInner" [attr.y]="shape.yInner"

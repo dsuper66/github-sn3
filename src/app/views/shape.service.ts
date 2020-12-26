@@ -142,6 +142,15 @@ export class ShapeService {
       //Y position
       let y = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
 
+      const xOuter = x - (selectWidth - branchWidth) / 2;
+      //Flow direction Arrow
+      const w = selectWidth;
+      const arrowH = 15;
+      //const h = branchInitLength;
+      //Capital letters means absolutely positioned, lower cases means relatively positioned.
+      //path1 = `M 0 0 l ${w/2} ${arrowH} l ${w/2} ${-arrowH}`;
+      path1 = `M 0 ${arrowH + 2} l ${w/2} ${-arrowH} l ${w/2} ${arrowH}`;
+
       newShape = ({
         elementType: elementType,
         elementId: newElementId,
@@ -149,10 +158,11 @@ export class ShapeService {
         yInner: y,
         wInner: branchWidth,
         hInner: branchInitLength,
-        xOuter: x - (selectWidth - branchWidth) / 2,
+        xOuter: xOuter,
         yOuter: y,
         wOuter: selectWidth,
-        hOuter: branchInitLength
+        hOuter: branchInitLength,
+        path1: path1
       })
     }
     //GEN & LOAD
@@ -170,6 +180,7 @@ export class ShapeService {
       var path2: string | undefined;
 
       if (elementType == 'gen') {
+        //gen sine wave
         let sineStartX = 6;
         let sineStartY = w / 2;
         let sineW = w - 2 * sineStartX;
@@ -177,6 +188,7 @@ export class ShapeService {
         path2 = `M ${sineStartX + sineW / 2} ${sineStartY} q ${sineW / 4} ${sineW / 2}  ${sineW / 2} 0`
       }
       else if (elementType == 'load') {
+        //load arrow
         let arrowH = 10;
         //<path id="lineAB" d="M 20 100 l 0 -98 m -18 18 l 18 -18 l 18 18"
         path1 = `M ${w / 2} ${h} l 0 ${-(h - 2)} m ${-arrowH} ${arrowH} l ${arrowH} ${-arrowH} l ${arrowH} ${arrowH}`
@@ -317,7 +329,7 @@ export class ShapeService {
     }
   }
 
-  //Assign results to display text fields of the shapes
+  //Assign results to text fields of the shapes
   applyResultsToShapesText() {
     for (const shape of this.shapes) {
       [shape.text1,shape.text2,shape.text3,shape.text4] = 
