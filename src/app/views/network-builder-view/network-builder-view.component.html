@@ -146,13 +146,14 @@
           <!-- stroke="black"
           fill="none" -->
 
-          <!--Branch arrow-->   
+          <!--Branch arrows-->   
           <svg *ngIf="shape.elementType=='branch'" class="path" 
           [attr.x]="shape.xOuter" 
           [attr.y]="shape.yOuter + shape.hOuter/2 - 15.0" 
           [attr.width]="shape.wOuter"
           [attr.height]="60">
-          <path [attr.d] = "shape.path1"/>
+          <svg *ngIf="shape.text2=='1'"><path [attr.d] = "shape.path1"/></svg>
+          <svg *ngIf="shape.text2=='2'"><path [attr.d] = "shape.path2"/></svg>
           </svg>
 
     </svg>

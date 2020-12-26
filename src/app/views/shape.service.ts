@@ -148,8 +148,8 @@ export class ShapeService {
       const arrowH = 15;
       //const h = branchInitLength;
       //Capital letters means absolutely positioned, lower cases means relatively positioned.
-      //path1 = `M 0 0 l ${w/2} ${arrowH} l ${w/2} ${-arrowH}`;
-      path1 = `M 0 ${arrowH + 2} l ${w/2} ${-arrowH} l ${w/2} ${arrowH}`;
+      path1 = `M 0 0 l ${w/2} ${arrowH} l ${w/2} ${-arrowH}`;
+      path2 = `M 0 ${arrowH + 2} l ${w/2} ${-arrowH} l ${w/2} ${arrowH}`;
 
       newShape = ({
         elementType: elementType,
@@ -162,7 +162,8 @@ export class ShapeService {
         yOuter: y,
         wOuter: selectWidth,
         hOuter: branchInitLength,
-        path1: path1
+        path1: path1,
+        path2: path2
       })
     }
     //GEN & LOAD

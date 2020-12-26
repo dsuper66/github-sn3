@@ -287,11 +287,24 @@ var ModelElementDataService = /** @class */ (function () {
                 }
                 else if (element.elementType == "branch") {
                     resultString1 = this.getResultString('branchFlow', results);
+                    //Draw arrow (does not work because svg is not updateable)
+                    var branchFlow = this.getResultVal('branchFlow', results);
+                    // const w = 40; //selectWidth;
+                    // const arrowH = 15;
+                    if (branchFlow > 0) {
+                        resultString2 = '1';
+                    }
+                    else if (branchFlow < 0) {
+                        resultString2 = '2';
+                    }
+                    else {
+                        resultString2 = '0';
+                    }
                 }
             }
         }
         // }
-        console.log("got result:>>" + resultString1 + "<<");
+        console.log("got result:>>" + resultString2 + "<<");
         return [resultString1, resultString2, resultString3, resultString4];
     };
     //The results are the shadow price of every constraint and the value of every variable
