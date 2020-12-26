@@ -129,10 +129,13 @@ var ShapeService = /** @class */ (function () {
             //Flow direction Arrow
             var w = selectWidth;
             var arrowH = 15;
+            var inset = 7;
             //const h = branchInitLength;
             //Capital letters means absolutely positioned, lower cases means relatively positioned.
-            path1 = "M 0 0 l " + w / 2 + " " + arrowH + " l " + w / 2 + " " + -arrowH;
-            path2 = "M 0 " + (arrowH + 2) + " l " + w / 2 + " " + -arrowH + " l " + w / 2 + " " + arrowH;
+            // path1 = `M 0 0 l ${w/2} ${arrowH} l ${w/2} ${-arrowH}`;
+            // path2 = `M 0 ${arrowH + 2} l ${w/2} ${-arrowH} l ${w/2} ${arrowH}`;
+            path1 = "M " + inset + " 0 l " + (w / 2 - inset) + " " + arrowH + " l " + (w / 2 - inset) + " " + -arrowH;
+            path2 = "M " + inset + " " + (arrowH + 2) + " l " + (w / 2 - inset) + " " + -arrowH + " l " + (w / 2 - inset) + " " + arrowH;
             newShape = ({
                 elementType: elementType,
                 elementId: newElementId,
