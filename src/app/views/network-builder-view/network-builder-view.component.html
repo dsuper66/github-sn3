@@ -97,37 +97,39 @@
               [attr.x]="shape.xInner + shape.wInner + 4" 
               [attr.y]="shape.yInner + shape.hInner/5"
               [attr.width]="shape.wOuter"
-              [attr.height]="10"
-              fill="red">{{shape.text1}}</text>
+              [attr.height]="10">
+              {{shape.text1}}</text>
             <!-- Text 2 -->
             <text 
             [attr.x]="shape.xInner + shape.wInner +4" 
             [attr.y]="shape.yInner + shape.hInner/5 + 15"
             [attr.width]="shape.wOuter"
-            [attr.height]="10"
-            fill="red">{{shape.text2}}</text>  
+            [attr.height]="10">
+            {{shape.text2}}</text>  
             <!-- Text 3 -->
             <text 
             [attr.x]="shape.xInner + shape.wInner +4" 
             [attr.y]="shape.yInner + shape.hInner/5 + 15 + 15"
             [attr.width]="shape.wOuter"
-            [attr.height]="10"
-            fill="red">{{shape.text3}}</text>
+            [attr.height]="10">
+            {{shape.text3}}</text>
             <!-- Text 4 -->
             <text 
+            [style.fill]="'red'"
             [attr.x]="shape.xInner + shape.wInner +4" 
             [attr.y]="shape.yInner + shape.hInner/5 + 15 + 15 + 15"
             [attr.width]="shape.wOuter"
-            [attr.height]="10"
-            fill="red">{{shape.text4}}</text>                               
+            [attr.height]="10">
+            {{shape.text4}}</text>                               
 
             <!-- Island Title -->
             <text id="island"
+            [style.fill]="'gray'"
             [attr.x]="shape.xInner + 6" 
             [attr.y]="shape.yInner + (3/4) * shape.hInner"
             [attr.width]="shape.wInner"
-            [attr.height]="shape.Inner"          
-            fill="gray">{{textForShape(shape.elementType)}}</text>
+            [attr.height]="shape.Inner">
+            {{textForShape(shape.elementType)}}</text>
           </svg> 
         
           <!-- Bus, Branch, Island... Inner -->
@@ -199,18 +201,19 @@
       <!-- Text 3 -->
       <svg>
         <text 
+        [ngClass]="{'color-red': shape.elementType=='gen'}"
         [attr.x]="shape.xOuter" 
         [attr.y]="shape.yInner - 3 - 30" 
         [attr.width]="shape.wOuter"
-        [attr.height]="20"
-        fill="red">{{shape.text3}}</text>
+        [attr.height]="20">
+        {{shape.text3}}</text>
       </svg>      
       <!-- Text 2 -->
       <!-- "{'color-black': shape.elementType=='gen', 'color-black': shape.elementType=='load'}" -->
       <!-- ng-class='color-red' -->
       <svg>
             <text 
-            [ngClass]="{'color-red': shape.elementType=='load', 'color-black': shape.elementType=='gen'}"
+            [ngClass]="{'color-red': shape.elementType=='load'}"
             [attr.x]="shape.xOuter" 
             [attr.y]="shape.yInner - 3 - 15" 
             [attr.width]="shape.wOuter"
