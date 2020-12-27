@@ -59,3 +59,19 @@ svg text{
   .rotate {
     transform: rotate(0,0,45deg);
   }
+
+  text {
+    fill: blue;
+  }
+
+  .color-black {
+    fill: black;
+  }
+  
+  .color-red {
+    fill: red;
+  }
+
+  .color-green {
+    fill: green;
+  }

@@ -147,6 +147,7 @@
           fill="none" -->
 
           <!--Branch arrows-->   
+          <!-- Direction is from text2... 0=none,1=Pos,2=Neg -->
           <svg *ngIf="shape.elementType=='branch'" class="path" 
           [attr.x]="shape.xOuter" 
           [attr.y]="shape.yOuter + shape.hOuter/2 - 15.0" 
@@ -205,13 +206,16 @@
         fill="red">{{shape.text3}}</text>
       </svg>      
       <!-- Text 2 -->
+      <!-- "{'color-black': shape.elementType=='gen', 'color-black': shape.elementType=='load'}" -->
+      <!-- ng-class='color-red' -->
       <svg>
             <text 
+            [ngClass]="{'color-red': shape.elementType=='load', 'color-black': shape.elementType=='gen'}"
             [attr.x]="shape.xOuter" 
             [attr.y]="shape.yInner - 3 - 15" 
             [attr.width]="shape.wOuter"
-            [attr.height]="20"
-            fill="red">{{shape.text2}}</text>
+            [attr.height]="20">
+            {{shape.text2}}</text>
       </svg>
       <!-- Text 1 -->
       <svg>
