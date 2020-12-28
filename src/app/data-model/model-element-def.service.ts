@@ -55,7 +55,7 @@ export class ModelElementDefService {
       { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 1000 },
       { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 250 },
       { propertyType: 'tranchePrice', elementType: 'enOfferTranche', defaultValue: 70 },
-      { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 0 },
+      { propertyType: 'trancheLimit', elementType: 'resOfferTranche', defaultValue: 100 },
       { propertyType: 'tranchePrice', elementType: 'resOfferTranche', defaultValue: 40 },
       { propertyType: 'capacityMax', elementType: 'gen', defaultValue: 120 },
       // { propertyType: 'childCount', elementType: 'childDef', defaultValue: 100 },

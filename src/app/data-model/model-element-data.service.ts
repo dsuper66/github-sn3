@@ -261,25 +261,33 @@ export class ModelElementDataService {
 
   private resultsDP = 2;
 
-  getResultString(key: string, results: {[resultType:string] : number}):string {
-    if (results[key] === undefined) {
+  //Extract results from dictionary and format as string
+  //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
+  getResultString(key: string, results: {[resultType:string] : number}, prefix = "",showZero = true):string {
+    const value = results[key];
+    if (value === undefined) {
       console.log("MISSING RESULT: " + key)
       return key
     }
     else {
-      return results[key].toFixed(this.resultsDP).toString();
+      if (showZero || value != 0) {
+        return prefix + value.toFixed(this.resultsDP).toString();
+      }
+      else {
+        return "";
+      }
     }
   }
 
-  getResultVal(key: string, results: {[resultType:string] : number}):number {
-    if (results[key] === undefined) {
-      console.log("MISSING RESULT: " + key)
-      return -9999.0
-    }
-    else {
-      return results[key];
-    }
-  }
+  // getResultVal(key: string, results: {[resultType:string] : number}):number {
+  //   if (results[key] === undefined) {
+  //     console.log("MISSING RESULT: " + key)
+  //     return -9999.0
+  //   }
+  //   else {
+  //     return results[key];
+  //   }
+  // }
 
   private prevObjectiveVal = 0.0;
   //Result string for display... for the element get pre-determined result types
@@ -302,47 +310,53 @@ export class ModelElementDataService {
         else if (element.elementType == "gen") {
           resultString1 = this.getResultString('enTrancheCleared',results);
           resultString2 = "res:" + this.getResultString('resTrancheCleared',results);
-          resultString3 = "-risk:" + this.getResultString('genResShortfall',results);
+          resultString3 = this.getResultString('genResShortfall',results,"-risk:",false);
         }
         else if (element.elementType == "load") {
           resultString1 = this.getResultString('bidTrancheCleared',results);
-          const uncleared = 
-            this.sumForChildren(elementId,'bidTranche','trancheLimit') - this.getResultVal('bidTrancheCleared',results);
-          if (uncleared > 0) {
-            resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
-          }          
+          //Calc uncleared
+          const bidsCleared = results['bidTrancheCleared'];
+          if (bidsCleared) {
+            const uncleared = 
+              this.sumForChildren(elementId,'bidTranche','trancheLimit') - bidsCleared;
+            //Only display if uncleared is > 0
+            if (uncleared > 0) {
+              resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
+            }          
+          }
         }        
         else if (element.elementType == "island") {
           resultString1 = "res$:" + this.getResultString('resCover',results);
           resultString2 = "risk:" + this.getResultString('islandRisk',results);
           resultString3 = "res:" + this.getResultString('islandRes',results);
-          resultString4 = "-risk:" + this.getResultString('islandResShortfall',results);         
+          resultString4 = this.getResultString('islandResShortfall',results,"-risk:",false);         
         }
         else if (element.elementType == "mathModel") {
-          var objectiveVal = this.getResultVal('objectiveVal',results);
-          const deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
-          this.prevObjectiveVal = objectiveVal;
-          resultString1 = "objVal:" + this.getResultString('objectiveVal',results);
-          resultString2 = "prev:" + objectiveVal.toFixed(this.resultsDP).toString();
-          resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.resultsDP).toString();
+          var objectiveVal = results['objectiveVal']; //this.getResultVal('objectiveVal',results);
+          if (objectiveVal) {
+            const deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
+            this.prevObjectiveVal = objectiveVal;
+            resultString1 = "objVal:" + this.getResultString('objectiveVal',results);
+            resultString2 = "prev:" + objectiveVal.toFixed(this.resultsDP).toString();
+            resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.resultsDP).toString();
+          }
         }        
         else if (element.elementType == "branch") {
           resultString1 = this.getResultString('branchFlow',results);
           
-          //Draw arrow (does not work because svg is not updateable)
-          const branchFlow = this.getResultVal('branchFlow',results);
-          // const w = 40; //selectWidth;
-          // const arrowH = 15;
-          if (branchFlow > 0) {
-            resultString2 = '1';
-          }     
-          else if (branchFlow < 0) {
-            resultString2 = '2';
+          //Determine direction of flow arrow
+          const branchFlow = results['branchFlow']; //this.getResultVal('branchFlow',results);
+          if (branchFlow) {
+            if (branchFlow > 0) {
+              resultString2 = '1';
+            }     
+            else if (branchFlow < 0) {
+              resultString2 = '2';
+            }
+            else {
+              resultString2 = '0';
+            } 
           }
-          else {
-            resultString2 = '0';
-          } 
-
         }
       }
     }
