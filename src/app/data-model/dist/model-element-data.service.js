@@ -191,6 +191,18 @@ var ModelElementDataService = /** @class */ (function () {
         if (propertyType === 'isRefBus' && value === 'true') {
             this.setPropertyForAllElements(propertyType, "false");
         }
+        //Special Case
+        //resistance... use this to populate the flow loss segments
+        if (propertyType === 'resistance') {
+            //Get segments and flowMax for this branch
+            var segments = this.getChildElements(elementId).filter(function (e) { return e.elementType == 'flowLossSegment'; });
+            var flowMax = this.getValueForElementProperty(elementId, 'flowMax');
+            var segFlowLimit = Number(flowMax) / segments.length;
+            for (var _i = 0, segments_1 = segments; _i < segments_1.length; _i++) {
+                var segment = segments_1[_i];
+                this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit);
+            }
+        }
         //Update the property for the element
         var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
         //Update if found
@@ -199,8 +211,8 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
             //If child elements have the same property then it also gets updated
             //(i.e. fromBus and toBus for dirBranch)
-            for (var _i = 0, _a = this.getChildElements(elementId).filter(function (childElement) { return _this.modelElementDefService.elementHasProperty(childElement, propertyType); }); _i < _a.length; _i++) {
-                var childElementWithProperty = _a[_i];
+            for (var _a = 0, _b = this.getChildElements(elementId).filter(function (childElement) { return _this.modelElementDefService.elementHasProperty(childElement, propertyType); }); _a < _b.length; _a++) {
+                var childElementWithProperty = _b[_a];
                 this.setPropertyForElement(childElementWithProperty.elementId, propertyType, value);
             }
         }
