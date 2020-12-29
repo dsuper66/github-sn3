@@ -210,12 +210,16 @@ export class ModelElementDataService {
     if (propertyType === 'resistance') {
       //Get segments and flowMax for this branch
       const segments = this.getChildElements(elementId).filter(e => e.elementType == 'flowLossSegment');
-      const flowMax = this.getValueForElementProperty(elementId,'flowMax');
-      const segFlowLimit = Number(flowMax) / segments.length;
+      const flowMax = Number(this.getValueForElementProperty(elementId,'flowMax'));
+      const segFlowLimit = flowMax / segments.length;
+      const resistance = Number(value);
+      var endPointFlow = 0.0;
       for (const segment of segments){
         this.setPropertyForElement(segment.elementId,'segFlowLimit',segFlowLimit);
+        endPointFlow += segFlowLimit;
+        const endPointLosses =  flowMax * flowMax * resistance;
+        this.setPropertyForElement(segment.elementId,'segLossLimit',endPointLosses);
       }
-      
     }
 
     //Update the property for the element
