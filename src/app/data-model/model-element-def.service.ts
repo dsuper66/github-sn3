@@ -20,9 +20,10 @@ export class ModelElementDefService {
 
   constructor() {
 
-
-    //Property Types
     //All property types must have an entry here, for the data entry display
+    //(this can probably go, replaced by an array of properties that are hidden
+    //... primitiveType is not actually used... all the properties are string
+    //and the json conversion decides wheteher or not it is a number)
     this.elementPropertyTypeSettings.push(
       { propertyType: 'isRefBus', primitiveType: 'bool', visible: true },
       { propertyType: 'fromBus', primitiveType: 'string', visible: false },
@@ -36,13 +37,14 @@ export class ModelElementDefService {
       { propertyType: 'parentId', primitiveType: 'string', visible: false },
       { propertyType: 'trancheLimit', primitiveType: 'number', visible: true },
       { propertyType: 'tranchePrice', primitiveType: 'number', visible: true },
-      { propertyType: 'flowLimit', primitiveType: 'number', visible: true },
-      { propertyType: 'lossLimit', primitiveType: 'number', visible: true },
+      { propertyType: 'segFlowLimit', primitiveType: 'number', visible: true },
+      { propertyType: 'segLossLimit', primitiveType: 'number', visible: true },
       { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
       { propertyType: 'direction', primitiveType: 'number', visible: true },
       { propertyType: 'islandId', primitiveType: 'string', visible: false },
       { propertyType: 'islandResShortfallPrice', primitiveType: 'number', visible: true },
-      { propertyType: 'genResShortfallPrice', primitiveType: 'number', visible: true }
+      { propertyType: 'genResShortfallPrice', primitiveType: 'number', visible: true },
+      { propertyType: 'lossFlowRatio', primitiveType: 'number', visible: false },      
     )
 
     //Separate so that different element types can have different defaults for the same properties
@@ -63,7 +65,7 @@ export class ModelElementDefService {
       { propertyType: 'genResShortfallPrice', elementType: 'gen', defaultValue: 900 }
     )
 
-    //Define Element Types and Property Types
+    //Define all Element Types and Property Types
     //An Element Type that is included in the model must be defined here to know its properties
     //Parent elements
     this.elementTypeProperties['bus'] = ['isRefBus'];
@@ -81,7 +83,7 @@ export class ModelElementDefService {
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','toBus'];
     //Reserve needs islandId (inherited), so cleared quantities go to island
     this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','islandId'];
-    this.elementTypeProperties['lossTranche'] = ['parentId', 'flowLimit', 'lossLimit'];
+    this.elementTypeProperties['flowLossSegment'] = ['parentId', 'segFlowLimit', 'segLossLimit', 'lossFlowRatio'];
 
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)

@@ -46,11 +46,11 @@ export class ModelElementDataService {
         { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
-    //Flow-Loss Tranches associated with branch
+    //Flow-Loss Segments associated with branch
     this.modelElements.push({
-      elementId: 'lossTrancheDef', elementType: 'childDef',
+      elementId: 'flowLossSegmentDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'branch' }, { 'childTypeId': 'lossTranche' }, { 'childCount': '2' }]),
+        { 'parentType': 'branch' }, { 'childTypeId': 'flowLossSegment' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Child Unrestricted Elements
