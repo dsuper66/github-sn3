@@ -35,8 +35,8 @@ export class MathModelDefService {
     { constraintType:'islandResCalc', elementType:'island', varType:'islandRes', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'resCover', elementType:'island', varType:'islandRisk', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'resCover', elementType:'island', varType:'islandRisk', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
-    { constraintType:'brFlowSumSegments', elementType:'dirBranch', varType:'branchFlow', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
-    { constraintType:'brLossSumSegments', elementType:'dirBranch', varType:'branchLoss', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
+    { constraintType:'brFlowIsSumOfSegs', elementType:'dirBranch', varType:'branchFlow', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
+    { constraintType:'brLossIsSumOfSegs', elementType:'dirBranch', varType:'branchLoss', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'segLossForFlow', elementType:'flowLossSegment', varType:'segmentLoss', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
 
     )
@@ -68,7 +68,7 @@ export class MathModelDefService {
       { constraintType: 'nodeBal', elementType: 'bidTranche', propertyMap: 'fromBus', varType: 'bidTrancheCleared', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'fromBus', varType: 'branchFlow', factorParentProperty: '', factorValue: -1, factorProperty: 'direction' },
       { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', varType: 'branchFlow', factorParentProperty: '', factorValue: 1, factorProperty: 'direction' },
-      { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', varType: 'branchLoss', factorParentProperty: '', factorValue: -1, factorProperty: 'direction' },
+      { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', varType: 'branchLoss', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'powerFlow', elementType: 'bus', propertyMap: 'fromBus', varType: 'phaseAnglePos', factorParentProperty: 'susceptance', factorValue: -1, factorProperty: '' },
       { constraintType: 'powerFlow', elementType: 'bus', propertyMap: 'toBus', varType: 'phaseAnglePos', factorParentProperty: 'susceptance', factorValue: 1, factorProperty: '' },
       { constraintType: 'powerFlow', elementType: 'dirBranch', propertyMap: 'parentId', varType: 'branchFlow', factorParentProperty: '', factorValue: 1, factorProperty: 'direction' },
@@ -87,9 +87,9 @@ export class MathModelDefService {
       { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandRes', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' },
-      { constraintType: 'brFlowSumSegments', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: '' },
-      { constraintType: 'brLossSumSegments', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentLoss', factorParentProperty: '', factorValue: -1, factorProperty: '' },
-      { constraintType: 'segLossForFlow', elementType: 'flowLossSegment', propertyMap: 'self', varType: 'lossFlowRatio', factorParentProperty: '', factorValue: -1, factorProperty: '' },
+      { constraintType: 'brFlowIsSumOfSegs', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: '' },
+      { constraintType: 'brLossIsSumOfSegs', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentLoss', factorParentProperty: '', factorValue: -1, factorProperty: '' },
+      { constraintType: 'segLossForFlow', elementType: 'flowLossSegment', propertyMap: 'self', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: 'lossFlowRatio' },
 
       )
 

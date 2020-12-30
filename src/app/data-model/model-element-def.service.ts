@@ -38,7 +38,7 @@ export class ModelElementDefService {
       { propertyType: 'trancheLimit', primitiveType: 'number', visible: true },
       { propertyType: 'tranchePrice', primitiveType: 'number', visible: true },
       { propertyType: 'segFlowLimit', primitiveType: 'number', visible: true },
-      { propertyType: 'segLossLimit', primitiveType: 'number', visible: true },
+      // { propertyType: 'segLossLimit', primitiveType: 'number', visible: true },
       { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
       { propertyType: 'direction', primitiveType: 'number', visible: true },
       { propertyType: 'islandId', primitiveType: 'string', visible: false },
@@ -83,7 +83,8 @@ export class ModelElementDefService {
     this.elementTypeProperties['enOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','toBus'];
     //Reserve needs islandId (inherited), so cleared quantities go to island
     this.elementTypeProperties['resOfferTranche'] = ['parentId', 'trancheLimit', 'tranchePrice','islandId'];
-    this.elementTypeProperties['flowLossSegment'] = ['parentId', 'segFlowLimit', 'segLossLimit', 'lossFlowRatio'];
+    //Flow-Loss segments
+    this.elementTypeProperties['flowLossSegment'] = ['parentId', 'segFlowLimit', 'lossFlowRatio'];
 
     //Child elements - unrestricted variables
     //Directional branches (power flow is at the parent branch level)

@@ -17,11 +17,11 @@ export class ModelElementDataService {
     private modelElementDefService: ModelElementDefService
   ) {
 
+    //ElementDef elements that define a relationship between elements...
     //The model elements (branch, bus, etc) are added by the user
-    //There are also the following "singleton" elements
+    //There are also the following "singleton" ElementDef elements
     //These are manually added here
-    //They are child element defintions which will
-    //cause child elements to be created automatically when the parent element is added
+    //They will cause child elements to be created automatically when the parent element is added
     //--------------------------------------------------
     //Child Tranches
     //--------------
@@ -46,11 +46,11 @@ export class ModelElementDataService {
         { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
-    //Flow-Loss Segments associated with branch
+    //Flow-Loss Segments associated with directional branch
     this.modelElements.push({
       elementId: 'flowLossSegmentDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'branch' }, { 'childTypeId': 'flowLossSegment' }, { 'childCount': '2' }]),
+        { 'parentType': 'dirBranch' }, { 'childTypeId': 'flowLossSegment' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Child Unrestricted Elements
@@ -167,7 +167,7 @@ export class ModelElementDataService {
 
   getModelElementOfType(elementType: string): ModelElement[] {
     return this.modelElements.filter(e => e.elementType === elementType);
-  }  
+  }
 
   getValueForElementProperty(elementId: string, propertyType: string): string {
     let properties = this.modelElements.filter(
@@ -178,7 +178,7 @@ export class ModelElementDataService {
 
   //Sum the child element properties, e.g., sum the bid quantities
   sumForChildren(elementId: string, childElementType: string, childPropertyType: string): number {
-    const childElements = this.modelElements.filter(e => 
+    const childElements = this.modelElements.filter(e =>
       e.properties['parentId'] == elementId
       && e.elementType == childElementType)
     let sum = 0.0;
@@ -208,17 +208,29 @@ export class ModelElementDataService {
     //Special Case
     //resistance... use this to populate the flow loss segments
     if (propertyType === 'resistance') {
-      //Get segments and flowMax for this branch
-      const segments = this.getChildElements(elementId).filter(e => e.elementType == 'flowLossSegment');
-      const flowMax = Number(this.getValueForElementProperty(elementId,'flowMax'));
-      const segFlowLimit = flowMax / segments.length;
+      const flowMax = Number(this.getValueForElementProperty(elementId, 'flowMax'));
       const resistance = Number(value);
-      var endPointFlow = 0.0;
-      for (const segment of segments){
-        this.setPropertyForElement(segment.elementId,'segFlowLimit',segFlowLimit);
-        endPointFlow += segFlowLimit;
-        const endPointLosses =  flowMax * flowMax * resistance;
-        this.setPropertyForElement(segment.elementId,'segLossLimit',endPointLosses);
+
+      //Get dirBranches, then set the segment properties
+      const dirBranches = this.getChildElements(elementId).filter(e => e.elementType == 'dirBranch');
+      for (const dirBranch of dirBranches) {
+        const segments = this.getChildElements(dirBranch.elementId).filter(e => e.elementType == 'flowLossSegment');
+        const segFlowLimit = flowMax / segments.length; //equal length segments
+        var startPointFlow = 0.0;
+        var endPointFlow = segFlowLimit;
+        for (const segment of segments) {
+          //Flow limit
+          this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit);
+          //Loss flow ratio
+          const startPointLosses = startPointFlow * startPointFlow * resistance;
+          const endPointLosses = endPointFlow * endPointFlow * resistance;
+          const lossFlowRatio = (endPointLosses-startPointLosses)/segFlowLimit;
+          this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio);
+          //For next segment
+          startPointFlow = endPointFlow;
+          endPointFlow += segFlowLimit;
+          console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
+        }
       }
     }
 
@@ -234,9 +246,9 @@ export class ModelElementDataService {
       //If child elements have the same property then it also gets updated
       //(i.e. fromBus and toBus for dirBranch)
       for (const childElementWithProperty of this.getChildElements(elementId).filter(
-        childElement => this.modelElementDefService.elementHasProperty(childElement,propertyType))) {
+        childElement => this.modelElementDefService.elementHasProperty(childElement, propertyType))) {
 
-        this.setPropertyForElement(childElementWithProperty.elementId,propertyType,value);
+        this.setPropertyForElement(childElementWithProperty.elementId, propertyType, value);
       }
     }
   }
@@ -280,7 +292,7 @@ export class ModelElementDataService {
 
   //Extract results from dictionary and format as string
   //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
-  getResultString(key: string, results: {[resultType:string] : number}, prefix = "",showZero = true):string {
+  getResultString(key: string, results: { [resultType: string]: number }, prefix = "", showZero = true): string {
     const value = results[key];
     if (value === undefined) {
       console.log("MISSING RESULT: " + key)
@@ -309,7 +321,7 @@ export class ModelElementDataService {
   private prevObjectiveVal = 0.0;
   //Result string for display... for the element get pre-determined result types
   //(where a result type is either a constraintType or varType) as an array of strings
-  getTextFromElementResults(elementId: string): [string,string,string,string] {
+  getTextFromElementResults(elementId: string): [string, string, string, string] {
     var resultString1 = ""
     var resultString2 = ""
     var resultString3 = ""
@@ -321,73 +333,73 @@ export class ModelElementDataService {
       const results = element.results
       if (results) {
         if (element.elementType == "bus") {
-            resultString1 = "$" + this.getResultString('nodeBal',results); //results['nodeBal'].toFixed(2).toString();  
-            resultString2 = "∠" + this.getResultString('phaseAnglePos',results);
+          resultString1 = "$" + this.getResultString('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
+          resultString2 = "∠" + this.getResultString('phaseAnglePos', results);
         }
         else if (element.elementType == "gen") {
-          resultString1 = this.getResultString('enTrancheCleared',results);
-          resultString2 = "res:" + this.getResultString('resTrancheCleared',results);
-          resultString3 = this.getResultString('genResShortfall',results,"-risk:",false);
+          resultString1 = this.getResultString('enTrancheCleared', results);
+          resultString2 = "res:" + this.getResultString('resTrancheCleared', results);
+          resultString3 = this.getResultString('genResShortfall', results, "-risk:", false);
         }
         else if (element.elementType == "load") {
-          resultString1 = this.getResultString('bidTrancheCleared',results);
+          resultString1 = this.getResultString('bidTrancheCleared', results);
           //Calc uncleared
           const bidsCleared = results['bidTrancheCleared'];
           if (bidsCleared) {
-            const uncleared = 
-              this.sumForChildren(elementId,'bidTranche','trancheLimit') - bidsCleared;
+            const uncleared =
+              this.sumForChildren(elementId, 'bidTranche', 'trancheLimit') - bidsCleared;
             //Only display if uncleared is > 0
             if (uncleared > 0) {
               resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
-            }          
+            }
           }
-        }        
+        }
         else if (element.elementType == "island") {
-          resultString1 = "res$:" + this.getResultString('resCover',results);
-          resultString2 = "risk:" + this.getResultString('islandRisk',results);
-          resultString3 = "res:" + this.getResultString('islandRes',results);
-          resultString4 = this.getResultString('islandResShortfall',results,"-risk:",false);         
+          resultString1 = "res$:" + this.getResultString('resCover', results);
+          resultString2 = "risk:" + this.getResultString('islandRisk', results);
+          resultString3 = "res:" + this.getResultString('islandRes', results);
+          resultString4 = this.getResultString('islandResShortfall', results, "-risk:", false);
         }
         else if (element.elementType == "mathModel") {
           var objectiveVal = results['objectiveVal']; //this.getResultVal('objectiveVal',results);
           if (objectiveVal) {
             const deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
             this.prevObjectiveVal = objectiveVal;
-            resultString1 = "objVal:" + this.getResultString('objectiveVal',results);
+            resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
             resultString2 = "prev:" + objectiveVal.toFixed(this.resultsDP).toString();
             resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.resultsDP).toString();
           }
-        }        
+        }
         else if (element.elementType == "branch") {
-          resultString1 = this.getResultString('branchFlow',results);
-          
+          resultString1 = this.getResultString('branchFlow', results);
+
           //Determine direction of flow arrow
           const branchFlow = results['branchFlow']; //this.getResultVal('branchFlow',results);
           if (branchFlow) {
             if (branchFlow > 0) {
               resultString2 = '1';
-            }     
+            }
             else if (branchFlow < 0) {
               resultString2 = '2';
             }
             else {
               resultString2 = '0';
-            } 
+            }
           }
         }
       }
     }
     // }
     console.log("got result:>>" + resultString2 + "<<");
-    return [resultString1,resultString2,resultString3,resultString4];
+    return [resultString1, resultString2, resultString3, resultString4];
   }
 
   //The results are the shadow price of every constraint and the value of every variable
   //...to get the result we just need the constraintType or varType string
-  addResult(elementId: string, resultType: string, resultId: string, value: number, 
+  addResult(elementId: string, resultType: string, resultId: string, value: number,
     constraintString: string, resultString: string) {
 
-    console.log("Element:" + elementId + " add result:" + value + " for result type:>>" + resultType + "<<"); 
+    console.log("Element:" + elementId + " add result:" + value + " for result type:>>" + resultType + "<<");
 
     //Get the element
     const elementToUpdate = this.modelElements.find(
@@ -412,20 +424,20 @@ export class ModelElementDataService {
         value *= -1.0;
       }
       //Directional results
-      const direction = this.getValueForElementProperty(elementId,'direction');
+      const direction = this.getValueForElementProperty(elementId, 'direction');
       if (direction) {
         value *= Number(direction);
       }
-      
+
 
       //The value adds to any existing value with the same key
       //(e.g. cleared offers add up at the parent level)
       if (elementToUpdate.results) {
         if (elementToUpdate.results[resultType]) {
-          elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;        
+          elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;
         }
         else {
-          elementToUpdate.results[resultType] = value;  
+          elementToUpdate.results[resultType] = value;
         }
       }
 
@@ -438,7 +450,7 @@ export class ModelElementDataService {
       //If element has a parent then also add the result to the parent
       const parentId = elementToUpdate.properties["parentId"]
       if (parentId) {
-        this.addResult(parentId,resultType,resultId,value,constraintString,resultString)
+        this.addResult(parentId, resultType, resultId, value, constraintString, resultString)
       }
     }
   }
