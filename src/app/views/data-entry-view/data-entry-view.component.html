@@ -43,8 +43,8 @@
           <input #saveUserNameCheckBox
           id="formName" 
           type="checkbox" 
-          [checked]="getIncludeStatus(formName)" 
-          (change)="setIncludeStatus(formName,saveUserNameCheckBox.checked)" /></td>
+          [checked]="getConstraintStatus(formName)" 
+          (change)="setConstraintStatus(formName,saveUserNameCheckBox.checked)" /></td>
 
       </tr>
   </table>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
+
 export class MathModelDefService {
 
   constructor() {
@@ -33,7 +34,6 @@ export class MathModelDefService {
     { constraintType:'genCapacityMax', elementType:'gen', varType:'genEnRes', inEquality:'le', rhsValue:0, rhsProperty:'capacityMax', factorValue:1, factorProperty:'' },
     { constraintType:'islandFindRisk', elementType:'gen', varType:'genEnRes', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'islandResCalc', elementType:'island', varType:'islandRes', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
-    { constraintType:'resCover', elementType:'island', varType:'islandRisk', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'resCover', elementType:'island', varType:'islandRisk', inEquality:'le', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'brFlowIsSumOfSegs', elementType:'dirBranch', varType:'branchFlow', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
     { constraintType:'brLossIsSumOfSegs', elementType:'dirBranch', varType:'branchLoss', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
@@ -93,44 +93,59 @@ export class MathModelDefService {
 
       )
 
-      this.disabledFactors.push ('resOfferTranche.resTrancheCleared');
+      //this.disabledFactors.push ('resOfferTranche.resTrancheCleared');
+      this.disabledItems[ComponentType.Constraint] = [];
+      this.disabledItems[ComponentType.VarFactor] = [];
+      // this.disabledItems[ComponentType.VarFactor].push('resOfferTranche.resTrancheCleared');
 
   }
-
 
   private constraintDefs: ConstraintDef[] = [];
   private constraintComps: ConstraintComp[] = [];
-  // private elementTypeVarTypes: { [elementTypeId: string]: string[] } = {};
 
-  //Enable/disable varFactors in the constraints
-  //Factors are identified by elementType.varType
-  private disabledFactors: string[] = [];
-  private disabledConstraints: string[] = [];
-  factorIsEnabled(factorId: string) {
-    return this.disabledFactors.filter(f => f === factorId).length == 0;
+  //Enable/disable varFactors in constraints
+  //VarFactors are identified by elementType.varType
+  // private disabledFactors: string[] = [];
+  // factorIsEnabled(factorId: string) {
+  //   return this.disabledFactors.filter(f => f === factorId).length == 0;
+  // }
+  // setFactorStatus(factorId: string, isEnabled: boolean) {
+  //   if (isEnabled) { //remove from the disabledFactors array
+  //     this.disabledFactors = this.disabledFactors.filter(f => f != factorId)
+  //   }
+  //   else if (this.factorIsEnabled(factorId)) { //add to the disabledFactors array if not already
+  //     this.disabledFactors.push(factorId)
+  //   }
+  // }
+
+  //Enable/Disable item, e.g., varFactor in Constraint, or a Constraint 
+  //Items are enabled by default
+  private disabledItems: string[][] = [];
+  itemIsEnabled(itemType: ComponentType, componentId: string) {
+    //If zero entries found in the disabled array then this component is enabled
+    return this.disabledItems[itemType].filter(f => f === componentId).length == 0;
   }
-  setFactorStatus(factorId: string, isEnabled: boolean) {
-    if (isEnabled) { //remove from the disabledFactors array
-      this.disabledFactors = this.disabledFactors.filter(f => f != factorId)
+  setItemStatus(itemType: ComponentType, componentId: string, isEnabled: boolean) {
+    if (isEnabled) { //remove from the disabled array
+      this.disabledItems = this.disabledItems.filter(f => f[itemType] != componentId)
     }
-    else if (this.factorIsEnabled(factorId)) { //add to the disabledFactors array if not already
-      this.disabledFactors.push(factorId)
+    else if (this.itemIsEnabled(itemType, componentId)) { //add to the disabled array if not already
+      this.disabledItems[itemType].push(componentId)
     }
-  }
+  }  
+
+
 
   getConstraintDefsAll() {
     return this.constraintDefs;
   }
-
   getConstraintCompsAll() {
     return this.constraintComps;
   }
-
   getConstraintDef(constraintType: string):ConstraintDef {
     console.log("get constraint def of type:" + constraintType);
     return this.constraintDefs.filter(cc => cc.constraintType === constraintType)[0];
   }
-
   getConstraintComps(constraintType: string) {
     console.log("get constraint comps of type:" + constraintType);
     return this.constraintComps.filter(cc => cc.constraintType === constraintType);
@@ -150,6 +165,11 @@ export interface ConstraintDef {
   factorProperty: string;
 }
 
+//Enable/disable component
+export enum ComponentType {
+  VarFactor,
+  Constraint
+}
 
 export interface ConstraintComp {
   constraintType: string;

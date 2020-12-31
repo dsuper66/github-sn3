@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.DataEntryViewComponent = void 0;
 var core_1 = require("@angular/core");
+var math_model_def_service_1 = require("../../data-model/math-model-def.service");
 var DataEntryViewComponent = /** @class */ (function () {
     function DataEntryViewComponent(modelElementDataService, modelElementDefService, router, route, settingsService, solverCallService, mathModelDefService) {
         var _this = this;
@@ -88,18 +89,25 @@ var DataEntryViewComponent = /** @class */ (function () {
         this.router.navigate(['../model-def'], { relativeTo: this.route });
     };
     //Constraint Defintions
-    DataEntryViewComponent.prototype.setIncludeStatus = function (constraintName, status) {
-        console.log(">>>" + constraintName + " >>>" + status);
+    DataEntryViewComponent.prototype.getConstraintStatus = function (itemId) {
+        return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ComponentType.Constraint, itemId);
     };
-    DataEntryViewComponent.prototype.getIncludeStatus = function (constraintName) {
-        return true;
+    DataEntryViewComponent.prototype.setConstraintStatus = function (itemId, isEnabled) {
+        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ComponentType.Constraint, itemId, isEnabled);
     };
+    // setConstraintStatus(constraintId: string, isEnabled: boolean) {
+    //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId, isEnabled);
+    //   // console.log(">>>" + constraintName + " >>>" + status);
+    // }
+    // getConstraintStatus(constraintId: string) {
+    //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId);
+    // }
     //Constraint Components
-    DataEntryViewComponent.prototype.getFactorStatus = function (factorId) {
-        return this.mathModelDefService.factorIsEnabled(factorId);
+    DataEntryViewComponent.prototype.getFactorStatus = function (itemId) {
+        return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ComponentType.VarFactor, itemId);
     };
-    DataEntryViewComponent.prototype.setFactorStatus = function (factorId, isEnabled) {
-        return this.mathModelDefService.setFactorStatus(factorId, isEnabled);
+    DataEntryViewComponent.prototype.setFactorStatus = function (itemId, isEnabled) {
+        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ComponentType.VarFactor, itemId, isEnabled);
     };
     //===SUBMIT===
     DataEntryViewComponent.prototype.onSubmit = function (form) {
@@ -211,12 +219,19 @@ var DataEntryViewComponent = /** @class */ (function () {
             //Properties for this element
             var parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
             this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
-            //Properties for child elements
+            //Properties for child elements, e.g., dirBranch child of branch
             var childElements = this.modelElementDataService.getChildElements(elementId);
             for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
                 var childElement = childElements_1[_i];
                 var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
+                //And child record can have child records, e.g., segments of dir branch
+                var childChildElements = this.modelElementDataService.getChildElements(childElement.elementId);
+                for (var _a = 0, childChildElements_1 = childChildElements; _a < childChildElements_1.length; _a++) {
+                    var childChildElement = childChildElements_1[_a];
+                    var childChildProperties = this.modelElementDefService.getPropertyTypesFor(childChildElement.elementType);
+                    this.populateFormFieldsFromProperties(childChildProperties, childChildElement.elementId);
+                }
             }
             //Constraint string
             if (selectedElement.constraintString) {

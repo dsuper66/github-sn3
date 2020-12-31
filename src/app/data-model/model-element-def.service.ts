@@ -44,7 +44,7 @@ export class ModelElementDefService {
       { propertyType: 'islandId', primitiveType: 'string', visible: false },
       { propertyType: 'islandResShortfallPrice', primitiveType: 'number', visible: true },
       { propertyType: 'genResShortfallPrice', primitiveType: 'number', visible: true },
-      { propertyType: 'lossFlowRatio', primitiveType: 'number', visible: false },      
+      { propertyType: 'lossFlowRatio', primitiveType: 'number', visible: true },      
     )
 
     //Separate so that different element types can have different defaults for the same properties

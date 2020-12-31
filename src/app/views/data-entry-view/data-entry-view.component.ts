@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
-import { MathModelDefService } from '../../data-model/math-model-def.service';
+import { ComponentType, MathModelDefService } from '../../data-model/math-model-def.service';
 import { SettingsService } from '../../data-model/settings.service';
 import { SolverCallService } from '../../data-model/solver-call.service';
 
@@ -40,7 +40,7 @@ export class DataEntryViewComponent implements OnInit {
       this.doElementDefs = true;
       this.populateFromElementDefs();
       this.backButtonRoute = "/main-component";
-    }    
+    }
     else if (id === "model-def") {
       this.doConstraintDefs = true;
       this.populateFromConstraintDefs();
@@ -57,13 +57,13 @@ export class DataEntryViewComponent implements OnInit {
     else if (id === "solver-out") {
       this.doSolverOut = true;
       this.solverOutString = this.solverCallService.solverResultString;
-    }    
+    }
     else {
       this.doDataEntry = true;
       this.populateFromElementId(id);
       this.backButtonRoute = "/network-builder-component";
     }
-    
+
   }
 
   doJSONModel = false;
@@ -98,21 +98,29 @@ export class DataEntryViewComponent implements OnInit {
     this.router.onSameUrlNavigation = 'reload';
     // this.router.navigate(['../' + target], { relativeTo: this.route });
     this.router.navigate(['../model-def'], { relativeTo: this.route });
-  }  
+  }
 
   //Constraint Defintions
-  setIncludeStatus(constraintName: string, status: boolean){
-    console.log(">>>" + constraintName + " >>>" + status);
+  getConstraintStatus(itemId: string): boolean {
+    return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,itemId);
   }
-  getIncludeStatus(constraintName: string) {
-    return true;
+  setConstraintStatus(itemId: string, isEnabled: boolean) {
+    return this.mathModelDefService.setItemStatus(ComponentType.Constraint, itemId, isEnabled);
   }
+
+  // setConstraintStatus(constraintId: string, isEnabled: boolean) {
+  //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId, isEnabled);
+  //   // console.log(">>>" + constraintName + " >>>" + status);
+  // }
+  // getConstraintStatus(constraintId: string) {
+  //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId);
+  // }
   //Constraint Components
-  getFactorStatus(factorId: string): boolean {
-    return this.mathModelDefService.factorIsEnabled(factorId);
+  getFactorStatus(itemId: string): boolean {
+    return this.mathModelDefService.itemIsEnabled(ComponentType.VarFactor,itemId);
   }
-  setFactorStatus(factorId: string, isEnabled: boolean) {
-    return this.mathModelDefService.setFactorStatus(factorId, isEnabled);
+  setFactorStatus(itemId: string, isEnabled: boolean) {
+    return this.mathModelDefService.setItemStatus(ComponentType.VarFactor, itemId, isEnabled);
   }
 
   //===SUBMIT===
@@ -134,13 +142,13 @@ export class DataEntryViewComponent implements OnInit {
 
           if (this.doDataEntry) {
             const elementId = this.fieldRefIdParent[index];
-            const propertyId = this.fieldRefIdChild[index];          
+            const propertyId = this.fieldRefIdChild[index];
             this.modelElementDataService.setPropertyForElement(elementId, propertyId, formValue);
           }
           else if (this.doElementDefs) {
             const elementType = this.fieldRefIdParent[index];
-            const propertyType = this.fieldRefIdChild[index];          
-            this.modelElementDefService.setDefaultValue(elementType,propertyType,formValue);
+            const propertyType = this.fieldRefIdChild[index];
+            this.modelElementDefService.setDefaultValue(elementType, propertyType, formValue);
           }
 
         }
@@ -155,24 +163,24 @@ export class DataEntryViewComponent implements OnInit {
   pageTitle = "";
 
   //Element Defs  
-  populateFromElementDefs (){
+  populateFromElementDefs() {
     this.pageTitle = "Property Defaults"
-  for (const propertyDef of
-    this.modelElementDefService.getDefaultSettingsAll()) {
+    for (const propertyDef of
+      this.modelElementDefService.getDefaultSettingsAll()) {
       this.formNames.push(propertyDef.elementType + "-" + propertyDef.propertyType)
-      this.formDefaults.push(propertyDef.defaultValue);  
+      this.formDefaults.push(propertyDef.defaultValue);
 
       this.fieldRefIdParent.push(propertyDef.elementType)
       this.fieldRefIdChild.push(propertyDef.propertyType)
     }
-  }  
+  }
 
 
   //Constraint Defs
-  cdArray:string[] = [];  
+  cdArray: string[] = [];
   ccArray: [string[]] = [[]];
   //Constraint Defs - Parent
-  populateFromConstraintDefs(){
+  populateFromConstraintDefs() {
     this.pageTitle = "Constraint Definitions";
     console.log("populateFromConstraintDefs");
     const constraintDefs = this.mathModelDefService.getConstraintDefsAll();
@@ -182,13 +190,13 @@ export class DataEntryViewComponent implements OnInit {
     }
   }
   //Constraint Defs - Components
-  populateFromConstraintComps(constraintType: string){
+  populateFromConstraintComps(constraintType: string) {
     console.log("populateFromConstraintComps");
     this.pageTitle = "Constraint: " + constraintType;
     const constraintDef = this.mathModelDefService.getConstraintDef(constraintType);
     const constraintComps = this.mathModelDefService.getConstraintComps(constraintType);
 
-    var a:string[] = [];    
+    var a: string[] = [];
     this.cdArray.push("parent elementType: " + constraintDef.elementType)
     this.cdArray.push("inequality: " + constraintDef.inEquality)
     if (constraintDef.rhsProperty != "") {
@@ -197,19 +205,19 @@ export class DataEntryViewComponent implements OnInit {
     else {
       this.cdArray.push("rhsValue: " + constraintDef.rhsValue)
     }
-    
+
     //If the parent has a var in the equation
     if (constraintDef.varType != "") {
       // this.cdArray.push(constraintDef.elementType + "." + constraintDef.varType)
       // const mult = constraintDef.factorValue.toString() + " x ";
       // if (constraintDef.factorProperty != "") {a.push(mult + constraintDef.factorProperty)};
 
-      
+
       this.formNames.push(constraintDef.elementType + "." + constraintDef.varType);
-      var a:string[] = [];
+      var a: string[] = [];
       a.push("[parent var]")
       var factors = constraintDef.factorValue.toString() + " x ";
-      if (constraintDef.factorProperty != "") {factors += constraintDef.factorProperty};
+      if (constraintDef.factorProperty != "") { factors += constraintDef.factorProperty };
       a.push(factors)
       this.ccArray.push(a);
     }
@@ -218,18 +226,18 @@ export class DataEntryViewComponent implements OnInit {
     for (const constraintComp of constraintComps) {
       this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
       console.log(">>>" + constraintComp.varType);
-      var a:string[] = [];
+      var a: string[] = [];
       a.push("[" + constraintComp.propertyMap + "]");
       var factors = constraintComp.factorValue.toString() + " x ";
-      if (constraintComp.factorProperty != "") {factors += constraintComp.factorProperty};
-      if (constraintComp.factorParentProperty != "") {factors += constraintComp.factorParentProperty};
+      if (constraintComp.factorProperty != "") { factors += constraintComp.factorProperty };
+      if (constraintComp.factorParentProperty != "") { factors += constraintComp.factorParentProperty };
       a.push(factors);
 
       this.ccArray.push(a);
-      
+
       // this.formNames.push("=========");
     }
-  }  
+  }
 
   //Data - data entry and results
   constraintString: string = "";
@@ -237,16 +245,22 @@ export class DataEntryViewComponent implements OnInit {
 
   populateFromElementId(elementId: string): void {
     const selectedElement = this.modelElementDataService.getModelElementForId(elementId);
-    if (selectedElement) {      
+    if (selectedElement) {
       //Properties for this element
       const parentProperties = this.modelElementDefService.getPropertyTypesFor(selectedElement.elementType);
-      this.populateFormFieldsFromProperties(parentProperties,selectedElement.elementId);
+      this.populateFormFieldsFromProperties(parentProperties, selectedElement.elementId);
 
-      //Properties for child elements
+      //Properties for child elements, e.g., dirBranch child of branch
       const childElements = this.modelElementDataService.getChildElements(elementId);
       for (const childElement of childElements) {
         const childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
-        this.populateFormFieldsFromProperties(childProperties,childElement.elementId);
+        this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
+        //And child record can have child records, e.g., segments of dir branch
+        const childChildElements = this.modelElementDataService.getChildElements(childElement.elementId);
+        for (const childChildElement of childChildElements) {
+          const childChildProperties = this.modelElementDefService.getPropertyTypesFor(childChildElement.elementType);
+          this.populateFormFieldsFromProperties(childChildProperties, childChildElement.elementId);
+        }
       }
 
       //Constraint string
@@ -277,7 +291,7 @@ export class DataEntryViewComponent implements OnInit {
 
         //Default value
         const defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
-        this.formDefaults.push(defaultValue);        
+        this.formDefaults.push(defaultValue);
 
         console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
 
