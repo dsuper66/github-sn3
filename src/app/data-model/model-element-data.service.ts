@@ -296,7 +296,7 @@ export class ModelElementDataService {
     const value = results[key];
     if (value === undefined) {
       console.log("MISSING RESULT: " + key)
-      return key
+      return " none"; //key
     }
     else {
       if (showZero || value != 0) {

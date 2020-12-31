@@ -90,10 +90,10 @@ var DataEntryViewComponent = /** @class */ (function () {
     };
     //Constraint Defintions
     DataEntryViewComponent.prototype.getConstraintStatus = function (itemId) {
-        return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ComponentType.Constraint, itemId);
+        return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ItemType.Constraint, itemId);
     };
     DataEntryViewComponent.prototype.setConstraintStatus = function (itemId, isEnabled) {
-        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ComponentType.Constraint, itemId, isEnabled);
+        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ItemType.Constraint, itemId, isEnabled);
     };
     // setConstraintStatus(constraintId: string, isEnabled: boolean) {
     //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId, isEnabled);
@@ -104,10 +104,10 @@ var DataEntryViewComponent = /** @class */ (function () {
     // }
     //Constraint Components
     DataEntryViewComponent.prototype.getFactorStatus = function (itemId) {
-        return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ComponentType.VarFactor, itemId);
+        return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ItemType.VarFactor, itemId);
     };
     DataEntryViewComponent.prototype.setFactorStatus = function (itemId, isEnabled) {
-        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ComponentType.VarFactor, itemId, isEnabled);
+        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ItemType.VarFactor, itemId, isEnabled);
     };
     //===SUBMIT===
     DataEntryViewComponent.prototype.onSubmit = function (form) {

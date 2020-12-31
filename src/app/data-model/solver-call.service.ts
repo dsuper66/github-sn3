@@ -105,7 +105,7 @@ export class SolverCallService {
     )
     //Log what is excluded
     for (const modelElement of modelElementsExcluded) {
-    console.log(">>>Excluded:" + modelElement.elementId + 
+    console.log("###Excluded:" + modelElement.elementId + 
       "expected count:" + this.modelElementDefService.getPropertyCount(modelElement.elementType) +
       "but only has ");
       for (const property of Object.keys(modelElement.properties)) {
@@ -151,7 +151,7 @@ export class SolverCallService {
 
     //==ConstraintDefs JSON==
     jString += this.jsonStart("constraintDefs");
-    let constraintDefs = this.mathModelDefService.getConstraintDefsAll();
+    let constraintDefs = this.mathModelDefService.getActiveConstraintDefs();
     for (const constraintDef of constraintDefs) {
       //Start ConstraintDef
       jString += "{";

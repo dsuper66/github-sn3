@@ -94,8 +94,8 @@ export class MathModelDefService {
       )
 
       //this.disabledFactors.push ('resOfferTranche.resTrancheCleared');
-      this.disabledItems[ComponentType.Constraint] = [];
-      this.disabledItems[ComponentType.VarFactor] = [];
+      this.disabledItems[ItemType.Constraint] = [];
+      this.disabledItems[ItemType.VarFactor] = [];
       // this.disabledItems[ComponentType.VarFactor].push('resOfferTranche.resTrancheCleared');
 
   }
@@ -121,20 +121,30 @@ export class MathModelDefService {
   //Enable/Disable item, e.g., varFactor in Constraint, or a Constraint 
   //Items are enabled by default
   private disabledItems: string[][] = [];
-  itemIsEnabled(itemType: ComponentType, componentId: string) {
+  itemIsEnabled(itemType: ItemType, componentId: string) {
     //If zero entries found in the disabled array then this component is enabled
-    return this.disabledItems[itemType].filter(f => f === componentId).length == 0;
+    if (this.disabledItems[itemType]) {
+      return this.disabledItems[itemType].filter(f => f === componentId).length == 0;
+    }
+    else {
+      return true;
+    }
   }
-  setItemStatus(itemType: ComponentType, componentId: string, isEnabled: boolean) {
-    if (isEnabled) { //remove from the disabled array
-      this.disabledItems = this.disabledItems.filter(f => f[itemType] != componentId)
+  setItemStatus(itemType: ItemType, componentId: string, isEnabled: boolean) {
+    //If isEnabled then remove from the disabled array
+    if (isEnabled) { 
+      this.disabledItems[itemType] = this.disabledItems[itemType].filter(f => f != componentId)
     }
     else if (this.itemIsEnabled(itemType, componentId)) { //add to the disabled array if not already
       this.disabledItems[itemType].push(componentId)
     }
   }  
 
-
+  //get constraints that are not in the disabled array
+  getActiveConstraintDefs(){
+    return this.constraintDefs.filter(
+      cd => !this.disabledItems[ItemType.Constraint].find(di => di === cd.constraintType));
+  }
 
   getConstraintDefsAll() {
     return this.constraintDefs;
@@ -166,7 +176,7 @@ export interface ConstraintDef {
 }
 
 //Enable/disable component
-export enum ComponentType {
+export enum ItemType {
   VarFactor,
   Constraint
 }

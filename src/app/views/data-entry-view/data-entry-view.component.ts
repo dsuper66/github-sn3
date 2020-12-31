@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 import { ModelElementDataService } from '../../data-model/model-element-data.service';
 import { ModelElementDefService } from '../../data-model/model-element-def.service';
-import { ComponentType, MathModelDefService } from '../../data-model/math-model-def.service';
+import { ItemType, MathModelDefService } from '../../data-model/math-model-def.service';
 import { SettingsService } from '../../data-model/settings.service';
 import { SolverCallService } from '../../data-model/solver-call.service';
 
@@ -102,10 +102,10 @@ export class DataEntryViewComponent implements OnInit {
 
   //Constraint Defintions
   getConstraintStatus(itemId: string): boolean {
-    return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,itemId);
+    return this.mathModelDefService.itemIsEnabled(ItemType.Constraint,itemId);
   }
   setConstraintStatus(itemId: string, isEnabled: boolean) {
-    return this.mathModelDefService.setItemStatus(ComponentType.Constraint, itemId, isEnabled);
+    return this.mathModelDefService.setItemStatus(ItemType.Constraint, itemId, isEnabled);
   }
 
   // setConstraintStatus(constraintId: string, isEnabled: boolean) {
@@ -117,10 +117,10 @@ export class DataEntryViewComponent implements OnInit {
   // }
   //Constraint Components
   getFactorStatus(itemId: string): boolean {
-    return this.mathModelDefService.itemIsEnabled(ComponentType.VarFactor,itemId);
+    return this.mathModelDefService.itemIsEnabled(ItemType.VarFactor,itemId);
   }
   setFactorStatus(itemId: string, isEnabled: boolean) {
-    return this.mathModelDefService.setItemStatus(ComponentType.VarFactor, itemId, isEnabled);
+    return this.mathModelDefService.setItemStatus(ItemType.VarFactor, itemId, isEnabled);
   }
 
   //===SUBMIT===

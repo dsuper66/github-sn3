@@ -77,7 +77,7 @@ var SolverCallService = /** @class */ (function () {
         //Log what is excluded
         for (var _i = 0, modelElementsExcluded_1 = modelElementsExcluded; _i < modelElementsExcluded_1.length; _i++) {
             var modelElement = modelElementsExcluded_1[_i];
-            console.log(">>>Excluded:" + modelElement.elementId +
+            console.log("###Excluded:" + modelElement.elementId +
                 "expected count:" + this.modelElementDefService.getPropertyCount(modelElement.elementType) +
                 "but only has ");
             for (var _a = 0, _b = Object.keys(modelElement.properties); _a < _b.length; _a++) {
@@ -118,7 +118,7 @@ var SolverCallService = /** @class */ (function () {
         jString += ",";
         //==ConstraintDefs JSON==
         jString += this.jsonStart("constraintDefs");
-        var constraintDefs = this.mathModelDefService.getConstraintDefsAll();
+        var constraintDefs = this.mathModelDefService.getActiveConstraintDefs();
         for (var _g = 0, constraintDefs_1 = constraintDefs; _g < constraintDefs_1.length; _g++) {
             var constraintDef = constraintDefs_1[_g];
             //Start ConstraintDef
