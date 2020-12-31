@@ -140,11 +140,19 @@ export class MathModelDefService {
     }
   }  
 
-  //get constraints that are not in the disabled array
+  //get constraints where the constraintType is not disabled
   getActiveConstraintDefs(){
     return this.constraintDefs.filter(
       cd => !this.disabledItems[ItemType.Constraint].find(di => di === cd.constraintType));
   }
+  //get constraint components that are not disabled and the constraintType is not disabled
+  //VarFactors are identified by elementType.varType
+  getActiveConstraintComps(){
+    return this.constraintComps.filter(
+      cc => 
+        !this.disabledItems[ItemType.VarFactor].find(di => di === cc.elementType + "." + cc.varType)
+        && !this.disabledItems[ItemType.Constraint].find(di => di === cc.constraintType));
+  }  
 
   getConstraintDefsAll() {
     return this.constraintDefs;

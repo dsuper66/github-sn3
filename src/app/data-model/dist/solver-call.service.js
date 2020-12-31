@@ -140,7 +140,7 @@ var SolverCallService = /** @class */ (function () {
         jString += ",";
         //==ConstraintComps JSON==
         jString += this.jsonStart("constraintComps");
-        var constraintComps = this.mathModelDefService.getConstraintCompsAll();
+        var constraintComps = this.mathModelDefService.getActiveConstraintComps();
         for (var _h = 0, constraintComps_1 = constraintComps; _h < constraintComps_1.length; _h++) {
             var constraintComp = constraintComps_1[_h];
             //Start ConstraintComps

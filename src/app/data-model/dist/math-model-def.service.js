@@ -88,10 +88,19 @@ var MathModelDefService = /** @class */ (function () {
             this.disabledItems[itemType].push(componentId);
         }
     };
-    //get constraints that are not in the disabled array
+    //get constraints where the constraintType is not disabled
     MathModelDefService.prototype.getActiveConstraintDefs = function () {
         var _this = this;
         return this.constraintDefs.filter(function (cd) { return !_this.disabledItems[ItemType.Constraint].find(function (di) { return di === cd.constraintType; }); });
+    };
+    //get constraint components that are not disabled and the constraintType is not disabled
+    //VarFactors are identified by elementType.varType
+    MathModelDefService.prototype.getActiveConstraintComps = function () {
+        var _this = this;
+        return this.constraintComps.filter(function (cc) {
+            return !_this.disabledItems[ItemType.VarFactor].find(function (di) { return di === cc.elementType + "." + cc.varType; })
+                && !_this.disabledItems[ItemType.Constraint].find(function (di) { return di === cc.constraintType; });
+        });
     };
     MathModelDefService.prototype.getConstraintDefsAll = function () {
         return this.constraintDefs;

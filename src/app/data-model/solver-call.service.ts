@@ -175,7 +175,7 @@ export class SolverCallService {
 
     //==ConstraintComps JSON==
     jString += this.jsonStart("constraintComps");
-    let constraintComps = this.mathModelDefService.getConstraintCompsAll();
+    let constraintComps = this.mathModelDefService.getActiveConstraintComps();
     for (const constraintComp of constraintComps) {
       //Start ConstraintComps
       jString += "{";
