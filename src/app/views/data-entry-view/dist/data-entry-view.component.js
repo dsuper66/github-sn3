@@ -95,13 +95,6 @@ var DataEntryViewComponent = /** @class */ (function () {
     DataEntryViewComponent.prototype.setConstraintStatus = function (itemId, isEnabled) {
         return this.mathModelDefService.setItemStatus(math_model_def_service_1.ItemType.Constraint, itemId, isEnabled);
     };
-    // setConstraintStatus(constraintId: string, isEnabled: boolean) {
-    //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId, isEnabled);
-    //   // console.log(">>>" + constraintName + " >>>" + status);
-    // }
-    // getConstraintStatus(constraintId: string) {
-    //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId);
-    // }
     //Constraint Components
     DataEntryViewComponent.prototype.getFactorStatus = function (itemId) {
         return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ItemType.VarFactor, itemId);

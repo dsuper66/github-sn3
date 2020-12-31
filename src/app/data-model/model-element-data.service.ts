@@ -372,6 +372,7 @@ export class ModelElementDataService {
         }
         else if (element.elementType == "branch") {
           resultString1 = this.getResultString('branchFlow', results);
+          resultString3 = (results['branchFlow'] - results['branchLoss']).toFixed(this.resultsDP).toString();
 
           //Determine direction of flow arrow
           const branchFlow = results['branchFlow']; //this.getResultVal('branchFlow',results);

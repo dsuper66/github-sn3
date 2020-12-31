@@ -108,13 +108,6 @@ export class DataEntryViewComponent implements OnInit {
     return this.mathModelDefService.setItemStatus(ItemType.Constraint, itemId, isEnabled);
   }
 
-  // setConstraintStatus(constraintId: string, isEnabled: boolean) {
-  //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId, isEnabled);
-  //   // console.log(">>>" + constraintName + " >>>" + status);
-  // }
-  // getConstraintStatus(constraintId: string) {
-  //   return this.mathModelDefService.itemIsEnabled(ComponentType.Constraint,constraintId);
-  // }
   //Constraint Components
   getFactorStatus(itemId: string): boolean {
     return this.mathModelDefService.itemIsEnabled(ItemType.VarFactor,itemId);

@@ -85,8 +85,6 @@ export class MathModelDefService {
       { constraintType: 'islandResCalc', elementType: 'resOfferTranche', propertyMap: 'islandId', varType: 'resTrancheCleared', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandRes', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' },
-      { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandRes', factorParentProperty: '', factorValue: -1, factorProperty: '' },
-      { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'brFlowIsSumOfSegs', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'brLossIsSumOfSegs', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentLoss', factorParentProperty: '', factorValue: -1, factorProperty: '' },
       { constraintType: 'segLossForFlow', elementType: 'flowLossSegment', propertyMap: 'self', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: 'lossFlowRatio' },
