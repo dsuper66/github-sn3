@@ -371,18 +371,31 @@ export class ModelElementDataService {
           }
         }
         else if (element.elementType == "branch") {
-          resultString1 = this.getResultString('branchFlow', results);
-          resultString2 = (results['branchFlow'] - results['branchLoss']).toFixed(this.resultsDP).toString();
+          var branchFlowGross = results['branchFlow'];
+          var branchFlowLoss = results['branchLoss'];
+
+          //Non-Neg flow
+          if (branchFlowGross >= 0) { 
+            resultString1 = branchFlowGross.toFixed(this.resultsDP).toString();
+            resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.resultsDP).toString();
+          }
+          else {
+            resultString2 = Math.abs(branchFlowGross).toFixed(this.resultsDP).toString();
+            resultString1 = (Math.abs(branchFlowGross) + branchFlowLoss).toFixed(this.resultsDP).toString()
+          }
 
           //Determine direction of flow arrow
-          const branchFlow = results['branchFlow']; //this.getResultVal('branchFlow',results);
-          if (branchFlow) {
-            if (branchFlow > 0) {
+          //The arrow
+          if (branchFlowGross) {
+            //Pos flow
+            if (branchFlowGross > 0) {
               resultString3 = '1';
             }
-            else if (branchFlow < 0) {
+            //Neg flow
+            else if (branchFlowGross < 0) {
               resultString3 = '2';
             }
+            //No flow
             else {
               resultString3 = '0';
             }
@@ -424,7 +437,7 @@ export class ModelElementDataService {
       if (resultType == "nodeBal" && resultId.includes("LTE")) {
         value *= -1.0;
       }
-      //Directional results
+      //Directional results, e.g., for branch arrow
       const direction = this.getValueForElementProperty(elementId, 'direction');
       if (direction) {
         value *= Number(direction);
