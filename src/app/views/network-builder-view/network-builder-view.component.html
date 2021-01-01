@@ -88,6 +88,12 @@
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
             fill="red">{{shape.text1}}</text>
+            <text 
+            [attr.x]="shape.xInner + shape.wInner + 4" 
+            [attr.y]="shape.yInner + shape.hInner/3 + 4 + 30"
+            [attr.width]="shape.wOuter"
+            [attr.height]="shape.hOuter"
+            fill="red">{{shape.text2}}</text>
           </svg> 
 
           <!-- Island Text -->
@@ -155,8 +161,8 @@
           [attr.y]="shape.yOuter + shape.hOuter/2 - 15.0" 
           [attr.width]="shape.wOuter"
           [attr.height]="60">
-          <svg *ngIf="shape.text2=='1'"><path [attr.d] = "shape.path1"/></svg>
-          <svg *ngIf="shape.text2=='2'"><path [attr.d] = "shape.path2"/></svg>
+          <svg *ngIf="shape.text3=='1'"><path [attr.d] = "shape.path1"/></svg>
+          <svg *ngIf="shape.text3=='2'"><path [attr.d] = "shape.path2"/></svg>
           </svg>
 
     </svg>
