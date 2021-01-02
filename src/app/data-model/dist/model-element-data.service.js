@@ -225,12 +225,25 @@ var ModelElementDataService = /** @class */ (function () {
         //Update if found
         if (elementToUpdate) {
             elementToUpdate.properties[propertyType] = value;
-            console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+            //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
             //If child elements have the same property then it also gets updated
             //(i.e. fromBus and toBus for dirBranch)
-            for (var _b = 0, _c = this.getChildElements(elementId).filter(function (childElement) { return _this.modelElementDefService.elementHasProperty(childElement, propertyType); }); _b < _c.length; _b++) {
-                var childElementWithProperty = _c[_b];
-                this.setPropertyForElement(childElementWithProperty.elementId, propertyType, value);
+            for (var _b = 0, _c = this.getChildElements(elementId).filter(function (c) { return _this.modelElementDefService.elementHasProperty(c, propertyType); }); _b < _c.length; _b++) {
+                var childElement = _c[_b];
+                //Special Case
+                //fromBus, toBus for Neg flow direction
+                if (propertyType == 'fromBus' || propertyType == 'toBus') {
+                    if (this.getValueForElementProperty(childElement.elementId, 'direction') == '-1') {
+                        console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
+                        if (propertyType == 'toBus') {
+                            propertyType = 'fromBus';
+                        }
+                        else if (propertyType == 'fromBus') {
+                            propertyType = 'toBus';
+                        }
+                    }
+                }
+                this.setPropertyForElement(childElement.elementId, propertyType, value);
             }
         }
     };

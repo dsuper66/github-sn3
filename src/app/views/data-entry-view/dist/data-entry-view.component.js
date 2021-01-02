@@ -39,6 +39,10 @@ var DataEntryViewComponent = /** @class */ (function () {
         //Data - data entry and results
         this.constraintString = "";
         this.resultString = "";
+        // fieldIsReadOnly(propertyType: string) {
+        //   return this.modelElementDefService.propertyIsReadOnly(propertyType);
+        // }
+        this.formFieldReadOnly = [];
         route.params.subscribe(function (params) { _this.idOfDataEntryObject = params['id']; });
     }
     DataEntryViewComponent.prototype.ngOnInit = function () {
@@ -244,7 +248,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             var propertyId = propertyIds_1[_i];
             if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
                 //Name/Title
-                this.formNames.push(elementId + "-" + propertyId);
+                this.formNames.push(elementId + "." + propertyId);
                 //PropertyId
                 this.fieldRefIdChild.push(propertyId);
                 //ElementId (for assigning any data entry)
@@ -252,6 +256,17 @@ var DataEntryViewComponent = /** @class */ (function () {
                 //Default value
                 var defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
                 this.formDefaults.push(defaultValue);
+                //Read-only... if the property is defined as read-only, or the element has a parent
+                if (this.modelElementDefService.propertyIsReadOnly(propertyId)
+                    || this.modelElementDataService.getValueForElementProperty(elementId, 'parentId')) {
+                    this.formFieldReadOnly.push(true);
+                }
+                // else if (this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
+                //   this.formFieldReadOnly.push(true);
+                // }
+                else {
+                    this.formFieldReadOnly.push(false);
+                }
                 console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
             }
             else {

@@ -106,7 +106,13 @@ export class ModelElementDefService {
       property => property == propertyType)[0] != undefined);
   }
 
-  propertyIsVisible(propertyType: string) {
+  readOnlyProperties: string[] = ['fromBus','toBus','parentId'];
+  propertyIsReadOnly(propertyType: string): boolean {
+    return this.readOnlyProperties.filter(r => r === propertyType).length != 0;
+  }
+
+  propertyIsVisible(propertyType: string): boolean {
+    return true;
     console.log("get visible status for property:" + propertyType);
     const propertyTypeSettings = this.elementPropertyTypeSettings.filter(property => property.propertyType === propertyType)[0];
     return propertyTypeSettings.visible;

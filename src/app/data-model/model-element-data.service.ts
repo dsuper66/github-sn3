@@ -205,6 +205,7 @@ export class ModelElementDataService {
       this.setPropertyForAllElements(propertyType, "false");
     }
 
+
     //Special Case
     //resistance... use this to populate the flow loss segments
     if (propertyType === 'resistance') {
@@ -224,7 +225,7 @@ export class ModelElementDataService {
           //Loss flow ratio
           const startPointLosses = startPointFlow * startPointFlow * resistance;
           const endPointLosses = endPointFlow * endPointFlow * resistance;
-          const lossFlowRatio = (endPointLosses-startPointLosses)/segFlowLimit;
+          const lossFlowRatio = (endPointLosses - startPointLosses) / segFlowLimit;
           this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio);
           //For next segment
           startPointFlow = endPointFlow;
@@ -241,14 +242,29 @@ export class ModelElementDataService {
     //Update if found
     if (elementToUpdate) {
       elementToUpdate.properties[propertyType] = value;
-      console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+      //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
 
       //If child elements have the same property then it also gets updated
       //(i.e. fromBus and toBus for dirBranch)
-      for (const childElementWithProperty of this.getChildElements(elementId).filter(
-        childElement => this.modelElementDefService.elementHasProperty(childElement, propertyType))) {
+      for (const childElement of this.getChildElements(elementId).filter(
+        c => this.modelElementDefService.elementHasProperty(c, propertyType))) {
 
-        this.setPropertyForElement(childElementWithProperty.elementId, propertyType, value);
+        //Special Case
+        //fromBus, toBus for Neg flow direction
+        if (propertyType == 'fromBus' || propertyType == 'toBus') {
+          if (this.getValueForElementProperty(childElement.elementId, 'direction') == '-1') {
+            console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
+            if (propertyType == 'toBus') {
+              propertyType = 'fromBus';
+            }
+            else if (propertyType == 'fromBus') {
+              propertyType = 'toBus';
+            }
+          }
+        }
+
+
+        this.setPropertyForElement(childElement.elementId, propertyType, value);
       }
     }
   }
@@ -375,7 +391,7 @@ export class ModelElementDataService {
           var branchFlowLoss = results['branchLoss'];
 
           //Non-Neg flow
-          if (branchFlowGross >= 0) { 
+          if (branchFlowGross >= 0) {
             resultString1 = branchFlowGross.toFixed(this.resultsDP).toString();
             resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.resultsDP).toString();
           }

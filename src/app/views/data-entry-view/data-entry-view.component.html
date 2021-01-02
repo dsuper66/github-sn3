@@ -98,22 +98,27 @@
     <table table-layout="fixed">
     <th>{{pageTitle}}</th>
     <tr *ngFor="let formName of formNames; index as i">
-
-      <!-- The label -->
-      <td>{{formName}}</td>
-
-      <!-- Create the input and add the default value -->
-      <td>
-        <input
-        style="text-align:right; width:120px"
-        type="text"
-        step="any"
-        placeholder="{{formDefaults[i]}}"
-        name="{{formName}}"
-        ngModel>
-      </td>
-      </tr>
-    </table>
+      <!-- Can Edit -->
+      <div  *ngIf="!formFieldReadOnly[i]">
+        <!-- The label -->
+        <td>{{formName}}</td>
+        <!-- Create the input and add the default value -->
+        <td>
+          <input
+          style="text-align:right; width:120px"
+          type="text"
+          step="any"
+          placeholder="{{formDefaults[i]}}"
+          name="{{formName}}"
+          ngModel>
+        </td>
+      </div>
+      <!-- Read-only -->
+      <div  *ngIf="formFieldReadOnly[i]">
+        <td>{{formName}}: <i>{{formDefaults[i]}}</i></td>
+      </div>      
+    </tr>
+  </table>
     
   </form>
      

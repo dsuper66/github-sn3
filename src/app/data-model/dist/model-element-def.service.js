@@ -13,6 +13,7 @@ var ModelElementDefService = /** @class */ (function () {
         this.elementPropertyTypeSettings = [];
         this.elementTypeProperties = {};
         this.defaultValueSettings = [];
+        this.readOnlyProperties = ['fromBus', 'toBus', 'parentId'];
         //All property types must have an entry here, for the data entry display
         //(this can probably go, replaced by an array of properties that are hidden
         //... primitiveType is not actually used... all the properties are string
@@ -54,7 +55,11 @@ var ModelElementDefService = /** @class */ (function () {
         var properties = this.elementTypeProperties[element.elementType];
         return (properties.filter(function (property) { return property == propertyType; })[0] != undefined);
     };
+    ModelElementDefService.prototype.propertyIsReadOnly = function (propertyType) {
+        return this.readOnlyProperties.filter(function (r) { return r === propertyType; }).length != 0;
+    };
     ModelElementDefService.prototype.propertyIsVisible = function (propertyType) {
+        return true;
         console.log("get visible status for property:" + propertyType);
         var propertyTypeSettings = this.elementPropertyTypeSettings.filter(function (property) { return property.propertyType === propertyType; })[0];
         return propertyTypeSettings.visible;

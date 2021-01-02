@@ -268,6 +268,11 @@ export class DataEntryViewComponent implements OnInit {
 
     }
   }
+
+  // fieldIsReadOnly(propertyType: string) {
+  //   return this.modelElementDefService.propertyIsReadOnly(propertyType);
+  // }
+  formFieldReadOnly: boolean[] = [];
   //Data entry fields (called from Data above)
   populateFormFieldsFromProperties(propertyIds: string[], elementId: string) {
     const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
@@ -275,7 +280,7 @@ export class DataEntryViewComponent implements OnInit {
       if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
 
         //Name/Title
-        this.formNames.push(elementId + "-" + propertyId);
+        this.formNames.push(elementId + "." + propertyId);
 
         //PropertyId
         this.fieldRefIdChild.push(propertyId);
@@ -285,6 +290,18 @@ export class DataEntryViewComponent implements OnInit {
         //Default value
         const defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
         this.formDefaults.push(defaultValue);
+
+        //Read-only... if the property is defined as read-only, or the element has a parent
+        if (this.modelElementDefService.propertyIsReadOnly(propertyId)
+          || this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
+          this.formFieldReadOnly.push(true);
+        }
+        // else if (this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
+        //   this.formFieldReadOnly.push(true);
+        // }
+        else {
+          this.formFieldReadOnly.push(false);  
+        }
 
         console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
 
