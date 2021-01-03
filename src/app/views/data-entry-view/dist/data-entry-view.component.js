@@ -242,36 +242,36 @@ var DataEntryViewComponent = /** @class */ (function () {
         }
     };
     //Data entry fields (called from Data above)
-    DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyIds, elementId) {
-        var showAllProperties = this.settingsService.getStatus("showHiddenProperties");
-        for (var _i = 0, propertyIds_1 = propertyIds; _i < propertyIds_1.length; _i++) {
-            var propertyId = propertyIds_1[_i];
-            if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
-                //Name/Title
-                this.formNames.push(elementId + "." + propertyId);
-                //PropertyId
-                this.fieldRefIdChild.push(propertyId);
-                //ElementId (for assigning any data entry)
-                this.fieldRefIdParent.push(elementId);
-                //Default value
-                var defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
-                this.formDefaults.push(defaultValue);
-                //Read-only... if the property is defined as read-only, or the element has a parent
-                if (this.modelElementDefService.propertyIsReadOnly(propertyId)
-                    || this.modelElementDataService.getValueForElementProperty(elementId, 'parentId')) {
-                    this.formFieldReadOnly.push(true);
-                }
-                // else if (this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
-                //   this.formFieldReadOnly.push(true);
-                // }
-                else {
-                    this.formFieldReadOnly.push(false);
-                }
-                console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
+    DataEntryViewComponent.prototype.populateFormFieldsFromProperties = function (propertyTypes, elementId) {
+        // const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
+        for (var _i = 0, propertyTypes_1 = propertyTypes; _i < propertyTypes_1.length; _i++) {
+            var propertyType = propertyTypes_1[_i];
+            // if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
+            //Name/Title
+            this.formNames.push(elementId + "." + propertyType);
+            //PropertyId
+            this.fieldRefIdChild.push(propertyType);
+            //ElementId (for assigning any data entry)
+            this.fieldRefIdParent.push(elementId);
+            //Default value
+            var defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyType);
+            this.formDefaults.push(defaultValue);
+            //Read-only... if the property is defined as read-only, or the element has a parent with the same property
+            if (this.modelElementDefService.propertyIsReadOnly(propertyType)
+                || this.modelElementDataService.parentHasProperty(elementId, propertyType)) {
+                this.formFieldReadOnly.push(true);
             }
+            // else if (this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
+            //   this.formFieldReadOnly.push(true);
+            // }
             else {
-                console.log(propertyId + ": not visible");
+                this.formFieldReadOnly.push(false);
             }
+            console.log(elementId + "-" + propertyType + "-value:" + defaultValue);
+            // }
+            // else {
+            //   console.log(propertyId + ": not visible")
+            // }
         }
     };
     DataEntryViewComponent = __decorate([

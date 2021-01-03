@@ -96,7 +96,7 @@ export class ModelElementService {
     const self = this;
     const childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
     childElementDefs.forEach(function (childElementDef: ModelElement) {
-      const childType = childElementDef.properties['childTypeId'];
+      const childType = childElementDef.properties['childType'];
       const childCount = childElementDef.properties['childCount'];
       console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
 

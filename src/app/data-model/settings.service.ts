@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class SettingsService {
 
   constructor() { 
-    this.settings["showHiddenProperties"] = false;
+    this.settings["sampleSetting"] = false;
   }
 
   //Settings

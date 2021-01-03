@@ -103,7 +103,9 @@ var SolverCallService = /** @class */ (function () {
                 var value = this.modelElementDataService.getValueForElementProperty(modelElement.elementId, propertyType);
                 //Don't write undefined values, e.g., tranches with no data
                 if (value != undefined) {
-                    jString += JSON.stringify(propertyType) + ":" + JSON.stringify(value) + ",";
+                    var stringifiedValue = (this.modelElementDefService.propertyIsString(propertyType)) ? JSON.stringify(value) : JSON.stringify(Number(value));
+                    console.log(">>>" + value + ">>>" + stringifiedValue + "<<<");
+                    jString += JSON.stringify(propertyType) + ":" + stringifiedValue + ",";
                 }
             }
             //Remove the last comma and close properties object

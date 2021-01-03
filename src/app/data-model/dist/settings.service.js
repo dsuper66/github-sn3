@@ -12,7 +12,7 @@ var SettingsService = /** @class */ (function () {
     function SettingsService() {
         //Settings
         this.settings = {};
-        this.settings["showHiddenProperties"] = false;
+        this.settings["sampleSetting"] = false;
     }
     //https://jessitron.com/2017/07/18/dictionary-objects-in-javascript-and-typescript/
     SettingsService.prototype.getAllSettingIds = function () {

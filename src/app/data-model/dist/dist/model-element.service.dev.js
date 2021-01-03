@@ -20,135 +20,117 @@ var core_1 = require("@angular/core");
 var ModelElementService =
 /** @class */
 function () {
-  function ModelElementService() {
-    this.modelElements = [];
-    this.elementNextIndex = new Map();
-    this.elementPropertyTypes = [];
-    this.propertyTypeIdsOfElementType = {}; // private propertiesOfElementType : Map<string, string[]>;
-
-    this.valueTypesOfProperties = new Map(); // private propertiesDisplayOrder = new Map<string,bigint >(); //-ve => read only, 0 no display
-
-    this.allProperties = [];
-    this.elementPropertyTypes.push({
-      propertyType: 'isRefBus',
-      primitiveType: 'bool',
-      defaultValue: true
-    }, {
-      propertyType: 'connId1',
-      primitiveType: 'string',
-      defaultValue: 'none'
-    }, {
-      propertyType: 'connId2',
-      primitiveType: 'string',
-      defaultValue: 'none'
-    }, {
-      propertyType: 'resistance',
-      primitiveType: 'number',
-      defaultValue: '10'
-    }, {
-      propertyType: 'susceptance',
-      primitiveType: 'number',
-      defaultValue: '0.001'
-    }, {
-      propertyType: 'enBids',
-      primitiveType: 'tranches',
-      defaultValue: [100, 70]
-    }, {
-      propertyType: 'enOffers',
-      primitiveType: 'tranches',
-      defaultValue: [50, 150]
-    }, {
-      propertyType: 'resOffers',
-      primitiveType: 'tranches',
-      defaultValue: [50, 150]
-    }, {
-      propertyType: 'genCapacity',
-      primitiveType: 'number',
-      defaultValue: '100'
-    }); //Element Types and their Property Types
-
-    this.propertyTypeIdsOfElementType['bus'] = ['isRefBus'];
-    this.propertyTypeIdsOfElementType['branch'] = ['connId1', 'connId2', 'resistance', 'susceptance'];
-    this.propertyTypeIdsOfElementType['gen'] = ['connId1', 'genCapacity'];
-    this.propertyTypeIdsOfElementType['load'] = ['connId1', 'reqdLoad'];
-    this.propertyTypeIdsOfElementType['genTranch'] = ['parentId', 'quantity', 'price'];
-    this.propertyTypeIdsOfElementType['resTranch'] = ['parentId', 'quantity', 'price'];
-    this.propertyTypeIdsOfElementType['lossTranch'] = ['parentId', 'flow', 'loss'];
+  function ModelElementService(modelElementDataService, modelElementDefService) {
+    this.modelElementDataService = modelElementDataService;
+    this.modelElementDefService = modelElementDefService;
   }
 
-  ModelElementService.prototype.getPropertyTypeIdsOfElementType = function (elementTypeId) {
-    console.log("from: " + this.propertyTypeIdsOfElementType); // let elementType = this.propertiesOfElementType.filter(elementType => elementType.elementTypeId === elementTypeId)[0];
-    // return elementType.propertyTypeIds;
+  ModelElementService.prototype.iff = function (condition, resultTrue, resultFalse) {
+    if (condition) {
+      return resultTrue;
+    } else {
+      return resultFalse;
+    }
+  }; //Add element (for child elements record their parent)
 
-    return this.propertyTypeIdsOfElementType[elementTypeId];
-  };
 
-  ModelElementService.prototype.getModelElements = function () {
-    return this.modelElements;
-  };
+  ModelElementService.prototype.addModelElement = function (elementTypeToAdd, parentId, childNum) {
+    //Add the new element
+    console.log(">>>>>addModelElement:" + elementTypeToAdd); //ID for the new element 
+    // const newId
+    //   = (parentId && childNum) //child id incorporated parent id
+    //     ? this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum)
+    //     : this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
 
-  ModelElementService.prototype.addModelElement = function (elementTypeId) {
-    //Get next index for i.d.
-    if (this.elementNextIndex[elementTypeId] == undefined) {
-      this.elementNextIndex[elementTypeId] = 1;
+    var newId;
+
+    if (parentId && childNum) {
+      //child element
+      //Special Case
+      //dirBranch child id has a suffix name not number
+      if (elementTypeToAdd == 'dirBranch') {
+        newId = parentId + elementTypeToAdd + (childNum == 1 ? "Pos" : "Neg"); // if (childNum == 1) {
+        //   newId = parentId + elementTypeToAdd + "Pos"
+        // }
+        // else {
+        //   newId = parentId + elementTypeToAdd + "Neg"
+        // }
+      } else {
+        //child id is parent + child
+        newId = this.modelElementDataService.makeIdFromStringAndNumber(parentId + elementTypeToAdd, childNum);
+      }
+    } else {
+      //parent element
+      newId = this.modelElementDataService.getIdForNewElementOfType(elementTypeToAdd);
+    } //Add the element
+
+
+    this.modelElementDataService.addElement(newId, elementTypeToAdd, {} //properties... empty and then populated either by defaults or data input
+    ); //If this is a child then assign parent property
+
+    if (parentId) {
+      this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
+    } //Special case
+    //bus... need one (and only one) with isRefBus = true
+
+
+    if (elementTypeToAdd === 'bus') {
+      //If no refBus then make this refBus = true
+      if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
+        this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
+      }
+    } //Special Case
+    //dirBranch needs a direction property (which is a multiplier)
+
+
+    if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
+      this.modelElementDataService.setPropertyForElement(newId, 'direction', childNum == 1 ? 1 : -1);
+    } //Create any child elements (linked back to parent like a gen is to a bus)
+
+
+    var self = this;
+    var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
+    childElementDefs.forEach(function (childElementDef) {
+      var childType = childElementDef.properties['childType'];
+      var childCount = childElementDef.properties['childCount'];
+      console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount); //Add the child record(s)
+
+      for (var childNum_1 = 1; childNum_1 <= childCount; childNum_1++) {
+        self.addModelElement(childType, newId, childNum_1);
+      }
+    }); //Set default values
+
+    for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
+      var defaultValueSetting = _a[_i];
+      var addDefaults = true; //If child element, only add defaults to number 1, i.e., don't repeat for all
+
+      if (childNum) {
+        if (childNum != 1) {
+          addDefaults = false;
+        }
+      } //Add defaults
+
+
+      if (addDefaults) {
+        this.modelElementDataService.setPropertyForElement(newId, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
+      }
+    } //Special case
+    //gen (and maybe others)... need an island 
+    //(when we created the shape we made sure that we had an island, for now there is only one)
+
+
+    var islandIdProperty = 'islandId';
+
+    if (this.modelElementDefService.elementTypeHasPropertyType(elementTypeToAdd, islandIdProperty)) {
+      var island = this.modelElementDataService.getModelElementOfType('island')[0];
+
+      if (island) {
+        console.log("###Island id:" + island.elementId);
+        this.modelElementDataService.setPropertyForElement(newId, islandIdProperty, island.elementId);
+      }
     }
 
-    var elementIndex = this.elementNextIndex[elementTypeId]; //Make the i.d.
-
-    var elementId = elementTypeId + ("000" + elementIndex).slice(-3);
-    this.elementNextIndex[elementTypeId] = elementIndex + 1; //Add the element
-
-    this.modelElements.push({
-      elementId: elementId,
-      elementTypeId: elementTypeId,
-      properties: this.makePropertiesForElementType(elementTypeId) // bus1: "",
-      // bus2: ""
-
-    });
-    return elementId;
-  };
-
-  ModelElementService.prototype.getValueForElementProperty = function (elementId, propertyType) {
-    var properties = this.modelElements.filter(function (element) {
-      return element.elementId === elementId;
-    })[0].properties;
-    return properties[propertyType];
-  };
-
-  ModelElementService.prototype.setValueForElementProperty = function (elementId, propertyType, value) {
-    this.modelElements.filter(function (element) {
-      return element.elementId === elementId;
-    })[0].properties[propertyType] = value;
-  };
-
-  ModelElementService.prototype.makePropertiesForElementType = function (elementTypeId) {
-    // let thesePropertyTypeIds = this.propertiesOfElementType.filter(
-    //   elementType => elementType.elementTypeId === elementTypeId)[0].propertyTypeIds;
-    console.log("makePropertiesForElementType of " + elementTypeId);
-    var thesePropertyTypeIds = this.propertyTypeIdsOfElementType[elementTypeId];
-    console.log("got property types: " + thesePropertyTypeIds); // let properties = this.elementPropertyTypes.filter(
-    //   elementPropertyType => thesePropertyTypeIds.find(elementPropertyType.propertyType thesePropertyTypeIds)
-    // )
-
-    var properties = {};
-
-    var _loop_1 = function _loop_1(propertyType) {
-      console.log("looking for " + propertyType);
-      var elementProperty = this_1.elementPropertyTypes.filter(function (elementPropertyType) {
-        return elementPropertyType.propertyType === propertyType;
-      })[0];
-      properties[elementProperty.propertyType] = elementProperty.defaultValue;
-    };
-
-    var this_1 = this;
-
-    for (var _i = 0, thesePropertyTypeIds_1 = thesePropertyTypeIds; _i < thesePropertyTypeIds_1.length; _i++) {
-      var propertyType = thesePropertyTypeIds_1[_i];
-
-      _loop_1(propertyType);
-    }
-
-    return properties;
+    return newId;
   };
 
   ModelElementService = __decorate([core_1.Injectable({

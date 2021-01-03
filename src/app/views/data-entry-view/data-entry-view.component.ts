@@ -102,7 +102,7 @@ export class DataEntryViewComponent implements OnInit {
 
   //Constraint Defintions
   getConstraintStatus(itemId: string): boolean {
-    return this.mathModelDefService.itemIsEnabled(ItemType.Constraint,itemId);
+    return this.mathModelDefService.itemIsEnabled(ItemType.Constraint, itemId);
   }
   setConstraintStatus(itemId: string, isEnabled: boolean) {
     return this.mathModelDefService.setItemStatus(ItemType.Constraint, itemId, isEnabled);
@@ -110,7 +110,7 @@ export class DataEntryViewComponent implements OnInit {
 
   //Constraint Components
   getFactorStatus(itemId: string): boolean {
-    return this.mathModelDefService.itemIsEnabled(ItemType.VarFactor,itemId);
+    return this.mathModelDefService.itemIsEnabled(ItemType.VarFactor, itemId);
   }
   setFactorStatus(itemId: string, isEnabled: boolean) {
     return this.mathModelDefService.setItemStatus(ItemType.VarFactor, itemId, isEnabled);
@@ -274,41 +274,41 @@ export class DataEntryViewComponent implements OnInit {
   // }
   formFieldReadOnly: boolean[] = [];
   //Data entry fields (called from Data above)
-  populateFormFieldsFromProperties(propertyIds: string[], elementId: string) {
-    const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
-    for (const propertyId of propertyIds) {
-      if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
+  populateFormFieldsFromProperties(propertyTypes: string[], elementId: string) {
+    // const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
+    for (const propertyType of propertyTypes) {
+      // if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
 
-        //Name/Title
-        this.formNames.push(elementId + "." + propertyId);
+      //Name/Title
+      this.formNames.push(elementId + "." + propertyType);
 
-        //PropertyId
-        this.fieldRefIdChild.push(propertyId);
-        //ElementId (for assigning any data entry)
-        this.fieldRefIdParent.push(elementId);
+      //PropertyId
+      this.fieldRefIdChild.push(propertyType);
+      //ElementId (for assigning any data entry)
+      this.fieldRefIdParent.push(elementId);
 
-        //Default value
-        const defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyId);
-        this.formDefaults.push(defaultValue);
+      //Default value
+      const defaultValue = this.modelElementDataService.getValueForElementProperty(elementId, propertyType);
+      this.formDefaults.push(defaultValue);
 
-        //Read-only... if the property is defined as read-only, or the element has a parent
-        if (this.modelElementDefService.propertyIsReadOnly(propertyId)
-          || this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
-          this.formFieldReadOnly.push(true);
-        }
-        // else if (this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
-        //   this.formFieldReadOnly.push(true);
-        // }
-        else {
-          this.formFieldReadOnly.push(false);  
-        }
-
-        console.log(elementId + "-" + propertyId + "-value:" + defaultValue);
-
+      //Read-only... if the property is defined as read-only, or the element has a parent with the same property
+      if (this.modelElementDefService.propertyIsReadOnly(propertyType)
+        || this.modelElementDataService.parentHasProperty(elementId, propertyType)) {
+        this.formFieldReadOnly.push(true);
       }
+      // else if (this.modelElementDataService.getValueForElementProperty(elementId,'parentId')) {
+      //   this.formFieldReadOnly.push(true);
+      // }
       else {
-        console.log(propertyId + ": not visible")
+        this.formFieldReadOnly.push(false);
       }
+
+      console.log(elementId + "-" + propertyType + "-value:" + defaultValue);
+
+      // }
+      // else {
+      //   console.log(propertyId + ": not visible")
+      // }
     }
   }
 }

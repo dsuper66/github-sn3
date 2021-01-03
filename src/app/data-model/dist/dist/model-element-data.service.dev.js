@@ -23,116 +23,106 @@ function () {
   function ModelElementDataService(modelElementDefService) {
     this.modelElementDefService = modelElementDefService;
     this.modelElements = [];
-    this.elementNextIndex = new Map(); //Manually Added Child element defintions which will
-    //cause child elements to be created automatically with parent
+    this.elementNextIndex = new Map();
+    this.resultsDP = 2; // getResultVal(key: string, results: {[resultType:string] : number}):number {
+    //   if (results[key] === undefined) {
+    //     console.log("MISSING RESULT: " + key)
+    //     return -9999.0
+    //   }
+    //   else {
+    //     return results[key];
+    //   }
+    // }
+
+    this.prevObjectiveVal = 0.0; //ElementDef elements that define a relationship between elements...
+    //The model elements (branch, bus, etc) are added by the user
+    //There are also the following "singleton" ElementDef elements
+    //These are manually added here
+    //They will cause child elements to be created automatically when the parent element is added
     //--------------------------------------------------
-    //Tranches
-    //--------
+    //Child Tranches
+    //--------------
     //Bid Tranches associated with load
 
     this.modelElements.push({
       elementId: 'bidTrancheDef',
-      elementType: 'trancheDef',
+      elementType: 'childDef',
       properties: this.makeDict([{
         'parentType': 'load'
       }, {
-        'childTypeId': 'bidTranche'
+        'childType': 'bidTranche'
       }, {
-        'childCount': '3'
+        'childCount': '2'
       }]),
-      visible: false
+      includeInModel: false
     }); //Energy Tranches associated with gen
 
     this.modelElements.push({
       elementId: 'enOfferTrancheDef',
-      elementType: 'trancheDef',
+      elementType: 'childDef',
       properties: this.makeDict([{
         'parentType': 'gen'
       }, {
-        'childTypeId': 'enOfferTranche'
+        'childType': 'enOfferTranche'
       }, {
-        'childCount': '3'
+        'childCount': '2'
       }]),
-      visible: false
+      includeInModel: false
     }); //Reserve Tranches associated with gen
 
     this.modelElements.push({
       elementId: 'resOfferTrancheDef',
-      elementType: 'trancheDef',
+      elementType: 'childDef',
       properties: this.makeDict([{
         'parentType': 'gen'
       }, {
-        'childTypeId': 'resOfferTranche'
-      }, {
-        'childCount': '3'
-      }]),
-      visible: false
-    }); //Flow-Loss Tranches associated with branch
-
-    this.modelElements.push({
-      elementId: 'lossTrancheDef',
-      elementType: 'trancheDef',
-      properties: this.makeDict([{
-        'parentType': 'branch'
-      }, {
-        'childTypeId': 'lossTranche'
-      }, {
-        'childCount': '3'
-      }]),
-      visible: false
-    }); //Unrestricted Elements
-    //---------------------
-    //Directional branches associated with branch
-    // this.modelElements.push({
-    //   elementId: 'branchFlowPos', elementType: 'unrestrictedDef',
-    //   properties: this.makeDict([
-    //     { 'parentType': 'branch' }, { 'childTypeId': 'dirBranchPos' }, { 'childCount': '1' }]),
-    //   visible: false
-    // });
-
-    this.modelElements.push({
-      elementId: 'dirBranchDef',
-      elementType: 'unrestrictedDef',
-      properties: this.makeDict([{
-        'parentType': 'branch'
-      }, {
-        'childTypeId': 'dirBranch'
+        'childType': 'resOfferTranche'
       }, {
         'childCount': '2'
       }]),
-      visible: false
-    }); // //Unrestricted - bus angle
-    // this.modelElements.push({
-    //   elementId: 'phaseAnglePos', elementType: 'unrestrictedDef',
-    //   properties: this.makeDict([
-    //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
-    //     { 'childTypeId': 'dirAnglePos' }, { 'childCount': '1' }]),
-    //   visible: false
-    // });
-    // this.modelElements.push({
-    //   elementId: 'phaseAngleNeg', elementType: 'unrestrictedDef',
-    //   properties: this.makeDict([
-    //     { 'parentType': 'bus' }, //{ 'varId': 'phaseAngle' }, 
-    //     { 'childTypeId': 'dirAngleNeg' }, { 'childCount': '1' }]),
-    //   visible: false
-    // }); 
-    //Static components of the model
+      includeInModel: false
+    }); //Flow-Loss Segments associated with directional branch
+
+    this.modelElements.push({
+      elementId: 'flowLossSegmentDef',
+      elementType: 'childDef',
+      properties: this.makeDict([{
+        'parentType': 'dirBranch'
+      }, {
+        'childType': 'flowLossSegment'
+      }, {
+        'childCount': '2'
+      }]),
+      includeInModel: false
+    }); //Child Unrestricted Elements
+    //---------------------------
+    //(2 child records... a forward direction and a reverse)
+
+    this.modelElements.push({
+      elementId: 'dirBranchDef',
+      elementType: 'childDef',
+      properties: this.makeDict([{
+        'parentType': 'branch'
+      }, {
+        'childType': 'dirBranch'
+      }, {
+        'childCount': '2'
+      }]),
+      includeInModel: false
+    }); //Static components of the model
     //mathModel has the objective as a variable
-
-    this.modelElements.push({
-      elementId: 'mathmodel001',
-      elementType: 'mathModel',
-      properties: {},
-      visible: false
-    }); //island has risk and reserve as variables 
+    // this.modelElements.push({
+    //   elementId: 'mathmodel001', elementType: 'mathModel',
+    //   properties: {},
+    //   includeInModel: true
+    // });
+    //island has risk and reserve as variables 
     //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
-
-    this.modelElements.push({
-      elementId: 'island001',
-      elementType: 'island',
-      properties: {},
-      visible: false
-    });
+    // this.modelElements.push({
+    //   elementId: 'island001', elementType: 'island',
+    //   properties: {},
+    //   includeInModel: true
+    // });
   }
 
   ModelElementDataService.prototype.getIdForNewElementOfType = function (elementType) {
@@ -165,7 +155,10 @@ function () {
       });
     });
     return dict;
-  }; //===DATA===
+  }; //==========
+  //   DATA
+  //==========
+  //Add element
 
 
   ModelElementDataService.prototype.addElement = function (elementId, elementType, properties) {
@@ -173,20 +166,27 @@ function () {
       elementId: elementId,
       elementType: elementType,
       properties: properties,
-      visible: true
+      includeInModel: true
     });
-  }; //Child elements
+  }; //Delete element
+
+
+  ModelElementDataService.prototype.deleteElement = function (elementId) {
+    this.modelElements = this.modelElements.filter(function (e) {
+      return e.elementId != elementId && e.properties['parentId'] != elementId;
+    });
+  }; //Get child elements
 
 
   ModelElementDataService.prototype.getChildElementDefs = function (elementType) {
-    return this.modelElements.filter(function (element) {
-      return element.properties['parentType'] === elementType;
+    return this.modelElements.filter(function (e) {
+      return e.properties['parentType'] === elementType;
     });
   };
 
-  ModelElementDataService.prototype.getChildIdsForElementId = function (elementId) {
-    return this.modelElements.filter(function (element) {
-      return element.properties['parentId'] === elementId;
+  ModelElementDataService.prototype.getChildElements = function (elementId) {
+    return this.modelElements.filter(function (e) {
+      return e.properties['parentId'] === elementId;
     });
   }; //Test - get all properties of all
 
@@ -194,7 +194,7 @@ function () {
   ModelElementDataService.prototype.listAllElements = function (elementId) {
     for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
       var element = _a[_i];
-      var propertyTypeIds = this.modelElementDefService.getPropertyTypeIdsFor(element.elementType);
+      var propertyTypeIds = this.modelElementDefService.getPropertyTypesFor(element.elementType);
 
       for (var _b = 0, propertyTypeIds_1 = propertyTypeIds; _b < propertyTypeIds_1.length; _b++) {
         var propertyType = propertyTypeIds_1[_b];
@@ -212,9 +212,15 @@ function () {
   };
 
   ModelElementDataService.prototype.getModelElementForId = function (elementId) {
-    return this.modelElements.filter(function (element) {
-      return element.elementId === elementId;
+    return this.modelElements.filter(function (e) {
+      return e.elementId === elementId;
     })[0];
+  };
+
+  ModelElementDataService.prototype.getModelElementOfType = function (elementType) {
+    return this.modelElements.filter(function (e) {
+      return e.elementType === elementType;
+    });
   };
 
   ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
@@ -222,30 +228,109 @@ function () {
       return element.elementId === elementId;
     })[0].properties;
     return properties[propertyType];
+  }; //Sum the child element properties, e.g., sum the bid quantities
+
+
+  ModelElementDataService.prototype.sumForChildren = function (elementId, childElementType, childPropertyType) {
+    var childElements = this.modelElements.filter(function (e) {
+      return e.properties['parentId'] == elementId && e.elementType == childElementType;
+    });
+    var sum = 0.0;
+
+    for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
+      var e = childElements_1[_i];
+      var value = e.properties[childPropertyType];
+
+      if (value) {
+        sum += value;
+      }
+    }
+
+    return sum;
   };
 
-  ModelElementDataService.prototype.getElementsWithPropertyValue = function (propertyType, value) {
+  ModelElementDataService.prototype.getElementsWherePropertyValue = function (propertyType, value) {
     return this.modelElements.filter(function (element) {
       return element.properties[propertyType] === value;
     });
   };
 
   ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
-    if (value) {
-      //Special cases
-      //isRefBus... can only have one refBus so set all to false first if the new value is true
-      if (propertyType === 'isRefBus' && value === 'true') {
-        this.setPropertyForAllElements(propertyType, "false");
-      } //Update the property for the element
+    var _this = this; //Special Case
+    //isRefBus... can only have one refBus so set all to false first if the new value is true
 
 
-      var elementToUpdate = this.modelElements.filter(function (element) {
-        return element.elementId === elementId;
-      })[0];
-      elementToUpdate.properties[propertyType] = value;
-      console.log("Set property:" + propertyType + "for:" + elementId);
-    } else {
-      console.log("Set property: no value");
+    if (propertyType === 'isRefBus' && value === 'true') {
+      this.setPropertyForAllElements(propertyType, "false");
+    } //Special Case
+    //resistance... use this to populate the flow loss segments
+
+
+    if (propertyType === 'resistance') {
+      var flowMax = Number(this.getValueForElementProperty(elementId, 'flowMax'));
+      var resistance = Number(value); //Get dirBranches, then set the segment properties
+
+      var dirBranches = this.getChildElements(elementId).filter(function (e) {
+        return e.elementType == 'dirBranch';
+      });
+
+      for (var _i = 0, dirBranches_1 = dirBranches; _i < dirBranches_1.length; _i++) {
+        var dirBranch = dirBranches_1[_i];
+        var segments = this.getChildElements(dirBranch.elementId).filter(function (e) {
+          return e.elementType == 'flowLossSegment';
+        });
+        var segFlowLimit = flowMax / segments.length; //equal length segments
+
+        var startPointFlow = 0.0;
+        var endPointFlow = segFlowLimit;
+
+        for (var _a = 0, segments_1 = segments; _a < segments_1.length; _a++) {
+          var segment = segments_1[_a]; //Flow limit
+
+          this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit); //Loss flow ratio
+
+          var startPointLosses = startPointFlow * startPointFlow * resistance;
+          var endPointLosses = endPointFlow * endPointFlow * resistance;
+          var lossFlowRatio = (endPointLosses - startPointLosses) / segFlowLimit;
+          this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio); //For next segment
+
+          startPointFlow = endPointFlow;
+          endPointFlow += segFlowLimit;
+          console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
+        }
+      }
+    } //Update the property for the element
+
+
+    var elementToUpdate = this.modelElements.filter(function (element) {
+      return element.elementId === elementId;
+    })[0]; //Update if found
+
+    if (elementToUpdate) {
+      elementToUpdate.properties[propertyType] = value; //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+      //If child elements have the same property then it also gets updated
+      //(i.e. fromBus and toBus for dirBranch)
+
+      for (var _b = 0, _c = this.getChildElements(elementId).filter(function (c) {
+        return _this.modelElementDefService.elementHasProperty(c, propertyType);
+      }); _b < _c.length; _b++) {
+        var childElement = _c[_b]; //Special Case
+        //fromBus, toBus for Neg flow direction
+
+        if (propertyType == 'fromBus' || propertyType == 'toBus') {
+          if (this.getValueForElementProperty(childElement.elementId, 'direction') == '-1') {
+            console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
+
+            if (propertyType == 'toBus') {
+              propertyType = 'fromBus';
+            } else if (propertyType == 'fromBus') {
+              propertyType = 'toBus';
+            }
+          }
+        }
+
+        this.setPropertyForElement(childElement.elementId, propertyType, value);
+      }
     }
   };
 
@@ -264,6 +349,191 @@ function () {
       }
     } else {
       console.log("NO VALUE");
+    }
+  }; //=============
+  //   RESULTS
+  //=============
+  //All values (prices and quantities) are stored in the results array of the element
+  //indexed by a string which is either the name of the constraint or variable
+
+
+  ModelElementDataService.prototype.resetResults = function () {
+    for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
+      var e = _a[_i]; // for (const price in element.prices) element.prices[price] = 0
+      // for (const quantity in element.quantities) element.quantities[quantity] = 0
+
+      e.results = {}; // for (const result in e.results) e.results[result] = 0
+
+      e.constraintString = "";
+      e.resultString = "";
+    }
+  }; //Extract results from dictionary and format as string
+  //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
+
+
+  ModelElementDataService.prototype.getResultString = function (key, results, prefix, showZero) {
+    if (prefix === void 0) {
+      prefix = "";
+    }
+
+    if (showZero === void 0) {
+      showZero = true;
+    }
+
+    var value = results[key];
+
+    if (value === undefined) {
+      console.log("MISSING RESULT: " + key);
+      return " none"; //key
+    } else {
+      if (showZero || value != 0) {
+        return prefix + value.toFixed(this.resultsDP).toString();
+      } else {
+        return "";
+      }
+    }
+  }; //Result string for display... for the element get pre-determined result types
+  //(where a result type is either a constraintType or varType) as an array of strings
+
+
+  ModelElementDataService.prototype.getTextFromElementResults = function (elementId) {
+    var resultString1 = "";
+    var resultString2 = "";
+    var resultString3 = "";
+    var resultString4 = "";
+    var element = this.modelElements.find(function (element) {
+      return element.elementId === elementId;
+    });
+
+    if (element) {
+      var results = element.results;
+
+      if (results) {
+        if (element.elementType == "bus") {
+          resultString1 = "$" + this.getResultString('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
+
+          resultString2 = "∠" + this.getResultString('phaseAnglePos', results);
+        } else if (element.elementType == "gen") {
+          resultString1 = this.getResultString('enTrancheCleared', results);
+          resultString2 = "res:" + this.getResultString('resTrancheCleared', results);
+          resultString3 = this.getResultString('genResShortfall', results, "-risk:", false);
+        } else if (element.elementType == "load") {
+          resultString1 = this.getResultString('bidTrancheCleared', results); //Calc uncleared
+
+          var bidsCleared = results['bidTrancheCleared'];
+
+          if (bidsCleared) {
+            var uncleared = this.sumForChildren(elementId, 'bidTranche', 'trancheLimit') - bidsCleared; //Only display if uncleared is > 0
+
+            if (uncleared > 0) {
+              resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
+            }
+          }
+        } else if (element.elementType == "island") {
+          resultString1 = "res$:" + this.getResultString('resCover', results);
+          resultString2 = "risk:" + this.getResultString('islandRisk', results);
+          resultString3 = "res:" + this.getResultString('islandRes', results);
+          resultString4 = this.getResultString('islandResShortfall', results, "-risk:", false);
+        } else if (element.elementType == "mathModel") {
+          var objectiveVal = results['objectiveVal']; //this.getResultVal('objectiveVal',results);
+
+          if (objectiveVal) {
+            var deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
+            this.prevObjectiveVal = objectiveVal;
+            resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
+            resultString2 = "prev:" + objectiveVal.toFixed(this.resultsDP).toString();
+            resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.resultsDP).toString();
+          }
+        } else if (element.elementType == "branch") {
+          var branchFlowGross = results['branchFlow'];
+          var branchFlowLoss = results['branchLoss']; //Non-Neg flow
+
+          if (branchFlowGross >= 0) {
+            resultString1 = branchFlowGross.toFixed(this.resultsDP).toString();
+            resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.resultsDP).toString();
+          } else {
+            resultString2 = Math.abs(branchFlowGross).toFixed(this.resultsDP).toString();
+            resultString1 = (Math.abs(branchFlowGross) + branchFlowLoss).toFixed(this.resultsDP).toString();
+          } //Determine direction of flow arrow
+          //The arrow
+
+
+          if (branchFlowGross) {
+            //Pos flow
+            if (branchFlowGross > 0) {
+              resultString3 = '1';
+            } //Neg flow
+            else if (branchFlowGross < 0) {
+                resultString3 = '2';
+              } //No flow
+              else {
+                  resultString3 = '0';
+                }
+          }
+        }
+      }
+    } // }
+
+
+    console.log("got result:>>" + resultString2 + "<<");
+    return [resultString1, resultString2, resultString3, resultString4];
+  }; //The results are the shadow price of every constraint and the value of every variable
+  //...to get the result we just need the constraintType or varType string
+
+
+  ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value, constraintString, resultString) {
+    console.log("Element:" + elementId + " add result:" + value + " for result type:>>" + resultType + "<<"); //Get the element
+
+    var elementToUpdate = this.modelElements.find(function (element) {
+      return element.elementId === elementId;
+    });
+
+    if (elementToUpdate) {
+      //Add the arrays if they does not exist
+      // if (!elementToUpdate.results) {
+      //   elementToUpdate.results = {}        
+      // }
+      // if (!elementToUpdate.constraintString) {
+      //   elementToUpdate.constraintString = ""        
+      // }
+      // if (!elementToUpdate.resultString) {
+      //   elementToUpdate.resultString = ""        
+      // }             
+      //Special case
+      //Node balance LTE constraint shadow price is negative
+      if (resultType == "nodeBal" && resultId.includes("LTE")) {
+        value *= -1.0;
+      } //Directional results, e.g., for branch arrow
+
+
+      var direction = this.getValueForElementProperty(elementId, 'direction');
+
+      if (direction) {
+        value *= Number(direction);
+      } //The value adds to any existing value with the same key
+      //(e.g. cleared offers add up at the parent level)
+
+
+      if (elementToUpdate.results) {
+        if (elementToUpdate.results[resultType]) {
+          elementToUpdate.results[resultType] = elementToUpdate.results[resultType] + value;
+        } else {
+          elementToUpdate.results[resultType] = value;
+        }
+      } //ConstraintString is empty for var result
+
+
+      if (constraintString != "") {
+        elementToUpdate.constraintString += "\n\n" + constraintString;
+      }
+
+      elementToUpdate.resultString += "\n" + resultString; //If element has a parent then also add the result to the parent
+
+      var parentId = elementToUpdate.properties["parentId"];
+
+      if (parentId) {
+        this.addResult(parentId, resultType, resultId, value, constraintString, resultString);
+      }
     }
   };
 

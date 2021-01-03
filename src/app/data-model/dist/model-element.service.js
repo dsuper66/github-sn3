@@ -74,7 +74,7 @@ var ModelElementService = /** @class */ (function () {
         var self = this;
         var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
         childElementDefs.forEach(function (childElementDef) {
-            var childType = childElementDef.properties['childTypeId'];
+            var childType = childElementDef.properties['childType'];
             var childCount = childElementDef.properties['childCount'];
             console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
             //Add the child record(s)

@@ -29,28 +29,28 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'bidTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '2' }]),
+        { 'parentType': 'load' }, { 'childType': 'bidTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Energy Tranches associated with gen
     this.modelElements.push({
       elementId: 'enOfferTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '2' }]),
+        { 'parentType': 'gen' }, { 'childType': 'enOfferTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Reserve Tranches associated with gen
     this.modelElements.push({
       elementId: 'resOfferTrancheDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '2' }]),
+        { 'parentType': 'gen' }, { 'childType': 'resOfferTranche' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Flow-Loss Segments associated with directional branch
     this.modelElements.push({
       elementId: 'flowLossSegmentDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'dirBranch' }, { 'childTypeId': 'flowLossSegment' }, { 'childCount': '2' }]),
+        { 'parentType': 'dirBranch' }, { 'childType': 'flowLossSegment' }, { 'childCount': '2' }]),
       includeInModel: false
     });
     //Child Unrestricted Elements
@@ -59,7 +59,7 @@ export class ModelElementDataService {
     this.modelElements.push({
       elementId: 'dirBranchDef', elementType: 'childDef',
       properties: this.makeDict([
-        { 'parentType': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }]),
+        { 'parentType': 'branch' }, { 'childType': 'dirBranch' }, { 'childCount': '2' }]),
       includeInModel: false
     });
 
@@ -137,12 +137,17 @@ export class ModelElementDataService {
       e => e.elementId != elementId && e.properties['parentId'] != elementId)
   }
 
-  //Get child elements
+  //Get child / parent elements
   getChildElementDefs(elementType: string): ModelElement[] {
     return this.modelElements.filter(e => e.properties['parentType'] === elementType);
   }
   getChildElements(elementId: string): ModelElement[] {
     return this.modelElements.filter(e => e.properties['parentId'] === elementId);
+  }
+  parentHasProperty(elementId: string, propertyType: string): boolean {
+    const parentId = this.getValueForElementProperty(elementId, 'parentId');
+    const value = this.getValueForElementProperty(parentId, propertyType);
+    return (value != "");
   }
 
   //Test - get all properties of all
@@ -170,10 +175,17 @@ export class ModelElementDataService {
   }
 
   getValueForElementProperty(elementId: string, propertyType: string): string {
-    let properties = this.modelElements.filter(
-      element => element.elementId === elementId
-    )[0].properties;
-    return properties[propertyType];
+    let element = this.modelElements.find(element => element.elementId === elementId);
+    if (element && element.properties[propertyType]) {
+      return element.properties[propertyType];
+    }
+    else {
+      return "";
+    }
+    // let properties = this.modelElements.filter(
+    //   element => element.elementId === elementId
+    // )[0].properties;
+    // return properties[propertyType];
   }
 
   //Sum the child element properties, e.g., sum the bid quantities
@@ -205,36 +217,6 @@ export class ModelElementDataService {
       this.setPropertyForAllElements(propertyType, "false");
     }
 
-
-    //Special Case
-    //resistance... use this to populate the flow loss segments
-    if (propertyType === 'resistance') {
-      const flowMax = Number(this.getValueForElementProperty(elementId, 'flowMax'));
-      const resistance = Number(value);
-
-      //Get dirBranches, then set the segment properties
-      const dirBranches = this.getChildElements(elementId).filter(e => e.elementType == 'dirBranch');
-      for (const dirBranch of dirBranches) {
-        const segments = this.getChildElements(dirBranch.elementId).filter(e => e.elementType == 'flowLossSegment');
-        const segFlowLimit = flowMax / segments.length; //equal length segments
-        var startPointFlow = 0.0;
-        var endPointFlow = segFlowLimit;
-        for (const segment of segments) {
-          //Flow limit
-          this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit);
-          //Loss flow ratio
-          const startPointLosses = startPointFlow * startPointFlow * resistance;
-          const endPointLosses = endPointFlow * endPointFlow * resistance;
-          const lossFlowRatio = (endPointLosses - startPointLosses) / segFlowLimit;
-          this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio);
-          //For next segment
-          startPointFlow = endPointFlow;
-          endPointFlow += segFlowLimit;
-          console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
-        }
-      }
-    }
-
     //Update the property for the element
     const elementToUpdate = this.modelElements.filter(
       element => element.elementId === elementId)[0];
@@ -243,6 +225,35 @@ export class ModelElementDataService {
     if (elementToUpdate) {
       elementToUpdate.properties[propertyType] = value;
       //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+
+      //Special Case
+      //resistance... use this to populate the flow loss segments
+      if (propertyType === 'resistance' || propertyType === 'flowMax') {
+        const flowMax = Number(this.getValueForElementProperty(elementId, 'flowMax'));
+        const resistance = Number(this.getValueForElementProperty(elementId, 'resistance'));
+
+        //Get dirBranches, then set the segment properties
+        const dirBranches = this.getChildElements(elementId).filter(e => e.elementType == 'dirBranch');
+        for (const dirBranch of dirBranches) {
+          const segments = this.getChildElements(dirBranch.elementId).filter(e => e.elementType == 'flowLossSegment');
+          const segFlowLimit = flowMax / segments.length; //equal length segments
+          var startPointFlow = 0.0;
+          var endPointFlow = segFlowLimit;
+          for (const segment of segments) {
+            //Flow limit
+            this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit);
+            //Loss flow ratio
+            const startPointLosses = startPointFlow * startPointFlow * resistance;
+            const endPointLosses = endPointFlow * endPointFlow * resistance;
+            const lossFlowRatio = (endPointLosses - startPointLosses) / segFlowLimit;
+            this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio);
+            //For next segment
+            startPointFlow = endPointFlow;
+            endPointFlow += segFlowLimit;
+            console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
+          }
+        }
+      }
 
       //If child elements have the same property then it also gets updated
       //(i.e. fromBus and toBus for dirBranch)

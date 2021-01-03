@@ -36,7 +36,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'bidTrancheDef', elementType: 'childDef',
             properties: this.makeDict([
-                { 'parentType': 'load' }, { 'childTypeId': 'bidTranche' }, { 'childCount': '2' }
+                { 'parentType': 'load' }, { 'childType': 'bidTranche' }, { 'childCount': '2' }
             ]),
             includeInModel: false
         });
@@ -44,7 +44,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'enOfferTrancheDef', elementType: 'childDef',
             properties: this.makeDict([
-                { 'parentType': 'gen' }, { 'childTypeId': 'enOfferTranche' }, { 'childCount': '2' }
+                { 'parentType': 'gen' }, { 'childType': 'enOfferTranche' }, { 'childCount': '2' }
             ]),
             includeInModel: false
         });
@@ -52,7 +52,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'resOfferTrancheDef', elementType: 'childDef',
             properties: this.makeDict([
-                { 'parentType': 'gen' }, { 'childTypeId': 'resOfferTranche' }, { 'childCount': '2' }
+                { 'parentType': 'gen' }, { 'childType': 'resOfferTranche' }, { 'childCount': '2' }
             ]),
             includeInModel: false
         });
@@ -60,7 +60,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'flowLossSegmentDef', elementType: 'childDef',
             properties: this.makeDict([
-                { 'parentType': 'dirBranch' }, { 'childTypeId': 'flowLossSegment' }, { 'childCount': '2' }
+                { 'parentType': 'dirBranch' }, { 'childType': 'flowLossSegment' }, { 'childCount': '2' }
             ]),
             includeInModel: false
         });
@@ -70,7 +70,7 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElements.push({
             elementId: 'dirBranchDef', elementType: 'childDef',
             properties: this.makeDict([
-                { 'parentType': 'branch' }, { 'childTypeId': 'dirBranch' }, { 'childCount': '2' }
+                { 'parentType': 'branch' }, { 'childType': 'dirBranch' }, { 'childCount': '2' }
             ]),
             includeInModel: false
         });
@@ -133,12 +133,17 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.deleteElement = function (elementId) {
         this.modelElements = this.modelElements.filter(function (e) { return e.elementId != elementId && e.properties['parentId'] != elementId; });
     };
-    //Get child elements
+    //Get child / parent elements
     ModelElementDataService.prototype.getChildElementDefs = function (elementType) {
         return this.modelElements.filter(function (e) { return e.properties['parentType'] === elementType; });
     };
     ModelElementDataService.prototype.getChildElements = function (elementId) {
         return this.modelElements.filter(function (e) { return e.properties['parentId'] === elementId; });
+    };
+    ModelElementDataService.prototype.parentHasProperty = function (elementId, propertyType) {
+        var parentId = this.getValueForElementProperty(elementId, 'parentId');
+        var value = this.getValueForElementProperty(parentId, propertyType);
+        return (value != "");
     };
     //Test - get all properties of all
     ModelElementDataService.prototype.listAllElements = function (elementId) {
@@ -162,8 +167,17 @@ var ModelElementDataService = /** @class */ (function () {
         return this.modelElements.filter(function (e) { return e.elementType === elementType; });
     };
     ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
-        var properties = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0].properties;
-        return properties[propertyType];
+        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (element && element.properties[propertyType]) {
+            return element.properties[propertyType];
+        }
+        else {
+            return "";
+        }
+        // let properties = this.modelElements.filter(
+        //   element => element.elementId === elementId
+        // )[0].properties;
+        // return properties[propertyType];
     };
     //Sum the child element properties, e.g., sum the bid quantities
     ModelElementDataService.prototype.sumForChildren = function (elementId, childElementType, childPropertyType) {
@@ -191,41 +205,41 @@ var ModelElementDataService = /** @class */ (function () {
         if (propertyType === 'isRefBus' && value === 'true') {
             this.setPropertyForAllElements(propertyType, "false");
         }
-        //Special Case
-        //resistance... use this to populate the flow loss segments
-        if (propertyType === 'resistance') {
-            var flowMax = Number(this.getValueForElementProperty(elementId, 'flowMax'));
-            var resistance = Number(value);
-            //Get dirBranches, then set the segment properties
-            var dirBranches = this.getChildElements(elementId).filter(function (e) { return e.elementType == 'dirBranch'; });
-            for (var _i = 0, dirBranches_1 = dirBranches; _i < dirBranches_1.length; _i++) {
-                var dirBranch = dirBranches_1[_i];
-                var segments = this.getChildElements(dirBranch.elementId).filter(function (e) { return e.elementType == 'flowLossSegment'; });
-                var segFlowLimit = flowMax / segments.length; //equal length segments
-                var startPointFlow = 0.0;
-                var endPointFlow = segFlowLimit;
-                for (var _a = 0, segments_1 = segments; _a < segments_1.length; _a++) {
-                    var segment = segments_1[_a];
-                    //Flow limit
-                    this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit);
-                    //Loss flow ratio
-                    var startPointLosses = startPointFlow * startPointFlow * resistance;
-                    var endPointLosses = endPointFlow * endPointFlow * resistance;
-                    var lossFlowRatio = (endPointLosses - startPointLosses) / segFlowLimit;
-                    this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio);
-                    //For next segment
-                    startPointFlow = endPointFlow;
-                    endPointFlow += segFlowLimit;
-                    console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
-                }
-            }
-        }
         //Update the property for the element
         var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
         //Update if found
         if (elementToUpdate) {
             elementToUpdate.properties[propertyType] = value;
             //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+            //Special Case
+            //resistance... use this to populate the flow loss segments
+            if (propertyType === 'resistance' || propertyType === 'flowMax') {
+                var flowMax = Number(this.getValueForElementProperty(elementId, 'flowMax'));
+                var resistance = Number(this.getValueForElementProperty(elementId, 'resistance'));
+                //Get dirBranches, then set the segment properties
+                var dirBranches = this.getChildElements(elementId).filter(function (e) { return e.elementType == 'dirBranch'; });
+                for (var _i = 0, dirBranches_1 = dirBranches; _i < dirBranches_1.length; _i++) {
+                    var dirBranch = dirBranches_1[_i];
+                    var segments = this.getChildElements(dirBranch.elementId).filter(function (e) { return e.elementType == 'flowLossSegment'; });
+                    var segFlowLimit = flowMax / segments.length; //equal length segments
+                    var startPointFlow = 0.0;
+                    var endPointFlow = segFlowLimit;
+                    for (var _a = 0, segments_1 = segments; _a < segments_1.length; _a++) {
+                        var segment = segments_1[_a];
+                        //Flow limit
+                        this.setPropertyForElement(segment.elementId, 'segFlowLimit', segFlowLimit);
+                        //Loss flow ratio
+                        var startPointLosses = startPointFlow * startPointFlow * resistance;
+                        var endPointLosses = endPointFlow * endPointFlow * resistance;
+                        var lossFlowRatio = (endPointLosses - startPointLosses) / segFlowLimit;
+                        this.setPropertyForElement(segment.elementId, 'lossFlowRatio', lossFlowRatio);
+                        //For next segment
+                        startPointFlow = endPointFlow;
+                        endPointFlow += segFlowLimit;
+                        console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
+                    }
+                }
+            }
             //If child elements have the same property then it also gets updated
             //(i.e. fromBus and toBus for dirBranch)
             for (var _b = 0, _c = this.getChildElements(elementId).filter(function (c) { return _this.modelElementDefService.elementHasProperty(c, propertyType); }); _b < _c.length; _b++) {
