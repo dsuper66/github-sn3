@@ -137,6 +137,15 @@ var ModelElementDataService = /** @class */ (function () {
                     || e.properties['toBus'] === elementId);
         }).length;
     };
+    //Get connected branches, for layout
+    ModelElementDataService.prototype.getConnectedBrId = function (elementId) {
+        var connectedBr = this.modelElements.filter(function (e) {
+            return e.elementType === 'branch' &&
+                (e.properties['fromBus'] === elementId
+                    || e.properties['toBus'] === elementId);
+        });
+        return connectedBr.map(function (br) { return br.elementId; });
+    };
     //Delete element
     ModelElementDataService.prototype.deleteElement = function (elementId) {
         this.modelElements = this.modelElements.filter(function (e) { return e.elementId != elementId && e.properties['parentId'] != elementId; });

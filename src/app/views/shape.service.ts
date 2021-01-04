@@ -133,18 +133,26 @@ export class ShapeService {
     else if (elementType == 'branch') {
       //From bus is top bus with min branch connections
       const busShapes = this.shapes.filter(s => s.elementType === 'bus');
-      const busesByYPosDesc = busShapes.sort((a,b) => a.yInner < b.yInner ? 1 : -1);
-      const topBusWithMinBr = busesByYPosDesc.reduce((p,c) => 
-        this.modelElementDataService.getConnectionCountBr(p.elementType) < this.modelElementDataService.getConnectionCountBr(p.elementId) 
+      const busesByYPos = busShapes.sort((a,b) => a.yInner > b.yInner ? 1 : -1);
+      //Count branches connected beneath each bus
+      const brIdUnderBus = busesByYPos.map(bus => 
+        this.modelElementDataService.getConnectedBrId(bus.elementId).filter(brId => 
+          this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
+      console.log("???" + busesByYPos.map(bus => this.modelElementDataService.getConnectedBrId(bus.elementId)) + "???" + brIdUnderBus);
+
+      const topBusWithMinBr = busesByYPos.reduce((p,c) => 
+        this.modelElementDataService.getConnectionCountBr(p.elementId) <= this.modelElementDataService.getConnectionCountBr(c.elementId) 
         ? p : c);
       const y = topBusWithMinBr.yInner + busWidth / 2;
 
-      //Find next bus down if any (and remember sorted by y descending so need to go back in the array to go down)
-      var brLength = branchInitLength;
-      const fromBusIndex = busesByYPosDesc.indexOf(topBusWithMinBr);   
-      console.log(">>>>>" + fromBusIndex + ">>>>>>" + busesByYPosDesc.length + ">>>>>" + busesByYPosDesc[fromBusIndex-1].elementId); 
-      if (busesByYPosDesc[fromBusIndex - 1]) {
-        brLength = busesByYPosDesc[fromBusIndex - 1].yInner - topBusWithMinBr.yInner;
+      //Find next bus down if any 
+      var brLength = branchInitLength; //default br length if no next bus found
+      const fromBusIndex = busesByYPos.indexOf(topBusWithMinBr);   
+      console.log("XXXX" + busesByYPos.map(b => b.elementId));
+      console.log(">>topBusWithMinBr>>>" + topBusWithMinBr.elementId + ">>>>>" + fromBusIndex + ">>>>>>" + busesByYPos.length); 
+      if (fromBusIndex < busesByYPos.length) {
+        console.log(">>>>" + busesByYPos[fromBusIndex + 1].elementId);
+        brLength = busesByYPos[fromBusIndex + 1].yInner - topBusWithMinBr.yInner;
       }
 
       
@@ -266,15 +274,15 @@ export class ShapeService {
     return newShape;
   }
 
-  // getShapePoint(elementId: string): Point {
-  //   const shape = this.shapes.find(s => s.elementId === elementId);
-  //   if (shape) {
-  //     return {x: shape.xInner, y: shape.yInner};
-  //   }
-  //   else {
-  //     return {x:0, y:0};
-  //   }
-  // }
+  getShapePoint(elementId: string): Point {
+    const shape = this.shapes.find(s => s.elementId === elementId);
+    if (shape) {
+      return {x: shape.xInner, y: shape.yInner};
+    }
+    else {
+      return {x:0, y:0};
+    }
+  }
 
   applyDeltaX(deltaX: number, shape: Shape) {
     shape.xInner += deltaX;

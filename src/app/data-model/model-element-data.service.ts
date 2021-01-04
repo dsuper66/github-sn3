@@ -138,6 +138,14 @@ export class ModelElementDataService {
         (e.properties['fromBus'] === elementId
         || e.properties['toBus'] === elementId)).length
   }
+  //Get connected branches, for layout
+  getConnectedBrId(elementId: string): string[] {
+    const connectedBr = this.modelElements.filter(e => 
+        e.elementType === 'branch' &&
+        (e.properties['fromBus'] === elementId
+        || e.properties['toBus'] === elementId));
+    return connectedBr.map(br => br.elementId);
+  }
 
   //Delete element
   deleteElement(elementId: string) {
