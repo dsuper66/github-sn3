@@ -3,6 +3,7 @@ import { Shape } from './shape';
 import { ModelElementService } from '../data-model/model-element.service'
 import { ModelElementDataService } from '../data-model/model-element-data.service'
 import { from } from 'rxjs';
+import { Point } from './point';
 
 @Injectable({
   providedIn: 'root'
@@ -130,6 +131,16 @@ export class ShapeService {
     }
     //BRANCH
     else if (elementType == 'branch') {
+      //Decide on from-bus and to-bus
+      //Buses ordered by y
+      const busShapes = this.shapes.filter(s => s.elementType === 'bus');
+      const busesByYPosDesc = busShapes.sort((a,b) => a.yInner < b.yInner ? 1 : -1);
+      const topBusWithMinBr = busesByYPosDesc.reduce((p,c) => 
+        this.modelElementDataService.getConnectionCountBr(p.elementType) < this.modelElementDataService.getConnectionCountBr(p.elementId) 
+        ? p : c);
+      const y = topBusWithMinBr.yInner + busWidth / 2;
+
+      
       let branchCountNew = brCount + 1;
       var x = 0;
       //Inset from left or right
@@ -140,7 +151,7 @@ export class ShapeService {
         x = brInsetRight
       };
       //Y position
-      let y = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
+      //let y = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
 
       const xOuter = x - (selectWidth - branchWidth) / 2;
       //Flow direction Arrow
@@ -247,6 +258,16 @@ export class ShapeService {
 
     return newShape;
   }
+
+  // getShapePoint(elementId: string): Point {
+  //   const shape = this.shapes.find(s => s.elementId === elementId);
+  //   if (shape) {
+  //     return {x: shape.xInner, y: shape.yInner};
+  //   }
+  //   else {
+  //     return {x:0, y:0};
+  //   }
+  // }
 
   applyDeltaX(deltaX: number, shape: Shape) {
     shape.xInner += deltaX;

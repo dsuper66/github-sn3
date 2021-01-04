@@ -60,6 +60,7 @@ var ShapeService = /** @class */ (function () {
     };
     //Add a shape
     ShapeService.prototype.addShape = function (elementType) {
+        var _this = this;
         var newElementId = "";
         //See if we need to add an island or mathModel
         if (elementType != 'island' && elementType != 'mathModel') {
@@ -113,6 +114,15 @@ var ShapeService = /** @class */ (function () {
         }
         //BRANCH
         else if (elementType == 'branch') {
+            //Decide on from-bus and to-bus
+            //Buses ordered by y
+            var busShapes = this.shapes.filter(function (s) { return s.elementType === 'bus'; });
+            var busesByYPosDesc = busShapes.sort(function (a, b) { return a.yInner < b.yInner ? 1 : -1; });
+            var topBusWithMinBr = busesByYPosDesc.reduce(function (p, c) {
+                return _this.modelElementDataService.getConnectionCountBr(p.elementType) < _this.modelElementDataService.getConnectionCountBr(p.elementId)
+                    ? p : c;
+            });
+            var y_2 = topBusWithMinBr.yInner + busWidth / 2;
             var branchCountNew = brCount + 1;
             var x = 0;
             //Inset from left or right
@@ -124,7 +134,7 @@ var ShapeService = /** @class */ (function () {
             }
             ;
             //Y position
-            var y_2 = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
+            //let y = (busInitY * Math.ceil(branchCountNew / 2)) + busWidth / 2;
             var xOuter = x - (selectWidth - branchWidth) / 2;
             //Flow direction Arrow
             var w = selectWidth;
@@ -223,6 +233,15 @@ var ShapeService = /** @class */ (function () {
         this.selectedShapeId = newElementId;
         return newShape;
     };
+    // getShapePoint(elementId: string): Point {
+    //   const shape = this.shapes.find(s => s.elementId === elementId);
+    //   if (shape) {
+    //     return {x: shape.xInner, y: shape.yInner};
+    //   }
+    //   else {
+    //     return {x:0, y:0};
+    //   }
+    // }
     ShapeService.prototype.applyDeltaX = function (deltaX, shape) {
         shape.xInner += deltaX;
         shape.xOuter += deltaX;

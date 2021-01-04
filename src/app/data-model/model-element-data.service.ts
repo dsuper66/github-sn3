@@ -131,6 +131,14 @@ export class ModelElementDataService {
     });
   }
 
+  //Connection count - for deciding where to connect shapes to bus
+  getConnectionCountBr(elementId: string): number {
+    return this.modelElements.filter(e => 
+        e.elementType === 'branch' &&
+        (e.properties['fromBus'] === elementId
+        || e.properties['toBus'] === elementId)).length
+  }
+
   //Delete element
   deleteElement(elementId: string) {
     this.modelElements = this.modelElements.filter(

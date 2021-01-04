@@ -129,6 +129,14 @@ var ModelElementDataService = /** @class */ (function () {
             includeInModel: true
         });
     };
+    //Connection count - for deciding where to connect shapes to bus
+    ModelElementDataService.prototype.getConnectionCountBr = function (elementId) {
+        return this.modelElements.filter(function (e) {
+            return e.elementType === 'branch' &&
+                (e.properties['fromBus'] === elementId
+                    || e.properties['toBus'] === elementId);
+        }).length;
+    };
     //Delete element
     ModelElementDataService.prototype.deleteElement = function (elementId) {
         this.modelElements = this.modelElements.filter(function (e) { return e.elementId != elementId && e.properties['parentId'] != elementId; });
