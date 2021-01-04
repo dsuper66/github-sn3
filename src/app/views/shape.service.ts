@@ -131,14 +131,21 @@ export class ShapeService {
     }
     //BRANCH
     else if (elementType == 'branch') {
-      //Decide on from-bus and to-bus
-      //Buses ordered by y
+      //From bus is top bus with min branch connections
       const busShapes = this.shapes.filter(s => s.elementType === 'bus');
       const busesByYPosDesc = busShapes.sort((a,b) => a.yInner < b.yInner ? 1 : -1);
       const topBusWithMinBr = busesByYPosDesc.reduce((p,c) => 
         this.modelElementDataService.getConnectionCountBr(p.elementType) < this.modelElementDataService.getConnectionCountBr(p.elementId) 
         ? p : c);
       const y = topBusWithMinBr.yInner + busWidth / 2;
+
+      //Find next bus down if any (and remember sorted by y descending so need to go back in the array to go down)
+      var brLength = branchInitLength;
+      const fromBusIndex = busesByYPosDesc.indexOf(topBusWithMinBr);   
+      console.log(">>>>>" + fromBusIndex + ">>>>>>" + busesByYPosDesc.length + ">>>>>" + busesByYPosDesc[fromBusIndex-1].elementId); 
+      if (busesByYPosDesc[fromBusIndex - 1]) {
+        brLength = busesByYPosDesc[fromBusIndex - 1].yInner - topBusWithMinBr.yInner;
+      }
 
       
       let branchCountNew = brCount + 1;
@@ -172,11 +179,11 @@ export class ShapeService {
         xInner: x,
         yInner: y,
         wInner: branchWidth,
-        hInner: branchInitLength,
+        hInner: brLength,
         xOuter: xOuter,
         yOuter: y,
         wOuter: selectWidth,
-        hOuter: branchInitLength,
+        hOuter: brLength,
         path1: path1,
         path2: path2
       })

@@ -114,8 +114,7 @@ var ShapeService = /** @class */ (function () {
         }
         //BRANCH
         else if (elementType == 'branch') {
-            //Decide on from-bus and to-bus
-            //Buses ordered by y
+            //From bus is top bus with min branch connections
             var busShapes = this.shapes.filter(function (s) { return s.elementType === 'bus'; });
             var busesByYPosDesc = busShapes.sort(function (a, b) { return a.yInner < b.yInner ? 1 : -1; });
             var topBusWithMinBr = busesByYPosDesc.reduce(function (p, c) {
@@ -123,6 +122,13 @@ var ShapeService = /** @class */ (function () {
                     ? p : c;
             });
             var y_2 = topBusWithMinBr.yInner + busWidth / 2;
+            //Find next bus down if any (and remember sorted by y descending so need to go back in the array to go down)
+            var brLength = branchInitLength;
+            var fromBusIndex = busesByYPosDesc.indexOf(topBusWithMinBr);
+            console.log(">>>>>" + fromBusIndex + ">>>>>>" + busesByYPosDesc.length + ">>>>>" + busesByYPosDesc[fromBusIndex - 1].elementId);
+            if (busesByYPosDesc[fromBusIndex - 1]) {
+                brLength = busesByYPosDesc[fromBusIndex - 1].yInner - topBusWithMinBr.yInner;
+            }
             var branchCountNew = brCount + 1;
             var x = 0;
             //Inset from left or right
@@ -152,11 +158,11 @@ var ShapeService = /** @class */ (function () {
                 xInner: x,
                 yInner: y_2,
                 wInner: branchWidth,
-                hInner: branchInitLength,
+                hInner: brLength,
                 xOuter: xOuter,
                 yOuter: y_2,
                 wOuter: selectWidth,
-                hOuter: branchInitLength,
+                hOuter: brLength,
                 path1: path1,
                 path2: path2
             });
