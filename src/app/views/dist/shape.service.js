@@ -116,27 +116,28 @@ var ShapeService = /** @class */ (function () {
         else if (elementType == 'branch') {
             //From bus is top bus with min branch connections
             var busShapes = this.shapes.filter(function (s) { return s.elementType === 'bus'; });
-            var busesByYPos = busShapes.sort(function (a, b) { return a.yInner > b.yInner ? 1 : -1; });
+            var busesByYPos_1 = busShapes.sort(function (a, b) { return a.yInner > b.yInner ? 1 : -1; });
             //Count branches connected beneath each bus
-            var brIdUnderBus = busesByYPos.map(function (bus) {
+            var brIdUnderBus_1 = busesByYPos_1.map(function (bus) {
                 return _this.modelElementDataService.getConnectedBrId(bus.elementId).filter(function (brId) {
                     return _this.getShapePoint(brId).y > _this.getShapePoint(bus.elementId).y;
                 });
             });
-            console.log("???" + busesByYPos.map(function (bus) { return _this.modelElementDataService.getConnectedBrId(bus.elementId); }) + "???" + brIdUnderBus);
-            var topBusWithMinBr = busesByYPos.reduce(function (p, c) {
-                return _this.modelElementDataService.getConnectionCountBr(p.elementId) <= _this.modelElementDataService.getConnectionCountBr(c.elementId)
+            console.log("???" + busesByYPos_1.map(function (bus) { return bus.elementId + ">" + brIdUnderBus_1[busesByYPos_1.indexOf(bus)].length + ">>"; }));
+            var topBusWithMinBr = busesByYPos_1.reduce(function (p, c) {
+                return brIdUnderBus_1[busesByYPos_1.indexOf(p)].length <= brIdUnderBus_1[busesByYPos_1.indexOf(c)].length
                     ? p : c;
             });
             var y_2 = topBusWithMinBr.yInner + busWidth / 2;
             //Find next bus down if any 
             var brLength = branchInitLength; //default br length if no next bus found
-            var fromBusIndex = busesByYPos.indexOf(topBusWithMinBr);
-            console.log("XXXX" + busesByYPos.map(function (b) { return b.elementId; }));
-            console.log(">>topBusWithMinBr>>>" + topBusWithMinBr.elementId + ">>>>>" + fromBusIndex + ">>>>>>" + busesByYPos.length);
-            if (fromBusIndex < busesByYPos.length) {
-                console.log(">>>>" + busesByYPos[fromBusIndex + 1].elementId);
-                brLength = busesByYPos[fromBusIndex + 1].yInner - topBusWithMinBr.yInner;
+            var fromBusIndex = busesByYPos_1.indexOf(topBusWithMinBr);
+            console.log("XXXX" + busesByYPos_1.map(function (b) { return b.elementId; }));
+            console.log(">>topBusWithMinBr>>>" + topBusWithMinBr.elementId + ">>>" + busesByYPos_1[fromBusIndex].elementId +
+                ">>" + fromBusIndex + ">>>>>>" + busesByYPos_1.length);
+            if (fromBusIndex < busesByYPos_1.length - 1) {
+                //console.log(">>>>" + busesByYPos[fromBusIndex + 1].elementId);
+                brLength = busesByYPos_1[fromBusIndex + 1].yInner - topBusWithMinBr.yInner;
             }
             var branchCountNew = brCount + 1;
             var x = 0;

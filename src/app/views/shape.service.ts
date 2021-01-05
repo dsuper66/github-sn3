@@ -138,10 +138,11 @@ export class ShapeService {
       const brIdUnderBus = busesByYPos.map(bus => 
         this.modelElementDataService.getConnectedBrId(bus.elementId).filter(brId => 
           this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
-      console.log("???" + busesByYPos.map(bus => this.modelElementDataService.getConnectedBrId(bus.elementId)) + "???" + brIdUnderBus);
+
+      console.log("???" + busesByYPos.map(bus => bus.elementId + ">" + brIdUnderBus[busesByYPos.indexOf(bus)].length + ">>"));
 
       const topBusWithMinBr = busesByYPos.reduce((p,c) => 
-        this.modelElementDataService.getConnectionCountBr(p.elementId) <= this.modelElementDataService.getConnectionCountBr(c.elementId) 
+        brIdUnderBus[busesByYPos.indexOf(p)].length <= brIdUnderBus[busesByYPos.indexOf(c)].length 
         ? p : c);
       const y = topBusWithMinBr.yInner + busWidth / 2;
 
@@ -149,9 +150,10 @@ export class ShapeService {
       var brLength = branchInitLength; //default br length if no next bus found
       const fromBusIndex = busesByYPos.indexOf(topBusWithMinBr);   
       console.log("XXXX" + busesByYPos.map(b => b.elementId));
-      console.log(">>topBusWithMinBr>>>" + topBusWithMinBr.elementId + ">>>>>" + fromBusIndex + ">>>>>>" + busesByYPos.length); 
-      if (fromBusIndex < busesByYPos.length) {
-        console.log(">>>>" + busesByYPos[fromBusIndex + 1].elementId);
+      console.log(">>topBusWithMinBr>>>" + topBusWithMinBr.elementId + ">>>" + busesByYPos[fromBusIndex].elementId +
+        ">>" + fromBusIndex + ">>>>>>" + busesByYPos.length); 
+      if (fromBusIndex < busesByYPos.length - 1) {
+        //console.log(">>>>" + busesByYPos[fromBusIndex + 1].elementId);
         brLength = busesByYPos[fromBusIndex + 1].yInner - topBusWithMinBr.yInner;
       }
 
