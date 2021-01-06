@@ -4,6 +4,7 @@ import { ModelElementService } from '../data-model/model-element.service'
 import { ModelElementDataService } from '../data-model/model-element-data.service'
 import { from } from 'rxjs';
 import { Point } from './point';
+import { max } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -131,31 +132,64 @@ export class ShapeService {
     }
     //BRANCH
     else if (elementType == 'branch') {
-      //From bus is top bus with min branch connections
+
+      //Priority for connecting
+      //Highest bus that has fewest connections
       const busShapes = this.shapes.filter(s => s.elementType === 'bus');
-      const busesByYPos = busShapes.sort((a,b) => a.yInner > b.yInner ? 1 : -1);
+      var busesByYPos = busShapes.sort((a,b) => a.yInner > b.yInner ? 1 : -1);
+
       //Count branches connected beneath each bus
-      const brIdUnderBus = busesByYPos.map(bus => 
+      var connBrIdUnderBus = busesByYPos.map(bus => 
         this.modelElementDataService.getConnectedBrId(bus.elementId).filter(brId => 
           this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
 
-      console.log("???" + busesByYPos.map(bus => bus.elementId + ">" + brIdUnderBus[busesByYPos.indexOf(bus)].length + ">>"));
+      //See if there are is a place to add the branch, i.e., brCountForBus < max
+      const maxAllowableBrCount = 2; //(connected below)
+      //Min excluding lowest
+      // const connExcludingLowest = connBrIdUnderBus.filter(b => connBrIdUnderBus.indexOf(b) < connBrIdUnderBus.length - 1);          
+      const brCountForBus = connBrIdUnderBus.map(brArray => brArray.length);
+      // const countForLast = brCountForBus[brCountForBus.length - 1];
+      // const minCountExcludingLast = brCountForBus.slice(0,-1).reduce((p,c) => p < c ? p : c);
 
-      const topBusWithMinBr = busesByYPos.reduce((p,c) => 
-        brIdUnderBus[busesByYPos.indexOf(p)].length <= brIdUnderBus[busesByYPos.indexOf(c)].length 
-        ? p : c);
-      const y = topBusWithMinBr.yInner + busWidth / 2;
-
-      //Find next bus down if any 
+      //Defaults
       var brLength = branchInitLength; //default br length if no next bus found
-      const fromBusIndex = busesByYPos.indexOf(topBusWithMinBr);   
-      console.log("XXXX" + busesByYPos.map(b => b.elementId));
-      console.log(">>topBusWithMinBr>>>" + topBusWithMinBr.elementId + ">>>" + busesByYPos[fromBusIndex].elementId +
-        ">>" + fromBusIndex + ">>>>>>" + busesByYPos.length); 
-      if (fromBusIndex < busesByYPos.length - 1) {
-        //console.log(">>>>" + busesByYPos[fromBusIndex + 1].elementId);
-        brLength = busesByYPos[fromBusIndex + 1].yInner - topBusWithMinBr.yInner;
+      var y = busInitY + busWidth / 2;
+
+      //Find first bus that has less than max connections
+      const topBusEligibleIndex = brCountForBus.findIndex(bc => bc < maxAllowableBrCount);
+      // console.log ("%%$$%%" + brCountForBus + "  " + topBusEligible);
+      
+      if (topBusEligibleIndex) {
+        console.log("%%%%%%count of connBrIdUnderBus:" + brCountForBus) + " top eligible:" + brCountForBus.indexOf(topBusEligibleIndex);
+        // const topIndex = brCountForBus.indexOf(topBusEligibleIndex);
+        const fromBus = busesByYPos[topBusEligibleIndex];
+        y = fromBus.yInner + busWidth / 2;
+
+        //Connect to next bus down, if any
+        if (topBusEligibleIndex < busesByYPos.length - 1) {
+          brLength = busesByYPos[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+        }
+
       }
+      // //If we don't need the lowest bus...
+      // var topBusWithMinBr: Shape;
+      // if (minCountFound < maxAllowableBrCount) {
+      //   topBusWithMinBr = busesByYPos.reduce((p,c) => 
+      //   connBrIdUnderBus[busesByYPos.indexOf(p)].length <= connBrIdUnderBus[busesByYPos.indexOf(c)].length 
+      //   ? p : c);
+      // }
+      // else {
+      //   topBusWithMinBr = busesByYPos.reduce((p,c) => 
+      //     connBrIdUnderBus[busesByYPos.indexOf(p)].length <= connBrIdUnderBus[busesByYPos.indexOf(c)].length 
+      //     ? p : c);
+      // }
+      // const y = topBusWithMinBr.yInner + busWidth / 2;
+
+      // //Connect to next bus down if any 
+      // const fromBusIndex = busesByYPos.indexOf(topBusWithMinBr);   
+      // if (fromBusIndex < busesByYPos.length - 1) {
+      //   brLength = busesByYPos[fromBusIndex + 1].yInner - topBusWithMinBr.yInner;
+      // }
 
       
       let branchCountNew = brCount + 1;
