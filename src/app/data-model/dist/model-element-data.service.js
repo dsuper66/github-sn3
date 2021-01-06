@@ -138,9 +138,10 @@ var ModelElementDataService = /** @class */ (function () {
         }).length;
     };
     //Get connected branches, for layout
-    ModelElementDataService.prototype.getConnectedBrId = function (elementId) {
+    ModelElementDataService.prototype.getBusConnections = function (elementId, elementTypes) {
+        console.log("elementTypes:" + elementTypes);
         var connectedBr = this.modelElements.filter(function (e) {
-            return e.elementType === 'branch' &&
+            return elementTypes.includes(e.elementType) &&
                 (e.properties['fromBus'] === elementId
                     || e.properties['toBus'] === elementId);
         });
@@ -253,7 +254,7 @@ var ModelElementDataService = /** @class */ (function () {
                         //For next segment
                         startPointFlow = endPointFlow;
                         endPointFlow += segFlowLimit;
-                        console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
+                        // console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
                     }
                 }
             }
@@ -262,10 +263,10 @@ var ModelElementDataService = /** @class */ (function () {
             for (var _b = 0, _c = this.getChildElements(elementId).filter(function (c) { return _this.modelElementDefService.elementHasProperty(c, propertyType); }); _b < _c.length; _b++) {
                 var childElement = _c[_b];
                 //Special Case
-                //fromBus, toBus for Neg flow direction
+                //fromBus, toBus for Neg flow direction is opposite
                 if (propertyType == 'fromBus' || propertyType == 'toBus') {
                     if (this.getValueForElementProperty(childElement.elementId, 'direction') == '-1') {
-                        console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
+                        // console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
                         if (propertyType == 'toBus') {
                             propertyType = 'fromBus';
                         }

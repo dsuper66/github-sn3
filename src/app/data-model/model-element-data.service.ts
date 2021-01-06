@@ -139,9 +139,10 @@ export class ModelElementDataService {
         || e.properties['toBus'] === elementId)).length
   }
   //Get connected branches, for layout
-  getConnectedBrId(elementId: string): string[] {
+  getBusConnections(elementId: string, elementTypes: string[]): string[] {
+    console.log("elementTypes:" + elementTypes);
     const connectedBr = this.modelElements.filter(e => 
-        e.elementType === 'branch' &&
+        elementTypes.includes(e.elementType) &&
         (e.properties['fromBus'] === elementId
         || e.properties['toBus'] === elementId));
     return connectedBr.map(br => br.elementId);
@@ -266,7 +267,7 @@ export class ModelElementDataService {
             //For next segment
             startPointFlow = endPointFlow;
             endPointFlow += segFlowLimit;
-            console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
+            // console.log("Segment for " + elementId + " flow loss ratio " + lossFlowRatio + " 1:" + startPointLosses + " 2:" + endPointLosses);
           }
         }
       }
@@ -277,10 +278,10 @@ export class ModelElementDataService {
         c => this.modelElementDefService.elementHasProperty(c, propertyType))) {
 
         //Special Case
-        //fromBus, toBus for Neg flow direction
+        //fromBus, toBus for Neg flow direction is opposite
         if (propertyType == 'fromBus' || propertyType == 'toBus') {
           if (this.getValueForElementProperty(childElement.elementId, 'direction') == '-1') {
-            console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
+            // console.log("###Flipping from and to for:" + childElement.elementId + " child of:" + elementToUpdate.elementId);
             if (propertyType == 'toBus') {
               propertyType = 'fromBus';
             }
