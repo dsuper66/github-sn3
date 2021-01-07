@@ -94,6 +94,8 @@ var ShapeService = /** @class */ (function () {
         //Counts
         var busCount = this.getCountShapesOfType('bus');
         var brCount = this.getCountShapesOfType('branch');
+        //Bus highest to lowest
+        var busesHighestToLowest = this.getShapesOfType('bus').sort(function (a, b) { return a.yInner > b.yInner ? 1 : -1; });
         //BUS
         if (elementType == 'bus') {
             //Place based on number of buses
@@ -118,29 +120,23 @@ var ShapeService = /** @class */ (function () {
             var brLength = branchInitLength; //default br length if no next bus found
             var y = busInitY + busWidth / 2;
             //Look for an available bus
-            var maxAllowableBrCount_1 = 2; //(connected below)
-            //Highest bus that has fewest connections
-            // const busShapes = this.shapes.filter(s => s.elementType === 'bus');
-            var busesByYPos = this.getShapesOfType('bus').sort(function (a, b) { return a.yInner > b.yInner ? 1 : -1; });
-            //Count branches connected beneath each bus
-            var connBrIdUnderBus = busesByYPos.map(function (bus) {
+            var brConnUnderBus = busesHighestToLowest.map(function (bus) {
                 return _this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(function (brId) {
                     return _this.getShapePoint(brId).y > _this.getShapePoint(bus.elementId).y;
                 });
             });
-            console.log("connBrIdUnderBus:" + connBrIdUnderBus);
-            //See if there are is a place to add the branch, i.e., brCountForBus < max
-            var brCountForBus = connBrIdUnderBus.map(function (brArray) { return brArray.length; });
+            var brCountForBus = brConnUnderBus.map(function (brArray) { return brArray.length; });
             //Find first bus that has less than max connections
+            var maxAllowableBrCount_1 = 2; //(connected below)
             var topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc < maxAllowableBrCount_1; });
-            console.log("%%%%%%top eligible:" + topBusEligibleIndex);
+            console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
             if (topBusEligibleIndex >= 0) {
                 // const topIndex = brCountForBus.indexOf(topBusEligibleIndex);
-                var fromBus = busesByYPos[topBusEligibleIndex];
+                var fromBus = busesHighestToLowest[topBusEligibleIndex];
                 y = fromBus.yInner + busWidth / 2;
                 //Connect to next bus down, if any
-                if (topBusEligibleIndex < busesByYPos.length - 1) {
-                    brLength = busesByYPos[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+                if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
+                    brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
                 }
             }
             else {
@@ -181,6 +177,7 @@ var ShapeService = /** @class */ (function () {
         }
         //GEN & LOAD
         else if (elementType == 'gen' || elementType == 'load') {
+            //Default locations      
             var genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load');
             var h = genLoadLength;
             var w = genLoadWidth;
@@ -190,6 +187,25 @@ var ShapeService = /** @class */ (function () {
             if (busCount > 1 && genLoadCount > 0) { //position on last bus
                 y = busInitY + (branchInitLength * (busCount - 1)) - h;
             }
+            //Try and find a bus to connect to
+            var genLoadConnAtBus = busesHighestToLowest.map(function (bus) {
+                return _this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']);
+            });
+            var glCountForBus = genLoadConnAtBus.map(function (brArray) { return brArray.length; });
+            //Find first bus that has less than max connections
+            var maxAllowableGenLoadCount_1 = 2;
+            var topBusEligibleIndex = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1; });
+            if (topBusEligibleIndex >= 0) {
+                var atBus = busesHighestToLowest[topBusEligibleIndex];
+                y = atBus.yInner - h;
+                if (glCountForBus[topBusEligibleIndex] == 0) {
+                    x_1 = atBus.xInner + atBus.wInner / 4 - w / 2;
+                }
+                else {
+                    x_1 = atBus.xInner + atBus.wInner * 3 / 4 - w / 2;
+                }
+            }
+            //Draw
             var path1;
             var path2;
             if (elementType == 'gen') {

@@ -112,6 +112,10 @@ export class ShapeService {
     //Counts
     const busCount = this.getCountShapesOfType('bus');
     const brCount = this.getCountShapesOfType('branch');
+
+    //Bus highest to lowest
+    const busesHighestToLowest = this.getShapesOfType('bus').sort((a,b) => a.yInner > b.yInner ? 1 : -1);
+
     //BUS
     if (elementType == 'bus') {
       //Place based on number of buses
@@ -138,30 +142,24 @@ export class ShapeService {
       var y = busInitY + busWidth / 2;
 
       //Look for an available bus
-      const maxAllowableBrCount = 2; //(connected below)
-      //Highest bus that has fewest connections
-      // const busShapes = this.shapes.filter(s => s.elementType === 'bus');
-      var busesByYPos = this.getShapesOfType('bus').sort((a,b) => a.yInner > b.yInner ? 1 : -1);
-      //Count branches connected beneath each bus
-      var connBrIdUnderBus = busesByYPos.map(bus => 
+      const brConnUnderBus = busesHighestToLowest.map(bus => 
         this.modelElementDataService.getBusConnections(bus.elementId,['branch']).filter(brId => 
           this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
-      console.log("connBrIdUnderBus:" + connBrIdUnderBus);
-      //See if there are is a place to add the branch, i.e., brCountForBus < max
-      const brCountForBus = connBrIdUnderBus.map(brArray => brArray.length);
+      const brCountForBus = brConnUnderBus.map(brArray => brArray.length);
 
       //Find first bus that has less than max connections
+      const maxAllowableBrCount = 2; //(connected below)
       const topBusEligibleIndex = brCountForBus.findIndex(bc => bc < maxAllowableBrCount);
-      console.log("%%%%%%top eligible:" + topBusEligibleIndex);
+      console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
       
       if (topBusEligibleIndex >= 0) {        
         // const topIndex = brCountForBus.indexOf(topBusEligibleIndex);
-        const fromBus = busesByYPos[topBusEligibleIndex];
+        const fromBus = busesHighestToLowest[topBusEligibleIndex];
         y = fromBus.yInner + busWidth / 2;
 
         //Connect to next bus down, if any
-        if (topBusEligibleIndex < busesByYPos.length - 1) {
-          brLength = busesByYPos[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+        if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
+          brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
         }
       }
       else {
@@ -206,6 +204,7 @@ export class ShapeService {
 
     //GEN & LOAD
     else if (elementType == 'gen' || elementType == 'load') {
+      //Default locations      
       let genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
       let h = genLoadLength;
       let w = genLoadWidth;
@@ -215,9 +214,28 @@ export class ShapeService {
       if (busCount > 1 && genLoadCount > 0) { //position on last bus
         y = busInitY + (branchInitLength * (busCount - 1)) - h;
       }
+
+      //Try and find a bus to connect to
+      const genLoadConnAtBus = busesHighestToLowest.map(bus => 
+        this.modelElementDataService.getBusConnections(bus.elementId,['gen','load']));
+      const glCountForBus = genLoadConnAtBus.map(brArray => brArray.length);
+      //Find first bus that has less than max connections
+      const maxAllowableGenLoadCount = 2;
+      const topBusEligibleIndex = glCountForBus.findIndex(glc => glc < maxAllowableGenLoadCount);
+      if (topBusEligibleIndex >= 0) {
+        const atBus = busesHighestToLowest[topBusEligibleIndex];
+        y = atBus.yInner - h;
+        if (glCountForBus[topBusEligibleIndex] == 0) {
+          x = atBus.xInner + atBus.wInner / 4 - w/2;
+        }
+        else {
+          x = atBus.xInner + atBus.wInner * 3 / 4 - w/2;
+        }
+      }
+
+      //Draw
       var path1: string | undefined;
       var path2: string | undefined;
-
       if (elementType == 'gen') {
         //gen sine wave
         let sineStartX = 6;
