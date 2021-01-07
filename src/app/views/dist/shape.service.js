@@ -80,7 +80,7 @@ var ShapeService = /** @class */ (function () {
         var branchInitLength = 184;
         var busInitX = 30;
         var busInitY = 120;
-        var busInitLength = 160;
+        var busInitLength = 164;
         var branchWidth = 5;
         var busWidth = 14;
         var genLoadLength = 42;
@@ -207,10 +207,10 @@ var ShapeService = /** @class */ (function () {
                 var atBus = busesHighestToLowest[topBusEligibleIndex];
                 y = atBus.yInner - h;
                 if (glCountForBus[topBusEligibleIndex] == 0) {
-                    x_1 = atBus.xInner + atBus.wInner / 4 - w / 2;
+                    x_1 = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
                 }
                 else {
-                    x_1 = atBus.xInner + atBus.wInner * 3 / 4 - w / 2;
+                    x_1 = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
                 }
             }
             //Draw

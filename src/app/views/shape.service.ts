@@ -96,7 +96,7 @@ export class ShapeService {
     const branchInitLength = 184;
     const busInitX = 30;
     const busInitY = 120;
-    const busInitLength = 160;
+    const busInitLength = 164;
     const branchWidth = 5;
     const busWidth = 14;
     const genLoadLength = 42;
@@ -236,10 +236,10 @@ export class ShapeService {
         const atBus = busesHighestToLowest[topBusEligibleIndex];
         y = atBus.yInner - h;
         if (glCountForBus[topBusEligibleIndex] == 0) {
-          x = atBus.xInner + atBus.wInner / 4 - w/2;
+          x = atBus.xInner + atBus.wInner * genLoadInsetFactor - w/2;
         }
         else {
-          x = atBus.xInner + atBus.wInner * 3 / 4 - w/2;
+          x = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w/2;
         }
       }
 
