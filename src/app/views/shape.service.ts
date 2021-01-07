@@ -140,6 +140,15 @@ export class ShapeService {
       //Default locations
       var brLength = branchInitLength; //default br length if no next bus found
       var y = busInitY + busWidth / 2;
+      let branchCountNew = brCount + 1;
+      var x = 0;
+      //Inset from left or right
+      if (branchCountNew % 2 == 1) {
+        x = brInsetLeft;
+      }
+      else {
+        x = brInsetRight
+      };      
 
       //Look for an available bus
       const brConnUnderBus = busesHighestToLowest.map(bus => 
@@ -153,29 +162,27 @@ export class ShapeService {
       console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
       
       if (topBusEligibleIndex >= 0) {        
-        // const topIndex = brCountForBus.indexOf(topBusEligibleIndex);
         const fromBus = busesHighestToLowest[topBusEligibleIndex];
         y = fromBus.yInner + busWidth / 2;
-
-        //Connect to next bus down, if any
+        //Length to Connect to next bus down, if any
         if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
           brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
         }
+        const brInsetLeft = busInitX + insetFactor * busInitLength
+        const brInsetRight = busInitX + (1 - insetFactor) * busInitLength - branchWidth
+        if (brCountForBus[topBusEligibleIndex] == 0) {
+          x = fromBus.xInner + insetFactor * fromBus.wInner;
+        }
+        else {
+          x = fromBus.xInner + (1 - insetFactor) * fromBus.wInner - branchWidth
+        }
+
       }
       else {
         //The default y and length will be used... Ideally return a message to raise an alert
         console.log("%%%%%%No bus eligible for tidy connection");
       }
 
-      let branchCountNew = brCount + 1;
-      var x = 0;
-      //Inset from left or right
-      if (branchCountNew % 2 == 1) {
-        x = brInsetLeft;
-      }
-      else {
-        x = brInsetRight
-      };
 
       const xOuter = x - (selectWidth - branchWidth) / 2;
 

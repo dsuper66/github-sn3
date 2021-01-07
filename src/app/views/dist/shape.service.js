@@ -119,6 +119,16 @@ var ShapeService = /** @class */ (function () {
             //Default locations
             var brLength = branchInitLength; //default br length if no next bus found
             var y = busInitY + busWidth / 2;
+            var branchCountNew = brCount + 1;
+            var x = 0;
+            //Inset from left or right
+            if (branchCountNew % 2 == 1) {
+                x = brInsetLeft;
+            }
+            else {
+                x = brInsetRight;
+            }
+            ;
             //Look for an available bus
             var brConnUnderBus = busesHighestToLowest.map(function (bus) {
                 return _this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(function (brId) {
@@ -131,28 +141,25 @@ var ShapeService = /** @class */ (function () {
             var topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc < maxAllowableBrCount_1; });
             console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
             if (topBusEligibleIndex >= 0) {
-                // const topIndex = brCountForBus.indexOf(topBusEligibleIndex);
                 var fromBus = busesHighestToLowest[topBusEligibleIndex];
                 y = fromBus.yInner + busWidth / 2;
-                //Connect to next bus down, if any
+                //Length to Connect to next bus down, if any
                 if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
                     brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+                }
+                var brInsetLeft_1 = busInitX + insetFactor * busInitLength;
+                var brInsetRight_1 = busInitX + (1 - insetFactor) * busInitLength - branchWidth;
+                if (brCountForBus[topBusEligibleIndex] == 0) {
+                    x = fromBus.xInner + insetFactor * fromBus.wInner;
+                }
+                else {
+                    x = fromBus.xInner + (1 - insetFactor) * fromBus.wInner - branchWidth;
                 }
             }
             else {
                 //The default y and length will be used... Ideally return a message to raise an alert
                 console.log("%%%%%%No bus eligible for tidy connection");
             }
-            var branchCountNew = brCount + 1;
-            var x = 0;
-            //Inset from left or right
-            if (branchCountNew % 2 == 1) {
-                x = brInsetLeft;
-            }
-            else {
-                x = brInsetRight;
-            }
-            ;
             var xOuter = x - (selectWidth - branchWidth) / 2;
             //Flow direction Arrow
             var w = selectWidth;
