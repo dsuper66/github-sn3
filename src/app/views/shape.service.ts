@@ -93,7 +93,7 @@ export class ShapeService {
     //Placement
     console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
     //Defaults
-    const branchInitLength = 160;
+    const branchInitLength = 184;
     const busInitX = 30;
     const busInitY = 120;
     const busInitLength = 160;
@@ -101,10 +101,7 @@ export class ShapeService {
     const busWidth = 14;
     const genLoadLength = 42;
     const genLoadWidth = 30;
-    //Derived
-    const insetFactor = 0.1
-    const brInsetLeft = busInitX + insetFactor * busInitLength
-    const brInsetRight = busInitX + (1 - insetFactor) * busInitLength - branchWidth
+
 
     //Selection box
     const selectWidth = 40;
@@ -137,7 +134,10 @@ export class ShapeService {
     //BRANCH
     else if (elementType == 'branch') {
 
+      const brInsetFactor = 0.92
       //Default locations
+      const brInsetLeft = busInitX + brInsetFactor * busInitLength
+      const brInsetRight = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth
       var brLength = branchInitLength; //default br length if no next bus found
       var y = busInitY + busWidth / 2;
       let branchCountNew = brCount + 1;
@@ -168,13 +168,13 @@ export class ShapeService {
         if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
           brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
         }
-        const brInsetLeft = busInitX + insetFactor * busInitLength
-        const brInsetRight = busInitX + (1 - insetFactor) * busInitLength - branchWidth
+        const brInsetLeft = busInitX + brInsetFactor * busInitLength
+        const brInsetRight = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth
         if (brCountForBus[topBusEligibleIndex] == 0) {
-          x = fromBus.xInner + insetFactor * fromBus.wInner;
+          x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
         }
         else {
-          x = fromBus.xInner + (1 - insetFactor) * fromBus.wInner - branchWidth
+          x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth
         }
 
       }
@@ -211,6 +211,8 @@ export class ShapeService {
 
     //GEN & LOAD
     else if (elementType == 'gen' || elementType == 'load') {
+      const genLoadInsetFactor = 0.25;
+
       //Default locations      
       let genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load')
       let h = genLoadLength;
@@ -226,9 +228,10 @@ export class ShapeService {
       const genLoadConnAtBus = busesHighestToLowest.map(bus => 
         this.modelElementDataService.getBusConnections(bus.elementId,['gen','load']));
       const glCountForBus = genLoadConnAtBus.map(brArray => brArray.length);
-      //Find first bus that has less than max connections
+      const minCount = glCountForBus.reduce((p,c) => p < c ? p : c);
+      //Find first bus that has least connections
       const maxAllowableGenLoadCount = 2;
-      const topBusEligibleIndex = glCountForBus.findIndex(glc => glc < maxAllowableGenLoadCount);
+      const topBusEligibleIndex = glCountForBus.findIndex(glc => glc < maxAllowableGenLoadCount && glc == minCount);
       if (topBusEligibleIndex >= 0) {
         const atBus = busesHighestToLowest[topBusEligibleIndex];
         y = atBus.yInner - h;

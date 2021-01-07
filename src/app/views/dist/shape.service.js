@@ -77,7 +77,7 @@ var ShapeService = /** @class */ (function () {
         //Placement
         console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
         //Defaults
-        var branchInitLength = 160;
+        var branchInitLength = 184;
         var busInitX = 30;
         var busInitY = 120;
         var busInitLength = 160;
@@ -85,10 +85,6 @@ var ShapeService = /** @class */ (function () {
         var busWidth = 14;
         var genLoadLength = 42;
         var genLoadWidth = 30;
-        //Derived
-        var insetFactor = 0.1;
-        var brInsetLeft = busInitX + insetFactor * busInitLength;
-        var brInsetRight = busInitX + (1 - insetFactor) * busInitLength - branchWidth;
         //Selection box
         var selectWidth = 40;
         //Counts
@@ -116,7 +112,10 @@ var ShapeService = /** @class */ (function () {
         }
         //BRANCH
         else if (elementType == 'branch') {
+            var brInsetFactor = 0.92;
             //Default locations
+            var brInsetLeft = busInitX + brInsetFactor * busInitLength;
+            var brInsetRight = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth;
             var brLength = branchInitLength; //default br length if no next bus found
             var y = busInitY + busWidth / 2;
             var branchCountNew = brCount + 1;
@@ -147,13 +146,13 @@ var ShapeService = /** @class */ (function () {
                 if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
                     brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
                 }
-                var brInsetLeft_1 = busInitX + insetFactor * busInitLength;
-                var brInsetRight_1 = busInitX + (1 - insetFactor) * busInitLength - branchWidth;
+                var brInsetLeft_1 = busInitX + brInsetFactor * busInitLength;
+                var brInsetRight_1 = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth;
                 if (brCountForBus[topBusEligibleIndex] == 0) {
-                    x = fromBus.xInner + insetFactor * fromBus.wInner;
+                    x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
                 }
                 else {
-                    x = fromBus.xInner + (1 - insetFactor) * fromBus.wInner - branchWidth;
+                    x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth;
                 }
             }
             else {
@@ -184,6 +183,7 @@ var ShapeService = /** @class */ (function () {
         }
         //GEN & LOAD
         else if (elementType == 'gen' || elementType == 'load') {
+            var genLoadInsetFactor = 0.25;
             //Default locations      
             var genLoadCount = this.getCountShapesOfType('gen') + this.getCountShapesOfType('load');
             var h = genLoadLength;
@@ -199,9 +199,10 @@ var ShapeService = /** @class */ (function () {
                 return _this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']);
             });
             var glCountForBus = genLoadConnAtBus.map(function (brArray) { return brArray.length; });
-            //Find first bus that has less than max connections
+            var minCount_1 = glCountForBus.reduce(function (p, c) { return p < c ? p : c; });
+            //Find first bus that has least connections
             var maxAllowableGenLoadCount_1 = 2;
-            var topBusEligibleIndex = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1; });
+            var topBusEligibleIndex = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1 && glc == minCount_1; });
             if (topBusEligibleIndex >= 0) {
                 var atBus = busesHighestToLowest[topBusEligibleIndex];
                 y = atBus.yInner - h;
