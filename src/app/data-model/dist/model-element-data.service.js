@@ -160,8 +160,13 @@ var ModelElementDataService = /** @class */ (function () {
     };
     ModelElementDataService.prototype.parentHasProperty = function (elementId, propertyType) {
         var parentId = this.getValueForElementProperty(elementId, 'parentId');
-        var value = this.getValueForElementProperty(parentId, propertyType);
-        return (value != "");
+        if (parentId === "") {
+            return false;
+        }
+        else {
+            var value = this.getValueForElementProperty(parentId, propertyType);
+            return (value != "");
+        }
     };
     //Test - get all properties of all
     ModelElementDataService.prototype.listAllElements = function (elementId) {
@@ -187,9 +192,11 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.getValueForElementProperty = function (elementId, propertyType) {
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (element && element.properties[propertyType]) {
+            console.log("found value:" + element.properties[propertyType] + " for:" + elementId);
             return element.properties[propertyType];
         }
         else {
+            console.log("did not find:" + propertyType + " for:" + elementId);
             return "";
         }
         // let properties = this.modelElements.filter(
@@ -218,17 +225,20 @@ var ModelElementDataService = /** @class */ (function () {
     };
     ModelElementDataService.prototype.setPropertyForElement = function (elementId, propertyType, value) {
         var _this = this;
-        //Special Case
-        //isRefBus... can only have one refBus so set all to false first if the new value is true
-        if (propertyType === 'isRefBus' && value === 'true') {
-            this.setPropertyForAllElements(propertyType, "false");
-        }
         //Update the property for the element
         var elementToUpdate = this.modelElements.filter(function (element) { return element.elementId === elementId; })[0];
         //Update if found
         if (elementToUpdate) {
+            //Special Case
+            //isRefBus... can only have one refBus so set all to false first if the new value is true
+            if (propertyType === 'isRefBus' && value === 'true') {
+                console.log("RESET ALL REFBUS");
+                this.setPropertyForAllElements(propertyType, 'false');
+                console.log("DONE RESET");
+            }
+            //Set the value
             elementToUpdate.properties[propertyType] = value;
-            //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+            console.log("For:" + elementToUpdate.elementId + " set:" + propertyType + " to:" + value);
             //Special Case
             //resistance... use this to populate the flow loss segments
             if (propertyType === 'resistance' || propertyType === 'flowMax') {
@@ -275,6 +285,7 @@ var ModelElementDataService = /** @class */ (function () {
                         }
                     }
                 }
+                console.log("set child elements for:" + elementId + " child element:" + childElement.elementId);
                 this.setPropertyForElement(childElement.elementId, propertyType, value);
             }
         }

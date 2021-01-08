@@ -114,11 +114,11 @@ var ShapeService = /** @class */ (function () {
         else if (elementType == 'branch') {
             var brInsetFactor = 0.92;
             //Default locations
+            var branchCountNew = brCount + 1;
             var brInsetLeft = busInitX + brInsetFactor * busInitLength;
             var brInsetRight = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth;
             var brLength = branchInitLength; //default br length if no next bus found
             var y = busInitY + busWidth / 2;
-            var branchCountNew = brCount + 1;
             var x = 0;
             //Inset from left or right
             if (branchCountNew % 2 == 1) {
@@ -135,29 +135,38 @@ var ShapeService = /** @class */ (function () {
                 });
             });
             var brCountForBus = brConnUnderBus.map(function (brArray) { return brArray.length; });
-            //Find first bus that has less than max connections
-            var maxAllowableBrCount_1 = 2; //(connected below)
-            var topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc < maxAllowableBrCount_1; });
-            console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
-            if (topBusEligibleIndex >= 0) {
-                var fromBus = busesHighestToLowest[topBusEligibleIndex];
-                y = fromBus.yInner + busWidth / 2;
-                //Length to Connect to next bus down, if any
-                if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
-                    brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+            var minBrCount_1 = brCountForBus.reduce(function (p, c) { return p < c ? p : c; });
+            //Find first bus that has the min connections
+            var maxAllowableBrCount = 2; //(connected below)
+            if (minBrCount_1 < maxAllowableBrCount) {
+                var topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc == minBrCount_1; });
+                //If min count is last bus, but a higher bus is valid then use the higher bus
+                if (brCountForBus.length > 1 && topBusEligibleIndex == busesHighestToLowest.length - 1) {
+                    //Use the highest with min connections excluding the last
+                    var minBrCountExcludeLast_1 = brCountForBus.slice(0, -1).reduce(function (p, c) { return p < c ? p : c; });
+                    if (minBrCountExcludeLast_1 < maxAllowableBrCount) {
+                        topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc == minBrCountExcludeLast_1; });
+                    }
                 }
-                var brInsetLeft_1 = busInitX + brInsetFactor * busInitLength;
-                var brInsetRight_1 = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth;
-                if (brCountForBus[topBusEligibleIndex] == 0) {
-                    x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
-                }
-                else {
-                    x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth;
+                // console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
+                if (topBusEligibleIndex >= 0) {
+                    var fromBus = busesHighestToLowest[topBusEligibleIndex];
+                    y = fromBus.yInner + busWidth / 2;
+                    //Length to Connect to next bus down, if any
+                    if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
+                        brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+                    }
+                    if (brCountForBus[topBusEligibleIndex] == 0) {
+                        x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
+                    }
+                    else {
+                        x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth;
+                    }
                 }
             }
             else {
-                //The default y and length will be used... Ideally return a message to raise an alert
-                console.log("%%%%%%No bus eligible for tidy connection");
+                //The default y and length will be used...
+                alert("No bus available for auto connect");
             }
             var xOuter = x - (selectWidth - branchWidth) / 2;
             //Flow direction Arrow
@@ -201,16 +210,21 @@ var ShapeService = /** @class */ (function () {
             var glCountForBus = genLoadConnAtBus.map(function (brArray) { return brArray.length; });
             var minCount_1 = glCountForBus.reduce(function (p, c) { return p < c ? p : c; });
             //Find first bus that has least connections
-            var maxAllowableGenLoadCount_1 = 2;
-            var topBusEligibleIndex = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1 && glc == minCount_1; });
-            if (topBusEligibleIndex >= 0) {
-                var atBus = busesHighestToLowest[topBusEligibleIndex];
+            var maxAllowableGenLoadCount_1 = 3;
+            var topBusEligibleIndex_1 = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1 && glc == minCount_1; });
+            if (topBusEligibleIndex_1 >= 0) {
+                var atBus = busesHighestToLowest[topBusEligibleIndex_1];
                 y = atBus.yInner - h;
-                if (glCountForBus[topBusEligibleIndex] == 0) {
+                //Zero gen-load already
+                if (glCountForBus[topBusEligibleIndex_1] == 0) {
+                    x_1 = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
+                }
+                //One gen-load already
+                else if (glCountForBus[topBusEligibleIndex_1] == 1) {
                     x_1 = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
                 }
                 else {
-                    x_1 = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
+                    x_1 = atBus.xInner + atBus.wInner * 0.5 - w / 2;
                 }
             }
             //Draw

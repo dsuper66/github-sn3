@@ -55,13 +55,32 @@ var ModelElementService = /** @class */ (function () {
         );
         //If this is a child then assign parent property
         if (parentId) {
+            console.log("assign parent property for child");
             this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
         }
+        //Set default values
+        console.log("set defaults");
+        for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
+            var defaultValueSetting = _a[_i];
+            var addDefaults = true;
+            //If child element, only add defaults to number 1, i.e., don't repeat for all
+            if (childNum) {
+                if (childNum != 1) {
+                    addDefaults = false;
+                }
+            }
+            //Add defaults
+            if (addDefaults) {
+                this.modelElementDataService.setPropertyForElement(newId, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
+            }
+        }
+        console.log("done set defaults");
         //Special case
         //bus... need one (and only one) with isRefBus = true
         if (elementTypeToAdd === 'bus') {
             //If no refBus then make this refBus = true
             if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
+                console.log("set ref bus true for:" + newId);
                 this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
             }
         }
@@ -82,21 +101,6 @@ var ModelElementService = /** @class */ (function () {
                 self.addModelElement(childType, newId, childNum_1);
             }
         });
-        //Set default values
-        for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
-            var defaultValueSetting = _a[_i];
-            var addDefaults = true;
-            //If child element, only add defaults to number 1, i.e., don't repeat for all
-            if (childNum) {
-                if (childNum != 1) {
-                    addDefaults = false;
-                }
-            }
-            //Add defaults
-            if (addDefaults) {
-                this.modelElementDataService.setPropertyForElement(newId, defaultValueSetting.propertyType, defaultValueSetting.defaultValue);
-            }
-        }
         //Special case
         //gen (and maybe others)... need an island 
         //(when we created the shape we made sure that we had an island, for now there is only one)

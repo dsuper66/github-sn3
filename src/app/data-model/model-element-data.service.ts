@@ -133,17 +133,17 @@ export class ModelElementDataService {
 
   //Connection count - for deciding where to connect shapes to bus
   getConnectionCountBr(elementId: string): number {
-    return this.modelElements.filter(e => 
-        e.elementType === 'branch' &&
-        (e.properties['fromBus'] === elementId
+    return this.modelElements.filter(e =>
+      e.elementType === 'branch' &&
+      (e.properties['fromBus'] === elementId
         || e.properties['toBus'] === elementId)).length
   }
   //Get connected branches, for layout
   getBusConnections(elementId: string, elementTypes: string[]): string[] {
     console.log("elementTypes:" + elementTypes);
-    const connectedBr = this.modelElements.filter(e => 
-        elementTypes.includes(e.elementType) &&
-        (e.properties['fromBus'] === elementId
+    const connectedBr = this.modelElements.filter(e =>
+      elementTypes.includes(e.elementType) &&
+      (e.properties['fromBus'] === elementId
         || e.properties['toBus'] === elementId));
     return connectedBr.map(br => br.elementId);
   }
@@ -163,8 +163,13 @@ export class ModelElementDataService {
   }
   parentHasProperty(elementId: string, propertyType: string): boolean {
     const parentId = this.getValueForElementProperty(elementId, 'parentId');
-    const value = this.getValueForElementProperty(parentId, propertyType);
-    return (value != "");
+    if (parentId === "") {
+      return false;
+    }
+    else {
+      const value = this.getValueForElementProperty(parentId, propertyType);
+      return (value != "");
+    }
   }
 
   //Test - get all properties of all
@@ -194,9 +199,11 @@ export class ModelElementDataService {
   getValueForElementProperty(elementId: string, propertyType: string): string {
     let element = this.modelElements.find(element => element.elementId === elementId);
     if (element && element.properties[propertyType]) {
+      console.log("found value:" + element.properties[propertyType] + " for:" + elementId);
       return element.properties[propertyType];
     }
     else {
+      console.log("did not find:" + propertyType + " for:" + elementId);
       return "";
     }
     // let properties = this.modelElements.filter(
@@ -228,20 +235,24 @@ export class ModelElementDataService {
 
   setPropertyForElement(elementId: string, propertyType: string, value: any) {
 
-    //Special Case
-    //isRefBus... can only have one refBus so set all to false first if the new value is true
-    if (propertyType === 'isRefBus' && value === 'true') {
-      this.setPropertyForAllElements(propertyType, "false");
-    }
-
     //Update the property for the element
     const elementToUpdate = this.modelElements.filter(
       element => element.elementId === elementId)[0];
 
     //Update if found
     if (elementToUpdate) {
+
+      //Special Case
+      //isRefBus... can only have one refBus so set all to false first if the new value is true
+      if (propertyType === 'isRefBus' && value === 'true') {
+        console.log("RESET ALL REFBUS");
+        this.setPropertyForAllElements(propertyType, 'false');
+        console.log("DONE RESET");
+      }
+
+      //Set the value
       elementToUpdate.properties[propertyType] = value;
-      //console.log("Set property:" + propertyType + " for:" + elementId + " as:" + value);
+      console.log("For:" + elementToUpdate.elementId + " set:" + propertyType + " to:" + value);
 
       //Special Case
       //resistance... use this to populate the flow loss segments
@@ -290,8 +301,7 @@ export class ModelElementDataService {
             }
           }
         }
-
-
+        console.log("set child elements for:" + elementId + " child element:" + childElement.elementId);
         this.setPropertyForElement(childElement.elementId, propertyType, value);
       }
     }

@@ -48,7 +48,7 @@ export class ModelElementDefService {
 
     //Defaults (different element types can have different defaults for the same properties)
     this.defaultValueSettings.push(
-      { propertyType: 'isRefBus', elementType: 'bus', defaultValue: false },
+      { propertyType: 'isRefBus', elementType: 'bus', defaultValue: 'false' },
       { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 },
       { propertyType: 'resistance', elementType: 'branch', defaultValue: 0.0001 },
       { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 },
@@ -66,7 +66,7 @@ export class ModelElementDefService {
     //Define all Element Types and Property Types
     //An Element Type that is included in the model must be defined here to know its properties
     //Parent elements
-    this.elementTypeProperties['bus'] = ['isRefBus','reqdLoad'];
+    this.elementTypeProperties['bus'] = ['isRefBus'];
     //Branch (flow limit and losses are at the directional level)
     this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance','flowMax'];
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax','islandId','genResShortfallPrice'];

@@ -246,6 +246,7 @@ export class DataEntryViewComponent implements OnInit {
       //Properties for child elements, e.g., dirBranch child of branch
       const childElements = this.modelElementDataService.getChildElements(elementId);
       for (const childElement of childElements) {
+        console.log("get data for child element:" + childElement.elementId);
         const childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
         this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
         //And child record can have child records, e.g., segments of dir branch
@@ -277,11 +278,8 @@ export class DataEntryViewComponent implements OnInit {
   populateFormFieldsFromProperties(propertyTypes: string[], elementId: string) {
     // const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
     for (const propertyType of propertyTypes) {
-      // if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
-
       //Name/Title
       this.formNames.push(elementId + "." + propertyType);
-
       //PropertyId
       this.fieldRefIdChild.push(propertyType);
       //ElementId (for assigning any data entry)

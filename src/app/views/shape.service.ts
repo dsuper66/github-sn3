@@ -4,7 +4,7 @@ import { ModelElementService } from '../data-model/model-element.service'
 import { ModelElementDataService } from '../data-model/model-element-data.service'
 import { from } from 'rxjs';
 import { Point } from './point';
-import { max } from 'rxjs/operators';
+import { max, min } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,7 @@ export class ShapeService {
   }
 
   //Whether to enable the solve button
-  haveModel():boolean{return(this.shapes.length > 0)}
+  haveModel(): boolean { return (this.shapes.length > 0) }
 
   //Delete
   deleteShape(elementId: string) {
@@ -82,7 +82,7 @@ export class ShapeService {
       if (!(this.shapes.find(s => s.elementType === 'mathModel'))) {
         this.addShape('mathModel');
       }
-    }    
+    }
 
     //Add the element and get back the i.d.
     newElementId = this.modelElementService.addModelElement(elementType);
@@ -111,7 +111,7 @@ export class ShapeService {
     const brCount = this.getCountShapesOfType('branch');
 
     //Bus highest to lowest
-    const busesHighestToLowest = this.getShapesOfType('bus').sort((a,b) => a.yInner > b.yInner ? 1 : -1);
+    const busesHighestToLowest = this.getShapesOfType('bus').sort((a, b) => a.yInner > b.yInner ? 1 : -1);
 
     //BUS
     if (elementType == 'bus') {
@@ -135,12 +135,13 @@ export class ShapeService {
     else if (elementType == 'branch') {
 
       const brInsetFactor = 0.92
+
       //Default locations
+      let branchCountNew = brCount + 1;
       const brInsetLeft = busInitX + brInsetFactor * busInitLength
       const brInsetRight = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth
       var brLength = branchInitLength; //default br length if no next bus found
       var y = busInitY + busWidth / 2;
-      let branchCountNew = brCount + 1;
       var x = 0;
       //Inset from left or right
       if (branchCountNew % 2 == 1) {
@@ -148,39 +149,48 @@ export class ShapeService {
       }
       else {
         x = brInsetRight
-      };      
+      };
 
       //Look for an available bus
-      const brConnUnderBus = busesHighestToLowest.map(bus => 
-        this.modelElementDataService.getBusConnections(bus.elementId,['branch']).filter(brId => 
+      const brConnUnderBus = busesHighestToLowest.map(bus =>
+        this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(brId =>
           this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
       const brCountForBus = brConnUnderBus.map(brArray => brArray.length);
+      const minBrCount = brCountForBus.reduce((p, c) => p < c ? p : c);
 
-      //Find first bus that has less than max connections
+      //Find first bus that has the min connections
       const maxAllowableBrCount = 2; //(connected below)
-      const topBusEligibleIndex = brCountForBus.findIndex(bc => bc < maxAllowableBrCount);
-      console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
-      
-      if (topBusEligibleIndex >= 0) {        
-        const fromBus = busesHighestToLowest[topBusEligibleIndex];
-        y = fromBus.yInner + busWidth / 2;
-        //Length to Connect to next bus down, if any
-        if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
-          brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
-        }
-        const brInsetLeft = busInitX + brInsetFactor * busInitLength
-        const brInsetRight = busInitX + (1 - brInsetFactor) * busInitLength - branchWidth
-        if (brCountForBus[topBusEligibleIndex] == 0) {
-          x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
-        }
-        else {
-          x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth
+      if (minBrCount < maxAllowableBrCount) {
+        var topBusEligibleIndex = brCountForBus.findIndex(bc => bc == minBrCount);
+        //If min count is last bus, but a higher bus is valid then use the higher bus
+        if (brCountForBus.length > 1 && topBusEligibleIndex == busesHighestToLowest.length - 1) {
+          //Use the highest with min connections excluding the last
+          const minBrCountExcludeLast = brCountForBus.slice(0,-1).reduce((p, c) => p < c ? p : c);
+          if (minBrCountExcludeLast < maxAllowableBrCount) {
+            topBusEligibleIndex = brCountForBus.findIndex(bc => bc == minBrCountExcludeLast);
+          }
         }
 
+        // console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
+
+        if (topBusEligibleIndex >= 0) {
+          const fromBus = busesHighestToLowest[topBusEligibleIndex];
+          y = fromBus.yInner + busWidth / 2;
+          //Length to Connect to next bus down, if any
+          if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
+            brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+          }
+          if (brCountForBus[topBusEligibleIndex] == 0) {
+            x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
+          }
+          else {
+            x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth
+          }
+        }
       }
       else {
-        //The default y and length will be used... Ideally return a message to raise an alert
-        console.log("%%%%%%No bus eligible for tidy connection");
+        //The default y and length will be used...
+        alert("No bus available for auto connect");
       }
 
 
@@ -190,8 +200,8 @@ export class ShapeService {
       const w = selectWidth;
       const arrowH = 15;
       const inset = 7;
-      path1 = `M ${inset} 0 l ${w/2 - inset} ${arrowH} l ${w/2 - inset} ${-arrowH}`;
-      path2 = `M ${inset} ${arrowH + 2} l ${w/2 - inset} ${-arrowH} l ${w/2 - inset} ${arrowH}`;      
+      path1 = `M ${inset} 0 l ${w / 2 - inset} ${arrowH} l ${w / 2 - inset} ${-arrowH}`;
+      path2 = `M ${inset} ${arrowH + 2} l ${w / 2 - inset} ${-arrowH} l ${w / 2 - inset} ${arrowH}`;
 
       newShape = ({
         elementType: elementType,
@@ -225,21 +235,26 @@ export class ShapeService {
       }
 
       //Try and find a bus to connect to
-      const genLoadConnAtBus = busesHighestToLowest.map(bus => 
-        this.modelElementDataService.getBusConnections(bus.elementId,['gen','load']));
+      const genLoadConnAtBus = busesHighestToLowest.map(bus =>
+        this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']));
       const glCountForBus = genLoadConnAtBus.map(brArray => brArray.length);
-      const minCount = glCountForBus.reduce((p,c) => p < c ? p : c);
+      const minCount = glCountForBus.reduce((p, c) => p < c ? p : c);
       //Find first bus that has least connections
-      const maxAllowableGenLoadCount = 2;
+      const maxAllowableGenLoadCount = 3;
       const topBusEligibleIndex = glCountForBus.findIndex(glc => glc < maxAllowableGenLoadCount && glc == minCount);
       if (topBusEligibleIndex >= 0) {
         const atBus = busesHighestToLowest[topBusEligibleIndex];
         y = atBus.yInner - h;
+        //Zero gen-load already
         if (glCountForBus[topBusEligibleIndex] == 0) {
-          x = atBus.xInner + atBus.wInner * genLoadInsetFactor - w/2;
+          x = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
+        }
+        //One gen-load already
+        else if (glCountForBus[topBusEligibleIndex] == 1) {
+          x = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
         }
         else {
-          x = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w/2;
+          x = atBus.xInner + atBus.wInner * 0.5 - w / 2;
         }
       }
 
@@ -313,10 +328,10 @@ export class ShapeService {
   getShapePoint(elementId: string): Point {
     const shape = this.shapes.find(s => s.elementId === elementId);
     if (shape) {
-      return {x: shape.xInner, y: shape.yInner};
+      return { x: shape.xInner, y: shape.yInner };
     }
     else {
-      return {x:0, y:0};
+      return { x: 0, y: 0 };
     }
   }
 
@@ -409,7 +424,7 @@ export class ShapeService {
   //Assign results to text fields of the shapes
   applyResultsToShapesText() {
     for (const shape of this.shapes) {
-      [shape.text1,shape.text2,shape.text3,shape.text4] = 
+      [shape.text1, shape.text2, shape.text3, shape.text4] =
         this.modelElementDataService.getTextFromElementResults(shape.elementId);
     }
   }

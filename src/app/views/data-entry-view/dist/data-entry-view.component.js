@@ -220,6 +220,7 @@ var DataEntryViewComponent = /** @class */ (function () {
             var childElements = this.modelElementDataService.getChildElements(elementId);
             for (var _i = 0, childElements_1 = childElements; _i < childElements_1.length; _i++) {
                 var childElement = childElements_1[_i];
+                console.log("get data for child element:" + childElement.elementId);
                 var childProperties = this.modelElementDefService.getPropertyTypesFor(childElement.elementType);
                 this.populateFormFieldsFromProperties(childProperties, childElement.elementId);
                 //And child record can have child records, e.g., segments of dir branch
@@ -246,7 +247,6 @@ var DataEntryViewComponent = /** @class */ (function () {
         // const showAllProperties = this.settingsService.getStatus("showHiddenProperties");
         for (var _i = 0, propertyTypes_1 = propertyTypes; _i < propertyTypes_1.length; _i++) {
             var propertyType = propertyTypes_1[_i];
-            // if (showAllProperties || this.modelElementDefService.propertyIsVisible(propertyId)) {
             //Name/Title
             this.formNames.push(elementId + "." + propertyType);
             //PropertyId
