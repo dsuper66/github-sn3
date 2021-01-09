@@ -58,7 +58,35 @@ var ModelElementService = /** @class */ (function () {
             console.log("assign parent property for child");
             this.modelElementDataService.setPropertyForElement(newId, 'parentId', parentId);
         }
-        //Set default values
+        //Special Case
+        //dirBranch needs a direction property (which is a multiplier)
+        if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
+            this.modelElementDataService.setPropertyForElement(newId, 'direction', childNum == 1 ? 1 : -1);
+        }
+        //Special case
+        //gen (and maybe others)... need an island 
+        //(when we created the shape we made sure that we had an island, for now there is only one)
+        var islandIdProperty = 'islandId';
+        if (this.modelElementDefService.elementTypeHasPropertyType(elementTypeToAdd, islandIdProperty)) {
+            var island = this.modelElementDataService.getModelElementOfType('island')[0];
+            if (island) {
+                console.log("###Island id:" + island.elementId);
+                this.modelElementDataService.setPropertyForElement(newId, islandIdProperty, island.elementId);
+            }
+        }
+        //Create any child elements (linked back to parent like a gen is to a bus)
+        var self = this;
+        var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
+        childElementDefs.forEach(function (childElementDef) {
+            var childType = childElementDef.properties['childType'];
+            var childCount = childElementDef.properties['childCount'];
+            console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
+            //Add the child record(s)
+            for (var childNum_1 = 1; childNum_1 <= childCount; childNum_1++) {
+                self.addModelElement(childType, newId, childNum_1);
+            }
+        });
+        //Set default values... this needs to be after the child elements are added so they also get the values
         console.log("set defaults");
         for (var _i = 0, _a = this.modelElementDefService.getDefaultSettingsForElementType(elementTypeToAdd); _i < _a.length; _i++) {
             var defaultValueSetting = _a[_i];
@@ -75,41 +103,13 @@ var ModelElementService = /** @class */ (function () {
             }
         }
         console.log("done set defaults");
-        //Special case
+        //Special case... needs to be after defaults are applied
         //bus... need one (and only one) with isRefBus = true
         if (elementTypeToAdd === 'bus') {
             //If no refBus then make this refBus = true
             if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {
                 console.log("set ref bus true for:" + newId);
                 this.modelElementDataService.setPropertyForElement(newId, 'isRefBus', 'true');
-            }
-        }
-        //Special Case
-        //dirBranch needs a direction property (which is a multiplier)
-        if (elementTypeToAdd === 'dirBranch' && childNum != undefined) {
-            this.modelElementDataService.setPropertyForElement(newId, 'direction', childNum == 1 ? 1 : -1);
-        }
-        //Create any child elements (linked back to parent like a gen is to a bus)
-        var self = this;
-        var childElementDefs = this.modelElementDataService.getChildElementDefs(elementTypeToAdd);
-        childElementDefs.forEach(function (childElementDef) {
-            var childType = childElementDef.properties['childType'];
-            var childCount = childElementDef.properties['childCount'];
-            console.log("Add Child Elements >>>>>>>>" + childType + " count:" + childCount);
-            //Add the child record(s)
-            for (var childNum_1 = 1; childNum_1 <= childCount; childNum_1++) {
-                self.addModelElement(childType, newId, childNum_1);
-            }
-        });
-        //Special case
-        //gen (and maybe others)... need an island 
-        //(when we created the shape we made sure that we had an island, for now there is only one)
-        var islandIdProperty = 'islandId';
-        if (this.modelElementDefService.elementTypeHasPropertyType(elementTypeToAdd, islandIdProperty)) {
-            var island = this.modelElementDataService.getModelElementOfType('island')[0];
-            if (island) {
-                console.log("###Island id:" + island.elementId);
-                this.modelElementDataService.setPropertyForElement(newId, islandIdProperty, island.elementId);
             }
         }
         return newId;

@@ -242,17 +242,17 @@ export class ModelElementDataService {
     //Update if found
     if (elementToUpdate) {
 
+      //Set the value
+      elementToUpdate.properties[propertyType] = value;
+      console.log("For:" + elementToUpdate.elementId + " set:" + propertyType + " to:" + value);
+
       //Special Case
       //isRefBus... can only have one refBus so set all to false first if the new value is true
       if (propertyType === 'isRefBus' && value === 'true') {
         console.log("RESET ALL REFBUS");
-        this.setPropertyForAllElements(propertyType, 'false');
+        this.setPropertyForAllElements(propertyType, 'false', elementToUpdate.elementId);
         console.log("DONE RESET");
-      }
-
-      //Set the value
-      elementToUpdate.properties[propertyType] = value;
-      console.log("For:" + elementToUpdate.elementId + " set:" + propertyType + " to:" + value);
+      }      
 
       //Special Case
       //resistance... use this to populate the flow loss segments
@@ -307,12 +307,12 @@ export class ModelElementDataService {
     }
   }
 
-  setPropertyForAllElements(propertyType: string, value: any) {
+  setPropertyForAllElements(propertyType: string, value: any, exceptElementId = "") {
     console.log("setPropertyForAllElements")
     if (value) {
 
       const elementsToUpdate = this.modelElements.filter(
-        element => element.properties[propertyType]);
+        e => e.properties[propertyType] && e.elementId != exceptElementId);
 
       for (const elementToUpdate of elementsToUpdate) {
         console.log("update property:" + propertyType + " of:" + elementToUpdate.elementType + " to:" + value);
@@ -342,11 +342,15 @@ export class ModelElementDataService {
     }
   }
 
-  private resultsDP = 2;
+  private defaultDP = 2;
 
   //Extract results from dictionary and format as string
   //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
-  getResultString(key: string, results: { [resultType: string]: number }, prefix = "", showZero = true): string {
+  getResultString(key: string, results: { [resultType: string]: number }, prefix = "", showZero = true,dp = -1): string {
+    var decimalPlaces = this.defaultDP;
+    if (dp >= 0) {
+      decimalPlaces = dp;
+    }
     const value = results[key];
     if (value === undefined) {
       console.log("MISSING RESULT: " + key)
@@ -354,7 +358,7 @@ export class ModelElementDataService {
     }
     else {
       if (showZero || value != 0) {
-        return prefix + value.toFixed(this.resultsDP).toString();
+        return prefix + value.toFixed(decimalPlaces).toString();
       }
       else {
         return "";
@@ -404,7 +408,7 @@ export class ModelElementDataService {
               this.sumForChildren(elementId, 'bidTranche', 'trancheLimit') - bidsCleared;
             //Only display if uncleared is > 0
             if (uncleared > 0) {
-              resultString2 = "(" + uncleared.toFixed(this.resultsDP).toString() + ")";
+              resultString2 = "(" + uncleared.toFixed(this.defaultDP).toString() + ")";
             }
           }
         }
@@ -420,8 +424,9 @@ export class ModelElementDataService {
             const deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
             this.prevObjectiveVal = objectiveVal;
             resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
-            resultString2 = "prev:" + objectiveVal.toFixed(this.resultsDP).toString();
-            resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.resultsDP).toString();
+            resultString2 = "prev:" + objectiveVal.toFixed(this.defaultDP).toString();
+            resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.defaultDP).toString();
+            resultString4 = "iterations:" + this.getResultString('iterationCount', results,"",true,0);
           }
         }
         else if (element.elementType == "branch") {
@@ -430,12 +435,12 @@ export class ModelElementDataService {
 
           //Non-Neg flow
           if (branchFlowGross >= 0) {
-            resultString1 = branchFlowGross.toFixed(this.resultsDP).toString();
-            resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.resultsDP).toString();
+            resultString1 = branchFlowGross.toFixed(this.defaultDP).toString();
+            resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.defaultDP).toString();
           }
           else {
-            resultString2 = Math.abs(branchFlowGross).toFixed(this.resultsDP).toString();
-            resultString1 = (Math.abs(branchFlowGross) + branchFlowLoss).toFixed(this.resultsDP).toString()
+            resultString2 = Math.abs(branchFlowGross).toFixed(this.defaultDP).toString();
+            resultString1 = (Math.abs(branchFlowGross) + branchFlowLoss).toFixed(this.defaultDP).toString()
           }
 
           //Determine direction of flow arrow

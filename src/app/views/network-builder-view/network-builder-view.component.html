@@ -96,7 +96,7 @@
             fill="red">{{shape.text2}}</text>
           </svg> 
 
-          <!-- Island Text -->
+          <!-- Island Text and MathModel-->
           <svg *ngIf="shape.elementType=='island' || shape.elementType=='mathModel'">
               <!-- Text 1 -->
               <text 
@@ -121,7 +121,7 @@
             {{shape.text3}}</text>
             <!-- Text 4 -->
             <text 
-            [style.fill]="'red'"
+            [style.fill]="(shape.elementType=='island' ? 'red' : '')"
             [attr.x]="shape.xInner + shape.wInner +4" 
             [attr.y]="shape.yInner + shape.hInner/5 + 15 + 15 + 15"
             [attr.width]="shape.wOuter"
