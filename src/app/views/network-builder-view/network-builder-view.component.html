@@ -84,16 +84,16 @@
           <svg *ngIf="shape.elementType=='branch'">
             <text 
             [attr.x]="shape.xInner + shape.wInner + 4" 
-            [attr.y]="shape.yInner + shape.hInner/3 + 7"
+            [attr.y]="shape.yInner + shape.hInner/2 - 19"
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
-            fill="red">{{shape.text1}}</text>
+            >{{shape.text1}}</text>
             <text 
             [attr.x]="shape.xInner + shape.wInner + 4" 
-            [attr.y]="shape.yInner + shape.hInner/3 + 7 + 35"
+            [attr.y]="shape.yInner + shape.hInner/2 + 16"
             [attr.width]="shape.wOuter"
             [attr.height]="shape.hOuter"
-            fill="red">{{shape.text2}}</text>
+            >{{shape.text2}}</text>
           </svg> 
 
           <!-- Island Text and MathModel-->
