@@ -10,9 +10,10 @@ exports.ShapeService = void 0;
 var core_1 = require("@angular/core");
 var shape_1 = require("./shape");
 var ShapeService = /** @class */ (function () {
-    function ShapeService(modelElementService, modelElementDataService) {
+    function ShapeService(modelElementService, modelElementDataService, modelElementResultsService) {
         this.modelElementService = modelElementService;
         this.modelElementDataService = modelElementDataService;
+        this.modelElementResultsService = modelElementResultsService;
         this.shapes = [];
     }
     ShapeService.prototype.setSelectedShapeId = function (selectedShapeId) {
@@ -382,7 +383,7 @@ var ShapeService = /** @class */ (function () {
         var _a;
         for (var _i = 0, _b = this.shapes; _i < _b.length; _i++) {
             var shape = _b[_i];
-            _a = this.modelElementDataService.getTextFromElementResults(shape.elementId), shape.text1 = _a[0], shape.text2 = _a[1], shape.text3 = _a[2], shape.text4 = _a[3];
+            _a = this.modelElementResultsService.getTextFromElementResults(shape.elementId), shape.text1 = _a[0], shape.text2 = _a[1], shape.text3 = _a[2], shape.text4 = _a[3];
         }
     };
     ShapeService = __decorate([

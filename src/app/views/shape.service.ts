@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Shape } from './shape';
 import { ModelElementService } from '../data-model/model-element.service'
 import { ModelElementDataService } from '../data-model/model-element-data.service'
+import { ModelElementResultsService } from '../data-model/model-element-results.service'
 import { from } from 'rxjs';
 import { Point } from './point';
 import { max, min } from 'rxjs/operators';
@@ -13,7 +14,8 @@ export class ShapeService {
 
   constructor(
     private modelElementService: ModelElementService,
-    private modelElementDataService: ModelElementDataService
+    private modelElementDataService: ModelElementDataService,
+    private modelElementResultsService: ModelElementResultsService
   ) { }
 
   private shapes: Shape[] = [];
@@ -425,7 +427,7 @@ export class ShapeService {
   applyResultsToShapesText() {
     for (const shape of this.shapes) {
       [shape.text1, shape.text2, shape.text3, shape.text4] =
-        this.modelElementDataService.getTextFromElementResults(shape.elementId);
+        this.modelElementResultsService.getTextFromElementResults(shape.elementId);
     }
   }
 }

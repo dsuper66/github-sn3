@@ -131,6 +131,7 @@ export class ModelElementService {
     //Special case
     //bus... need one (and only one) with isRefBus = true
     //.. needs to be after defaults are applied, because if default is after then it will set all to false
+    //###Currently REFBUS is not used###
     if (elementTypeToAdd === 'bus') {
       //If no refBus then make this refBus = true
       if (this.modelElementDataService.getElementsWherePropertyValue('isRefBus', 'true').length == 0) {

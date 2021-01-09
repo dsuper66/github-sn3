@@ -13,17 +13,6 @@ var ModelElementDataService = /** @class */ (function () {
         this.modelElementDefService = modelElementDefService;
         this.modelElements = [];
         this.elementNextIndex = new Map();
-        this.defaultDP = 2;
-        // getResultVal(key: string, results: {[resultType:string] : number}):number {
-        //   if (results[key] === undefined) {
-        //     console.log("MISSING RESULT: " + key)
-        //     return -9999.0
-        //   }
-        //   else {
-        //     return results[key];
-        //   }
-        // }
-        this.prevObjectiveVal = 0.0;
         //ElementDef elements that define a relationship between elements...
         //The model elements (branch, bus, etc) are added by the user
         //There are also the following "singleton" ElementDef elements
@@ -74,20 +63,6 @@ var ModelElementDataService = /** @class */ (function () {
             ]),
             includeInModel: false
         });
-        //Static components of the model
-        //mathModel has the objective as a variable
-        // this.modelElements.push({
-        //   elementId: 'mathmodel001', elementType: 'mathModel',
-        //   properties: {},
-        //   includeInModel: true
-        // });
-        //island has risk and reserve as variables 
-        //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
-        // this.modelElements.push({
-        //   elementId: 'island001', elementType: 'island',
-        //   properties: {},
-        //   includeInModel: true
-        // });
     }
     ModelElementDataService.prototype.getIdForNewElementOfType = function (elementType) {
         //Get next index for i.d.
@@ -199,10 +174,6 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("did not find:" + propertyType + " for:" + elementId);
             return "";
         }
-        // let properties = this.modelElements.filter(
-        //   element => element.elementId === elementId
-        // )[0].properties;
-        // return properties[propertyType];
     };
     //Sum the child element properties, e.g., sum the bid quantities
     ModelElementDataService.prototype.sumForChildren = function (elementId, childElementType, childPropertyType) {
@@ -234,6 +205,7 @@ var ModelElementDataService = /** @class */ (function () {
             console.log("For:" + elementToUpdate.elementId + " set:" + propertyType + " to:" + value);
             //Special Case
             //isRefBus... can only have one refBus so set all to false first if the new value is true
+            //###Currently REFBUS is not used###
             if (propertyType === 'isRefBus' && value === 'true') {
                 console.log("RESET ALL REFBUS");
                 this.setPropertyForAllElements(propertyType, 'false', elementToUpdate.elementId);
@@ -313,122 +285,144 @@ var ModelElementDataService = /** @class */ (function () {
     ModelElementDataService.prototype.resetResults = function () {
         for (var _i = 0, _a = this.modelElements; _i < _a.length; _i++) {
             var e = _a[_i];
-            // for (const price in element.prices) element.prices[price] = 0
-            // for (const quantity in element.quantities) element.quantities[quantity] = 0
             e.results = {};
-            // for (const result in e.results) e.results[result] = 0
             e.constraintString = "";
             e.resultString = "";
         }
     };
-    //Extract results from dictionary and format as string
-    //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
-    ModelElementDataService.prototype.getResultString = function (key, results, prefix, showZero, dp) {
-        if (prefix === void 0) { prefix = ""; }
-        if (showZero === void 0) { showZero = true; }
-        if (dp === void 0) { dp = -1; }
-        var decimalPlaces = this.defaultDP;
-        if (dp >= 0) {
-            decimalPlaces = dp;
-        }
-        var value = results[key];
-        if (value === undefined) {
-            console.log("MISSING RESULT: " + key);
-            return " none"; //key
-        }
-        else {
-            if (showZero || value != 0) {
-                return prefix + value.toFixed(decimalPlaces).toString();
-            }
-            else {
-                return "";
-            }
-        }
-    };
-    //Result string for display... for the element get pre-determined result types
-    //(where a result type is either a constraintType or varType) as an array of strings
-    ModelElementDataService.prototype.getTextFromElementResults = function (elementId) {
-        var resultString1 = "";
-        var resultString2 = "";
-        var resultString3 = "";
-        var resultString4 = "";
+    ModelElementDataService.prototype.getElementType = function (elementId) {
         var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (element) {
-            var results = element.results;
-            if (results) {
-                if (element.elementType == "bus") {
-                    resultString1 = "$" + this.getResultString('nodeBal', results); //results['nodeBal'].toFixed(2).toString();  
-                    resultString2 = "∠" + this.getResultString('phaseAnglePos', results);
-                }
-                else if (element.elementType == "gen") {
-                    resultString1 = this.getResultString('enTrancheCleared', results);
-                    resultString2 = "res:" + this.getResultString('resTrancheCleared', results);
-                    resultString3 = this.getResultString('genResShortfall', results, "-risk:", false);
-                }
-                else if (element.elementType == "load") {
-                    resultString1 = this.getResultString('bidTrancheCleared', results);
-                    //Calc uncleared
-                    var bidsCleared = results['bidTrancheCleared'];
-                    if (bidsCleared) {
-                        var uncleared = this.sumForChildren(elementId, 'bidTranche', 'trancheLimit') - bidsCleared;
-                        //Only display if uncleared is > 0
-                        if (uncleared > 0) {
-                            resultString2 = "(" + uncleared.toFixed(this.defaultDP).toString() + ")";
-                        }
-                    }
-                }
-                else if (element.elementType == "island") {
-                    resultString1 = "res$:" + this.getResultString('resCover', results);
-                    resultString2 = "risk:" + this.getResultString('islandRisk', results);
-                    resultString3 = "res:" + this.getResultString('islandRes', results);
-                    resultString4 = this.getResultString('islandResShortfall', results, "-risk:", false);
-                }
-                else if (element.elementType == "mathModel") {
-                    var objectiveVal = results['objectiveVal']; //this.getResultVal('objectiveVal',results);
-                    if (objectiveVal) {
-                        var deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
-                        this.prevObjectiveVal = objectiveVal;
-                        resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
-                        resultString2 = "prev:" + objectiveVal.toFixed(this.defaultDP).toString();
-                        resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.defaultDP).toString();
-                        resultString4 = "iterations:" + this.getResultString('iterationCount', results, "", true, 0);
-                    }
-                }
-                else if (element.elementType == "branch") {
-                    var branchFlowGross = results['branchFlow'];
-                    var branchFlowLoss = results['branchLoss'];
-                    //Non-Neg flow
-                    if (branchFlowGross >= 0) {
-                        resultString1 = branchFlowGross.toFixed(this.defaultDP).toString();
-                        resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.defaultDP).toString();
-                    }
-                    else {
-                        resultString2 = Math.abs(branchFlowGross).toFixed(this.defaultDP).toString();
-                        resultString1 = (Math.abs(branchFlowGross) + branchFlowLoss).toFixed(this.defaultDP).toString();
-                    }
-                    //Determine direction of flow arrow
-                    //The arrow
-                    if (branchFlowGross) {
-                        //Pos flow
-                        if (branchFlowGross > 0) {
-                            resultString3 = '1';
-                        }
-                        //Neg flow
-                        else if (branchFlowGross < 0) {
-                            resultString3 = '2';
-                        }
-                        //No flow
-                        else {
-                            resultString3 = '0';
-                        }
-                    }
-                }
-            }
+            return element.elementType;
         }
-        // }
-        console.log("got result:>>" + resultString2 + "<<");
-        return [resultString1, resultString2, resultString3, resultString4];
+        else {
+            return "";
+        }
     };
+    ModelElementDataService.prototype.getResultsDict = function (elementId) {
+        var element = this.modelElements.find(function (element) { return element.elementId === elementId; });
+        if (element) {
+            return element.results;
+        }
+        else {
+            return undefined;
+        }
+    };
+    /*
+    private defaultDP = 2;
+  
+    //Extract results from dictionary and format as string
+    //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
+    getResultString(key: string, results: { [resultType: string]: number }, prefix = "", showZero = true, dp = -1): string {
+      var decimalPlaces = this.defaultDP;
+      if (dp >= 0) {
+        decimalPlaces = dp;
+      }
+      const value = results[key];
+      if (value === undefined) {
+        console.log("MISSING RESULT: " + key)
+        return " none"; //key
+      }
+      else {
+        if (showZero || value != 0) {
+          return prefix + value.toFixed(decimalPlaces).toString();
+        }
+        else {
+          return "";
+        }
+      }
+    }
+  
+    private prevObjectiveVal = 0.0;
+    //Result string for display... for the element get pre-determined result types
+    //(where a result type is either a constraintType or varType) as an array of strings
+    getTextFromElementResults(elementId: string): [string, string, string, string] {
+      var resultString1 = ""
+      var resultString2 = ""
+      var resultString3 = ""
+      var resultString4 = ""
+      let element = this.modelElements.find(
+        element => element.elementId === elementId
+      );
+      if (element) {
+        const results = element.results
+        if (results) {
+          if (element.elementType == "bus") {
+            resultString1 = "$" + this.getResultString('nodeBal', results); //results['nodeBal'].toFixed(2).toString();
+            resultString2 = "∠" + this.getResultString('phaseAnglePos', results);
+          }
+          else if (element.elementType == "gen") {
+            resultString1 = this.getResultString('enTrancheCleared', results);
+            resultString2 = "res:" + this.getResultString('resTrancheCleared', results);
+            resultString3 = this.getResultString('genResShortfall', results, "-risk:", false);
+          }
+          else if (element.elementType == "load") {
+            resultString1 = this.getResultString('bidTrancheCleared', results);
+            //Calc uncleared
+            const bidsCleared = results['bidTrancheCleared'];
+            if (bidsCleared) {
+              const uncleared =
+                this.sumForChildren(elementId, 'bidTranche', 'trancheLimit') - bidsCleared;
+              //Only display if uncleared is > 0
+              if (uncleared > 0) {
+                resultString2 = "(" + uncleared.toFixed(this.defaultDP).toString() + ")";
+              }
+            }
+          }
+          else if (element.elementType == "island") {
+            resultString1 = "res$:" + this.getResultString('resCover', results);
+            resultString2 = "risk:" + this.getResultString('islandRisk', results);
+            resultString3 = "res:" + this.getResultString('islandRes', results);
+            resultString4 = this.getResultString('islandResShortfall', results, "-risk:", false);
+          }
+          else if (element.elementType == "mathModel") {
+            var objectiveVal = results['objectiveVal']; //this.getResultVal('objectiveVal',results);
+            if (objectiveVal) {
+              const deltaObjectiveVal = objectiveVal - this.prevObjectiveVal;
+              this.prevObjectiveVal = objectiveVal;
+              resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
+              resultString2 = "prev:" + objectiveVal.toFixed(this.defaultDP).toString();
+              resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.defaultDP).toString();
+              resultString4 = "iterations:" + this.getResultString('iterationCount', results, "", true, 0);
+            }
+          }
+          else if (element.elementType == "branch") {
+            var branchFlowGross = results['branchFlow'];
+            var branchFlowLoss = results['branchLoss'];
+  
+            //Non-Neg flow
+            if (branchFlowGross >= 0) {
+              resultString1 = branchFlowGross.toFixed(this.defaultDP).toString();
+              resultString2 = (branchFlowGross - branchFlowLoss).toFixed(this.defaultDP).toString();
+            }
+            else {
+              resultString2 = Math.abs(branchFlowGross).toFixed(this.defaultDP).toString();
+              resultString1 = (Math.abs(branchFlowGross) + branchFlowLoss).toFixed(this.defaultDP).toString()
+            }
+  
+            //Determine direction of flow arrow
+            //The arrow
+            if (branchFlowGross) {
+              //Pos flow
+              if (branchFlowGross > 0) {
+                resultString3 = '1';
+              }
+              //Neg flow
+              else if (branchFlowGross < 0) {
+                resultString3 = '2';
+              }
+              //No flow
+              else {
+                resultString3 = '0';
+              }
+            }
+          }
+        }
+      }
+      // }
+      console.log("got result:>>" + resultString2 + "<<");
+      return [resultString1, resultString2, resultString3, resultString4];
+    }*/
     //The results are the shadow price of every constraint and the value of every variable
     //...to get the result we just need the constraintType or varType string
     ModelElementDataService.prototype.addResult = function (elementId, resultType, resultId, value, constraintString, resultString) {
@@ -436,16 +430,6 @@ var ModelElementDataService = /** @class */ (function () {
         //Get the element
         var elementToUpdate = this.modelElements.find(function (element) { return element.elementId === elementId; });
         if (elementToUpdate) {
-            //Add the arrays if they does not exist
-            // if (!elementToUpdate.results) {
-            //   elementToUpdate.results = {}        
-            // }
-            // if (!elementToUpdate.constraintString) {
-            //   elementToUpdate.constraintString = ""        
-            // }
-            // if (!elementToUpdate.resultString) {
-            //   elementToUpdate.resultString = ""        
-            // }             
             //Special case
             //Node balance LTE constraint shadow price is negative
             if (resultType == "nodeBal" && resultId.includes("LTE")) {

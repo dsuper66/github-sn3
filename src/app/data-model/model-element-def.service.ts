@@ -20,35 +20,9 @@ export class ModelElementDefService {
 
   constructor() {
 
-    //All property types must have an entry here, for the data entry display
-    //(this can probably go, replaced by an array of properties that are hidden
-    //... primitiveType is not actually used... all the properties are string
-    //and the json conversion decides wheteher or not it is a number)
-    // this.elementPropertyTypeSettings.push(
-    //   { propertyType: 'isRefBus', primitiveType: 'bool', visible: true },
-    //   { propertyType: 'fromBus', primitiveType: 'string', visible: false },
-    //   { propertyType: 'toBus', primitiveType: 'string', visible: false },
-    //   { propertyType: 'flowMax', primitiveType: 'number', visible: true },
-    //   { propertyType: 'resistance', primitiveType: 'number', visible: true },
-    //   { propertyType: 'susceptance', primitiveType: 'number', visible: true },
-    //   { propertyType: 'childCount', primitiveType: 'number', visible: false },
-    //   { propertyType: 'parentType', primitiveType: 'string', visible: false },
-    //   { propertyType: 'childType', primitiveType: 'string', visible: false },
-    //   { propertyType: 'parentId', primitiveType: 'string', visible: false },
-    //   { propertyType: 'trancheLimit', primitiveType: 'number', visible: true },
-    //   { propertyType: 'tranchePrice', primitiveType: 'number', visible: true },
-    //   { propertyType: 'segFlowLimit', primitiveType: 'number', visible: true },
-    //   { propertyType: 'capacityMax', primitiveType: 'number', visible: true },
-    //   { propertyType: 'direction', primitiveType: 'number', visible: true },
-    //   { propertyType: 'islandId', primitiveType: 'string', visible: false },
-    //   { propertyType: 'islandResShortfallPrice', primitiveType: 'number', visible: true },
-    //   { propertyType: 'genResShortfallPrice', primitiveType: 'number', visible: true },
-    //   { propertyType: 'lossFlowRatio', primitiveType: 'number', visible: true },      
-    // )
-
     //Defaults (different element types can have different defaults for the same properties)
     this.defaultValueSettings.push(
-      { propertyType: 'isRefBus', elementType: 'bus', defaultValue: 'false' },
+      // { propertyType: 'isRefBus', elementType: 'bus', defaultValue: 'false' },
       { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 },
       { propertyType: 'resistance', elementType: 'branch', defaultValue: 0.0001 },
       { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 },
@@ -66,7 +40,8 @@ export class ModelElementDefService {
     //Define all Element Types and Property Types
     //An Element Type that is included in the model must be defined here to know its properties
     //Parent elements
-    this.elementTypeProperties['bus'] = ['isRefBus'];
+    // this.elementTypeProperties['bus'] = ['isRefBus'];
+    this.elementTypeProperties['bus'] = [];
     //Branch (flow limit and losses are at the directional level)
     this.elementTypeProperties['branch'] = ['fromBus', 'toBus', 'susceptance', 'resistance','flowMax'];
     this.elementTypeProperties['gen'] = ['toBus', 'capacityMax','islandId','genResShortfallPrice'];
@@ -111,28 +86,6 @@ export class ModelElementDefService {
   propertyIsString(propertyType: string): boolean {
     return this.stringProperties.filter(s => s === propertyType).length != 0;
   }
-
-  // propertyIsVisible(propertyType: string): boolean {
-  //   return true;
-  //   console.log("get visible status for property:" + propertyType);
-  //   const propertyTypeSettings = this.elementPropertyTypeSettings.filter(property => property.propertyType === propertyType)[0];
-  //   return propertyTypeSettings.visible;
-  // }
-
-  /*
-  getDefaultValueForProperty(propertyType: string, elementType: string): any {
-    const defaultValueSetting = this.defaultValueSettings.filter(
-      defaultValueSetting => defaultValueSetting.propertyType === propertyType
-        && defaultValueSetting.elementType == elementType)[0];
-    if (defaultValueSetting) {
-      console.log("found default:" + defaultValueSetting.defaultValue);
-      return defaultValueSetting.defaultValue;
-    }
-    else {
-      console.log("%c" + "No Default found for:" + elementType + " property:" + propertyType, "color: red");
-      return "";
-    }
-  }*/
 
   elementHasProperty(element: ModelElement, propertyType: string): boolean {
     const properties = this.elementTypeProperties[element.elementType];
@@ -185,7 +138,5 @@ export class ModelElementDefService {
       return 0;
     }
   }
-
-
 
 }

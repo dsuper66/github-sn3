@@ -63,21 +63,6 @@ export class ModelElementDataService {
       includeInModel: false
     });
 
-    //Static components of the model
-    //mathModel has the objective as a variable
-    // this.modelElements.push({
-    //   elementId: 'mathmodel001', elementType: 'mathModel',
-    //   properties: {},
-    //   includeInModel: true
-    // });
-    //island has risk and reserve as variables 
-    //(static for now, but will be based on connectivity, created by saveConnectivityToModel)
-    // this.modelElements.push({
-    //   elementId: 'island001', elementType: 'island',
-    //   properties: {},
-    //   includeInModel: true
-    // });
-
   }
 
   private modelElements: ModelElement[] = [];
@@ -206,10 +191,6 @@ export class ModelElementDataService {
       console.log("did not find:" + propertyType + " for:" + elementId);
       return "";
     }
-    // let properties = this.modelElements.filter(
-    //   element => element.elementId === elementId
-    // )[0].properties;
-    // return properties[propertyType];
   }
 
   //Sum the child element properties, e.g., sum the bid quantities
@@ -248,11 +229,12 @@ export class ModelElementDataService {
 
       //Special Case
       //isRefBus... can only have one refBus so set all to false first if the new value is true
+      //###Currently REFBUS is not used###
       if (propertyType === 'isRefBus' && value === 'true') {
         console.log("RESET ALL REFBUS");
         this.setPropertyForAllElements(propertyType, 'false', elementToUpdate.elementId);
         console.log("DONE RESET");
-      }      
+      }
 
       //Special Case
       //resistance... use this to populate the flow loss segments
@@ -333,20 +315,42 @@ export class ModelElementDataService {
 
   resetResults() {
     for (const e of this.modelElements) {
-      // for (const price in element.prices) element.prices[price] = 0
-      // for (const quantity in element.quantities) element.quantities[quantity] = 0
       e.results = {};
-      // for (const result in e.results) e.results[result] = 0
       e.constraintString = ""
       e.resultString = ""
     }
   }
 
+  getElementType(elementId:string):string {
+    const element = this.modelElements.find(
+      element => element.elementId === elementId
+    );
+    if (element) {
+      return element.elementType;
+    }
+    else {
+      return "";
+    }    
+  }
+  
+  getResultsDict(elementId: string): {[resultType:string] : number}|undefined {
+    const element = this.modelElements.find(
+      element => element.elementId === elementId
+    );
+    if (element) {
+      return element.results;
+    }
+    else {
+      return undefined;
+    }
+  }  
+
+  /*
   private defaultDP = 2;
 
   //Extract results from dictionary and format as string
   //For exceptions, e.g., risk deficit or uncleared load, only want to show if non-zero
-  getResultString(key: string, results: { [resultType: string]: number }, prefix = "", showZero = true,dp = -1): string {
+  getResultString(key: string, results: { [resultType: string]: number }, prefix = "", showZero = true, dp = -1): string {
     var decimalPlaces = this.defaultDP;
     if (dp >= 0) {
       decimalPlaces = dp;
@@ -365,16 +369,6 @@ export class ModelElementDataService {
       }
     }
   }
-
-  // getResultVal(key: string, results: {[resultType:string] : number}):number {
-  //   if (results[key] === undefined) {
-  //     console.log("MISSING RESULT: " + key)
-  //     return -9999.0
-  //   }
-  //   else {
-  //     return results[key];
-  //   }
-  // }
 
   private prevObjectiveVal = 0.0;
   //Result string for display... for the element get pre-determined result types
@@ -426,7 +420,7 @@ export class ModelElementDataService {
             resultString1 = "objVal:" + this.getResultString('objectiveVal', results);
             resultString2 = "prev:" + objectiveVal.toFixed(this.defaultDP).toString();
             resultString3 = "delta:" + deltaObjectiveVal.toFixed(this.defaultDP).toString();
-            resultString4 = "iterations:" + this.getResultString('iterationCount', results,"",true,0);
+            resultString4 = "iterations:" + this.getResultString('iterationCount', results, "", true, 0);
           }
         }
         else if (element.elementType == "branch") {
@@ -465,7 +459,7 @@ export class ModelElementDataService {
     // }
     console.log("got result:>>" + resultString2 + "<<");
     return [resultString1, resultString2, resultString3, resultString4];
-  }
+  }*/
 
   //The results are the shadow price of every constraint and the value of every variable
   //...to get the result we just need the constraintType or varType string
@@ -480,17 +474,6 @@ export class ModelElementDataService {
 
     if (elementToUpdate) {
 
-      //Add the arrays if they does not exist
-      // if (!elementToUpdate.results) {
-      //   elementToUpdate.results = {}        
-      // }
-      // if (!elementToUpdate.constraintString) {
-      //   elementToUpdate.constraintString = ""        
-      // }
-      // if (!elementToUpdate.resultString) {
-      //   elementToUpdate.resultString = ""        
-      // }             
-
       //Special case
       //Node balance LTE constraint shadow price is negative
       if (resultType == "nodeBal" && resultId.includes("LTE")) {
@@ -501,7 +484,6 @@ export class ModelElementDataService {
       if (direction) {
         value *= Number(direction);
       }
-
 
       //The value adds to any existing value with the same key
       //(e.g. cleared offers add up at the parent level)
@@ -527,6 +509,4 @@ export class ModelElementDataService {
       }
     }
   }
-
-
 }
