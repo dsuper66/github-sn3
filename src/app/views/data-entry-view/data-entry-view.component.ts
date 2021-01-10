@@ -119,7 +119,7 @@ export class DataEntryViewComponent implements OnInit {
   //===SUBMIT===
   onSubmit(form: NgForm): void {
     //The form returns an object
-    console.log('you submitted value:', form);
+    console.log('submitted values:', form);
 
     //Extract the data from the object
     //Fields where no data has been entered are empty strings, so we don't update those
@@ -128,7 +128,7 @@ export class DataEntryViewComponent implements OnInit {
 
         const formValue = Object(form)[formName];
 
-        if (formValue && formValue != "") {
+        if (formValue && formValue != "" && !isNaN(Number(formValue))) {
 
           // let newValue = Object(form)[propertyType];
           console.log(">>>value>>>" + formName + ":" + formValue);

@@ -110,13 +110,13 @@ var DataEntryViewComponent = /** @class */ (function () {
     DataEntryViewComponent.prototype.onSubmit = function (form) {
         var _this = this;
         //The form returns an object
-        console.log('you submitted value:', form);
+        console.log('submitted values:', form);
         //Extract the data from the object
         //Fields where no data has been entered are empty strings, so we don't update those
         if (this.formNames) {
             this.formNames.forEach(function (formName, index) {
                 var formValue = Object(form)[formName];
-                if (formValue && formValue != "") {
+                if (formValue && formValue != "" && !isNaN(Number(formValue))) {
                     // let newValue = Object(form)[propertyType];
                     console.log(">>>value>>>" + formName + ":" + formValue);
                     if (_this.doDataEntry) {

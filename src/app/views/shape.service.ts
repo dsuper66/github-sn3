@@ -59,7 +59,7 @@ export class ShapeService {
   }
   getShapesOfTypes(elementTypes: string[]): Shape[] {
     return this.shapes.filter(shape => elementTypes.indexOf(shape.elementType) >= 0);
-  }  
+  }
   //...and not of type
   getShapesNotOfType(elementType: string): Shape[] {
     return this.shapes.filter(shape => shape.elementType != elementType);
@@ -151,39 +151,41 @@ export class ShapeService {
       };
 
       //Look for an available bus
-      const brConnUnderBus = busesHighestToLowest.map(bus =>
-        this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(brId =>
-          this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
-      const brCountForBus = brConnUnderBus.map(brArray => brArray.length);
-      const minBrCount = brCountForBus.reduce((p, c) => p < c ? p : c);
+      if (busesHighestToLowest.length > 0) {
+        const brConnUnderBus = busesHighestToLowest.map(bus =>
+          this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(brId =>
+            this.getShapePoint(brId).y > this.getShapePoint(bus.elementId).y));
+        const brCountForBus = brConnUnderBus.map(brArray => brArray.length);
+        const minBrCountFound = brCountForBus.reduce((p, c) => p < c ? p : c);
 
-      //Find first bus that has the min connections
-      const maxAllowableBrCount = 2; //(connected below)
-      if (minBrCount < maxAllowableBrCount) {
-        var topBusEligibleIndex = brCountForBus.findIndex(bc => bc == minBrCount);
-        //If min count is last bus, but a higher bus is valid then use the higher bus
-        if (brCountForBus.length > 1 && topBusEligibleIndex == busesHighestToLowest.length - 1) {
-          //Use the highest with min connections excluding the last
-          const minBrCountExcludeLast = brCountForBus.slice(0,-1).reduce((p, c) => p < c ? p : c);
-          if (minBrCountExcludeLast < maxAllowableBrCount) {
-            topBusEligibleIndex = brCountForBus.findIndex(bc => bc == minBrCountExcludeLast);
+        //Find first bus that has the min connections
+        const maxAllowableBrCount = 2; //(connected below)
+        if (minBrCountFound < maxAllowableBrCount) {
+          var topBusEligibleIndex = brCountForBus.findIndex(bc => bc == minBrCountFound);
+          //If min count is last bus, but a higher bus is valid then use the higher bus
+          if (brCountForBus.length > 1 && topBusEligibleIndex == busesHighestToLowest.length - 1) {
+            //Use the highest with min connections excluding the last
+            const minBrCountExcludeLast = brCountForBus.slice(0, -1).reduce((p, c) => p < c ? p : c);
+            if (minBrCountExcludeLast < maxAllowableBrCount) {
+              topBusEligibleIndex = brCountForBus.findIndex(bc => bc == minBrCountExcludeLast);
+            }
           }
-        }
 
-        // console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
+          // console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
 
-        if (topBusEligibleIndex >= 0) {
-          const fromBus = busesHighestToLowest[topBusEligibleIndex];
-          y = fromBus.yInner + busWidth / 2;
-          //Length to Connect to next bus down, if any
-          if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
-            brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
-          }
-          if (brCountForBus[topBusEligibleIndex] == 0) {
-            x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
-          }
-          else {
-            x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth
+          if (topBusEligibleIndex >= 0) {
+            const fromBus = busesHighestToLowest[topBusEligibleIndex];
+            y = fromBus.yInner + busWidth / 2;
+            //Length to Connect to next bus down, if any
+            if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
+              brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+            }
+            if (brCountForBus[topBusEligibleIndex] == 0) {
+              x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
+            }
+            else {
+              x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth
+            }
           }
         }
       }
@@ -234,26 +236,28 @@ export class ShapeService {
       }
 
       //Try and find a bus to connect to
-      const genLoadConnAtBus = busesHighestToLowest.map(bus =>
-        this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']));
-      const glCountForBus = genLoadConnAtBus.map(brArray => brArray.length);
-      const minCount = glCountForBus.reduce((p, c) => p < c ? p : c);
-      //Find first bus that has least connections
-      const maxAllowableGenLoadCount = 3;
-      const topBusEligibleIndex = glCountForBus.findIndex(glc => glc < maxAllowableGenLoadCount && glc == minCount);
-      if (topBusEligibleIndex >= 0) {
-        const atBus = busesHighestToLowest[topBusEligibleIndex];
-        y = atBus.yInner - h;
-        //Zero gen-load already
-        if (glCountForBus[topBusEligibleIndex] == 0) {
-          x = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
-        }
-        //One gen-load already
-        else if (glCountForBus[topBusEligibleIndex] == 1) {
-          x = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
-        }
-        else {
-          x = atBus.xInner + atBus.wInner * 0.5 - w / 2;
+      if (busesHighestToLowest.length > 0) {
+        const genLoadConnAtBus = busesHighestToLowest.map(bus =>
+          this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']));
+        const glCountForBus = genLoadConnAtBus.map(brArray => brArray.length);
+        const minCount = glCountForBus.reduce((p, c) => p < c ? p : c);
+        //Find first bus that has least connections
+        const maxAllowableGenLoadCount = 3;
+        const topBusEligibleIndex = glCountForBus.findIndex(glc => glc < maxAllowableGenLoadCount && glc == minCount);
+        if (topBusEligibleIndex >= 0) {
+          const atBus = busesHighestToLowest[topBusEligibleIndex];
+          y = atBus.yInner - h;
+          //Zero gen-load already
+          if (glCountForBus[topBusEligibleIndex] == 0) {
+            x = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
+          }
+          //One gen-load already
+          else if (glCountForBus[topBusEligibleIndex] == 1) {
+            x = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
+          }
+          else {
+            x = atBus.xInner + atBus.wInner * 0.5 - w / 2;
+          }
         }
       }
 

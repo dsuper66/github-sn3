@@ -127,38 +127,40 @@ var ShapeService = /** @class */ (function () {
             }
             ;
             //Look for an available bus
-            var brConnUnderBus = busesHighestToLowest.map(function (bus) {
-                return _this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(function (brId) {
-                    return _this.getShapePoint(brId).y > _this.getShapePoint(bus.elementId).y;
+            if (busesHighestToLowest.length > 0) {
+                var brConnUnderBus = busesHighestToLowest.map(function (bus) {
+                    return _this.modelElementDataService.getBusConnections(bus.elementId, ['branch']).filter(function (brId) {
+                        return _this.getShapePoint(brId).y > _this.getShapePoint(bus.elementId).y;
+                    });
                 });
-            });
-            var brCountForBus = brConnUnderBus.map(function (brArray) { return brArray.length; });
-            var minBrCount_1 = brCountForBus.reduce(function (p, c) { return p < c ? p : c; });
-            //Find first bus that has the min connections
-            var maxAllowableBrCount = 2; //(connected below)
-            if (minBrCount_1 < maxAllowableBrCount) {
-                var topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc == minBrCount_1; });
-                //If min count is last bus, but a higher bus is valid then use the higher bus
-                if (brCountForBus.length > 1 && topBusEligibleIndex == busesHighestToLowest.length - 1) {
-                    //Use the highest with min connections excluding the last
-                    var minBrCountExcludeLast_1 = brCountForBus.slice(0, -1).reduce(function (p, c) { return p < c ? p : c; });
-                    if (minBrCountExcludeLast_1 < maxAllowableBrCount) {
-                        topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc == minBrCountExcludeLast_1; });
+                var brCountForBus = brConnUnderBus.map(function (brArray) { return brArray.length; });
+                var minBrCountFound_1 = brCountForBus.reduce(function (p, c) { return p < c ? p : c; });
+                //Find first bus that has the min connections
+                var maxAllowableBrCount = 2; //(connected below)
+                if (minBrCountFound_1 < maxAllowableBrCount) {
+                    var topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc == minBrCountFound_1; });
+                    //If min count is last bus, but a higher bus is valid then use the higher bus
+                    if (brCountForBus.length > 1 && topBusEligibleIndex == busesHighestToLowest.length - 1) {
+                        //Use the highest with min connections excluding the last
+                        var minBrCountExcludeLast_1 = brCountForBus.slice(0, -1).reduce(function (p, c) { return p < c ? p : c; });
+                        if (minBrCountExcludeLast_1 < maxAllowableBrCount) {
+                            topBusEligibleIndex = brCountForBus.findIndex(function (bc) { return bc == minBrCountExcludeLast_1; });
+                        }
                     }
-                }
-                // console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
-                if (topBusEligibleIndex >= 0) {
-                    var fromBus = busesHighestToLowest[topBusEligibleIndex];
-                    y = fromBus.yInner + busWidth / 2;
-                    //Length to Connect to next bus down, if any
-                    if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
-                        brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
-                    }
-                    if (brCountForBus[topBusEligibleIndex] == 0) {
-                        x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
-                    }
-                    else {
-                        x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth;
+                    // console.log("%%%%%% connBrIdUnderBus:" + brConnUnderBus + " top eligible:" + topBusEligibleIndex);
+                    if (topBusEligibleIndex >= 0) {
+                        var fromBus = busesHighestToLowest[topBusEligibleIndex];
+                        y = fromBus.yInner + busWidth / 2;
+                        //Length to Connect to next bus down, if any
+                        if (topBusEligibleIndex < busesHighestToLowest.length - 1) {
+                            brLength = busesHighestToLowest[topBusEligibleIndex + 1].yInner - fromBus.yInner;
+                        }
+                        if (brCountForBus[topBusEligibleIndex] == 0) {
+                            x = fromBus.xInner + (1 - brInsetFactor) * fromBus.wInner;
+                        }
+                        else {
+                            x = fromBus.xInner + (brInsetFactor) * fromBus.wInner - branchWidth;
+                        }
                     }
                 }
             }
@@ -202,27 +204,29 @@ var ShapeService = /** @class */ (function () {
                 y = busInitY + (branchInitLength * (busCount - 1)) - h;
             }
             //Try and find a bus to connect to
-            var genLoadConnAtBus = busesHighestToLowest.map(function (bus) {
-                return _this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']);
-            });
-            var glCountForBus = genLoadConnAtBus.map(function (brArray) { return brArray.length; });
-            var minCount_1 = glCountForBus.reduce(function (p, c) { return p < c ? p : c; });
-            //Find first bus that has least connections
-            var maxAllowableGenLoadCount_1 = 3;
-            var topBusEligibleIndex_1 = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1 && glc == minCount_1; });
-            if (topBusEligibleIndex_1 >= 0) {
-                var atBus = busesHighestToLowest[topBusEligibleIndex_1];
-                y = atBus.yInner - h;
-                //Zero gen-load already
-                if (glCountForBus[topBusEligibleIndex_1] == 0) {
-                    x_1 = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
-                }
-                //One gen-load already
-                else if (glCountForBus[topBusEligibleIndex_1] == 1) {
-                    x_1 = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
-                }
-                else {
-                    x_1 = atBus.xInner + atBus.wInner * 0.5 - w / 2;
+            if (busesHighestToLowest.length > 0) {
+                var genLoadConnAtBus = busesHighestToLowest.map(function (bus) {
+                    return _this.modelElementDataService.getBusConnections(bus.elementId, ['gen', 'load']);
+                });
+                var glCountForBus = genLoadConnAtBus.map(function (brArray) { return brArray.length; });
+                var minCount_1 = glCountForBus.reduce(function (p, c) { return p < c ? p : c; });
+                //Find first bus that has least connections
+                var maxAllowableGenLoadCount_1 = 3;
+                var topBusEligibleIndex_1 = glCountForBus.findIndex(function (glc) { return glc < maxAllowableGenLoadCount_1 && glc == minCount_1; });
+                if (topBusEligibleIndex_1 >= 0) {
+                    var atBus = busesHighestToLowest[topBusEligibleIndex_1];
+                    y = atBus.yInner - h;
+                    //Zero gen-load already
+                    if (glCountForBus[topBusEligibleIndex_1] == 0) {
+                        x_1 = atBus.xInner + atBus.wInner * (1 - genLoadInsetFactor) - w / 2;
+                    }
+                    //One gen-load already
+                    else if (glCountForBus[topBusEligibleIndex_1] == 1) {
+                        x_1 = atBus.xInner + atBus.wInner * genLoadInsetFactor - w / 2;
+                    }
+                    else {
+                        x_1 = atBus.xInner + atBus.wInner * 0.5 - w / 2;
+                    }
                 }
             }
             //Draw
