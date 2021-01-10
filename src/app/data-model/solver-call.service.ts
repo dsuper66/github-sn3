@@ -136,7 +136,7 @@ export class SolverCallService {
         if (value != undefined) {
           const stringifiedValue = 
             (this.modelElementDefService.propertyIsString(propertyType)) ? JSON.stringify(value) : JSON.stringify(Number(value));
-          console.log (">>>" + value + ">>>" + stringifiedValue + "<<<");
+          console.log ("value:" + value + " stringifiedValue:>" + stringifiedValue + "<");
           jString += JSON.stringify(propertyType) + ":" + stringifiedValue + ","
         }
       }

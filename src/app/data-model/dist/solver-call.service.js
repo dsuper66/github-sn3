@@ -104,7 +104,7 @@ var SolverCallService = /** @class */ (function () {
                 //Don't write undefined values, e.g., tranches with no data
                 if (value != undefined) {
                     var stringifiedValue = (this.modelElementDefService.propertyIsString(propertyType)) ? JSON.stringify(value) : JSON.stringify(Number(value));
-                    console.log(">>>" + value + ">>>" + stringifiedValue + "<<<");
+                    console.log("value:" + value + " stringifiedValue:>" + stringifiedValue + "<");
                     jString += JSON.stringify(propertyType) + ":" + stringifiedValue + ",";
                 }
             }

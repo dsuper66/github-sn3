@@ -8,17 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.NetworkBuilderViewComponent = void 0;
 var core_1 = require("@angular/core");
-// import { Router } from '@angular/router';
 var NetworkBuilderViewComponent = /** @class */ (function () {
-    function NetworkBuilderViewComponent(shapeService, dataService, solverCallService, renderer) {
+    function NetworkBuilderViewComponent(shapeService, solverCallService, renderer) {
         this.shapeService = shapeService;
-        this.dataService = dataService;
         this.solverCallService = solverCallService;
         this.renderer = renderer;
-        //timer... https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
-        //source = timer(1000, 2000);
-        // source = timer(1000, 1000);
-        // subscribe = this.source.subscribe(val => this.timeLeft = val/100);
         this.shapesToDraw = [];
         this.directionDone = true;
         //For knowing whether to draw or unselect
@@ -28,7 +22,6 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
     }
     NetworkBuilderViewComponent.prototype.ngOnInit = function () {
         //If we navigate away then when we come back this will populate the display
-        // this.doUpdateResults = this.dataService.doUpdateResults();
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
     };
@@ -41,17 +34,9 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         }
     };
     NetworkBuilderViewComponent.prototype.haveModel = function () { return this.shapeService.haveModel(); };
-    // busWidth = 14;
-    // headerH = 35;
-    // infoWidth = 30;
-    // selectedId: string;
     NetworkBuilderViewComponent.prototype.solveInProgress = function () { return this.solverCallService.solveInProgress; };
     ;
-    // timeLeft = "";
     NetworkBuilderViewComponent.prototype.solveModel = function () {
-        // const source = timer(1000, 1000);
-        // const places = 3;
-        // const subscribe = source.subscribe(val => this.timeLeft = String(val).padStart(places, '0'));
         this.solverCallService.solveModel();
     };
     //Add Element
@@ -88,13 +73,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                     this.drawingState = "keepDrawing";
                     this.selectedShape = checkShape;
                     this.shapeService.setSelectedShapeId(checkShape.elementId);
-                    //For bus or branch need to check direction
-                    // if (this.selectedShape.elementType == 'bus'
-                    //   || this.selectedShape.elementType == 'branch') {
-                    //   this.directionDone = false;
-                    // }
                 }
-                // console.log("inside");
                 break;
             }
         }
@@ -152,7 +131,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                     }
                 }
             }
-            //Direction is done, also check for ROTATE (not used)
+            //Direction is done, also check for ROTATE (***not used***)
             else if (this.selectedShape.elementType == 'branch'
                 && this.selectedShape.doResize) {
                 deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
@@ -261,10 +240,6 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
     };
     //Check for overlaps (then call Connectivity Processing)
     NetworkBuilderViewComponent.prototype.checkForOverlaps = function () {
-        // var overlap = !(rect1.right < rect2.left || 
-        //   rect1.left > rect2.right || 
-        //   rect1.bottom < rect2.top || 
-        //   rect1.top > rect2.bottom)
         if (this.selectedShape != undefined) {
             console.log("checkForOverlaps:" + this.selectedShape.elementId + " type:" + this.selectedShape.elementType);
             //Bus is moving

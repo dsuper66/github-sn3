@@ -107,7 +107,6 @@ var ShapeService = /** @class */ (function () {
                 wOuter: busInitLength,
                 hOuter: selectWidth
             });
-            //console.log(">>>" + (busInitX) + " " + (y + busWidth / 2))
         }
         //BRANCH
         else if (elementType == 'branch') {

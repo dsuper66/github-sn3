@@ -87,12 +87,11 @@ export class ModelElementService {
     //Special case
     //gen (and maybe others)... need an island 
     //(when we created the shape we made sure that we had an island, for now there is only one)
-    const islandIdProperty = 'islandId'
-    if (this.modelElementDefService.elementTypeHasPropertyType(elementTypeToAdd, islandIdProperty)) {
+    if (this.modelElementDefService.elementTypeHasPropertyType(elementTypeToAdd, 'islandId')) {
       const island = this.modelElementDataService.getModelElementOfType('island')[0];
       if (island) {
         console.log("###Island id:" + island.elementId);
-        this.modelElementDataService.setPropertyForElement(newId, islandIdProperty, island.elementId);
+        this.modelElementDataService.setPropertyForElement(newId, 'islandId', island.elementId);
       }
     }
 
@@ -143,16 +142,5 @@ export class ModelElementService {
 
     return newId;
   }
-
-  // getOrAddIslandId(): string {
-  //   const existingIslands = this.modelElementDataService.getModelElements().filter(
-  //     e => e.elementType == 'island');
-  //   if (existingIslands.length === 0) {
-  //     return this.addModelElement('island');
-  //   }
-  //   else {
-  //     return existingIslands[0].elementId
-  //   }
-  // }
 
 }

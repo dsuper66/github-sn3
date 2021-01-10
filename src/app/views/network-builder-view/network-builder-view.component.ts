@@ -2,13 +2,7 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
-import { ControlContainer } from '@angular/forms';
-import { ModelElementDataService } from '../../data-model/model-element-data.service';
-import { timer } from 'rxjs';
 import { SolverCallService } from '../../data-model/solver-call.service';
-
-// import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-network-builder-view',
@@ -19,25 +13,15 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   constructor(
     private shapeService: ShapeService,
-    private dataService: ModelElementDataService,
     private solverCallService: SolverCallService,
-    private renderer: Renderer2) { 
-
-    }
+    private renderer: Renderer2) 
+    {}
 
   ngOnInit(): void {
     //If we navigate away then when we come back this will populate the display
-    // this.doUpdateResults = this.dataService.doUpdateResults();
     this.selectedShape = this.shapeService.getSelectedShape();
     this.shapesToDraw = this.shapeService.getShapes();
   }
-
-  //timer... https://www.learnrxjs.io/learn-rxjs/operators/creation/timer
-  
-  //source = timer(1000, 2000);
-  // source = timer(1000, 1000);
-  // subscribe = this.source.subscribe(val => this.timeLeft = val/100);
- 
 
   shapesToDraw: Shape[] = [];
   selectedShape?: Shape;
@@ -52,18 +36,10 @@ export class NetworkBuilderViewComponent implements OnInit {
   }
 
   haveModel():boolean{return this.shapeService.haveModel()}
-  // busWidth = 14;
-  // headerH = 35;
-  // infoWidth = 30;
-  // selectedId: string;
 
   solveInProgress(): boolean{return this.solverCallService.solveInProgress};
 
-  // timeLeft = "";
   solveModel() {
-    // const source = timer(1000, 1000);
-    // const places = 3;
-    // const subscribe = source.subscribe(val => this.timeLeft = String(val).padStart(places, '0'));
     this.solverCallService.solveModel();
   }
 
@@ -112,17 +88,7 @@ export class NetworkBuilderViewComponent implements OnInit {
 
           this.selectedShape = checkShape;
           this.shapeService.setSelectedShapeId(checkShape.elementId);
-
-          //For bus or branch need to check direction
-          // if (this.selectedShape.elementType == 'bus'
-          //   || this.selectedShape.elementType == 'branch') {
-          //   this.directionDone = false;
-          // }
-
         }
-
-        // console.log("inside");
-
         break;
       }
     }
@@ -183,7 +149,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           }
         }
       }
-      //Direction is done, also check for ROTATE (not used)
+      //Direction is done, also check for ROTATE (***not used***)
       else if (this.selectedShape.elementType == 'branch'
         && this.selectedShape.doResize) {
         deltaFromStartX = (drawingPoint.x - this.firstPoint.x);
@@ -193,7 +159,6 @@ export class NetworkBuilderViewComponent implements OnInit {
         else if (deltaFromStartX < -50) {
           console.log("DIAGONAL-");
         }
-
         // var el = document.getElementById(this.selectedShape.elementId);
         // this.renderer.setStyle(el, "transform", "rotate(-45deg)");
       }
@@ -309,11 +274,6 @@ export class NetworkBuilderViewComponent implements OnInit {
 
   //Check for overlaps (then call Connectivity Processing)
   checkForOverlaps() {
-    // var overlap = !(rect1.right < rect2.left || 
-    //   rect1.left > rect2.right || 
-    //   rect1.bottom < rect2.top || 
-    //   rect1.top > rect2.bottom)
-   
     if (this.selectedShape != undefined)
     {
       console.log("checkForOverlaps:" + this.selectedShape.elementId + " type:" + this.selectedShape.elementType);
@@ -390,7 +350,6 @@ export class NetworkBuilderViewComponent implements OnInit {
     }
   }
 
-
   deleteSelectedShape() {
     if (this.selectedShape != undefined) {
       this.shapeService.deleteShape(this.selectedShape.elementId);
@@ -399,14 +358,5 @@ export class NetworkBuilderViewComponent implements OnInit {
       this.selectedShape = undefined;
     }
   }
-
-  // doUpdateResults = false;
-
-  // getPrice(elementId: string) : string {
-  //   return this.dataService.getPrice(elementId)
-  // }
-  // getQuantity(elementId: string) : string{
-  //   return this.dataService.getQuantity(elementId)
-  // }  
 
 }

@@ -154,7 +154,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         var constraintDefs = this.mathModelDefService.getConstraintDefsAll();
         for (var _i = 0, constraintDefs_1 = constraintDefs; _i < constraintDefs_1.length; _i++) {
             var constraintDef = constraintDefs_1[_i];
-            console.log(">>>" + constraintDef.constraintType);
+            console.log("constraintType:" + constraintDef.constraintType);
             this.formNames.push(constraintDef.constraintType);
         }
     };
@@ -193,7 +193,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         for (var _i = 0, constraintComps_1 = constraintComps; _i < constraintComps_1.length; _i++) {
             var constraintComp = constraintComps_1[_i];
             this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
-            console.log(">>>" + constraintComp.varType);
+            console.log("varType:" + constraintComp.varType);
             var a = [];
             a.push("[" + constraintComp.propertyMap + "]");
             var factors = constraintComp.factorValue.toString() + " x ";
@@ -234,8 +234,8 @@ var DataEntryViewComponent = /** @class */ (function () {
             //Constraint string
             if (selectedElement.constraintString) {
                 this.constraintString = selectedElement.constraintString;
+                console.log("constraintString:" + selectedElement.constraintString);
             }
-            console.log(">>> " + selectedElement.constraintString);
             //Results string
             if (selectedElement.resultString) {
                 this.resultString = selectedElement.resultString;

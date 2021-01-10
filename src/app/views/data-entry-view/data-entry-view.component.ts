@@ -178,7 +178,7 @@ export class DataEntryViewComponent implements OnInit {
     console.log("populateFromConstraintDefs");
     const constraintDefs = this.mathModelDefService.getConstraintDefsAll();
     for (const constraintDef of constraintDefs) {
-      console.log(">>>" + constraintDef.constraintType);
+      console.log("constraintType:" + constraintDef.constraintType);
       this.formNames.push(constraintDef.constraintType);
     }
   }
@@ -218,7 +218,7 @@ export class DataEntryViewComponent implements OnInit {
     //The child vars in the equation
     for (const constraintComp of constraintComps) {
       this.formNames.push(constraintComp.elementType + "." + constraintComp.varType);
-      console.log(">>>" + constraintComp.varType);
+      console.log("varType:" + constraintComp.varType);
       var a: string[] = [];
       a.push("[" + constraintComp.propertyMap + "]");
       var factors = constraintComp.factorValue.toString() + " x ";
@@ -260,8 +260,8 @@ export class DataEntryViewComponent implements OnInit {
       //Constraint string
       if (selectedElement.constraintString) {
         this.constraintString = selectedElement.constraintString;
+        console.log("constraintString:" + selectedElement.constraintString);
       }
-      console.log(">>> " + selectedElement.constraintString);
       //Results string
       if (selectedElement.resultString) {
         this.resultString = selectedElement.resultString;
