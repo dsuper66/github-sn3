@@ -206,11 +206,12 @@ var ModelElementDataService = /** @class */ (function () {
             //Special Case
             //isRefBus... can only have one refBus so set all to false first if the new value is true
             //###Currently REFBUS is not used###
+            /*
             if (propertyType === 'isRefBus' && value === 'true') {
-                console.log("RESET ALL REFBUS");
-                this.setPropertyForAllElements(propertyType, 'false', elementToUpdate.elementId);
-                console.log("DONE RESET");
-            }
+              console.log("RESET ALL REFBUS");
+              this.setPropertyForAllElements(propertyType, 'false', elementToUpdate.elementId);
+              console.log("DONE RESET");
+            }*/
             //Special Case
             //resistance... use this to populate the flow loss segments
             if (propertyType === 'resistance' || propertyType === 'flowMax') {

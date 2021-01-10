@@ -5,7 +5,7 @@ import { ModelElementDataService } from '../data-model/model-element-data.servic
 import { ModelElementResultsService } from '../data-model/model-element-results.service'
 import { from } from 'rxjs';
 import { Point } from './point';
-import { max, min } from 'rxjs/operators';
+import { find, max, min } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -54,14 +54,12 @@ export class ShapeService {
     return this.shapes.filter(shape => shape.elementId === elementId)[0];
   }
   //Shapes of type
-  //***this happens multiple times during a move *****/
   getShapesOfType(elementType: string): Shape[] {
-    let filtered = this.shapes.filter(shape => shape.elementType === elementType);
-    // for (let element of filtered) {
-    //   console.log("shapes of type:" + elementType + " = " + element.elementId);
-    // }
-    return filtered;
+    return this.shapes.filter(shape => shape.elementType === elementType);
   }
+  getShapesOfTypes(elementTypes: string[]): Shape[] {
+    return this.shapes.filter(shape => elementTypes.indexOf(shape.elementType) >= 0);
+  }  
   //...and not of type
   getShapesNotOfType(elementType: string): Shape[] {
     return this.shapes.filter(shape => shape.elementType != elementType);

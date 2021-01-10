@@ -266,6 +266,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //   rect1.bottom < rect2.top || 
         //   rect1.top > rect2.bottom)
         if (this.selectedShape != undefined) {
+            console.log("checkForOverlaps:" + this.selectedShape.elementId + " type:" + this.selectedShape.elementType);
             //Bus is moving
             if (this.selectedShape.elementType === 'bus') {
                 var theBus = this.selectedShape;
@@ -275,7 +276,7 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                     //overlapped
                     if (this.shapeService.isOverlap(theNotBus, theBus)) {
                         //not a branch
-                        if (theNotBus.elementType != 'branch') {
+                        if (theNotBus.elementType == 'gen' || theNotBus.elementType == 'load') {
                             if (theNotBus.connId1 === "") { //don't steal other connections
                                 theNotBus.connId1 = theBus.elementId;
                             }
@@ -305,7 +306,9 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
                 }
             }
             //Non-bus is moving
-            else {
+            else if (this.selectedShape.elementType === 'branch'
+                || this.selectedShape.elementType === 'gen'
+                || this.selectedShape.elementType === 'load') {
                 var theNotBus = this.selectedShape;
                 var theBuses = this.shapeService.getShapesOfType('bus');
                 theNotBus.connId1 = "";

@@ -313,9 +313,10 @@ export class NetworkBuilderViewComponent implements OnInit {
     //   rect1.left > rect2.right || 
     //   rect1.bottom < rect2.top || 
     //   rect1.top > rect2.bottom)
-
+   
     if (this.selectedShape != undefined)
     {
+      console.log("checkForOverlaps:" + this.selectedShape.elementId + " type:" + this.selectedShape.elementType);
 
       //Bus is moving
       if (this.selectedShape.elementType === 'bus') {
@@ -325,7 +326,7 @@ export class NetworkBuilderViewComponent implements OnInit {
           //overlapped
           if (this.shapeService.isOverlap(theNotBus, theBus)) {
             //not a branch
-            if (theNotBus.elementType != 'branch') {
+            if (theNotBus.elementType == 'gen' || theNotBus.elementType == 'load' ) {
               if (theNotBus.connId1 === "") { //don't steal other connections
                 theNotBus.connId1 = theBus.elementId;
               }
@@ -355,7 +356,11 @@ export class NetworkBuilderViewComponent implements OnInit {
         }
       }
       //Non-bus is moving
-      else {
+      else if (this.selectedShape.elementType === 'branch' 
+      || this.selectedShape.elementType === 'gen'
+      || this.selectedShape.elementType === 'load') 
+      {
+
         let theNotBus = this.selectedShape;
         let theBuses = this.shapeService.getShapesOfType('bus');
         theNotBus.connId1 = "";

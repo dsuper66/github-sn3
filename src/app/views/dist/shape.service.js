@@ -43,13 +43,11 @@ var ShapeService = /** @class */ (function () {
         return this.shapes.filter(function (shape) { return shape.elementId === elementId; })[0];
     };
     //Shapes of type
-    //***this happens multiple times during a move *****/
     ShapeService.prototype.getShapesOfType = function (elementType) {
-        var filtered = this.shapes.filter(function (shape) { return shape.elementType === elementType; });
-        // for (let element of filtered) {
-        //   console.log("shapes of type:" + elementType + " = " + element.elementId);
-        // }
-        return filtered;
+        return this.shapes.filter(function (shape) { return shape.elementType === elementType; });
+    };
+    ShapeService.prototype.getShapesOfTypes = function (elementTypes) {
+        return this.shapes.filter(function (shape) { return elementTypes.indexOf(shape.elementType) >= 0; });
     };
     //...and not of type
     ShapeService.prototype.getShapesNotOfType = function (elementType) {
