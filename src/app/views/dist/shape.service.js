@@ -76,9 +76,9 @@ var ShapeService = /** @class */ (function () {
         //Placement
         console.log(newElementId + ":" + elementType + " count:" + (this.getCountShapesOfType(elementType) + 1));
         //Defaults
-        var branchInitLength = 188;
+        var branchInitLength = 185;
         var busInitX = 30;
-        var busInitY = 110;
+        var busInitY = 109;
         var busInitLength = 164;
         var branchWidth = 5;
         var busWidth = 14;
