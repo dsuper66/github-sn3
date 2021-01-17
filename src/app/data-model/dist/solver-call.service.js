@@ -25,6 +25,7 @@ var SolverCallService = /** @class */ (function () {
         this.solverJsonInput = "";
         this.solverResultString = "";
         this.solveInProgress = false;
+        this.ipAddress = "";
     }
     SolverCallService.prototype.sendModelToSolver = function (solverInput) {
         var httpOptions = {
@@ -138,8 +139,10 @@ var SolverCallService = /** @class */ (function () {
         }
         //Remove last comma, close constraintDefs list
         jString = this.replaceLastChar(jString, ",", "]");
+        //=============
         //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps
         jString += ",";
+        //=============
         //==ConstraintComps JSON==
         jString += this.jsonStart("constraintComps");
         var constraintComps = this.mathModelDefService.getActiveConstraintComps();
@@ -158,6 +161,19 @@ var SolverCallService = /** @class */ (function () {
             jString = this.replaceLastChar(jString, ",", "},");
         }
         //Remove last comma, close constraintComps list
+        jString = this.replaceLastChar(jString, ",", "]");
+        //=============
+        //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps "," SolverOptions
+        jString += ",";
+        //=============    
+        //==SolverOptions JSON==
+        jString += this.jsonStart("solverOptions");
+        jString += "{";
+        jString += this.jsonAddPair("key", "ipAddress");
+        jString += this.jsonAddPair("value", this.ipAddress);
+        //Remove last comma and close this solverOption object
+        jString = this.replaceLastChar(jString, ",", "},");
+        //Remove last comma, close solverOptions list
         jString = this.replaceLastChar(jString, ",", "]");
         //Close JSON
         jString += "}";

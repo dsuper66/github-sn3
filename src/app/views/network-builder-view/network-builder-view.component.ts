@@ -3,17 +3,27 @@ import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
 import { SolverCallService } from '../../data-model/solver-call.service';
+import { HttpClient } from '@angular/common/http';
+
+export interface IpData {
+  ip: string,
+  city: string,
+  region: string,
+  country: string
+}
 
 @Component({
   selector: 'app-network-builder-view',
   templateUrl: './network-builder-view.component.html',
   styleUrls: ['./network-builder-view.component.css']
 })
+
 export class NetworkBuilderViewComponent implements OnInit {
 
   constructor(
     private shapeService: ShapeService,
     private solverCallService: SolverCallService,
+    private http: HttpClient,
     private renderer: Renderer2) 
     {}
 
@@ -21,6 +31,19 @@ export class NetworkBuilderViewComponent implements OnInit {
     //If we navigate away then when we come back this will populate the display
     this.selectedShape = this.shapeService.getSelectedShape();
     this.shapesToDraw = this.shapeService.getShapes();
+
+    this.http.get<{ip:string}>('https://jsonip.com')
+    .subscribe( data => {
+      console.log('*********************ip address:', data.ip);
+      this.solverCallService.ipAddress = data.ip;
+    })
+
+    this.http.get<IpData>('https://ipapi.co/json')
+    .subscribe( ipData => {
+      console.log('*********************ip:' + ipData.ip + "," + ipData.city + "," + ipData.region + "," + ipData.country);
+      
+    })
+
   }
 
   shapesToDraw: Shape[] = [];
@@ -40,7 +63,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   solveInProgress(): boolean{return this.solverCallService.solveInProgress};
 
   solveModel() {
-    this.solverCallService.solveModel();
+      this.solverCallService.solveModel();
   }
 
   //Drawing declarations

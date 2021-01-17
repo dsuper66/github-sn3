@@ -9,9 +9,10 @@ exports.__esModule = true;
 exports.NetworkBuilderViewComponent = void 0;
 var core_1 = require("@angular/core");
 var NetworkBuilderViewComponent = /** @class */ (function () {
-    function NetworkBuilderViewComponent(shapeService, solverCallService, renderer) {
+    function NetworkBuilderViewComponent(shapeService, solverCallService, http, renderer) {
         this.shapeService = shapeService;
         this.solverCallService = solverCallService;
+        this.http = http;
         this.renderer = renderer;
         this.shapesToDraw = [];
         this.directionDone = true;
@@ -21,9 +22,19 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.touchTime = Date.now();
     }
     NetworkBuilderViewComponent.prototype.ngOnInit = function () {
+        var _this = this;
         //If we navigate away then when we come back this will populate the display
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
+        this.http.get('https://jsonip.com')
+            .subscribe(function (data) {
+            console.log('*********************ip address:', data.ip);
+            _this.solverCallService.ipAddress = data.ip;
+        });
+        this.http.get('https://ipapi.co/json')
+            .subscribe(function (ipData) {
+            console.log('*********************ip:' + ipData.ip + "," + ipData.city + "," + ipData.region + "," + ipData.country);
+        });
     };
     NetworkBuilderViewComponent.prototype.textForShape = function (shapeType) {
         if (shapeType === 'island') {

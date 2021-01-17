@@ -45,6 +45,8 @@ export class SolverCallService {
 
   solveInProgress = false;
 
+  ipAddress = "";
+
   sendModelToSolver(solverInput: SolverInput): Observable<ModelResults> {
     const httpOptions:Object = {
       headers: new HttpHeaders({
@@ -173,8 +175,10 @@ export class SolverCallService {
     //Remove last comma, close constraintDefs list
     jString = this.replaceLastChar(jString,",", "]");
 
+    //=============
     //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps
     jString += ",";
+    //=============
 
     //==ConstraintComps JSON==
     jString += this.jsonStart("constraintComps");
@@ -196,6 +200,21 @@ export class SolverCallService {
     //Remove last comma, close constraintComps list
     jString = this.replaceLastChar(jString,",", "]");
 
+
+    //=============
+    //Next "object"...  Elements "," ConstraintDefs "," ConstraintComps "," SolverOptions
+    jString += ",";
+    //=============    
+
+    //==SolverOptions JSON==
+    jString += this.jsonStart("solverOptions");
+    jString += "{";
+    jString += this.jsonAddPair("key","ipAddress");
+    jString += this.jsonAddPair("value",this.ipAddress);
+    //Remove last comma and close this solverOption object
+    jString = this.replaceLastChar(jString,",", "},");    
+    //Remove last comma, close solverOptions list
+    jString = this.replaceLastChar(jString,",", "]");
 
     //Close JSON
     jString += "}";
