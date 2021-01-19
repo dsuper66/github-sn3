@@ -26,14 +26,16 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         //If we navigate away then when we come back this will populate the display
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
-        this.http.get('https://jsonip.com')
-            .subscribe(function (data) {
-            console.log('*********************ip address:', data.ip);
-            _this.solverCallService.ipAddress = data.ip;
-        });
+        // this.http.get<{ip:string}>('https://jsonip.com')
+        // .subscribe( data => {
+        //   console.log('*********************ip address:', data.ip);
+        //   this.solverCallService.ipAddress = data.ip;
+        // })
         this.http.get('https://ipapi.co/json')
             .subscribe(function (ipData) {
-            console.log('*********************ip:' + ipData.ip + "," + ipData.city + "," + ipData.region + "," + ipData.country);
+            var ipString = "ip: " + ipData.ip + ", city: " + ipData.city + ", region: " + ipData.region + ", country: " + ipData.country;
+            console.log('*********************' + ipString);
+            _this.solverCallService.ipAddress = ipString;
         });
     };
     NetworkBuilderViewComponent.prototype.textForShape = function (shapeType) {

@@ -32,16 +32,17 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.selectedShape = this.shapeService.getSelectedShape();
     this.shapesToDraw = this.shapeService.getShapes();
 
-    this.http.get<{ip:string}>('https://jsonip.com')
-    .subscribe( data => {
-      console.log('*********************ip address:', data.ip);
-      this.solverCallService.ipAddress = data.ip;
-    })
+    // this.http.get<{ip:string}>('https://jsonip.com')
+    // .subscribe( data => {
+    //   console.log('*********************ip address:', data.ip);
+    //   this.solverCallService.ipAddress = data.ip;
+    // })
 
     this.http.get<IpData>('https://ipapi.co/json')
     .subscribe( ipData => {
-      console.log('*********************ip:' + ipData.ip + "," + ipData.city + "," + ipData.region + "," + ipData.country);
-      
+      const ipString = "ip: " + ipData.ip + ", city: " + ipData.city + ", region: " + ipData.region + ", country: " + ipData.country
+      console.log('*********************' + ipString);
+      this.solverCallService.ipAddress = ipString;
     })
 
   }
