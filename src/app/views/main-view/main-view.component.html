@@ -3,11 +3,6 @@
 <button class="marginAll"
   routerLink="/network-builder-component">Build</button>
 
-<!-- <button class="marginAll"
-  routerLink="/network-builder-component">Solve</button> -->
-<!-- <button class="marginAll"
-  routerLink="/network-builder-component">Results</button> -->
-
 <!-- Settings -->
 <br><br>
 <div *ngFor="let settingId of getAllSettingIds()">
@@ -23,23 +18,14 @@
 <!-- Buttons -->
 <br>
 <button class="marginAll"
+  routerLink="/data-entry-component/model-def">Model Def</button>  
+  <button class="marginAll"
+  routerLink="/data-entry-component/element-def">Element Def</button>  
+
+<br>
+<button class="marginAll"
   routerLink="/data-entry-component/json-model">JSON Model</button>
 <button class="marginAll"
   routerLink="/data-entry-component/solver-out">Solver Out</button>
 
 
-<br>
-<button class="marginAll"
-  routerLink="/data-entry-component/model-def">Model Def</button>  
-  <button class="marginAll"
-  routerLink="/data-entry-component/element-def">Element Def</button>  
-
-<!-- JSON model -->
-<!-- <div class="textBox marginAll">
-    {{solverJsonInput}}
-</div> -->
-
-<!-- Results from SCALA -->
-<!-- <pre class="textBox marginAll">
-  {{solverResultString}}
-</pre> -->

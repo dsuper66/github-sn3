@@ -169,8 +169,12 @@ var SolverCallService = /** @class */ (function () {
         //==SolverOptions JSON==
         jString += this.jsonStart("solverOptions");
         jString += "{";
-        jString += this.jsonAddPair("key", "ipAddress");
-        jString += this.jsonAddPair("value", this.ipAddress);
+        //IP Address
+        //jString += this.jsonAddPair("key","ipAddress");
+        //jString += this.jsonAddPair("value",this.ipAddress);
+        //Dummy
+        jString += this.jsonAddPair("key", "dummyKey");
+        jString += this.jsonAddPair("value", "dummyValue");
         //Remove last comma and close this solverOption object
         jString = this.replaceLastChar(jString, ",", "},");
         //Remove last comma, close solverOptions list
