@@ -25,7 +25,7 @@ export class ModelElementDefService {
       // { propertyType: 'isRefBus', elementType: 'bus', defaultValue: 'false' },
       { propertyType: 'flowMax', elementType: 'branch', defaultValue: 300 },
       { propertyType: 'resistance', elementType: 'branch', defaultValue: 0.0001 },
-      { propertyType: 'susceptance', elementType: 'branch', defaultValue: 1 },
+      { propertyType: 'susceptance', elementType: 'branch', defaultValue: 2 },
       { propertyType: 'trancheLimit', elementType: 'bidTranche', defaultValue: 100 },
       { propertyType: 'tranchePrice', elementType: 'bidTranche', defaultValue: 1000 },
       { propertyType: 'trancheLimit', elementType: 'enOfferTranche', defaultValue: 250 },
