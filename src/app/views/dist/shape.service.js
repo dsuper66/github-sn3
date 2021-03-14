@@ -78,7 +78,7 @@ var ShapeService = /** @class */ (function () {
         //Defaults
         var branchInitLength = 180;
         var busInitX = 30;
-        var busInitY = 106;
+        var busInitY = 124; //sets the y-offset of everything
         var busInitLength = 164;
         var branchWidth = 5;
         var busWidth = 14;

@@ -95,8 +95,9 @@ export class ShapeService {
     //Defaults
     const branchInitLength = 180;
     const busInitX = 30;
-    const busInitY = 106;
+    const busInitY = 124; //sets the y-offset of everything
     const busInitLength = 164;
+
     const branchWidth = 5;
     const busWidth = 14;
     const genLoadLength = 38;
