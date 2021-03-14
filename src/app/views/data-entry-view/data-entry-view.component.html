@@ -33,6 +33,7 @@
 
  <!-- CONSTRAINT DEF PARENT -->
  <!-- https://stackoverflow.com/questions/40214655/angular-2-checkbox-two-way-data-binding -->
+ <!-- Clicking the detail button calls a re-load of the form with the i.d. as arg -->
  <div *ngIf="doConstraintDefs">
   <button routerLink="/main-component">Back</button>
   <table table-layout="fixed">
@@ -45,7 +46,6 @@
           type="checkbox" 
           [checked]="getConstraintStatus(formName)" 
           (change)="setConstraintStatus(formName,saveUserNameCheckBox.checked)" /></td>
-
       </tr>
   </table>
 </div>

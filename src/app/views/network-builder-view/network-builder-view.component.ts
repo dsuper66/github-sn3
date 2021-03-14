@@ -3,6 +3,7 @@ import { Shape } from '../shape';
 import { Point } from '../point';
 import { ShapeService } from '../shape.service';
 import { SolverCallService } from '../../data-model/solver-call.service';
+import { ItemType, MathModelDefService } from '../../data-model/math-model-def.service';
 import { HttpClient } from '@angular/common/http';
 
 export interface IpData {
@@ -23,6 +24,7 @@ export class NetworkBuilderViewComponent implements OnInit {
   constructor(
     private shapeService: ShapeService,
     private solverCallService: SolverCallService,
+    private mathModelDefService: MathModelDefService,
     private http: HttpClient,
     private renderer: Renderer2) 
     {}
@@ -32,18 +34,20 @@ export class NetworkBuilderViewComponent implements OnInit {
     this.selectedShape = this.shapeService.getSelectedShape();
     this.shapesToDraw = this.shapeService.getShapes();
 
+    this.reservesEnabled = this.getReservesEnabled();
+    this.lossesEnabled = this.getLossesEnabled();
     // this.http.get<{ip:string}>('https://jsonip.com')
     // .subscribe( data => {
     //   console.log('*********************ip address:', data.ip);
     //   this.solverCallService.ipAddress = data.ip;
     // })
 
-    this.http.get<IpData>('https://ipapi.co/json')
-    .subscribe( ipData => {
-      const ipString = "ip: " + ipData.ip + ", city: " + ipData.city + ", region: " + ipData.region + ", country: " + ipData.country
-      console.log('*********************' + ipString);
-      this.solverCallService.ipAddress = ipString;
-    })
+    // this.http.get<IpData>('https://ipapi.co/json')
+    // .subscribe( ipData => {
+    //   const ipString = "ip: " + ipData.ip + ", city: " + ipData.city + ", region: " + ipData.region + ", country: " + ipData.country
+    //   console.log('*********************' + ipString);
+    //   this.solverCallService.ipAddress = ipString;
+    // })
 
   }
 
@@ -76,6 +80,38 @@ export class NetworkBuilderViewComponent implements OnInit {
   drawingState = "stopped";
   //Touch can lead to touch evt followed by mouse... use timer to stop mouse
   touchTime = Date.now();
+
+  //Solver settings
+  public lossesEnabled: boolean;
+  public reservesEnabled: boolean;
+  setReservesEnabled(status: boolean){
+    this.mathModelDefService.setReservesEnabled(status);
+    // console.log("set reserves:" + status);
+    // this.mathModelDefService.setItemStatus(ItemType.Constraint, "resCover", status);
+  }  
+  getReservesEnabled(): boolean{
+    return this.mathModelDefService.getReservesEnabled();
+    // console.log("get reserves");
+    // return this.mathModelDefService.itemIsEnabled(ItemType.Constraint, "resCover");
+  }
+  setLossesEnabled(status: boolean){
+    this.mathModelDefService.setLossesEnabled(status);
+    // console.log("set losses:" + status);
+    // this.mathModelDefService.setItemStatus(ItemType.Constraint, "segLossForFlow", status);
+    // this.mathModelDefService.setItemStatus(ItemType.VarFactor, "dirBranch.branchLoss", status);
+  }  
+  getLossesEnabled(): boolean{
+    return this.mathModelDefService.getLossesEnabled();
+    // console.log("get losses");
+    // if (!this.mathModelDefService.itemIsEnabled(ItemType.Constraint, "segLossForFlow")
+    // && !this.mathModelDefService.itemIsEnabled(ItemType.VarFactor, "dirBranch.branchLoss")) {
+    //   return false;
+    // }
+    // else {
+    //   return true;
+    // }
+  }  
+  
 
   //Add Element
   addElement(type: string) {

@@ -9,9 +9,10 @@ exports.__esModule = true;
 exports.NetworkBuilderViewComponent = void 0;
 var core_1 = require("@angular/core");
 var NetworkBuilderViewComponent = /** @class */ (function () {
-    function NetworkBuilderViewComponent(shapeService, solverCallService, http, renderer) {
+    function NetworkBuilderViewComponent(shapeService, solverCallService, mathModelDefService, http, renderer) {
         this.shapeService = shapeService;
         this.solverCallService = solverCallService;
+        this.mathModelDefService = mathModelDefService;
         this.http = http;
         this.renderer = renderer;
         this.shapesToDraw = [];
@@ -22,21 +23,22 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
         this.touchTime = Date.now();
     }
     NetworkBuilderViewComponent.prototype.ngOnInit = function () {
-        var _this = this;
         //If we navigate away then when we come back this will populate the display
         this.selectedShape = this.shapeService.getSelectedShape();
         this.shapesToDraw = this.shapeService.getShapes();
+        this.reservesEnabled = this.getReservesEnabled();
+        this.lossesEnabled = this.getLossesEnabled();
         // this.http.get<{ip:string}>('https://jsonip.com')
         // .subscribe( data => {
         //   console.log('*********************ip address:', data.ip);
         //   this.solverCallService.ipAddress = data.ip;
         // })
-        this.http.get('https://ipapi.co/json')
-            .subscribe(function (ipData) {
-            var ipString = "ip: " + ipData.ip + ", city: " + ipData.city + ", region: " + ipData.region + ", country: " + ipData.country;
-            console.log('*********************' + ipString);
-            _this.solverCallService.ipAddress = ipString;
-        });
+        // this.http.get<IpData>('https://ipapi.co/json')
+        // .subscribe( ipData => {
+        //   const ipString = "ip: " + ipData.ip + ", city: " + ipData.city + ", region: " + ipData.region + ", country: " + ipData.country
+        //   console.log('*********************' + ipString);
+        //   this.solverCallService.ipAddress = ipString;
+        // })
     };
     NetworkBuilderViewComponent.prototype.textForShape = function (shapeType) {
         if (shapeType === 'island') {
@@ -51,6 +53,33 @@ var NetworkBuilderViewComponent = /** @class */ (function () {
     ;
     NetworkBuilderViewComponent.prototype.solveModel = function () {
         this.solverCallService.solveModel();
+    };
+    NetworkBuilderViewComponent.prototype.setReservesEnabled = function (status) {
+        this.mathModelDefService.setReservesEnabled(status);
+        // console.log("set reserves:" + status);
+        // this.mathModelDefService.setItemStatus(ItemType.Constraint, "resCover", status);
+    };
+    NetworkBuilderViewComponent.prototype.getReservesEnabled = function () {
+        return this.mathModelDefService.getReservesEnabled();
+        // console.log("get reserves");
+        // return this.mathModelDefService.itemIsEnabled(ItemType.Constraint, "resCover");
+    };
+    NetworkBuilderViewComponent.prototype.setLossesEnabled = function (status) {
+        this.mathModelDefService.setLossesEnabled(status);
+        // console.log("set losses:" + status);
+        // this.mathModelDefService.setItemStatus(ItemType.Constraint, "segLossForFlow", status);
+        // this.mathModelDefService.setItemStatus(ItemType.VarFactor, "dirBranch.branchLoss", status);
+    };
+    NetworkBuilderViewComponent.prototype.getLossesEnabled = function () {
+        return this.mathModelDefService.getLossesEnabled();
+        // console.log("get losses");
+        // if (!this.mathModelDefService.itemIsEnabled(ItemType.Constraint, "segLossForFlow")
+        // && !this.mathModelDefService.itemIsEnabled(ItemType.VarFactor, "dirBranch.branchLoss")) {
+        //   return false;
+        // }
+        // else {
+        //   return true;
+        // }
     };
     //Add Element
     NetworkBuilderViewComponent.prototype.addElement = function (type) {

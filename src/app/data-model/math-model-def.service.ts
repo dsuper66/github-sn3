@@ -91,10 +91,15 @@ export class MathModelDefService {
 
       )
 
-      //this.disabledFactors.push ('resOfferTranche.resTrancheCleared');
+      //Array for disabling constraints and varFactors
       this.disabledItems[ItemType.Constraint] = [];
       this.disabledItems[ItemType.VarFactor] = [];
-      // this.disabledItems[ComponentType.VarFactor].push('resOfferTranche.resTrancheCleared');
+      //Some model items are disabled by default
+      //this.disabledItems[ItemType.Constraint].push("resCover");
+      //this.disabledItems[ItemType.VarFactor].push("brLossIsSumOfSegs");
+      this.setReservesEnabled(false);
+      this.setLossesEnabled(false);
+
 
   }
 
@@ -117,7 +122,7 @@ export class MathModelDefService {
   // }
 
   //Enable/Disable item, e.g., varFactor in Constraint, or a Constraint 
-  //Items are enabled by default
+  //Items not in the array are enabled
   private disabledItems: string[][] = [];
   itemIsEnabled(itemType: ItemType, componentId: string) {
     //If zero entries found in the disabled array then this component is enabled
@@ -135,8 +140,35 @@ export class MathModelDefService {
     }
     else if (this.itemIsEnabled(itemType, componentId)) { //add to the disabled array if not already
       this.disabledItems[itemType].push(componentId)
+      console.log("disable itemType:" + itemType + " componentId:" + componentId);
     }
   }  
+  //Enabble/Disable specific functionality
+  setReservesEnabled(status: boolean){
+    console.log("set reserves:" + status);
+    this.setItemStatus(ItemType.Constraint, "resCover", status);
+  }  
+  getReservesEnabled(): boolean{
+    console.log("get reserves");
+    return this.itemIsEnabled(ItemType.Constraint, "resCover");
+  }
+  setLossesEnabled(status: boolean){
+    console.log("set losses:" + status);
+    this.setItemStatus(ItemType.Constraint, "segLossForFlow", status);
+    this.setItemStatus(ItemType.VarFactor, "dirBranch.branchLoss", status);
+  }  
+  getLossesEnabled(): boolean{
+    console.log("get losses");
+    if (!this.itemIsEnabled(ItemType.Constraint, "segLossForFlow")
+    && !this.itemIsEnabled(ItemType.VarFactor, "dirBranch.branchLoss")) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+
 
   //get constraints where the constraintType is not disabled
   getActiveConstraintDefs(){

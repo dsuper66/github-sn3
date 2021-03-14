@@ -105,7 +105,7 @@ export class DataEntryViewComponent implements OnInit {
     return this.mathModelDefService.itemIsEnabled(ItemType.Constraint, itemId);
   }
   setConstraintStatus(itemId: string, isEnabled: boolean) {
-    return this.mathModelDefService.setItemStatus(ItemType.Constraint, itemId, isEnabled);
+    this.mathModelDefService.setItemStatus(ItemType.Constraint, itemId, isEnabled);
   }
 
   //Constraint Components

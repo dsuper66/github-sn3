@@ -97,7 +97,7 @@ var DataEntryViewComponent = /** @class */ (function () {
         return this.mathModelDefService.itemIsEnabled(math_model_def_service_1.ItemType.Constraint, itemId);
     };
     DataEntryViewComponent.prototype.setConstraintStatus = function (itemId, isEnabled) {
-        return this.mathModelDefService.setItemStatus(math_model_def_service_1.ItemType.Constraint, itemId, isEnabled);
+        this.mathModelDefService.setItemStatus(math_model_def_service_1.ItemType.Constraint, itemId, isEnabled);
     };
     //Constraint Components
     DataEntryViewComponent.prototype.getFactorStatus = function (itemId) {

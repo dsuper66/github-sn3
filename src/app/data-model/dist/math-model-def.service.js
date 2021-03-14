@@ -27,7 +27,7 @@ var MathModelDefService = /** @class */ (function () {
         //   }
         // }
         //Enable/Disable item, e.g., varFactor in Constraint, or a Constraint 
-        //Items are enabled by default
+        //Items not in the array are enabled
         this.disabledItems = [];
         this.constraintDefs.push(
         // { constraintType:'nodeBal', elementType:'bus', varType:'', inEquality:'eq', rhsValue:0, rhsProperty:'', factorValue:1, factorProperty:'' },
@@ -65,10 +65,14 @@ var MathModelDefService = /** @class */ (function () {
         // { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandRes', factorParentProperty: '', factorValue: -1, factorProperty: '' },
         // { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' },
         { constraintType: 'nodeBal', elementType: 'enOfferTranche', propertyMap: 'toBus', varType: 'enTrancheCleared', factorParentProperty: '', factorValue: 1, factorProperty: '' }, { constraintType: 'nodeBal', elementType: 'bidTranche', propertyMap: 'fromBus', varType: 'bidTrancheCleared', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'fromBus', varType: 'branchFlow', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', varType: 'branchFlow', factorParentProperty: '', factorValue: 1, factorProperty: '' }, { constraintType: 'nodeBal', elementType: 'dirBranch', propertyMap: 'toBus', varType: 'branchLoss', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'powerFlow', elementType: 'bus', propertyMap: 'fromBus', varType: 'phaseAnglePos', factorParentProperty: 'susceptance', factorValue: -1, factorProperty: '' }, { constraintType: 'powerFlow', elementType: 'bus', propertyMap: 'toBus', varType: 'phaseAnglePos', factorParentProperty: 'susceptance', factorValue: 1, factorProperty: '' }, { constraintType: 'powerFlow', elementType: 'dirBranch', propertyMap: 'parentId', varType: 'branchFlow', factorParentProperty: '', factorValue: 1, factorProperty: 'direction' }, { constraintType: 'dirBranchLimit', elementType: 'dirBranch', propertyMap: 'parentId', varType: 'branchFlow', factorParentProperty: '', factorValue: 1, factorProperty: '' }, { constraintType: 'objective', elementType: 'enOfferTranche', propertyMap: 'all', varType: 'enTrancheCleared', factorParentProperty: '', factorValue: 1, factorProperty: 'tranchePrice' }, { constraintType: 'objective', elementType: 'bidTranche', propertyMap: 'all', varType: 'bidTrancheCleared', factorParentProperty: '', factorValue: -1, factorProperty: 'tranchePrice' }, { constraintType: 'objective', elementType: 'resOfferTranche', propertyMap: 'all', varType: 'resTrancheCleared', factorParentProperty: '', factorValue: 1, factorProperty: 'tranchePrice' }, { constraintType: 'objective', elementType: 'island', propertyMap: 'all', varType: 'islandResShortfall', factorParentProperty: '', factorValue: 1, factorProperty: 'islandResShortfallPrice' }, { constraintType: 'objective', elementType: 'gen', propertyMap: 'all', varType: 'genResShortfall', factorParentProperty: '', factorValue: 1, factorProperty: 'genResShortfallPrice' }, { constraintType: 'genEnResCalc', elementType: 'enOfferTranche', propertyMap: 'parentId', varType: 'enTrancheCleared', factorParentProperty: '', factorValue: 1, factorProperty: '' }, { constraintType: 'genEnResCalc', elementType: 'resOfferTranche', propertyMap: 'parentId', varType: 'resTrancheCleared', factorParentProperty: '', factorValue: 1, factorProperty: '' }, { constraintType: 'islandFindRisk', elementType: 'island', propertyMap: 'islandId', varType: 'islandRisk', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'islandFindRisk', elementType: 'gen', propertyMap: 'self', varType: 'genResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'islandResCalc', elementType: 'resOfferTranche', propertyMap: 'islandId', varType: 'resTrancheCleared', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandRes', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'resCover', elementType: 'island', propertyMap: 'self', varType: 'islandResShortfall', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'brFlowIsSumOfSegs', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'brLossIsSumOfSegs', elementType: 'flowLossSegment', propertyMap: 'parentId', varType: 'segmentLoss', factorParentProperty: '', factorValue: -1, factorProperty: '' }, { constraintType: 'segLossForFlow', elementType: 'flowLossSegment', propertyMap: 'self', varType: 'segmentFlow', factorParentProperty: '', factorValue: -1, factorProperty: 'lossFlowRatio' });
-        //this.disabledFactors.push ('resOfferTranche.resTrancheCleared');
+        //Array for disabling constraints and varFactors
         this.disabledItems[ItemType.Constraint] = [];
         this.disabledItems[ItemType.VarFactor] = [];
-        // this.disabledItems[ComponentType.VarFactor].push('resOfferTranche.resTrancheCleared');
+        //Some model items are disabled by default
+        //this.disabledItems[ItemType.Constraint].push("resCover");
+        //this.disabledItems[ItemType.VarFactor].push("brLossIsSumOfSegs");
+        this.setReservesEnabled(false);
+        this.setLossesEnabled(false);
     }
     MathModelDefService.prototype.itemIsEnabled = function (itemType, componentId) {
         //If zero entries found in the disabled array then this component is enabled
@@ -86,6 +90,31 @@ var MathModelDefService = /** @class */ (function () {
         }
         else if (this.itemIsEnabled(itemType, componentId)) { //add to the disabled array if not already
             this.disabledItems[itemType].push(componentId);
+            console.log("disable itemType:" + itemType + " componentId:" + componentId);
+        }
+    };
+    //Enabble/Disable specific functionality
+    MathModelDefService.prototype.setReservesEnabled = function (status) {
+        console.log("set reserves:" + status);
+        this.setItemStatus(ItemType.Constraint, "resCover", status);
+    };
+    MathModelDefService.prototype.getReservesEnabled = function () {
+        console.log("get reserves");
+        return this.itemIsEnabled(ItemType.Constraint, "resCover");
+    };
+    MathModelDefService.prototype.setLossesEnabled = function (status) {
+        console.log("set losses:" + status);
+        this.setItemStatus(ItemType.Constraint, "segLossForFlow", status);
+        this.setItemStatus(ItemType.VarFactor, "dirBranch.branchLoss", status);
+    };
+    MathModelDefService.prototype.getLossesEnabled = function () {
+        console.log("get losses");
+        if (!this.itemIsEnabled(ItemType.Constraint, "segLossForFlow")
+            && !this.itemIsEnabled(ItemType.VarFactor, "dirBranch.branchLoss")) {
+            return false;
+        }
+        else {
+            return true;
         }
     };
     //get constraints where the constraintType is not disabled
