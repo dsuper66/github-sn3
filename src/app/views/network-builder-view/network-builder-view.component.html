@@ -170,8 +170,10 @@
 
           [attr.rx]="shape.elementType=='bus'?8:2" 
 
-          [style.fill]="(shape.elementType=='island' || shape.elementType=='mathModel') ? 'none' : 'black'"
+          [style.fill]="(shape.elementType=='island' || shape.elementType=='mathModel') ? 'none' :
+          ((shape.elementType=='branch' && shape.text4 == '1') ? 'red' : 'black')"         
           /> 
+          <!-- [style.fill]="(shape.elementType=='island' || shape.elementType=='mathModel') ? 'none' : 'black'" -->
           <!-- stroke="black"
           fill="none" -->
 

@@ -114,6 +114,14 @@ var ModelElementResultsService = /** @class */ (function () {
                         resultString3 = '0';
                     }
                 }
+                //Determine if binding
+                var flowMax = this.modelElementDataService.getValueForElementProperty(elementId, 'flowMax');
+                if (Math.abs(branchFlowGross) == Number(flowMax)) {
+                    resultString4 = '1';
+                }
+                else {
+                    resultString4 = '0';
+                }
             }
         }
         // }

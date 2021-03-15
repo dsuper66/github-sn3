@@ -114,6 +114,16 @@ export class ModelElementResultsService {
             resultString3 = '0';
           }
         }
+
+        //Determine if binding
+        const flowMax = this.modelElementDataService.getValueForElementProperty(elementId,'flowMax');
+        if (Math.abs(branchFlowGross) == Number(flowMax)) {
+          resultString4 = '1';
+        }
+        else {
+          resultString4 = '0'
+        }
+
       }
     }
     // }
